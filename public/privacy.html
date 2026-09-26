@@ -13,20 +13,20 @@ body{font-family:Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8
 <body><main class="wrap"><article class="card">
 <a href="/">← العودة إلى كامن</a>
 <h1 class="brand">سياسة الخصوصية — كامن</h1>
-<p class="note"><strong>النسخة التجريبية العامة:</strong> تتم قراءة كشف الدرجات ومعالجة النتائج داخل متصفح المستخدم. لا تُرفع صورة كشف الدرجات أو ملفه إلى خادم كامن في هذه النسخة.</p>
-<h2>ما الذي يُحفظ؟</h2><p>تُحفظ المقررات التي اعتمدها المستخدم، والمهارات المستنتجة، والهدف، والموافقات وسجل الاستخدام محليًا في تخزين المتصفح حتى يختار المستخدم حذفها.</p>
-<h2>رفع الصور وOCR</h2><p>تتم عملية التعرف البصري داخل المتصفح. قد يقوم التطبيق بتنزيل ملفات نموذج اللغة اللازمة للتعرف البصري من مصدر خارجي عند الحاجة، لكن صورة كشف الدرجات نفسها لا تُرسل إلى ذلك المصدر.</p>
+<p class="note"><strong>النسخة العامة الحالية:</strong> تتم قراءة كشف الدرجات ومعالجة النتائج داخل متصفح المستخدم. لا تُرفع صورة كشف الدرجات أو ملفه إلى خادم كامن في هذه النسخة.</p>
+<h2>ما الذي يُحفظ؟</h2><p>تُحفظ المقررات المعتمدة وملف القدرات والموافقات وسجل الاستخدام في sessionStorage داخل جلسة المتصفح. تُمسح الجلسة عند إغلاق المتصفح، ويمكن للمستخدم أيضًا حذفها يدويًا من داخل كامن.</p>
+<h2>رفع الصور وOCR</h2><p>تتم عملية التعرف البصري داخل المتصفح. ملفات OCR العربية والإنجليزية وملفات التشغيل تُخدم من نفس نطاق كامن في النسخة الحالية؛ صورة كشف الدرجات نفسها لا تُرسل إلى OCR API خارجي.</p>
 <h2>حقوق المستخدم</h2><p>يمكن للمستخدم مراجعة البيانات قبل اعتمادها، تصحيحها، تصدير ملفه، وسحب أو حذف بيانات الجلسة المحلية.</p>
-<h2>ما لا تفعله النسخة العامة</h2><p>لا تشارك بيانات الطالب مع المرشدين أو الباحثين أو مزودي الدورات فعليًا، ولا تُفعّل تخزينًا مؤسسيًا مركزيًا. أي إطلاق مؤسسي يتطلب اتفاقيات بيانات وسياسة احتفاظ واستضافة معتمدة ومراجعة امتثال مستقلة.</p>
+<h2>ما لا تفعله النسخة العامة</h2><p>لا تشارك بيانات الطالب مع المرشدين أو الباحثين أو أصحاب العمل أو مزودي التدريب فعليًا، ولا تُفعّل تخزينًا مؤسسيًا مركزيًا، ولا تستخدم بيانات الجلسة لتدريب نموذج مركزي. أي إطلاق مؤسسي يتطلب اتفاقيات بيانات وسياسة احتفاظ واستضافة معتمدة ومراجعة امتثال مستقلة.</p>
 <h2>ملفات تعريف الارتباط والتحليلات</h2><p>لا يحتاج كامن في النسخة الحالية إلى ملفات تعريف ارتباط إعلانية أو تتبع تسويقي لبناء حكم الملاءمة.</p>
 <h2>التحديثات</h2><p>آخر تحديث: 26 سبتمبر 2026.</p>
 <section class="en">
 <h1>Privacy Policy — Kamin</h1>
 <p class="note"><strong>Public pilot:</strong> Transcript reading and inference run inside the user's browser. The transcript file or image is not uploaded to a Kamin server in this release.</p>
-<h2>What is stored?</h2><p>Approved courses, inferred skills, goals, consents and the usage log are stored locally in browser storage until the user deletes them.</p>
-<h2>Image OCR</h2><p>Optical character recognition runs in the browser. The app may download language-model files required for OCR, but the transcript image itself is not sent to that model source.</p>
+<h2>What is stored?</h2><p>Approved courses, the capability profile, consents, and the usage log use sessionStorage in the current browser session. The session clears when the browser closes, and the user can also delete it manually.</p>
+<h2>Image OCR</h2><p>Optical character recognition runs in the browser. Arabic/English OCR language data and runtime assets are served from the Kamin origin in the current release; the transcript image itself is not sent to an external OCR API.</p>
 <h2>Your controls</h2><p>You can review and correct extracted data before approval, export your profile, and delete the local pilot session.</p>
-<h2>Institutional deployment</h2><p>Advisor/research sharing and central institutional storage are not operational in the public pilot. They require approved hosting, retention rules, data agreements and compliance review.</p>
+<h2>Institutional deployment</h2><p>Advisor/employer/research sharing and central institutional storage are not operational in the public release. Session data are not used to train a central model. Institutional deployment requires approved hosting, retention rules, data agreements and compliance review.</p>
 <p>Last updated: 26 September 2026.</p>
 </section>
 </article></main></body></html>
