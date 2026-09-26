@@ -6,7 +6,7 @@
 <section class="hero"><span class="eyebrow">مركز الثقة</span><h1>الثقة آلية في المنتج، وليست شعارًا.</h1><p>نفرّق بين ما هو operational في النسخة العامة وما يحتاج بوابة امتثال قبل أي إطلاق مؤسسي.</p></section>
 <section class="grid">
 <div class="card"><span class="pill ok">Operational</span><h2>المعالجة المحلية</h2><p>قراءة السجل وOCR تعمل داخل المتصفح، وملفات OCR تُخدم من نطاق كامن.</p></div>
-<div class="card"><span class="pill ok">Operational</span><h2>جلسة مؤقتة</h2><p>ملف النسخة العامة يستخدم sessionStorage ويُمسح عند إغلاق جلسة المتصفح أو عند الحذف اليدوي.</p></div>
+<div class="card"><span class="pill ok">Operational</span><h2>حفظ محلي باختيارك</h2><p>الافتراضي جلسة مؤقتة. وبموافقة صريحة يمكن الاحتفاظ بالملف على نفس الجهاز عبر IndexedDB، مع زر واضح لإيقاف الحفظ أو حذف كل البيانات المحلية.</p></div>
 <div class="card"><span class="pill ok">Operational</span><h2>موافقة حسب الغرض</h2><p>تحليل السجل وبناء البصمة الذاتية أغراض منفصلة، والمشاركة المؤسسية غير مفعّلة حاليًا.</p></div>
 <div class="card"><span class="pill ok">Operational</span><h2>استمرارية مشفّرة</h2><p>يمكن للمستخدم تنزيل نسخة محلية مشفّرة بـ AES-GCM واستعادتها لاحقًا. كامن لا يخزن عبارة المرور ولا يستطيع فك النسخة بدونها.</p></div>
 </section>
@@ -16,7 +16,7 @@
 <div class="item"><h3>الإنسان يقرر</h3><p>كامن لا يتخذ قرار توظيف ولا يمنع المستخدم من فرصة.</p></div>
 </div></section>
 <section class="card"><h2>الاستعادة الآمنة</h2><p>النسخة المحمولة تحفظ الأدلة وحالة الملف وJSON-LD. عند الاستعادة لا نثق بنتائج مشتقة قديمة: يعاد حساب المهارات وFit من الأدلة، وتُصفّر موافقات المرشد/البحث الخارجية.</p></section>
-<section class="card"><h2>ما لا يحدث في النسخة العامة</h2><ul><li>لا يوجد تخزين مركزي لملف الطالب.</li><li>لا توجد مشاركة فعلية مع مرشد أو صاحب عمل أو باحث.</li><li>لا تستخدم بيانات الجلسة لتدريب نموذج مركزي.</li><li>لا توجد إعلانات أو عمولات تؤثر على Fit.</li></ul></section>
+<section class="card"><h2>ما لا يحدث في النسخة العامة</h2><ul><li>لا يوجد تخزين مركزي لملف الطالب.</li><li>لا توجد مشاركة فعلية مع مرشد أو صاحب عمل أو باحث.</li><li>لا تستخدم بيانات الملف المحلي لتدريب نموذج مركزي.</li><li>قياس الـpilot معطل افتراضيًا، وعند تفعيله لا يلتقط محتوى السجل الأكاديمي أو بياناته الشخصية.</li><li>لا توجد إعلانات أو عمولات تؤثر على Fit.</li></ul></section>
 <section class="card"><h2>بوابة الإطلاق المؤسسي</h2><p>قبل تخزين بيانات شخصية مركزيًا أو إظهار cohort analytics، يلزم على الأقل: استضافة معتمدة، سياسة احتفاظ، اتفاقية مشاركة بيانات، ضوابط صلاحيات، سجل وصول، minimum cell size للتجميع، مراجعة PDPL، واختبار إعادة التعريف والتحيز.</p><div class="actions"><a class="btn" href="/privacy.html">سياسة الخصوصية</a><a class="btn alt" href="/methodology.html?lang=ar">المنهجية</a></div></section>
-<section class="card en"><h2>English summary</h2><p>The public release processes transcripts locally, uses temporary browser-session storage, supports AES-GCM encrypted local backups for continuity, and does not centrally store or train on profile data. Institutional storage, employer access, and cohort analytics remain behind a separate compliance gate.</p></section>
+<section class="card en"><h2>English summary</h2><p>The public release processes transcripts locally and defaults to session-only storage. With explicit consent, a profile can persist on the same device in IndexedDB; users can disable persistence, delete all local profile data, or create an AES-GCM encrypted backup for portability. Kamin does not centrally store or train on profile data. Pilot analytics are off by default and, when enabled for a defined cohort, exclude transcript content and personally identifying academic data. Institutional storage, employer access, and cohort analytics remain behind a separate compliance gate.</p></section>
 </main></body></html>
