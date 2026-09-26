@@ -321,6 +321,10 @@ function Privacy({ lang, state, setState, log, onExport, onDelete }) {
       return
     }
     if (key === 'insight' && state.consents.insight) {
+      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة بصمة الطالب ومحو ملاحظاتها':'Student Insight consent withdrawn and observations removed',ts:Date.now()},...s.audit]}))
+      return
+    }
+    if (key === 'insight' && state.consents.insight) {
       setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة Person 360 ومحو بياناتها':'Person 360 consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
       return
     }
