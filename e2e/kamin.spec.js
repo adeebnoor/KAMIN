@@ -2,14 +2,9 @@ import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
-  page.on('pageerror', error => console.log('KAMIN_PAGE_ERROR', error.message, error.stack||''))
-  page.on('console', message => {
-    if(['error','warning'].includes(message.type())) console.log('KAMIN_BROWSER_CONSOLE', message.type(), message.text())
-  })
   await page.goto('/')
   await expect(page.locator('h1')).toContainText('حوّل شهادتك ومشاريعك')
   await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
-  console.log('KAMIN_AFTER_OPEN_BODY', (await page.locator('body').innerText()).slice(0,4000))
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
