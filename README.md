@@ -20,9 +20,21 @@ Research-dependent functions such as Saudi-normalized psychometric scores, learn
 - OCR worker, WASM core, and Arabic/English language data are served from the Kamin origin; transcript content is not sent to an OCR API.
 - No transcript is centrally stored by this static public release.
 - Extracted courses are shown for user review before any inference.
-- Profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` and older session keys are migrated out and removed.
+- Profile data are session-only by default. With explicit user consent, Kamin can persist the profile locally on the same device in IndexedDB; there is still no central profile store in the public release.
+- Users can export/import an AES-GCM encrypted portable profile and can clear all Kamin profile data from browser session storage and IndexedDB.
 - Users can create an AES-GCM encrypted local `.kamin` backup containing restore state plus the canonical JSON-LD graph. The passphrase is never stored; import recomputes derived judgments and resets external-sharing consents.
 - Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
+
+## Occupational taxonomy boundary
+
+Kamin exposes a taxonomy-neutral occupation interface with `lookup`, `search`, and SKOS-governed `crosswalk` operations. The public repository contains no SSCO classification rules, hierarchy-construction logic, proprietary scoring method, SSCO ontology assets, or SSCO crosswalk table.
+
+- `VITE_SSCO_ENABLED=false` is the required/default public state.
+- Any SSCO implementation is consumed only through a separately controlled runtime service.
+- No SSCO mapping data may be published here without a dated written clearance decision.
+- Job target profiles can carry nullable `onet`, `esco`, and `ssco` identifiers without embedding any taxonomy-specific method.
+
+See `docs/OCCUPATION_TAXONOMY_BOUNDARY.md` and the pull-request IP gate.
 
 ## Evidence and skill mapping
 
