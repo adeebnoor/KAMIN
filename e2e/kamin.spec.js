@@ -224,3 +224,34 @@ test('canonical JSON-LD ontology context is published with verified namespaces',
   expect(context.Credential).toBe('ceterms:Credential')
   expect(context.Competency).toBe('ceasn:Competency')
 })
+
+
+test('Kamin 1.0 production naming replaces prototype language', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await expect(page.getByText('كامن 1.0')).toBeVisible()
+  const body=await page.locator('body').innerText()
+  expect(body).not.toMatch(/public pilot|launch pilot|نسخة إطلاق تجريبية|نسخة تجريبية عامة/i)
+})
+
+test('legacy pilot session migrates once into Kamin 1.0 session storage', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => {
+    sessionStorage.clear()
+    sessionStorage.setItem('kamin-pilot-session-v2', JSON.stringify({
+      courses:[],
+      approved:false,
+      goal:'data',
+      consents:{analyze:false,insight:false,advisor:false,research:false},
+      insight:{version:'legacy',declaredPreferences:{workStructure:'balanced'}},
+      audit:[]
+    }))
+  })
+  await page.reload()
+  const storage=await page.evaluate(() => ({
+    current:sessionStorage.getItem('kamin-session-v3'),
+    legacy:sessionStorage.getItem('kamin-pilot-session-v2')
+  }))
+  expect(storage.current).toContain('"goal":"data"')
+  expect(storage.legacy).toBeNull()
+})
