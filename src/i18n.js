@@ -5,19 +5,40 @@ export const copy = {
     subTagline: 'المهارات الكامنة • الأدلة الأكاديمية',
     nav: { home: 'الرئيسية', how: 'كيف يعمل', trust: 'الثقة والامتثال', app: 'تجربة كامن' },
     hero: {
-      eyebrow: 'من سجلك الأكاديمي إلى قرار أوضح',
-      title: 'قدراتك أكثر من درجاتك.',
-      text: 'كامن يحوّل كشف الدرجات إلى مهارات موثقة، ثم يشرح لك أي دورة تناسبك ولماذا، وما الذي ينقصك لتصبح مناسبة.',
+      eyebrow: 'السوق لم يعد يسأل: ما مسماك؟ بل: ماذا حققت؟',
+      title: 'قيمتك فيما تستطيع تحقيقه، لا في معدلك وحده.',
+      text: 'كامن يقرأ سجلك الأكاديمي كدليل: ما طبّقته، وما درسته، وما الذي ينقصك قبل أن تدفع وقتًا أو مالًا في خطوة لا تخدم هدفك.',
       cta: 'اكتشف لحظة كامن',
-      secondary: 'اعرف كيف يعمل',
-      trust: 'في النسخة التجريبية العامة، تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.'
+      secondary: 'شاهد مثالًا',
+      trust: 'في النسخة التجريبية العامة، تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.',
+      cards: [
+        ['دليل تطبيق', 'مشروع التخرج · تحليل المتطلبات'],
+        ['بعد دورة مناسبة', 'تبني تقريرًا أسبوعيًا آليًا بـ SQL']
+      ]
+    },
+    value: {
+      kicker: 'من سطر في السيرة إلى قيمة لها دليل',
+      title: 'الدليل قبل الادعاء، والنتيجة قبل اسم الدورة.',
+      intro: 'مثال توضيحي لطالبة افتراضية يبيّن كيف يغيّر كامن القرار دون أن يدّعي معرفة ما لا يدعمه السجل.',
+      traditional: 'ما تقوله السيرة التقليدية',
+      traditionalItems: ['سارة · خريجة نظم معلومات', 'معدل 3.6', 'أحب الإدارة', 'سأسجل في دورة PMP'],
+      kamin: 'ما يقوله كامن من كشف درجاتها',
+      signals: [
+        ['طبّقت', 'تحليل المتطلبات', 'الدليل: مشروع التخرج + مقرر تحليل النظم'],
+        ['قيمة تضيفها', 'تحويل احتياج الإدارة إلى متطلبات واضحة', 'دليل تطبيقي قابل للمراجعة'],
+        ['فجوة قابلة للسد', 'توظيف الذكاء الاصطناعي في العمل', 'لا يظهر دليل معتمد عليها بعد'],
+        ['لا تناسبك الآن', 'PMP', 'تحتاج شرط الخبرة الرسمي؛ ابدأ بمسار بديل'],
+        ['تناسبك بشروط', 'تحليل البيانات بـ SQL', 'بعدها ستستطيع بناء تقرير أسبوعي آلي']
+      ],
+      result: 'بدل إنفاق سنة ورسوم في خطوة لا تخدمها الآن، تبدأ سارة بمسار تدعمه الأدلة ويظل الطريق إلى PMP واضحًا بعد استيفاء الخبرة.',
+      demo: 'مثال توضيحي لطالبة افتراضية — وليس قصة مستخدم حقيقية.'
     },
     how: {
       title: 'ثلاث خطوات فقط',
       steps: [
         ['أودع', 'ارفع كشف الدرجات. لن نستخدم أي نتيجة قبل أن تراجعها وتعتمدها.'],
         ['اكتشف', 'شاهد المهارات المستنتجة مع المقرر والدليل ودرجة الثقة.'],
-        ['قرّر', 'قارن الدورات بحكم مفسّر: تناسبك، تناسبك بشروط، أو لا تناسبك الآن.']
+        ['قرّر', 'قارن الدورات بحكم مفسّر، واعرف ما الذي ستستطيع تحقيقه بعد كل دورة.']
       ]
     },
     trustTitle: 'الثقة ليست صفحة قانونية. هي جزء من المنتج.',
@@ -87,19 +108,40 @@ export const copy = {
     subTagline: 'Latent skills • Academic evidence',
     nav: { home: 'Home', how: 'How it works', trust: 'Trust & compliance', app: 'Try Kamin' },
     hero: {
-      eyebrow: 'From academic record to a clearer decision',
-      title: 'You are more than your grades.',
-      text: 'Kamin turns your transcript into evidence-backed skills, then explains which learning opportunities fit you, why they fit, and what is missing when they do not.',
+      eyebrow: 'The market is moving from titles to demonstrated value',
+      title: 'Your value is what you can achieve — not your GPA alone.',
+      text: 'Kamin reads your academic record as evidence: what you applied, what you studied, and what is still missing before you spend time or money on the next step.',
       cta: 'Discover your Kamin moment',
-      secondary: 'See how it works',
-      trust: 'In this public pilot, files are processed locally on your device and are not uploaded to a Kamin server.'
+      secondary: 'See an example',
+      trust: 'In this public pilot, files are processed locally on your device and are not uploaded to a Kamin server.',
+      cards: [
+        ['Applied evidence', 'Graduation project · requirements analysis'],
+        ['After the right course', 'Build an automated weekly SQL report']
+      ]
+    },
+    value: {
+      kicker: 'From a CV line to evidence-backed value',
+      title: 'Evidence before claims. Outcomes before course names.',
+      intro: 'An illustrative fictional student shows how Kamin can change a decision without claiming more than the record supports.',
+      traditional: 'What a traditional CV says',
+      traditionalItems: ['Sara · Information Systems graduate', 'GPA 3.6', 'I like management', 'I will take PMP'],
+      kamin: 'What Kamin can say from her transcript',
+      signals: [
+        ['Applied', 'Requirements analysis', 'Evidence: graduation project + systems analysis course'],
+        ['Value delivered', 'Turn business needs into clear requirements', 'Reviewable applied evidence'],
+        ['Bridgeable gap', 'AI use at work', 'No approved evidence is visible yet'],
+        ['Not yet', 'PMP', 'Official experience gate applies; start with an alternative path'],
+        ['Fits with conditions', 'Data analysis with SQL', 'Afterward you can build an automated weekly report']
+      ],
+      result: 'Instead of spending a year and fees on a step that does not serve her yet, Sara starts on an evidence-supported path while keeping a clear route to PMP after the experience requirement is met.',
+      demo: 'Illustrative fictional student — not a real user story.'
     },
     how: {
       title: 'Only three steps',
       steps: [
         ['Deposit', 'Upload your transcript. Nothing is used until you review and approve the extraction.'],
         ['Discover', 'See inferred skills with course evidence and confidence.'],
-        ['Decide', 'Compare courses with an explained judgment: fits, fits with conditions, or not yet.']
+        ['Decide', 'Compare courses with an explained judgment and the outcome you should be able to achieve afterward.']
       ]
     },
     trustTitle: 'Trust is not a legal page. It is part of the product.',
