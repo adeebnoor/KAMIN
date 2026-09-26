@@ -1,4 +1,4 @@
-export const KAMIN_ONTOLOGY_VERSION = '0.1.0'
+export const KAMIN_ONTOLOGY_VERSION = '0.2.0'
 
 export const NAMESPACES = {
   rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -157,6 +157,15 @@ export const KAMIN_RELATIONS = {
   mechanism: 'kamin:mechanism',
   fitTarget: 'kamin:fitTarget',
   outcomeStatus: 'kamin:outcomeStatus',
+  studied: 'kamin:studied',
+  demonstrates: 'kamin:demonstrates',
+  academicContext: 'kamin:academicContext',
+  pursuesGoal: 'kamin:pursuesGoal',
+  requiresCapability: 'kamin:requiresCapability',
+  developsCapability: 'kamin:developsCapability',
+  supportsGoal: 'kamin:supportsGoal',
+  compatiblePreference: 'kamin:compatiblePreference',
+  classifiedAs: 'kamin:classifiedAs',
 }
 
 export const JSON_LD_CONTEXT = {
@@ -176,6 +185,14 @@ export const JSON_LD_CONTEXT = {
   concept: {'@id':'kamin:object','@type':'@id'},
   subject: {'@id':'kamin:subject','@type':'@id'},
   consentPurpose: {'@id':'kamin:consentPurpose','@type':'@id'},
+  studied: {'@id':'kamin:studied','@type':'@id'},
+  demonstrates: {'@id':'kamin:demonstrates','@type':'@id'},
+  academicContext: {'@id':'kamin:academicContext','@type':'@id'},
+  pursuesGoal: {'@id':'kamin:pursuesGoal','@type':'@id'},
+  requiresCapability: {'@id':'kamin:requiresCapability','@type':'@id'},
+  developsCapability: {'@id':'kamin:developsCapability','@type':'@id'},
+  supportsGoal: {'@id':'kamin:supportsGoal','@type':'@id'},
+  classifiedAs: {'@id':'kamin:classifiedAs','@type':'@id'},
 }
 
 export const EXTERNAL_ID_POLICY = {
