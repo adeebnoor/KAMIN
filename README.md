@@ -4,22 +4,42 @@
 
 🌐 **Live public pilot:** https://kamin-12mf.onrender.com
 
-The pilot is continuously deployed from `main` after code changes and protected by a GitHub quality gate (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
+Kamin turns academic records into traceable skill evidence and explainable learning-fit judgments. This repository implements the public pilot against **BRD v3.1 (26 September 2026)**.
 
-Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public pilot experience built from BRD v3.0.
+## Product boundary
 
-## Public pilot privacy model
+The pilot intentionally keeps a narrow first-release boundary:
+
+- Education record first; the wider ten-record vault is visible but locked.
+- Exact course-code → learning-outcome → skill mappings only.
+- Failed, withdrawn, incomplete and unknown-grade rows do not create evidence.
+- A course title or keyword never creates a skill.
+- Demo mappings are synthetic-demo only until the first academic department formally approves its mapping table.
+- Course-fit indicators are explicitly **provisional / uncalibrated** until retrospective validation.
+- Commercial fields are isolated from the judgment engine and protected by a regression test.
+
+## Public-pilot privacy model
 
 - Transcript parsing runs in the browser.
-- No transcript is centrally stored by this static pilot.
-- Extracted courses are shown for user review before any inference.
-- All pilot profile data lives in browser local storage and can be exported or deleted.
-- Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
+- The transcript file is not uploaded to a Kamin server.
+- **Temporary session storage is the default**; device-persistent local storage is opt-in.
+- Analysis consent is off by default and must be granted explicitly after the user reviews the extracted rows.
+- Withdrawing the educational record removes its effect from skills and judgments.
+- Image OCR is intentionally disabled until Arabic/English OCR worker, core and language assets are self-hosted. The pilot does not download OCR runtime assets from third parties.
+- Advisor sharing and research-consent switches are governance demonstrations only until approved Saudi-hosted infrastructure and institutional agreements exist.
 
-## Quality gates
+## Quality gate and deployment
 
-`npm run check` runs deterministic engine tests, a production build, browser journeys on desktop/mobile Chromium, and an axe accessibility scan for serious/critical issues.
+`npm run check` runs:
+
+1. deterministic engine/transcript tests;
+2. production build;
+3. desktop + mobile Chromium journeys;
+4. accessibility checks across primary screens;
+5. browser checks for routing, consent, mobile navigation and network isolation.
+
+Render is configured with `autoDeployTrigger: checksPass`, so a commit to the production branch is deployed only after CI checks pass.
 
 ## Compliance posture
 
-The product is designed around Saudi PDPL principles, DGA digital-experience/accessibility guidance, WCAG 2.1 AA targets, purpose-specific consent, data minimization, explainability, withdrawal and auditability. This is a compliance-by-design posture, not a legal certification.
+The product is designed around Saudi PDPL principles, WCAG 2.1 AA targets, purpose-specific consent, data minimization, explainability, withdrawal and auditability. This is a design posture, **not an official certification or legal opinion**.

@@ -14,8 +14,8 @@ body{font-family:Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8
 <a href="/">← العودة إلى كامن</a>
 <h1 class="brand">سياسة الخصوصية — كامن</h1>
 <p class="note"><strong>النسخة التجريبية العامة:</strong> تتم قراءة كشف الدرجات ومعالجة النتائج داخل متصفح المستخدم. لا تُرفع صورة كشف الدرجات أو ملفه إلى خادم كامن في هذه النسخة.</p>
-<h2>ما الذي يُحفظ؟</h2><p>تُحفظ المقررات التي اعتمدها المستخدم، والمهارات المستنتجة، والهدف، والموافقات وسجل الاستخدام محليًا في تخزين المتصفح حتى يختار المستخدم حذفها.</p>
-<h2>رفع الصور وOCR</h2><p>تتم عملية التعرف البصري داخل المتصفح. قد يقوم التطبيق بتنزيل ملفات نموذج اللغة اللازمة للتعرف البصري من مصدر خارجي عند الحاجة، لكن صورة كشف الدرجات نفسها لا تُرسل إلى ذلك المصدر.</p>
+<h2>ما الذي يُحفظ؟</h2><p>الجلسة المؤقتة هي الوضع الافتراضي وتُحفظ في sessionStorage. يمكن للمستخدم اختيار الحفظ على هذا الجهاز في localStorage. تُحفظ المقررات التي اعتمدها، والهدف، والموافقات وسجل الاستخدام فقط بحسب اختياره، ويمكن حذفها في أي وقت.</p>
+<h2>رفع الصور وOCR</h2><p>قراءة الصور متوقفة مؤقتًا في النسخة العامة. لن يحمّل كامن عامل OCR أو نماذج اللغة من طرف خارجي. ستُعاد الميزة فقط بعد استضافة حزمة العربية والإنجليزية ذاتيًا وفحص سجل الشبكة.</p>
 <h2>حقوق المستخدم</h2><p>يمكن للمستخدم مراجعة البيانات قبل اعتمادها، تصحيحها، تصدير ملفه، وسحب أو حذف بيانات الجلسة المحلية.</p>
 <h2>ما لا تفعله النسخة العامة</h2><p>لا تشارك بيانات الطالب مع المرشدين أو الباحثين أو مزودي الدورات فعليًا، ولا تُفعّل تخزينًا مؤسسيًا مركزيًا. أي إطلاق مؤسسي يتطلب اتفاقيات بيانات وسياسة احتفاظ واستضافة معتمدة ومراجعة امتثال مستقلة.</p>
 <h2>ملفات تعريف الارتباط والتحليلات</h2><p>لا يحتاج كامن في النسخة الحالية إلى ملفات تعريف ارتباط إعلانية أو تتبع تسويقي لبناء حكم الملاءمة.</p>
@@ -23,8 +23,8 @@ body{font-family:Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8
 <section class="en">
 <h1>Privacy Policy — Kamin</h1>
 <p class="note"><strong>Public pilot:</strong> Transcript reading and inference run inside the user's browser. The transcript file or image is not uploaded to a Kamin server in this release.</p>
-<h2>What is stored?</h2><p>Approved courses, inferred skills, goals, consents and the usage log are stored locally in browser storage until the user deletes them.</p>
-<h2>Image OCR</h2><p>Optical character recognition runs in the browser. The app may download language-model files required for OCR, but the transcript image itself is not sent to that model source.</p>
+<h2>What is stored?</h2><p>Temporary session storage is the default and uses sessionStorage. Users may opt into persistent storage on this device via localStorage. Approved courses, goals, consents and audit events are stored according to that choice and can be deleted at any time.</p>
+<h2>Image OCR</h2><p>Image OCR is temporarily disabled in the public pilot. Kamin will not download OCR workers, cores or language models from third parties. The feature returns only after Arabic and English OCR assets are self-hosted and network-tested.</p>
 <h2>Your controls</h2><p>You can review and correct extracted data before approval, export your profile, and delete the local pilot session.</p>
 <h2>Institutional deployment</h2><p>Advisor/research sharing and central institutional storage are not operational in the public pilot. They require approved hosting, retention rules, data agreements and compliance review.</p>
 <p>Last updated: 26 September 2026.</p>
