@@ -1,4 +1,4 @@
-import { findSascedCandidates, findSascedLevelCandidates } from '../taxonomies/sasced.js'
+import { findSsceSpecializationCandidates, findSsceLevelCandidates } from '../reference/ssce.js'
 
 const ARABIC_DIGITS='٠١٢٣٤٥٦٧٨٩'
 const PERSIAN_DIGITS='۰۱۲۳۴۵۶۷۸۹'
@@ -233,8 +233,8 @@ function finalize(text,source,mode,extra={}){
       usedOcr:!!extra.usedOcr,
       pages:extra.pages||null,
       mode,
-      sascedCandidates:findSascedCandidates(text).slice(0,5),
-      sascedLevelCandidates:findSascedLevelCandidates(text).slice(0,3),
+      ssceCandidates:findSsceSpecializationCandidates(text).slice(0,5),
+      ssceLevelCandidates:findSsceLevelCandidates(text).slice(0,3),
     },
     mode,
   }
