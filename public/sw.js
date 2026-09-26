@@ -1,5 +1,12 @@
-const CACHE = 'kamin-public-v3'
-const CORE = ['/favicon.svg', '/manifest.webmanifest', '/kamin-logo-fixed.webp', '/privacy.html']
+const CACHE = 'kamin-public-v4'
+const CORE = [
+  '/favicon.svg',
+  '/manifest.webmanifest',
+  '/kamin-logo-v3.webp',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/privacy.html'
+]
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)))
@@ -7,12 +14,18 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))))
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(key => key.startsWith('kamin-public-') && key !== CACHE).map(key => caches.delete(key))
+    ))
+  )
   self.clients.claim()
 })
 
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET' || new URL(event.request.url).origin !== location.origin) return
+  if (event.request.method !== 'GET') return
+  const url = new URL(event.request.url)
+  if (url.origin !== location.origin) return
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
@@ -26,13 +39,26 @@ self.addEventListener('fetch', event => {
     return
   }
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      const network = fetch(event.request).then(response => {
+  const immutable = url.pathname.startsWith('/assets/') ||
+    url.pathname.startsWith('/ocr/') ||
+    ['/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg'].includes(url.pathname)
+
+  if (immutable) {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
         if (response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()))
         return response
-      }).catch(() => cached)
-      return cached || network
-    })
+      }))
+    )
+    return
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()))
+        return response
+      })
+      .catch(() => caches.match(event.request))
   )
 })
