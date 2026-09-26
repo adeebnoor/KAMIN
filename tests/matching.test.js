@@ -120,4 +120,18 @@ describe('Person360 graph-native matching', () => {
     expect(data.semanticPaths.some(path=>path.kind==='preference-alignment'&&path.status==='supported')).toBe(true)
     expect(data.missingSkills.length).toBeGreaterThan(0)
   })
+
+  it('handles an empty Person360 graph without falling back or throwing', () => {
+    const graph=projectStateToPerson360({
+      state:{courses:[],goal:null,insight:emptyInsightState()},
+      skills:[],
+      educationClassification:{primary:null},
+    })
+    const profile=buildMatchingProfile({graph})
+    const matches=matchTargets(profile,{lang:'en'})
+    expect(profile.mode).toBe('person360-graph')
+    expect(matches.length).toBeGreaterThan(0)
+    expect(matches.every(item=>item.decisionBasis==='person360-semantic-graph')).toBe(true)
+  })
+
 })
