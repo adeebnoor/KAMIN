@@ -10,6 +10,7 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
+import { INSIGHT_DOMAINS, INSIGHT_ITEMS, INSIGHT_SCALE, computeInsightProfile, emptyInsightState, insightCompletion } from './insight.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
@@ -17,7 +18,8 @@ const blankState = {
   courses: [],
   approved: false,
   goal: null,
-  consents: { analyze: false, advisor: false, research: false },
+  consents: { analyze: false, insight: false, advisor: false, research: false },
+  insight: emptyInsightState(),
   audit: [],
 }
 
@@ -33,7 +35,13 @@ const getSaved = () => {
       }
     }
     const parsed=JSON.parse(raw||'null')
-    return parsed && typeof parsed==='object' ? { ...blankState, ...parsed } : blankState
+    if(!parsed || typeof parsed!=='object') return blankState
+    return {
+      ...blankState,
+      ...parsed,
+      consents:{...blankState.consents,...(parsed.consents||{})},
+      insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})}},
+    }
   } catch {
     return blankState
   }
