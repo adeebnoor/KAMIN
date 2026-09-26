@@ -28,8 +28,11 @@ export function parseTranscriptText(text) {
 export async function extractTranscript(file, onProgress = () => {}) {
   const type = file.type || ''
   if (type.includes('pdf') || file.name?.toLowerCase().endsWith('.pdf')) {
-    const pdfjs = await import('pdfjs-dist')
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()
+    const [pdfjs, workerModule] = await Promise.all([
+      import('pdfjs-dist'),
+      import('pdfjs-dist/build/pdf.worker.min.mjs?url'),
+    ])
+    pdfjs.GlobalWorkerOptions.workerSrc = workerModule.default
     const buffer = await file.arrayBuffer()
     const doc = await pdfjs.getDocument({ data: buffer }).promise
     let text = ''
