@@ -248,6 +248,7 @@ test('legacy pilot session migrates once into Kamin 1.0 session storage', async 
     }))
   })
   await page.reload()
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
   const storage=await page.evaluate(() => ({
     current:sessionStorage.getItem('kamin-session-v3'),
     legacy:sessionStorage.getItem('kamin-pilot-session-v2')
