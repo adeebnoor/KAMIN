@@ -185,6 +185,7 @@ function Landing({ lang, onTry }) {
 function ValidationSummary({lang,validation}) {
   if(!validation) return null
   const rejected=validation.rejected||[]
+  const sasced=validation.sascedCandidates?.[0]||null
   return <div className="validation-summary" role="status" aria-live="polite">
     <div><strong>{lang==='ar'?'ملخص التحقق':'Validation summary'}</strong><span>{lang==='ar'? `${validation.recognized||0} مقرر تم التعرف عليه` : `${validation.recognized||0} courses recognized`}</span></div>
     <div className="validation-badges">
@@ -192,6 +193,10 @@ function ValidationSummary({lang,validation}) {
       <span>{rejected.length ? (lang==='ar'? `${rejected.length} سطر يحتاج مراجعة` : `${rejected.length} rows need review`) : (lang==='ar'?'لا توجد أسطر مشتبهة':'No suspicious rows')}</span>
       {Number.isFinite(validation.extractionCoverage)&&<span>{lang==='ar'? `تغطية الاستخراج: ${Math.round(validation.extractionCoverage*100)}%` : `Extraction coverage: ${Math.round(validation.extractionCoverage*100)}%`}</span>}
     </div>
+    {sasced&&<div className="sasced-candidate">
+      <div><strong>{lang==='ar'?'سياق أكاديمي مرشح — SASCED-20':'Academic context candidate — SASCED-20'}</strong><span>{sasced.code} · {sasced[lang]}</span></div>
+      <small>{lang==='ar'?'اقتراح من النص فقط؛ لا يصبح تصنيفًا معتمدًا ولا يؤثر في الحكم حتى يؤكده الطالب أو الجهة الأكاديمية.':'Text-derived candidate only; it is not an approved classification and does not affect judgment until confirmed by the student or academic authority.'}</small>
+    </div>}
     {rejected.length>0&&<details><summary>{lang==='ar'?'عرض الأسطر التي تعذر تحليلها':'Show rows that could not be parsed'}</summary>{rejected.slice(0,12).map((r,i)=><code key={i}>{r.line}</code>)}</details>}
   </div>
 }
