@@ -1,7 +1,7 @@
-const CACHE = 'kamin-public-v4'
+const CACHE = 'kamin-public-v5'
 const CORE = [
   '/favicon.svg',
-  '/manifest.webmanifest',
+  '/manifest.json',
   '/kamin-logo-v3.webp',
   '/icon-192.png',
   '/icon-512.png',

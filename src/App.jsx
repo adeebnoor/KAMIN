@@ -8,13 +8,10 @@ import {
 import { copy } from './i18n.js'
 import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
-import { extractTranscript } from './utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
 import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
 import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
-import { projectStateToPerson360 } from './ontology/projector.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
-import { buildPortableProfile, decryptPortableProfile, encryptPortableProfile, normalizePortableState } from './utils/portableProfile.js'
 import { clearLocalProfile, readLocalProfile, writeLocalProfile } from './utils/localProfileStore.js'
 import { trustMicrocopy } from './content/trustCopy.js'
 import { PILOT_ANALYTICS_ENABLED, clearPilotLocalData, submitPilotFeedback, trackPilotEvent } from './utils/pilotAnalytics.js'
@@ -692,6 +689,7 @@ function KaminApp({ lang, onClose }) {
     trackPilotEvent('upload_started')
     setProcessing(true); setProgress(2)
     try {
+      const { extractTranscript } = await import('./utils/transcript.js')
       const result = await extractTranscript(file,setProgress)
       setDraft(result.courses)
       setValidation(result.validation||null)
@@ -725,9 +723,13 @@ function KaminApp({ lang, onClose }) {
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
   const exportProfile = async passphrase => {
+    const [{ projectStateToPerson360 }, portable] = await Promise.all([
+      import('./ontology/projector.js'),
+      import('./utils/portableProfile.js'),
+    ])
     const person360=projectStateToPerson360({state,skills,educationClassification})
-    const payload=buildPortableProfile({state,person360,appVersion:'1.0.0'})
-    const envelope=await encryptPortableProfile(payload,passphrase)
+    const payload=portable.buildPortableProfile({state,person360,appVersion:'1.0.0'})
+    const envelope=await portable.encryptPortableProfile(payload,passphrase)
     const url=URL.createObjectURL(new Blob([JSON.stringify(envelope,null,2)],{type:'application/vnd.kamin.profile+json'}))
     const a=document.createElement('a')
     a.href=url
@@ -740,6 +742,7 @@ function KaminApp({ lang, onClose }) {
     if (!file || file.size > 10*1024*1024) throw new Error('BACKUP_TOO_LARGE')
     let envelope
     try { envelope=JSON.parse(await file.text()) } catch { throw new Error('INVALID_BACKUP_FILE') }
+    const { decryptPortableProfile, normalizePortableState } = await import('./utils/portableProfile.js')
     const payload=await decryptPortableProfile(envelope,passphrase)
     const restored=normalizePortableState(payload)
     const next={

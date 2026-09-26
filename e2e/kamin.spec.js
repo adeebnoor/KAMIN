@@ -35,7 +35,8 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await page.goto('/')
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /كامن/)
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
-  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', /manifest\.webmanifest$/)
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', /manifest\.json$/)
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('type', 'application/manifest+json')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /kamin/)
   await expect(page.locator('img[src*="kamin-logo-fixed"]')).toHaveCount(0)
   await expect(page.locator('link[rel="alternate"][hreflang="ar-SA"]')).toHaveAttribute('href', /lang=ar/)
@@ -45,7 +46,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -104,8 +105,9 @@ test('app dialog supports Escape and mobile usage log navigation', async ({ page
 
 
 test('manifest uses installable PNG icons and local OCR assets are same-origin', async ({ request }) => {
-  const manifestResponse=await request.get('/manifest.webmanifest')
+  const manifestResponse=await request.get('/manifest.json')
   expect(manifestResponse.ok()).toBeTruthy()
+  expect(manifestResponse.headers()['content-type']).not.toContain('octet-stream')
   const manifest=await manifestResponse.json()
   expect(manifest.icons.map(icon=>icon.src)).toEqual(expect.arrayContaining(['/icon-192.png','/icon-512.png']))
   for(const icon of ['/icon-192.png','/icon-512.png']){
@@ -301,7 +303,7 @@ test('expert-review trust surfaces are honest and navigable', async ({ page }) =
 
   await page.goto('/trust.html?lang=ar')
   await expect(page.locator('h1')).toContainText('الثقة آلية في المنتج')
-  await expect(page.getByText(/لا تستخدم بيانات الجلسة لتدريب نموذج مركزي/)).toBeVisible()
+  await expect(page.getByText(/حفظ محلي باختيارك/)).toBeVisible()
 })
 
 
