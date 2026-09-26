@@ -21,6 +21,7 @@ Research-dependent functions such as Saudi-normalized psychometric scores, learn
 - No transcript is centrally stored by this static public release.
 - Extracted courses are shown for user review before any inference.
 - Profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` and older session keys are migrated out and removed.
+- Users can create an AES-GCM encrypted local `.kamin` backup containing restore state plus the canonical JSON-LD graph. The passphrase is never stored; import recomputes derived judgments and resets external-sharing consents.
 - Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
 
 ## Evidence and skill mapping
@@ -60,3 +61,12 @@ The architecture reuses external standards rather than inventing one monolithic 
 Psychometric instruments are registered separately from the ontology. Current candidate instruments include O*NET Mini Interest Profiler (RIASEC) and the public-domain IPIP Big Five Arabic adaptation. They do not create academic skill evidence or override formal eligibility gates.
 
 See `docs/KAMIN_ONTOLOGY.md` for the frozen architecture and student-project guardrails. Public-facing transparency surfaces are `public/sample-report.html`, `public/methodology.html`, `public/trust.html`, and `public/privacy.html`.
+
+
+## National interoperability posture
+
+Kamin is intentionally positioned as a **complementary university evidence & trust layer**, not a parallel Saudi national skills platform and not a KAU-only product. The launch wedge is university-led B2B2C. The architecture keeps a provider-neutral canonical graph, explicit crosswalk/adapters, and portable evidence so an official national API can be integrated later without making it a prerequisite for user value. Kamin does not claim a current government integration or endorsement. See `public/interoperability.html`.
+
+## Saudi psychometric validation boundary
+
+O*NET Mini Interest Profiler and the IPIP Big Five Arabic adaptation are research candidates only. Their instrument scores have `productionUse:false` and `decisionRole:'none-until-saudi-validation'`. Self-declared RIASEC/work-value labels remain separate product preferences and are not psychometric scores. A Saudi validation study is required before instrument scores can affect Fit.
