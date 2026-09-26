@@ -16,7 +16,7 @@ const GRADE_MAP = new Map([
 ])
 const GRADE_TOKEN = /^(?:A\+|A-|A|B\+|B-|B|C\+|C-|C|D\+|D-|D|F|W|WF|I|IP|NP|DN|P|PASS|أ\+|ا\+|أ|ا|ب\+|ب|ج\+|ج|د\+|د|هـ|ه|ح|م)$/i
 const COURSE_FORWARD = /\b([A-Z]{2,10})\s*[-\/:]?\s*(\d{2,4}[A-Z]?)\b/ig
-const COURSE_REVERSE = /\b(\d{2,4}[A-Z]?)\s*[-\/:]?\s*([A-Z]{2,10})\b/ig
+const COURSE_REVERSE = /\b(\d{2,4}[A-Z]?)\s*[-\/:]?\s*([A-Z]{2,10})\b/g
 const numericGrade = (token) => /^\d{2,3}(?:\.\d+)?$/.test(token) && Number(token) >= 50 && Number(token) <= 100
 const normalizeGrade = token => GRADE_MAP.get(String(token||'').trim()) || String(token||'').trim().toUpperCase()
 
@@ -36,7 +36,7 @@ function findCourseMatches(text){
     .filter((m,i,arr)=>!i || m.index!==arr[i-1].index)
 }
 
-const COURSE_TOKEN = /(?:[A-Z]{2,10}\s*[-\/:]?\s*\d{2,4}[A-Z]?|\d{2,4}[A-Z]?\s*[-\/:]?\s*[A-Z]{2,10})/i
+const hasCourseToken = (text) => findCourseMatches(text).length>0
 
 function tokenObjects(text){
   const tokens=[]
@@ -117,9 +117,9 @@ export function parseTranscriptTextDetailed(text) {
     let consumed=0
 
     // Some PDF/OCR layouts wrap the title or grade onto the following line.
-    if(!row && COURSE_TOKEN.test(line)){
+    if(!row && hasCourseToken(line)){
       for(let lookahead=1;lookahead<=2 && i+lookahead<lines.length;lookahead+=1){
-        if(COURSE_TOKEN.test(lines[i+lookahead])) break
+        if(hasCourseToken(lines[i+lookahead])) break
         const combined=[line,...lines.slice(i+1,i+lookahead+1)].join(' ')
         row=parseLine(combined)
         if(row){consumed=lookahead;break}
@@ -127,7 +127,7 @@ export function parseTranscriptTextDetailed(text) {
     }
 
     if (!row) {
-      if (COURSE_TOKEN.test(line)) rejected.push({line,reason:'course-like row could not be parsed'})
+      if (hasCourseToken(line)) rejected.push({line,reason:'course-like row could not be parsed'})
       continue
     }
 
