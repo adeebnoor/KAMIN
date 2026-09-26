@@ -7,12 +7,15 @@ import { projectStateToPerson360 } from '../src/ontology/projector.js'
 
 describe('Kamin ontology stack', () => {
   it('reuses external standards rather than a monolithic local ontology', () => {
-    expect(ONTOLOGY_STACK.competency.standard).toMatch(/CASE/)
+    expect(ONTOLOGY_STACK.competencyExchange.standard).toMatch(/CASE/)
     expect(ONTOLOGY_STACK.skillsOccupations.standard).toBe('ESCO')
     expect(ONTOLOGY_STACK.workforceModel.standard).toMatch(/O\*NET/)
     expect(ONTOLOGY_STACK.provenance.standard).toMatch(/PROV-O/)
     expect(ONTOLOGY_STACK.classification.standard).toMatch(/SKOS/)
     expect(ONTOLOGY_STACK.privacy.standard).toMatch(/DPV/)
+    expect(ONTOLOGY_STACK.verifiableCredentials.version).toBe('2.0')
+    expect(ONTOLOGY_STACK.learnerRecord.version).toBe('2.0')
+    expect(ONTOLOGY_STACK.workforceModel.version).toBe('31.0')
   })
 
   it('keeps local extensions limited to qualified claims and matching concepts', () => {
@@ -54,9 +57,11 @@ describe('Person 360 provenance rules', () => {
 describe('Psychometric governance', () => {
   it('registers standards-based instruments and no home-grown diagnostic instrument', () => {
     expect(PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30.dimensions).toEqual(['Realistic','Investigative','Artistic','Social','Enterprising','Conventional'])
-    expect(PSYCHOMETRIC_INSTRUMENTS.ipip50Arabic.items).toBe(50)
+    expect(PSYCHOMETRIC_INSTRUMENTS.ipip50ArabicLevant.items).toBe(50)
     expect(PSYCHOMETRIC_GOVERNANCE.rules.join(' ')).toMatch(/never assume equal weights/i)
     expect(PSYCHOMETRIC_GOVERNANCE.prohibitedLabels).toContain('diagnosis')
+    expect(PSYCHOMETRIC_INSTRUMENTS.legacyOnetWorkValues.status).toBe('legacy-reference-only')
+    expect(PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30.status).toMatch(/arabic-adaptation-required/)
   })
 
   it('uses controlled preference vocabularies instead of free text for rule inputs', () => {
