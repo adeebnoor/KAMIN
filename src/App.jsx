@@ -6,6 +6,9 @@ import {
   UploadCloud, X,
 } from 'lucide-react'
 import { copy } from './i18n.js'
+import LandingExperience from './components/LandingExperience.jsx'
+import DecisionStudio from './components/DecisionStudio.jsx'
+import { canonicalCourseCode, reviewProfileQuality } from './utils/profileQuality.js'
 import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
@@ -133,200 +136,6 @@ function Header({ lang, setLang, onTry }) {
   </header>
 }
 
-function Hero({ lang, onTry }) {
-  const t = copy[lang]
-  const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight
-  return <section id="home" className="hero">
-    <div className="shell hero-grid">
-      <div className="hero-copy">
-        <span className="eyebrow"><GraduationCap size={16}/>{t.hero.eyebrow}</span>
-        <h1>{t.hero.title}</h1>
-        <p>{t.hero.text}</p>
-        <div className="hero-network-line" aria-label={lang === 'ar' ? 'رحلة كامن من الدليل إلى القرار' : 'Kamin journey from evidence to decision'}>
-          <span>{lang === 'ar' ? 'سجل + مشاريع' : 'Record + projects'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'ملف القدرات 360°' : 'Capability Profile 360°'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'ملاءمة مفسّرة' : 'Explainable fit'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'خطوة تالية' : 'Next step'}</span>
-        </div>
-        <div className="hero-actions">
-          <button className="button primary" onClick={onTry}>{t.hero.cta}<Arrow size={18}/></button>
-          <a className="button secondary" href={lang === 'ar' ? '/sample-report.html?lang=ar' : '/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}>{t.hero.secondary}</a>
-        </div>
-        <div className="privacy-chip"><ShieldCheck size={18}/><span>{t.hero.trust}</span></div>
-      </div>
-      <div className="hero-preview proof-preview" aria-label={lang === 'ar' ? 'معاينة تقرير قدرات كامن' : 'Kamin capability report preview'}>
-        <div className="proof-window">
-          <div className="proof-window-head"><span>{lang === 'ar' ? 'تقرير تجريبي · سارة' : 'Demo report · Sara'}</span><small>{lang === 'ar' ? 'بيانات وهمية' : 'Synthetic data'}</small></div>
-          <div className="proof-role"><small>{lang === 'ar' ? 'الهدف' : 'Target'}</small><strong>Junior Data Analyst</strong><span className="status conditional">{lang === 'ar' ? 'ملاءمة بشروط' : 'Fits with conditions'}</span></div>
-          <div className="proof-evidence">
-            <div><BadgeCheck size={17}/><span><b>SQL</b><small>{lang === 'ar' ? 'قواعد بيانات · دليل أكاديمي' : 'Database course · academic evidence'}</small></span></div>
-            <div><BadgeCheck size={17}/><span><b>Python</b><small>{lang === 'ar' ? 'مشروع تطبيقي' : 'Applied project'}</small></span></div>
-            <div className="proof-gap"><Target size={17}/><span><b>Cloud</b><small>{lang === 'ar' ? 'فجوة: لا يوجد دليل معتمد بعد' : 'Gap: no approved evidence yet'}</small></span></div>
-          </div>
-          <div className="proof-next"><strong>{lang === 'ar' ? 'الخطوة التالية' : 'Next step'}</strong><span>{lang === 'ar' ? 'أضف مشروعًا صغيرًا منشورًا على السحابة ثم أعد التقييم.' : 'Add a small cloud-deployed project, then re-evaluate.'}</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-}
-
-function ValueExample({ lang }) {
-  const v = copy[lang].value
-  return <section id="example" className="section value-section">
-    <div className="shell">
-      <div className="section-title"><span>03</span><div><small className="value-kicker">{v.kicker}</small><h2>{v.title}</h2><p>{v.intro}</p></div></div>
-      <div className="value-grid">
-        <article className="value-card traditional"><small>{v.traditional}</small><h3>{v.traditionalItems[0]}</h3><ul>{v.traditionalItems.slice(1).map(item=><li key={item}>{item}</li>)}</ul></article>
-        <article className="value-card kamin-value"><small>{v.kamin}</small><div className="value-signals">{v.signals.map(([type,title,evidence])=><div className="value-signal" key={type+title}><span>{type}</span><div><strong>{title}</strong><small>{evidence}</small></div></div>)}</div></article>
-      </div>
-      <div className="value-result"><ShieldCheck size={18}/><div><strong>{lang==='ar'?'النتيجة':'Outcome'}</strong><p>{v.result}</p><small>{v.demo}</small></div></div>
-    </div>
-  </section>
-}
-
-function Landing({ lang, onTry }) {
-  const t = copy[lang]
-  const stepIcons = [FileCheck2, Fingerprint, Target]
-  const trustIcons = [Fingerprint, FileCheck2, ShieldCheck, SearchCheck]
-  const personDimensions = lang === 'ar' ? [
-    ['01','أدلة أكاديمية','المقررات والنتائج التي راجعتها واعتمدتها أنت.'],
-    ['02','قدرات مرتبطة بمصدر','لا تظهر مهارة في الحكم دون أثر يمكن الرجوع إليه.'],
-    ['03','تفضيلات وأهداف','إشارات تختارها أنت لتخصيص القرار، ولا تتحول إلى دليل أكاديمي.'],
-    ['04','فجوات واضحة','ما لا نملك عليه دليلًا يبقى فجوة، لا استنتاجًا مخفيًا.'],
-  ] : [
-    ['01','Academic evidence','Courses and results that you reviewed and approved.'],
-    ['02','Source-linked capabilities','A skill does not enter a judgment without a traceable source.'],
-    ['03','Preferences and goals','Signals you choose for personalization; they do not become academic evidence.'],
-    ['04','Visible gaps','What lacks evidence remains a gap, not a hidden inference.'],
-  ]
-  const liveNow = lang === 'ar' ? [
-    ['استخراج السجل محليًا','PDF وصور، مع OCR داخل المتصفح ومراجعة قبل الاعتماد.'],
-    ['مهارات مرتبطة بالأدلة','الربط المعتمد فقط يؤثر في الحكم؛ المقرر غير المربوط لا يولد مهارة.'],
-    ['قرارات تعلم مفسّرة','لماذا تناسبك الدورة، وما الفجوة، وما الذي يجعلها مناسبة لاحقًا.'],
-    ['مطابقة وظائف وتدريب تجريبية','تعرض آليات الملاءمة والحدود دون نسبة رقمية غير معايرة.'],
-  ] : [
-    ['Local transcript ingestion','PDF and images with in-browser OCR and review before approval.'],
-    ['Evidence-linked skills','Only governed mappings affect judgments; unmapped courses create no skills.'],
-    ['Explainable learning decisions','Why a course fits, what is missing, and what could make it suitable later.'],
-    ['Pilot job & training matching','Shows fit mechanisms and limits without an uncalibrated numeric score.'],
-  ]
-  const notClaimed = lang === 'ar' ? [
-    'لا ننشر دقة نموذج غير مقاسة بعد.',
-    'لا ندّعي وجود شبكة شركات أو جامعات متعاقدة ما لم تكن موثقة.',
-    'لا توجد قرارات توظيف آلية أو حجب فرص عن المستخدم.',
-    'المدارس ومطابقة الأشخاص ليستا ضمن شريحة الإطلاق الأولى.',
-  ] : [
-    'We do not publish model-accuracy claims before measurement.',
-    'We do not imply signed university or employer networks without evidence.',
-    'Kamin does not make automated hiring decisions or block opportunities.',
-    'Schools and people-matching are outside the first launch wedge.',
-  ]
-  const institutionCards = lang === 'ar' ? [
-    ['الجامعات ومراكز الإرشاد المهني','Pilot لطلاب السنة الأخيرة والخريجين: ملف قدرات مملوك للطالب + فجوات برامج مجمّعة لاحقًا بعد بوابة الامتثال.','المسار الأول'],
-    ['أصحاب العمل','Employer-Lite لاحقًا: فتح تقرير بموافقة المرشح، رؤية الدليل، فهم الفجوات، وإرسال feedback.','المسار الثاني'],
-  ] : [
-    ['Universities & career centers','Pilot for final-year students and recent graduates: student-owned profiles plus aggregate program gaps after the compliance gate.','Primary path'],
-    ['Employers','Employer-Lite next: open a candidate report with consent, inspect evidence, understand gaps, and provide feedback.','Second path'],
-  ]
-  return <>
-    <Hero lang={lang} onTry={onTry}/>
-
-    <section className="journey-strip" aria-label={lang === 'ar' ? 'نموذج كامن' : 'Kamin model'}>
-      <div className="shell journey-grid">
-        {[
-          [lang === 'ar' ? 'اجمع' : 'Collect', lang === 'ar' ? 'الأدلة' : 'evidence'],
-          [lang === 'ar' ? 'ابنِ' : 'Build', lang === 'ar' ? 'ملف القدرات' : 'capability profile'],
-          [lang === 'ar' ? 'قارن' : 'Compare', lang === 'ar' ? 'بمتطلبات الفرصة' : 'to requirements'],
-          [lang === 'ar' ? 'افهم' : 'Explain', lang === 'ar' ? 'السبب والفجوة والتالي' : 'why, gap, next'],
-        ].map(([verb,noun],i)=><div className="journey-node" key={verb+noun}><span>{String(i+1).padStart(2,'0')}</span><div><small>{verb}</small><strong>{noun}</strong></div></div>)}
-      </div>
-    </section>
-
-    <section id="proof" className="section proof-section">
-      <div className="shell">
-        <div className="section-title"><span>01</span><div><small className="value-kicker">{lang === 'ar' ? 'إثبات قبل التوسع' : 'Proof before expansion'}</small><h2>{lang === 'ar' ? 'ما الذي يعمل اليوم فعلًا؟' : 'What actually works today?'}</h2><p className="section-lead">{lang === 'ar' ? 'بدل قائمة وعود واسعة، هذه حدود النسخة العامة الحالية وما نرفض الادعاء به قبل القياس.' : 'Instead of a broad promise list, this is the current public-release boundary—and what we refuse to claim before measurement.'}</p></div></div>
-        <div className="proof-grid">
-          <div className="proof-live"><div className="proof-label live">{lang === 'ar' ? 'Operational الآن' : 'Operational now'}</div>{liveNow.map(([title,text])=><article key={title}><Check size={18}/><div><strong>{title}</strong><p>{text}</p></div></article>)}</div>
-          <div className="proof-boundary"><div className="proof-label boundary">{lang === 'ar' ? 'لا ندّعيه بعد' : 'Not claimed yet'}</div>{notClaimed.map(item=><p key={item}><X size={16}/><span>{item}</span></p>)}</div>
-        </div>
-        <div className="proof-actions">
-          <a className="button primary" href={lang === 'ar' ? '/sample-report.html?lang=ar' : '/sample-report.html?lang=en'}>{lang === 'ar' ? 'افتح تقريرًا تجريبيًا' : 'Open a sample report'}</a>
-          <a className="button secondary" href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'اقرأ المنهجية' : 'Read methodology'}</a>
-          <a className="button secondary" href={lang === 'ar' ? '/trust.html?lang=ar' : '/trust.html?lang=en'}>{lang === 'ar' ? 'مركز الثقة' : 'Trust center'}</a>
-          <button className="button secondary" onClick={onTry}>{lang==='ar'?'جرّب رفع سجل ومقارنة حتى 3 دورات':'Try transcript upload & compare up to 3 courses'}</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="person360" className="section person360-section">
-      <div className="shell">
-        <div className="section-title"><span>02</span><div><small className="value-kicker">{lang === 'ar' ? 'ملف القدرات 360°' : 'Capability Profile 360°'}</small><h2>{lang === 'ar' ? 'ملف تملكه أنت، وليس “تقييمًا شاملًا” تملكه المؤسسة.' : 'A profile you own—not a 360° assessment owned by an institution.'}</h2><p className="section-lead">{lang === 'ar' ? 'الاسم الداخلي للمعمارية هو Person 360، لكن تجربة المستخدم تركز على ملكيتك لملف القدرات: أدلة، قدرات، تفضيلات، أهداف وفجوات منفصلة وقابلة للمراجعة.' : 'The internal architecture uses Person 360, but the user experience centers ownership: evidence, capabilities, preferences, goals, and gaps remain distinct and reviewable.'}</p></div></div>
-        <div className="person360-grid compact">{personDimensions.map(([n,title,text])=><article className="dimension-card" key={n}><span className="dimension-number">{n}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-        <div className="network-note"><ShieldCheck size={19}/><div><strong>{lang === 'ar' ? 'الذكاء الاصطناعي يقترح. الدليل يبرر. وأنت تقرر.' : 'AI suggests. Evidence justifies. You decide.'}</strong><span>{lang === 'ar' ? 'في النسخة العامة، البيانات تبقى في جلسة المتصفح ولا تُستخدم لتدريب نموذج مركزي.' : 'In the public release, profile data stays in the browser session and is not used to train a central model.'}</span></div></div>
-      </div>
-    </section>
-
-    <ValueExample lang={lang}/>
-
-    <section id="how" className="section">
-      <div className="shell">
-        <div className="section-title"><span>04</span><div><small className="value-kicker">{lang === 'ar' ? 'أول 10 دقائق' : 'The first 10 minutes'}</small><h2>{t.how.title}</h2></div></div>
-        <div className="cards-3">{t.how.steps.map(([title, text], i) => {
-          const Icon = stepIcons[i]
-          return <article className="info-card" key={title}><div className="icon-box"><Icon/></div><small>{String(i+1).padStart(2,'0')}</small><h3>{title}</h3><p>{text}</p></article>
-        })}</div>
-      </div>
-    </section>
-
-    <section id="institutions" className="section institutions-section">
-      <div className="shell">
-        <div className="section-title"><span>05</span><div><small className="value-kicker">{lang === 'ar' ? 'تركيز الإطلاق' : 'Launch wedge'}</small><h2>{lang === 'ar' ? 'طلاب السنة الأخيرة والخريجون أولًا. الجامعات والشركات ثانيًا.' : 'Final-year students and recent graduates first. Universities and employers second.'}</h2><p className="section-lead">{lang === 'ar' ? 'لا نستهدف المدارس أو كل فئات السوق بنفس القوة في البداية. المسار التجاري الأول هو B2B2C عبر جامعة أو برنامج واضح، ثم Employer-Lite لقياس الثقة والأثر.' : 'We are not targeting schools or every market segment equally at launch. The first commercial path is B2B2C through a focused university/program, followed by Employer-Lite to measure trust and outcomes.'}</p></div></div>
-        <div className="institution-grid focused">{institutionCards.map(([title,text,status],i)=>{const Icon=[GraduationCap,SearchCheck][i];return <article className="institution-card" key={title}><div className="institution-head"><span className="institution-badge"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
-        <div className="institution-demo-links">
-          <a href={lang==='ar'?'/advisor.html?lang=ar':'/advisor.html?lang=en'}><SearchCheck size={17}/><span><strong>{lang==='ar'?'عرض المرشد التجريبي':'Advisor demo'}</strong><small>{lang==='ar'?'بيانات وهمية · لا مشاركة فعلية':'Synthetic data · no live sharing'}</small></span></a>
-          <a href={lang==='ar'?'/admin.html?lang=ar':'/admin.html?lang=en'}><LayoutDashboard size={17}/><span><strong>{lang==='ar'?'عرض الإدارة التجريبي':'Administration demo'}</strong><small>{lang==='ar'?'تجميع وهمي · ليس analytics حقيقيًا':'Synthetic aggregate · not live analytics'}</small></span></a>
-          <a href={lang==='ar'?'/validation.html?lang=ar':'/validation.html?lang=en'}><ClipboardCheck size={17}/><span><strong>{lang==='ar'?'خطة التحقق H3/H4':'H3/H4 validation plan'}</strong><small>{lang==='ar'?'Protocol فقط · لا نتائج':'Protocol only · no results'}</small></span></a>
-        </div>
-        <div className="business-principle">
-          <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
-          <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك الملاءمة.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
-        </div>
-        <div className="national-positioning">
-          <div><small>{lang === 'ar' ? 'التموضع الوطني' : 'National interoperability posture'}</small><h3>{lang === 'ar' ? 'مكمّل للبنية الوطنية للمهارات — لا منصة موازية.' : 'Complement national skills infrastructure — do not duplicate it.'}</h3></div>
-          <p>{lang === 'ar'
-            ? 'كامن يركز على طبقة الدليل الجامعي المملوكة للفرد: ترجمة السجل والمشاريع إلى أدلة قدرات قابلة للتفسير والنقل. مستقبلًا نصمم للتوافق مع التصنيفات الوطنية والتكامل عبر API إذا أصبح مسار رسمي متاحًا؛ لا يوجد تكامل أو اعتماد حكومي معلن اليوم.'
-            : 'Kamin focuses on the individual-owned university evidence layer: translating records and projects into portable, explainable capability evidence. We design for national taxonomy alignment and future API interoperability if an official path becomes available; there is no claimed government integration or endorsement today.'}</p>
-          <a href={lang==='ar'?'/interoperability.html?lang=ar':'/interoperability.html?lang=en'}>{lang==='ar'?'اقرأ قرار التموضع والتكامل':'Read the interoperability decision'}</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="trust" className="section trust">
-      <div className="shell trust-grid">
-        <div className="trust-copy"><span className="eyebrow"><LockKeyhole size={16}/>Privacy by design</span><h2>{t.trustTitle}</h2><p>{t.compliance.text}</p><div className="trust-links"><a href={lang === 'ar' ? '/trust.html?lang=ar' : '/trust.html?lang=en'}>{lang === 'ar' ? 'مركز الثقة' : 'Trust center'}</a><a href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'المنهجية والحدود' : 'Methodology & limits'}</a><a href={lang === 'ar' ? '/privacy.html?lang=ar' : '/privacy.html?lang=en'}>{lang === 'ar' ? 'سياسة الخصوصية' : 'Privacy policy'}</a></div></div>
-        <div className="trust-cards">{t.trustItems.map(([title,text],i) => {
-          const Icon = trustIcons[i]
-          return <article key={title}><Icon/><h3>{title}</h3><p>{text}</p></article>
-        })}</div>
-      </div>
-    </section>
-
-    <section id="faq" className="section faq-section">
-      <div className="shell faq-grid">
-        <div className="section-title"><span>07</span><h2>{lang === 'ar' ? 'أسئلة قبل أن تثق بالتوصية' : 'Questions before you trust a recommendation'}</h2></div>
-        <div className="faq-list">
-          <details><summary>{lang === 'ar' ? 'هل كامن يقرر من يوظف؟' : 'Does Kamin decide who gets hired?'}</summary><p>{lang === 'ar' ? 'لا. النسخة الحالية أداة دعم قرار للفرد. لا تتخذ قرار توظيف، ولا تمنعك من فرصة، ولا تعرض نسبة ملاءمة غير معايرة.' : 'No. The current release is decision support for the individual. It does not make hiring decisions, block opportunities, or show an uncalibrated fit percentage.'}</p></details>
-          <details><summary>{lang === 'ar' ? 'من أين تأتي المهارات؟' : 'Where do skills come from?'}</summary><p>{lang === 'ar' ? 'لا يكفي اسم المقرر وحده. الحكم يستخدم فقط روابط مقررات → مخرجات تعلم → مهارات تم تعريفها صراحةً في طبقة الربط. المقرر غير المربوط يبقى ظاهرًا لكنه لا يولد مهارة.' : 'A course title is not enough. Judgments use only explicit course → learning-outcome → skill mappings. An unmapped course remains visible but creates no skill.'}</p></details>
-          <details><summary>{lang === 'ar' ? 'هل لديكم أرقام دقة منشورة؟' : 'Do you publish accuracy metrics?'}</summary><p>{lang === 'ar' ? 'ليس بعد. نعرض معايير التحقق المستهدفة في صفحة المنهجية، لكننا لا نقدم target على أنه result. أي precision/recall أو pilot metric يجب أن يأتي من اختبار موثق.' : 'Not yet. Methodology lists validation targets, but a target is never presented as a result. Precision, recall, and pilot metrics must come from documented evaluation.'}</p></details>
-          <details><summary>{lang === 'ar' ? 'أين تُحفظ بيانات النسخة العامة؟' : 'Where is public-release data stored?'}</summary><p>{lang === 'ar' ? 'محليًا داخل متصفحك. يمكنك اختيار حفظ الملف على هذا الجهاز عبر IndexedDB بموافقة صريحة، أو إبقاءه مؤقتًا للجلسة فقط. لا يوجد تخزين مركزي لملفك في النسخة العامة.' : 'Locally in your browser. With explicit consent you can keep the profile on this device in IndexedDB, or leave it session-only. This public release has no central profile storage.'}</p></details>
-        </div>
-      </div>
-    </section>
-
-    <section className="final-cta"><div className="shell final-cta-row"><div><small>{t.name}</small><h2>{lang === 'ar' ? 'من شهادة يصعب شرحها إلى ملف قدرات يمكن الدفاع عنه.' : 'From a hard-to-explain degree to a defensible capability profile.'}</h2><p>{lang === 'ar' ? 'ابدأ ببيانات وهمية، راجع كل دليل، وشاهد كيف يتحول إلى حكم مفسّر قبل رفع أي ملف حقيقي.' : 'Start with synthetic data, inspect every evidence link, and see how it becomes an explainable judgment before uploading a real file.'}</p></div><button className="button light" onClick={onTry}>{t.hero.cta}{lang === 'ar' ? <ArrowLeft/> : <ArrowRight/>}</button></div></section>
-  </>
-}
-
 function ValidationSummary({lang,validation}) {
   if(!validation) return null
   const rejected=validation.rejected||[]
@@ -356,20 +165,22 @@ function CourseReview({ lang, rows, setRows, onApprove, consent, setConsent }) {
   const t = copy[lang].app
   const [formOpen, setFormOpen] = useState(false)
   const [form, setForm] = useState({ code:'', name:'', grade:'' })
-  const update = (i,key,value) => setRows(rows.map((r,idx) => idx === i ? { ...r, [key]: value } : r))
+  const quality = reviewProfileQuality(rows)
+  const update = (i,key,value) => setRows(rows.map((r,idx) => idx === i ? { ...r, [key]: value, source: r.source === 'demo' ? 'demo' : 'manual', originalSource: r.originalSource || r.source || 'manual' } : r))
   const add = () => {
     if (!form.code.trim() || !form.name.trim() || !form.grade.trim()) return
-    setRows([...rows, { ...form, code: form.code.toUpperCase() }]); setForm({code:'',name:'',grade:''}); setFormOpen(false)
+    setRows([...rows, { ...form, code: canonicalCourseCode(form.code), source:'manual' }]); setForm({code:'',name:'',grade:''}); setFormOpen(false)
   }
   return <div className="panel">
     <div className="panel-head"><div><small>{t.review}</small><h3>{lang === 'ar' ? `${rows.length} مقررات مستخرجة` : `${rows.length} extracted courses`}</h3></div><button className="text-button" onClick={() => setFormOpen(v => !v)}><Plus size={17}/>{t.addRow}</button></div>
+    <div className={`quality-review ${quality.issues.length?'has-issues':''}`} role="status"><h4>{lang==='ar'?'معلومات صحيحة، مسار أنسب لك':'Accurate information, more relevant guidance'}</h4><p>{lang==='ar'?'طابق الرمز والدرجة مع سجلك الأصلي. لا ترفع الدرجة لتحسين النتيجة؛ نقطة البداية الصادقة تساعدك على اختيار تدريب يناسب استعدادك.':'Match codes and grades to your original record. Do not raise a grade to improve a result; an honest starting point helps you choose suitable training.'}</p>{quality.issues.length>0&&<ul>{quality.issues.map((issue,i)=><li key={i}>{lang==='ar'?`السطر ${issue.index+1}: `:`Row ${issue.index+1}: `}{issue.kind==='duplicate'?(lang==='ar'?'رمز مقرر مكرر؛ احتفظ بالمحاولة التي تريد اعتمادها.':'Duplicate course code; keep the attempt you intend to use.'):issue.kind==='grade'?(lang==='ar'?'صيغة درجة غير معروفة؛ استخدم A أو B+ أو درجة من 0 إلى 100.':'Unrecognized grade; use A, B+, or a score from 0 to 100.'):(lang==='ar'?'أكمل رمز المقرر واسمه ودرجته من المصدر.':'Complete the code, name and grade from the source.')}</li>)}</ul>}<p>{lang==='ar'?'هذا فحص اتساق فقط؛ مراجعتك لا تعني توثيقًا من الجامعة.':'This is a consistency check; your review is not university verification.'}</p></div>
     <div className="mapping-coverage" role="status"><strong>{rows.filter(row=>isMappedCourse(row.code)).length}/{rows.length||0}</strong><span>{lang==='ar'?'مقررات لها ربط قدرات محكوم حاليًا':'courses currently have governed capability mappings'}</span><a href={lang==='ar'?'/mapping.html?lang=ar':'/mapping.html?lang=en'} target="_blank" rel="noreferrer">{lang==='ar'?'منهجية الربط':'Mapping methodology'}</a></div>
     {formOpen && <div className="manual-row"><input aria-label={t.courseCode} placeholder="CPIT-251" value={form.code} onChange={e=>setForm({...form,code:e.target.value})}/><input aria-label={t.courseName} placeholder={t.courseName} value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/><input aria-label={t.grade} placeholder="A / B+" value={form.grade} onChange={e=>setForm({...form,grade:e.target.value})}/><button onClick={add}>{t.save}</button></div>}
     <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th>{lang==='ar'?'حالة الربط':'Mapping'}</th><th>{lang==='ar'?'سياق البرنامج الوطني':'National programme context'}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
       {rows.map((r,i)=>{const national=ssceForCourse(r);return <tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><span className={isMappedCourse(r.code)?'mapping-badge mapped':'mapping-badge unmapped'}>{isMappedCourse(r.code)?(lang==='ar'?'ربط مهارة معتمد حاليًا':'Current governed skill mapping'):(lang==='ar'?'غير مربوط بمهارة بعد':'Not skill-mapped yet')}</span></td><td>{national?<span className="ssce-inline"><b>{national.code}</b><small>{national.labels[lang]}</small></span>:<span className="ssce-none">{lang==='ar'?'غير مستدل من رمز المقرر':'Not inferred from course namespace'}</span>}</td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>})}
     </tbody></table></div>
     {rows.some(r=>!isMappedCourse(r.code))&&<div className="mapping-note"><SearchCheck size={17}/><span>{lang==='ar'?'المقرر غير المربوط يبقى في سجلك لكنه لا ينتج مهارة أو يؤثر في الحكم حتى يعتمد القسم ربطه بمخرج تعلم ومهارة.':'An unmapped course stays in your record but creates no skill and affects no judgment until the department approves a learning-outcome-to-skill mapping.'}</span></div>}
-    <div className="approval approval-consent"><label><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>{lang === 'ar' ? 'أوافق صراحةً على تحليل هذا السجل لبناء ملف مهاراتي بعد مراجعتي له.' : 'I explicitly consent to analyzing this record to build my skills profile after reviewing it.'}</span></label><button className="button primary" disabled={!rows.length || !consent} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
+    <div className="approval approval-consent"><label><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>{lang === 'ar' ? 'أوافق صراحةً على تحليل هذا السجل لبناء ملف مهاراتي بعد مراجعتي له.' : 'I explicitly consent to analyzing this record to build my skills profile after reviewing it.'}</span></label><button className="button primary" disabled={!quality.canApprove || !consent} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
   </div>
 }
 
@@ -424,10 +235,10 @@ function StudentInsight({ lang, state, setState, log }) {
   const grant=()=>{
     if(!agree) return
     setState(s=>({...s,consents:{...s.consents,insight:true},insight:{...emptyInsightState(),...(s.insight||{})},audit:[{label:lang==='ar'?'منح موافقة بصمة الطالب 360':'Student 360 consent granted',ts:Date.now()},...s.audit]}))
-    log(lang==='ar'?'بدء ملف Person 360':'Person 360 profile started')
+    log(lang==='ar'?'بدء ملف التفضيلات':'Preference profile started')
   }
   const updatePreference=(schemeId,optionId)=>{
-    setState(s=>({...s,insight:setDeclaredPreference(s.insight||emptyInsightState(),schemeId,optionId)}))
+    setState(s=>{const current=s.insight||emptyInsightState();if(!optionId){const prefs={...current.declaredPreferences};delete prefs[schemeId];return {...s,insight:{...current,declaredPreferences:prefs}}}return {...s,insight:setDeclaredPreference(current,schemeId,optionId)}})
     log(lang==='ar'?'تحديث تفضيل منظم':'Structured preference updated')
   }
   if(!state.consents.insight){
@@ -444,8 +255,9 @@ function StudentInsight({ lang, state, setState, log }) {
   }
   return <div className="student-insight">
     <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وتدخل الآن فقط كإشارات تفضيل منخفضة المخاطر في المطابقة. المقاييس السيكومترية المعيارية تبقى مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared and now act only as low-risk preference signals in matching. Standardized psychometric instruments remain separate until implementation and validation are complete.'}</p></div>
-    <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
-      <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
+    <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختر ما يشبهك اليوم':'Choose what reflects you today'}</h3></div></div>
+      <p className="preference-benefit">{lang==='ar'?'هذه إجابات اختيارية لفهم اتجاهك، وليست اختبارًا تنجح أو ترسب فيه. الاهتمام وقيم العمل والتعاون تساعد على شرح توافق السياق؛ التعلم والإيقاع والمسؤولية تُحفظ في ملفك ولا تغيّر المطابقة حاليًا.':'These optional answers describe your direction; they are not a pass/fail test. Interests, values and collaboration inform contextual explanations. Learning mode, pace and responsibility are saved but do not currently affect matching.'}</p>
+      <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'لم أحدد بعد / لا أرغب بالإجابة':'Undecided / prefer not to answer'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
     </div>
     <div className="app-title compact"><small>{lang==='ar'?'مسار بحثي منفصل':'Separate research track'}</small><h2>{lang==='ar'?'أدوات مرشحة للمعايرة السعودية — لا تؤثر على الملاءمة':'Candidate instruments for Saudi validation — no Fit effect'}</h2></div>
     <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
@@ -816,10 +628,10 @@ function KaminApp({ lang, onClose }) {
     } finally { setProcessing(false); setProgress(0) }
   }
   const approve = () => {
-    if (!reviewConsent) return
+    if (!reviewConsent || !reviewProfileQuality(draft).canApprove) return
     const approvedSkills=inferSkills(draft)
     setChangeSummary({type:'approve',courses:draft.length,skills:approvedSkills.length,ts:Date.now()})
-    setState(s=>({...s,courses:draft,approved:true,consents:{...s.consents,analyze:true},audit:[{label:lang==='ar'?'منح موافقة تحليل السجل واعتماده':'Transcript analysis consent granted and record approved',ts:Date.now()},...s.audit]}))
+    setState(s=>({...s,courses:draft.map(row=>({...row,code:canonicalCourseCode(row.code),source:row.source||'manual'})),approved:true,consents:{...s.consents,analyze:true},audit:[{label:lang==='ar'?'منح موافقة تحليل السجل واعتماده':'Transcript analysis consent granted and record approved',ts:Date.now()},...s.audit]}))
     setView('dashboard')
     trackPilotEvent('profile_completed')
     setNotice(lang==='ar' ? 'تم اعتماد السجل. اختر “الاحتفاظ بملفي على هذا الجهاز” إذا أردت العودة إليه بعد إغلاق المتصفح.' : 'Transcript approved. Choose “Keep my profile on this device” if you want it available after closing the browser.')
@@ -890,6 +702,7 @@ function KaminApp({ lang, onClose }) {
 
   const nav = [
     ['dashboard',LayoutDashboard,t.app.dashboard],
+    ['studio',SearchCheck,lang==='ar'?'شبكتي ومساعدي':'My network & guide'],
     ['skills',GraduationCap,t.app.skills],
     ['insight',Fingerprint,t.app.insight],
     ['matches',SearchCheck,t.app.matches],
@@ -907,11 +720,12 @@ function KaminApp({ lang, onClose }) {
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public release'}</span></div>
       </aside>
       <div className="app-main">
-        <header className="app-topbar"><div><small>{t.app.title}</small><strong>{state.approved?(lang==='ar'?'ملف معتمد':'Approved profile'):(lang==='ar'?'إصدار عام':'Public release')}</strong></div><div><button ref={closeButtonRef} className="icon-button" onClick={onClose} aria-label={lang==='ar'?'إغلاق':'Close'}><X/></button></div></header>
+        <header className="app-topbar"><div><small>{t.app.title}</small><strong>{state.approved?(lang==='ar'?'ملف راجعته أنت':'Student-reviewed profile'):(lang==='ar'?'إصدار عام':'Public release')}</strong></div><div><button ref={closeButtonRef} className="icon-button" onClick={onClose} aria-label={lang==='ar'?'إغلاق':'Close'}><X/></button></div></header>
         {notice&&<div className="toast" role="status" aria-live="polite"><Check size={18}/><span>{notice}</span></div>}
         <div className="app-content-wrap" role="main">
           {view==='start' && <section className="app-content onboarding">
             <div className="app-title"><small>01</small><h2>{t.app.title}</h2><p>{t.app.intro}</p></div>
+            <div className="onboarding-benefit"><strong>{lang==='ar'?'ماذا ستحصل عليه مقابل معلوماتك؟':'What will your information give you?'}</strong><p>{lang==='ar'?'السجل يكشف روابط قدراتك. الهدف يوجّه استكشافك. نعرض النتيجة وحدودها قبل أن تطلب مشاركة أي شيء.':'Your record reveals capability links. Your goal directs exploration. Review the result and its limits before choosing to share anything.'}</p></div>
             <div className="onboarding-primary">
               <a className="sample-first-link" href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد التقرير التوضيحي أولًا — بدون رفع أي ملف':'View the synthetic report first — no upload required'}</a>
               <button className="onboarding-upload" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><div><small>{lang==='ar'?'المسار الموصى به':'Recommended start'}</small><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></div></button>
@@ -935,12 +749,15 @@ function KaminApp({ lang, onClose }) {
               ? (lang==='ar'?'ملفك محفوظ محليًا على هذا الجهاز بموافقتك. لا توجد نسخة مركزية لدى كامن.':'Your profile is persistently saved on this device with your consent. Kamin keeps no central copy.')
               : (lang==='ar'?'ملفك مؤقت في جلسة المتصفح الحالية فقط. فعّل الحفظ المحلي أدناه إذا أردت العودة إليه لاحقًا.':'Your profile is session-only right now. Enable local device saving below if you want to return later.')}</span></div>
             {!state.localPersistence&&!persistenceDismissed&&<div className="local-save-prompt"><div><LockKeyhole size={20}/><span><strong>{lang==='ar'?'هل تريد الاحتفاظ بملفك على هذا الجهاز؟':'Keep your profile on this device?'}</strong><small>{lang==='ar'?'يُحفظ محليًا عبر IndexedDB بعد موافقتك، ويمكنك حذفه بالكامل في أي وقت.':'With your consent it is stored locally in IndexedDB and can be fully deleted at any time.'}</small></span></div><div><button className="button primary" onClick={()=>changePersistence(true)}>{lang==='ar'?'نعم، احتفظ بملفي':'Yes, keep my profile'}</button><button className="button secondary" onClick={()=>setPersistenceDismissed(true)}>{lang==='ar'?'ليس الآن':'Not now'}</button></div></div>}
+            <div className="dashboard-studio-prompt"><div><h3>{lang==='ar'?'شاهد الروابط التي صنعت هذه النتيجة':'See the connections behind your result'}</h3><p>{lang==='ar'?'شبكة قدرات تفاعلية، إجابات مستندة إلى ملفك، وخطة للخطوة التالية.':'An interactive capability network, grounded answers, and a plan for your next step.'}</p></div><button className="button primary" onClick={()=>setView('studio')}>{lang==='ar'?'افتح شبكتي ومساعدي':'Open my network & guide'}</button></div>
+            <button className="text-button record-review-button" onClick={()=>{setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}}>{lang==='ar'?'راجع وصحح بيانات سجلي':'Review and correct my record'}</button>
             <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى قوة دليل':'Highest evidence strength'}</span><strong>{skills[0]?evidenceStrengthText(skills[0].confidenceLabel,lang):'—'}</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'الحكم الأعلى حاليًا':'Current top judgment'}</span><strong>{nextDecision?t.app.fit[nextDecision.status]:'—'}</strong><small>{nextDecision?.title[lang]||(lang==='ar'?'أضف دليلًا معتمدًا أولًا':'Add approved evidence first')}</small></article></div>
             <EducationClassificationCard lang={lang} classification={educationClassification}/>
             <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=><div className="skill-row" key={s.id}><span>{s.labels[lang]}</span><div><i className={s.confidenceLabel||'low'}/></div><b>{evidenceStrengthText(s.confidenceLabel,lang)}</b></div>)}</div>
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
             {nextDecision?<div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{nextDecision.title[lang]}</h3></div><span className={`status ${nextDecision.status}`}>{t.app.fit[nextDecision.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{t.app.fit[nextDecision.status]}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{nextDecision.reasons.map((reason,i)=><p key={i}><Check size={15}/>{reason}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {nextDecision.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>:<div className="panel decision decision-locked"><LockKeyhole size={28}/><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{lang==='ar'?'أضف أو اعتمد مقررًا مرتبطًا بقدرة لفتح أول توصية':'Add or approve capability-linked coursework to unlock your first recommendation'}</h3><p>{lang==='ar'?'لا يعرض كامن حكم دورة عندما لا توجد أي مهارة مدعومة بالدليل. يمكنك مراجعة السجل أو إضافة مقرر يدويًا.':'Kamin does not render a course judgment when the profile has zero evidence-backed skills. Review your transcript or add a course manually.'}</p></div></div>}<PilotFeedback lang={lang}/>
           </section>}
+          {view==='studio' && <section className="app-content"><DecisionStudio lang={lang} matches={matches} state={state} onReview={()=>{setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('dashboard')}/></section>}
           {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer lang={lang} profile={matchProfile} matches={matches}/></section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
@@ -966,7 +783,7 @@ class AppErrorBoundary extends Component {
 }
 
 export default function App() {
-  const [lang,setLang] = useState(()=>new URLSearchParams(window.location.search).get('lang')||localStorage.getItem('kamin-lang')||'ar')
+  const [lang,setLang] = useState(()=>[new URLSearchParams(window.location.search).get('lang'),localStorage.getItem('kamin-lang')].find(value=>['ar','en'].includes(value))||'ar')
   const [appOpen,setAppOpen] = useState(false)
   const appTriggerRef=useRef(null)
   const openApp=()=>{appTriggerRef.current=document.activeElement;setAppOpen(true)}
@@ -1017,9 +834,11 @@ export default function App() {
   },[lang])
   useEffect(()=>{ document.body.style.overflow=appOpen?'hidden':''; return()=>{document.body.style.overflow=''} },[appOpen])
   return <>
+    <div inert={appOpen} aria-hidden={appOpen?true:undefined}>
     <Header lang={lang} setLang={setLang} onTry={openApp}/>
-    <main id="main"><Landing lang={lang} onTry={openApp}/></main>
+    <main id="main"><LandingExperience lang={lang} onTry={openApp}/></main>
     <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href={lang==='ar'?'/privacy.html?lang=ar':'/privacy.html?lang=en'}>{lang==='ar'?'الخصوصية':'Privacy'}</a><a href={lang==='ar'?'/faq.html?lang=ar':'/faq.html?lang=en'}>{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a><a href={lang==='ar'?'/stories.html?lang=ar':'/stories.html?lang=en'}>{lang==='ar'?'قصص المستخدمين':'User stories'}</a><a href={lang==='ar'?'/validation.html?lang=ar':'/validation.html?lang=en'}>{lang==='ar'?'التحقق':'Validation'}</a></div></div></footer>
+    </div>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp}/></AppErrorBoundary>}
   </>
 }

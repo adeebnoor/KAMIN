@@ -1,0 +1,55 @@
+import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
+async function openProfile(page) {
+ await page.goto('/?lang=ar')
+ await page.getByRole('button',{name:'ابدأ برفع سجلك'}).first().click()
+ await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي'}).click()
+ await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+ await page.getByRole('button',{name:/أعتمد السجل/}).click()
+}
+test('network connections explain a source and layout fits mobile',async({page})=>{
+ await page.goto('/?lang=ar')
+ await page.getByRole('button',{name:/CPIT-260 مصدر المعلومة/}).click()
+ await expect(page.locator('.network-explanation')).toContainText('لم تتحقق الجامعة')
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
+ const rects=await page.locator('.graph-node').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}))
+ for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++)expect(rects[i].left<rects[j].right&&rects[i].right>rects[j].left&&rects[i].top<rects[j].bottom&&rects[i].bottom>rects[j].top).toBe(false)
+})
+test('guide and plan use selected target without creating new evidence',async({page})=>{
+ await openProfile(page)
+ await page.getByRole('button',{name:'افتح شبكتي ومساعدي'}).click()
+ await page.getByLabel('المسار الذي أريد استكشافه').selectOption('job-cyber-analyst')
+ await expect(page.getByRole('dialog').locator('.network-explanation')).toBeVisible()
+ await expect(page.getByRole('button',{name:'إغلاق',exact:true})).toBeInViewport()
+ if(page.viewportSize().width>900){
+  const sidebar=await page.locator('.app-sidebar').boundingBox()
+  const main=await page.locator('.app-main').boundingBox()
+  expect(sidebar.x).toBeGreaterThan(main.x)
+ }
+ const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
+ await page.getByRole('tab',{name:'مساعد القرار'}).click()
+ await page.getByLabel('اختر سؤالك').selectOption('missing')
+ await expect(page.locator('.guide-answer')).toContainText('لا يوجد حتى الآن مسار دليل')
+ await page.getByRole('tab',{name:'خطة التطوير'}).click()
+ await expect(page.locator('.studio-plan')).toContainText('أساسيات الأمن السيبراني')
+ const download=page.waitForEvent('download')
+ await page.getByRole('button',{name:'تنزيل الخطة'}).click()
+ expect((await download).suggestedFilename()).toBe('kamin-development-plan.txt')
+ expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
+ const results=await new AxeBuilder({page}).analyze()
+ expect(results.violations.filter(v=>['serious','critical'].includes(v.impact))).toEqual([])
+})
+test('invalid grades and repeated courses cannot be approved',async({page})=>{
+ await openProfile(page)
+ await page.getByRole('button',{name:'راجع وصحح بيانات سجلي'}).click()
+ await page.getByLabel('الدرجة 1',{exact:true}).fill('AAA')
+ await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+ await expect(page.getByRole('button',{name:/أعتمد السجل/})).toBeDisabled()
+ await expect(page.locator('.quality-review')).toContainText('صيغة درجة غير معروفة')
+})
+test('English network and guide retain grounded explanations',async({page})=>{
+ await page.goto('/?lang=en')
+ await page.getByRole('button',{name:/CPIT-260 Evidence source/}).click()
+ await expect(page.locator('.network-explanation')).toContainText('not institutionally verified')
+ await expect(page.locator('html')).toHaveAttribute('dir','ltr')
+})

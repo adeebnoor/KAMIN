@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1:visible')).toContainText('حوّل شهادتك ومشاريعك')
+  await expect(page.locator('h1:visible')).toContainText('قدراتك مترابطة')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
@@ -20,7 +20,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1:visible')).toContainText('Turn your degree and projects')
+  await expect(page.locator('h1:visible')).toContainText('Your skills connect')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {
@@ -69,11 +69,11 @@ test('approved Kamin session gives explicit local-save confirmation', async ({ p
 
 test('proof-first landing exposes fictional evidence and transparent boundaries', async ({ page, request }) => {
   await page.goto('/')
-  await expect(page.locator('#proof')).toContainText('ما الذي يعمل اليوم فعلًا؟')
-  await expect(page.locator('#proof')).toContainText('لا ندّعيه بعد')
-  await page.locator('#example').scrollIntoViewIfNeeded()
-  await expect(page.locator('#example')).toContainText('مثال توضيحي لطالبة افتراضية')
-  await expect(page.locator('#example')).toContainText('PMP')
+  await expect(page.locator('#proof')).toContainText('ملف واحد. علاقات تكشف أكثر.')
+  await expect(page.locator('#proof')).toContainText('المسارات أمثلة مرجعية')
+  await page.locator('#home').scrollIntoViewIfNeeded()
+  await expect(page.locator('#home')).toContainText('مثال تفاعلي · بيانات وهمية')
+  await expect(page.locator('#person360')).toContainText('صلاحية التوصيات هنا تحتاج تحققًا مستقلًا')
 
   for (const path of ['/sample-report.html','/methodology.html','/trust.html','/interoperability.html']) {
     const response = await request.get(path)
@@ -241,7 +241,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByRole('button', { name: /فرصي/ }).first().click()
   await expect(page.getByText(/فرصك المفسّرة/)).toBeVisible()
-  await expect(page.getByText(/محلل بيانات/)).toBeVisible()
+  await expect(page.getByRole('dialog').getByRole('heading',{name:'محلل بيانات',exact:true})).toBeVisible()
   await expect(page.getByText(/فجوات أو حدود/).first()).toBeVisible()
   await expect(page.locator('.match-explorer')).not.toContainText(/\d+%/)
   await expect(page.getByText(/غير معاير رقميًا/).first()).toBeVisible()
