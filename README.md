@@ -4,21 +4,31 @@
 
 🌐 **Live public pilot:** https://kamin-12mf.onrender.com
 
-The pilot is continuously deployed from `main` after code changes and protected by a GitHub quality gate (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
+The pilot is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
 Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public pilot experience built from BRD v3.1.
 
 ## Public pilot privacy model
 
-- Transcript parsing runs in the browser.
+- Transcript parsing and OCR run inside the browser.
+- OCR worker, WASM core, and Arabic/English language data are served from the Kamin origin; transcript content is not sent to an OCR API.
 - No transcript is centrally stored by this static pilot.
 - Extracted courses are shown for user review before any inference.
-- All pilot profile data lives in browser local storage and can be exported or deleted.\n- Image OCR is disabled in the public pilot until OCR worker/core/language assets are fully self-hosted; text PDFs and manual entry remain available.
+- Pilot profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` data are migrated out and removed.
 - Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
+
+## Evidence and skill mapping
+
+- Parsing a course is not the same as mapping it to a skill.
+- Student judgments use only explicitly approved course → learning outcome → skill mappings.
+- An unmapped course remains visible in the record but creates no skill and changes no judgment.
+- Semantic similarity / embeddings may be used later to **suggest candidate mappings to a department reviewer**. They are not accepted as direct evidence until a human reviewer approves the mapping.
 
 ## Quality gates
 
 `npm run check` runs deterministic engine tests, a production build, browser journeys on desktop/mobile Chromium, and an axe accessibility scan for serious/critical issues.
+
+The production build also generates PWA icons, a horizontal social card, and self-hosted OCR runtime assets.
 
 ## Compliance posture
 
