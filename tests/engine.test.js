@@ -117,7 +117,7 @@ describe('SASCED-20 academic context layer', () => {
     expect(it.broad.code).toBe('06')
     expect(it.narrow.code).toBe('061')
     expect(it.detailed.code).toBe('0613')
-    expect(it.ar).toBe('تقنية المعلومات')
+    expect(it.labels.ar).toBe('تقنية المعلومات')
   })
 
   it('does not infer an academic specialty from a generic course title alone', () => {
