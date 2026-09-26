@@ -46,7 +46,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld','/knowledge/ict-kg-v1.jsonld','/faq.html','/mapping.html','/mapping/course-skill-map-v1.json','/mapping/course-skill-map.schema.json','/static-i18n.js','/404.html']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld','/knowledge/ict-kg-v1.jsonld','/faq.html','/mapping.html','/mapping/course-skill-map-v1.json','/mapping/course-skill-map.schema.json','/static-i18n.js','/404.html','/advisor.html','/admin.html','/validation.html','/stories.html']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -358,7 +358,7 @@ test('psychometric instruments are visibly research-only until Saudi validation'
   await page.getByRole('button', { name: 'بصمتي' }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
-  await expect(page.getByText(/لا تؤثر على Fit/)).toBeVisible()
+  await expect(page.getByText(/لا تؤثر على الملاءمة/)).toBeVisible()
   await expect(page.getByText(/research-candidate-saudi-validation-required/).first()).toBeVisible()
 })
 
@@ -475,7 +475,7 @@ test('Data Analyst golden path exposes external knowledge and learning bridges',
   await expect(card).toContainText('STAT-201')
   await expect(card).toContainText('ESCO 2511.3')
   await expect(card).toContainText('O*NET-SOC 15-2051.01')
-  await expect(card).toContainText('إشارات تطويرية — لا تغيّر حكم Fit')
+  await expect(card).toContainText('إشارات تطويرية — لا تغيّر حكم الملاءمة')
   await expect(card).toContainText('Python')
   await expect(card).toContainText('Power BI')
   await expect(card).toContainText('الجسر التالي المقترح')
@@ -614,4 +614,92 @@ test('dedicated FAQ and branded 404 assets are shipped', async ({ page, request 
   await expect(page.locator('h1:visible')).toContainText('Questions before you trust a recommendation')
   await page.goto('/404.html?lang=ar')
   await expect(page.locator('h1:visible')).toContainText('هذه الصفحة غير موجودة')
+})
+
+
+test('BRD visibility surfaces are public and explicitly non-operational where required', async ({ page, request }) => {
+  for(const path of ['/advisor.html','/admin.html','/validation.html','/stories.html']){
+    const response=await request.get(path)
+    expect(response.ok(), path).toBeTruthy()
+  }
+
+  await page.goto('/advisor.html?lang=ar')
+  await expect(page.locator('h1:visible')).toContainText('ماذا يرى المرشد')
+  await expect(page.getByText(/لا توجد مشاركة فعلية/).first()).toBeVisible()
+
+  await page.goto('/admin.html?lang=ar')
+  await expect(page.locator('h1:visible')).toContainText('لوحة الإدارة')
+  await expect(page.getByText(/لا توجد cohort analytics حقيقية/)).toBeVisible()
+
+  await page.goto('/stories.html?lang=ar')
+  await expect(page.getByText(/0 قصص حقيقية منشورة حاليًا/)).toBeVisible()
+  await expect(page.getByText(/لن ننشر قصة حقيقية قبل وجود موافقة حقيقية/)).toBeVisible()
+})
+
+test('validation page resolves prototype decisions without inventing research results', async ({ page }) => {
+  await page.goto('/validation.html?lang=ar')
+  const ar=page.locator('[data-kamin-lang="ar"]:visible')
+  await expect(page.locator('h1:visible')).toContainText('ما حُسم، وما بقي بحثيًا')
+  await expect(ar.locator('b').filter({hasText:/^D-05$/})).toBeVisible()
+  await expect(ar.getByText(/قسم تقنية المعلومات/)).toBeVisible()
+  await expect(ar.locator('b').filter({hasText:/^D-01$/})).toBeVisible()
+  await expect(ar.getByText(/لا يوجد نموذج عربي توليدي/)).toBeVisible()
+  await expect(ar.locator('b').filter({hasText:/^H3$/})).toBeVisible()
+  await expect(ar.getByText(/خطة — لا نتائج/).first()).toBeVisible()
+  await expect(ar.locator('b').filter({hasText:/^H4$/})).toBeVisible()
+  await expect(ar.getByText(/لا تدعي وجود موافقة أخلاقية/)).toBeVisible()
+})
+
+test('FR-09 what-changed message appears after deposit and approval', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
+  await expect(page.locator('.what-changed')).toContainText(/ما الذي تغيّر بعد الإيداع/)
+  await expect(page.locator('.what-changed')).toContainText(/6 مقرر/)
+
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await page.getByRole('button',{name:/أعتمد السجل/}).click()
+  await expect(page.locator('.what-changed')).toContainText(/ما الذي تغيّر بعد الاعتماد/)
+  await expect(page.locator('.what-changed')).toContainText(/5 قدرة/)
+})
+
+test('FR-09 what-changed message appears after transcript consent withdrawal', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await page.getByRole('button',{name:/أعتمد السجل/}).click()
+  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  const analyze=page.getByRole('checkbox',{name:/تحليل السجل وبناء ملف المهارات/})
+  await expect(analyze).toBeChecked()
+  await analyze.uncheck()
+  await expect(page.locator('.what-changed')).toContainText(/ما الذي تغيّر بعد سحب موافقة السجل/)
+  await expect(page.locator('.what-changed')).toContainText(/6 مقرر/)
+  await expect(page.locator('.what-changed')).toContainText(/5 قدرة/)
+})
+
+test('skill cards surface governed evidence level beside evidence strength', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await page.getByRole('button',{name:/أعتمد السجل/}).click()
+  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  const card=page.locator('.skill-card').first()
+  await expect(card).toContainText('مستوى الإثبات')
+  await expect(card).toContainText('ربط محكوم')
+})
+
+test('public sample makes three-course comparison capability discoverable', async ({ page }) => {
+  await page.goto('/sample-report.html?lang=ar')
+  await expect(page.getByRole('heading',{name:/مقارنة 3 مسارات تعلم/})).toBeVisible()
+  await expect(page.getByRole('columnheader',{name:'SQL للمحللين'})).toBeVisible()
+  await expect(page.getByRole('columnheader',{name:'Python للتحليل'})).toBeVisible()
+  await expect(page.getByRole('columnheader',{name:'BI Dashboard'})).toBeVisible()
+})
+
+test('privacy page explains that hosting serves assets but does not receive transcript bytes', async ({ page }) => {
+  await page.goto('/privacy.html?lang=ar')
+  await expect(page.getByText(/الخادم المستضيف يقدّم ملفات الموقع وJavaScript وملفات OCR فقط/)).toBeVisible()
+  await expect(page.getByText(/يُقرأ كـbytes داخل المتصفح/)).toBeVisible()
 })
