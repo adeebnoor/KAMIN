@@ -3,8 +3,8 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1')).toContainText('قيمتك')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await expect(page.locator('h1')).toContainText('حوّل شهادتك ومشاريعك')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
@@ -20,7 +20,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1')).toContainText('not your GPA alone')
+  await expect(page.locator('h1')).toContainText('Turn your degree and projects')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {
@@ -48,7 +48,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/ontology/kamin-context.jsonld']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -56,7 +56,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
 
 test('approved Kamin session gives explicit local-save confirmation', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
@@ -69,18 +69,23 @@ test('approved Kamin session gives explicit local-save confirmation', async ({ p
   expect(storage.legacy).toBeNull()
 })
 
-test('value-first landing includes an explicitly fictional example', async ({ page }) => {
+test('proof-first landing exposes fictional evidence and transparent boundaries', async ({ page, request }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /شاهد مثال/ }).click()
-  await expect(page.locator('#example')).toContainText('من سطر في السيرة إلى قيمة لها دليل')
+  await expect(page.locator('#proof')).toContainText('ما الذي يعمل اليوم فعلًا؟')
+  await expect(page.locator('#proof')).toContainText('لا ندّعيه بعد')
+  await page.locator('#example').scrollIntoViewIfNeeded()
   await expect(page.locator('#example')).toContainText('مثال توضيحي لطالبة افتراضية')
   await expect(page.locator('#example')).toContainText('PMP')
-  await expect(page.locator('#example')).toContainText('بعدها ستستطيع')
+
+  for (const path of ['/sample-report.html','/methodology.html','/trust.html']) {
+    const response = await request.get(path)
+    expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
+  }
 })
 
 test('analysis consent is off by default and gates approval', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   const consent=page.getByRole('checkbox', { name: /أوافق صراحةً/ })
   await expect(consent).not.toBeChecked()
@@ -92,11 +97,11 @@ test('analysis consent is off by default and gates approval', async ({ page }) =
 test('app dialog supports Escape and mobile usage log navigation', async ({ page }) => {
   await page.setViewportSize({width:390,height:844})
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toBeHidden()
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await expect(page.getByRole('button', { name: /سجل الاستخدام/ })).toBeVisible()
 })
 
@@ -119,7 +124,7 @@ test('manifest uses installable PNG icons and local OCR assets are same-origin',
 
 test('a failed upload path never injects demo courses', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   const input=page.locator('#kamin-transcript-file')
   await input.setInputFiles({name:'not-a-transcript.txt',mimeType:'text/plain',buffer:Buffer.from('hello world')})
   await expect(page.getByRole('alert')).toContainText(/لم نتعرف على مقررات/)
@@ -129,7 +134,7 @@ test('a failed upload path never injects demo courses', async ({ page }) => {
 
 test('Kamin does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
@@ -143,7 +148,7 @@ test('Kamin does not present heuristic mastery or fit percentages as calibrated 
 
 test('upload validation surfaces a non-binding SASCED academic context candidate', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   const input=page.locator('#kamin-transcript-file')
   await input.setInputFiles({
     name:'it-transcript.txt',
@@ -158,7 +163,7 @@ test('upload validation surfaces a non-binding SASCED academic context candidate
 
 test('approved demo surfaces Saudi national classification context without turning it into a skill', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
@@ -170,7 +175,7 @@ test('approved demo surfaces Saudi national classification context without turni
 
 test('Person 360 is optional, structured, and available before transcript approval', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: 'بصمتي' }).first().click()
   await expect(page.getByText(/بصمتك قبل التوصية/)).toBeVisible()
   await expect(page.getByText(/لا يوجد تشخيص نفسي/)).toBeVisible()
@@ -195,7 +200,7 @@ test('Person 360 is optional, structured, and available before transcript approv
 
 test('withdrawing Person 360 consent clears only the insight layer', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: 'بصمتي' }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
@@ -228,7 +233,7 @@ test('canonical JSON-LD ontology context is published with verified namespaces',
 
 test('Person 360 drives explainable job and training matches without a magic score', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /بصمتي/ }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
@@ -245,7 +250,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
 
 test('academic evidence can move a reference job from conditional to fits while psychometrics never override gaps', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
@@ -275,11 +280,29 @@ test('legacy pilot session migrates once into Kamin 1.0 session storage', async 
     }))
   })
   await page.reload()
-  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
   const storage=await page.evaluate(() => ({
     current:sessionStorage.getItem('kamin-session-v3'),
     legacy:sessionStorage.getItem('kamin-pilot-session-v2')
   }))
   expect(storage.current).toContain('"goal":"data"')
   expect(storage.legacy).toBeNull()
+})
+
+
+test('expert-review trust surfaces are honest and navigable', async ({ page }) => {
+  await page.goto('/methodology.html?lang=ar')
+  await expect(page.locator('h1')).toContainText('كيف ينتقل كامن من الدليل إلى الحكم؟')
+  await expect(page.getByText(/Targets وليست Results/)).toBeVisible()
+  await expect(page.getByText(/لا توجد أرقام دقة منشورة بعد/)).toBeVisible()
+
+  await page.goto('/sample-report.html?lang=ar')
+  await expect(page.locator('h1')).toContainText('سارة')
+  await expect(page.getByText(/بيانات وهمية بالكامل/)).toBeVisible()
+  await expect(page.getByText(/تناسبك بشروط/)).toBeVisible()
+  await expect(page.getByText(/لا يوجد دليل معتمد في الملف الحالي/)).toBeVisible()
+
+  await page.goto('/trust.html?lang=ar')
+  await expect(page.locator('h1')).toContainText('الثقة آلية في المنتج')
+  await expect(page.getByText(/لا تستخدم بيانات الجلسة لتدريب نموذج مركزي/)).toBeVisible()
 })
