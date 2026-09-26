@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { demoCourses } from '../src/data.js'
 import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
 import { parseTranscriptText, parseTranscriptTextDetailed } from '../src/utils/transcript.js'
-import { inferTranscriptSsces, ssceForCourse, ssceIct } from '../src/reference/ssce.js'
-import { findSascedCandidates, getSascedSpecialty, courseSascedContexts } from '../src/taxonomies/sasced.js'
+import { inferTranscriptSsces, ssceForCourse, ssceIct, findSsceSpecializationCandidates, findSsceLevelCandidates, getSsceSpecialization, courseSsceContexts } from '../src/reference/ssce.js'
 
 describe('Kamin deterministic engine', () => {
   it('infers only explicitly mapped evidence-backed skills', () => {
@@ -100,15 +99,21 @@ describe('portable transcript parsing', () => {
 
 
 describe('SASCED-20 academic context layer', () => {
+  it('maps qualification levels as well as specialties', () => {
+    expect(findSsceLevelCandidates('بكالوريوس تقنية المعلومات')[0].code).toBe('6')
+    expect(findSsceLevelCandidates('ماجستير علوم البيانات')[0].code).toBe('7')
+    expect(findSsceLevelCandidates('PhD in Computer Science')[0].code).toBe('8')
+  })
+
   it('maps common Saudi ICT programme names to official SASCED specialty codes', () => {
-    expect(findSascedCandidates('بكالوريوس تقنية المعلومات')[0].code).toBe('061303')
-    expect(findSascedCandidates('Bachelor of Information Systems')[0].code).toBe('061304')
-    expect(findSascedCandidates('برنامج الأمن السيبراني')[0].code).toBe('061203')
-    expect(findSascedCandidates('ماجستير علوم البيانات')[0].code).toBe('061902')
+    expect(findSsceSpecializationCandidates('بكالوريوس تقنية المعلومات')[0].code).toBe('061303')
+    expect(findSsceSpecializationCandidates('Bachelor of Information Systems')[0].code).toBe('061304')
+    expect(findSsceSpecializationCandidates('برنامج الأمن السيبراني')[0].code).toBe('061203')
+    expect(findSsceSpecializationCandidates('ماجستير علوم البيانات')[0].code).toBe('061902')
   })
 
   it('preserves the official hierarchy for Information Technology', () => {
-    const it=getSascedSpecialty('061303')
+    const it=getSsceSpecialization('061303')
     expect(it.broad.code).toBe('06')
     expect(it.narrow.code).toBe('061')
     expect(it.detailed.code).toBe('0613')
@@ -116,12 +121,12 @@ describe('SASCED-20 academic context layer', () => {
   })
 
   it('does not infer an academic specialty from a generic course title alone', () => {
-    expect(findSascedCandidates('Systems Analysis and Design')).toHaveLength(0)
+    expect(findSsceSpecializationCandidates('Systems Analysis and Design')).toHaveLength(0)
   })
 
   it('keeps course-to-SASCED links as context tags rather than skill evidence', () => {
-    expect(courseSascedContexts['CPIT-305']).toContain('061303')
-    expect(courseSascedContexts['CPIT-252']).toContain('061302')
+    expect(courseSsceContexts['CPIT-305']).toContain('061303')
+    expect(courseSsceContexts['CPIT-252']).toContain('061302')
   })
 })
 
