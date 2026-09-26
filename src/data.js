@@ -33,7 +33,7 @@ export const opportunities = [
   {
     id: 'ba',
     title: { ar: 'أساسيات تحليل الأعمال', en: 'Business Analysis Foundations' },
-    provider: 'مثال توضيحي · Illustrative pilot',
+    provider: 'مثال توضيحي · Illustrative example',
     duration: { ar: '6 أسابيع', en: '6 weeks' },
     cost: { ar: 'تقديرية', en: 'Illustrative' },
     goals: ['management', 'product'],
@@ -44,7 +44,7 @@ export const opportunities = [
   {
     id: 'sql',
     title: { ar: 'SQL للمحللين', en: 'SQL for Analysts' },
-    provider: 'مثال توضيحي · Illustrative pilot',
+    provider: 'مثال توضيحي · Illustrative example',
     duration: { ar: '5 أسابيع', en: '5 weeks' },
     cost: { ar: 'تقديرية', en: 'Illustrative' },
     goals: ['data', 'product'],
@@ -84,7 +84,7 @@ export const opportunities = [
   {
     id: 'cyber-foundations',
     title: { ar: 'أساسيات الأمن السيبراني', en: 'Cybersecurity Foundations' },
-    provider: 'مثال توضيحي · Illustrative pilot',
+    provider: 'مثال توضيحي · Illustrative example',
     duration: { ar: '7 أسابيع', en: '7 weeks' },
     cost: { ar: 'تقديرية', en: 'Illustrative' },
     goals: ['cyber'],
