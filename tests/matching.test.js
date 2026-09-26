@@ -81,6 +81,10 @@ describe('Person360 graph-native matching', () => {
     expect(data.semanticPaths.filter(path=>path.kind==='capability-match').map(path=>path.courseCode))
       .toEqual(expect.arrayContaining(['CPIT-260','STAT-201']))
     expect(data.semanticPaths.some(path=>path.relationChain.some(edge=>edge.predicate==='kamin:requiresCapability'))).toBe(true)
+    expect(data.knowledgeInsights.externalOccupations.map(x=>x.notation)).toEqual(expect.arrayContaining(['2511.3','15-2051.01']))
+    expect(data.knowledgeInsights.developmentGaps.map(x=>x.capabilityKey)).toEqual(expect.arrayContaining(['sql','python','power-bi']))
+    expect(data.knowledgeInsights.bridges.map(x=>x.targetId)).toEqual(expect.arrayContaining(['training-python-analytics','training-bi-dashboard']))
+    expect(data.judgment).toBe('fits')
   })
 
   it('does not treat a competency entity as evidence unless a demonstrates claim reaches it', () => {
