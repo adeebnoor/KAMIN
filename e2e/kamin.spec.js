@@ -154,3 +154,15 @@ test('upload validation surfaces a non-binding SASCED academic context candidate
   await expect(page.getByText(/061303/)).toBeVisible()
   await expect(page.getByText(/لا يصبح تصنيفًا معتمدًا/)).toBeVisible()
 })
+
+
+test('approved demo surfaces Saudi national classification context without turning it into a skill', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await expect(page.getByText(/التصنيف السعودي الموحد/)).toBeVisible()
+  await expect(page.getByText('061303').first()).toBeVisible()
+  await expect(page.getByText(/لا ينتج هذا التصنيف مهارة بحد ذاته/)).toBeVisible()
+})
