@@ -10,7 +10,8 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 
-const STORAGE_KEY = 'kamin-pilot-session-v2'\nconst LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
+const STORAGE_KEY = 'kamin-pilot-session-v2'
+const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
 const blankState = {
   courses: [],
   approved: false,
@@ -433,7 +434,8 @@ export default function App() {
     setMeta('og:locale', ar ? 'ar_SA' : 'en_US', 'property')
     setMeta('twitter:title', title)
     setMeta('twitter:description', description)
-    setMeta('og:image', publicOrigin + '/og-kamin-1200x630.jpg', 'property')\n    setMeta('twitter:image', publicOrigin + '/og-kamin-1200x630.jpg')
+    setMeta('og:image', publicOrigin + '/og-kamin-1200x630.jpg', 'property')
+    setMeta('twitter:image', publicOrigin + '/og-kamin-1200x630.jpg')
     const canonical = document.head.querySelector('link[rel="canonical"]')
     if (canonical) canonical.setAttribute('href', publicOrigin + '/?lang=' + lang)
     const ld = document.getElementById('kamin-ld')
