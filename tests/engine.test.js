@@ -17,6 +17,8 @@ describe('Kamin deterministic evidence engine', () => {
     expect(requirements.knowledgeEvidence.some((e) => e.code === 'CPIT-251')).toBe(true)
     expect(skills.every((s) => s.evidence.length > 0)).toBe(true)
     expect(skills.every((s) => s.calibrated === false)).toBe(true)
+    expect(skills.every((s) => Number.isFinite(s.confidence))).toBe(true)
+    expect(skills.every((s) => s.confidence >= 0 && s.confidence <= 100)).toBe(true)
   })
 
   it('never treats failed, withdrawn or incomplete courses as evidence', () => {
