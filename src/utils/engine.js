@@ -5,7 +5,7 @@ const ARABIC_GRADES = new Map([
   ['هـ','F'],['ه','F'],['ح','W'],['م','I'],
 ])
 const NON_EVIDENCE = new Set(['F','W','WF','I','IP','NP','DN'])
-const normalizeCode = (code) => String(code || '').trim().toUpperCase().replace(/\s+/g,'-').replace(/--+/g,'-')
+const normalizeCode = (code) => String(code || '').trim().toUpperCase().replace(/\s+/g,'-').replace(/--+/g,'-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/,'$1-$2')
 export const normalizeGrade = (grade) => {
   const raw=String(grade || '').trim().replace(/\s+/g,'').toUpperCase()
   return ARABIC_GRADES.get(raw) || raw
@@ -13,10 +13,10 @@ export const normalizeGrade = (grade) => {
 const gradeWeight = (grade) => {
   const g=normalizeGrade(grade)
   if (!g || NON_EVIDENCE.has(g)) return null
-  if (g.startsWith('A')) return 1
-  if (g.startsWith('B')) return .88
-  if (g.startsWith('C')) return .72
-  if (g.startsWith('D')) return .58
+  if (/^A[+-]?$/.test(g)) return 1
+  if (/^B[+-]?$/.test(g)) return .88
+  if (/^C[+-]?$/.test(g)) return .72
+  if (/^D[+-]?$/.test(g)) return .58
   const numeric=Number(g)
   if (!Number.isNaN(numeric) && numeric >= 50 && numeric <= 100) return Math.max(.5,Math.min(1,numeric/100))
   return null
