@@ -74,7 +74,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
         targetCapabilityId:edge.object,
         pathText:describeCapabilityPath(best,target,lang),
         relationChain:[
-          best.courseId ? {from:best.courseId,predicate:'prov:wasDerivedInto',to:best.evidenceId} : null,
+          best.courseId ? {from:best.evidenceId,predicate:'kamin:courseContext',to:best.courseId} : null,
           {from:best.personId,predicate:'kamin:demonstrates',to:best.capabilityId,claimId:best.claimId},
           {from:targetGraph['@id'],predicate:'kamin:requiresCapability',to:edge.object},
         ].filter(Boolean),
