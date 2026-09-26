@@ -339,7 +339,7 @@ export default function App() {
     setMeta('og:locale', ar ? 'ar_SA' : 'en_US', 'property')
     setMeta('twitter:title', title)
     setMeta('twitter:description', description)
-    setMeta('og:image', origin + '/og-kamin.jpg', 'property')
+    setMeta('og:image', origin + '/kamin-logo-fixed.webp', 'property')
     const canonical = document.head.querySelector('link[rel="canonical"]')
     if (canonical) canonical.setAttribute('href', origin + '/')
     const ld = document.getElementById('kamin-ld')
