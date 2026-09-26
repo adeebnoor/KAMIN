@@ -46,7 +46,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld','/knowledge/ict-kg-v1.jsonld']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -452,4 +452,33 @@ test('Matches exposes Person360 semantic evidence paths', async ({ page }) => {
   await expect(dataCard).toContainText('CPIT-260')
   await expect(dataCard).toContainText('STAT-201')
   await expect(dataCard).toContainText('kamin-graph-fit-v1')
+})
+
+
+test('Data Analyst golden path exposes external knowledge and learning bridges', async ({ page, request }) => {
+  const graphResponse=await request.get('/knowledge/ict-kg-v1.jsonld')
+  expect(graphResponse.ok()).toBeTruthy()
+  const graph=await graphResponse.json()
+  expect(graph.version).toBe('kamin-ict-kg-v1')
+  expect(graph.entities.some(entity=>entity['@id']==='http://data.europa.eu/esco/occupation/d3edb8f8-3a06-47a0-8fb9-9b212c006aa2')).toBe(true)
+
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await page.getByRole('button', { name: /فرصي/ }).first().click()
+
+  const card=page.locator('article.match-card').filter({hasText:'محلل بيانات'})
+  await expect(card).toBeVisible()
+  await expect(card).toContainText('CPIT-260')
+  await expect(card).toContainText('STAT-201')
+  await expect(card).toContainText('ESCO 2511.3')
+  await expect(card).toContainText('O*NET-SOC 15-2051.01')
+  await expect(card).toContainText('إشارات تطويرية — لا تغيّر حكم Fit')
+  await expect(card).toContainText('Python')
+  await expect(card).toContainText('Power BI')
+  await expect(card).toContainText('الجسر التالي المقترح')
+  await expect(card).toContainText('مختبر Python للتحليل')
+  await expect(card).not.toContainText(/\d+%/)
 })

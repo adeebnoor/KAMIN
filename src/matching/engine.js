@@ -6,6 +6,7 @@ import {
   indexPersonGraph,
   strongestCapabilityPath,
 } from './graph.js'
+import { deriveKnowledgeInsights } from '../knowledge/query.js'
 
 const text=(ar,en,lang)=>lang==='ar'?ar:en
 const pref=(profile,key)=>profile?.preferences?.[key]||null
@@ -56,7 +57,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
   const hardGates=[]
   const semanticPaths=[]
 
-  const requirementEdges=targetGraph.edges.filter(edge=>edge.predicate==='kamin:requiresCapability')
+  const requirementEdges=targetGraph.edges.filter(edge=>edge.subject===targetGraph['@id'] && edge.predicate==='kamin:requiresCapability')
   const missing=[]
   const met=[]
 
@@ -114,7 +115,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
     ))
   }
 
-  const targetGoalEdges=targetGraph.edges.filter(edge=>edge.predicate==='kamin:supportsGoal')
+  const targetGoalEdges=targetGraph.edges.filter(edge=>edge.subject===targetGraph['@id'] && edge.predicate==='kamin:supportsGoal')
   const selectedGoal=index.goal?.key||null
   const goalMatch=selectedGoal ? targetGoalEdges.some(edge=>edge.objectKey===selectedGoal) : null
   if(selectedGoal){
@@ -179,6 +180,11 @@ function judgeGraphTarget(profile,target,lang='ar'){
   else if(goalMatch===false) judgment='exploratory'
   else if(requirementEdges.length===0 || met.length===requirementEdges.length) judgment='fits'
 
+  const knowledgeInsights=deriveKnowledgeInsights(index,target.id,{
+    lang,
+    requiredCapabilityKeys:missing,
+  })
+
   return {
     ...target,
     judgment,
@@ -187,6 +193,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
     limitingMechanisms:limits,
     missingSkills:missing,
     semanticPaths,
+    knowledgeInsights,
     graphTrace:{
       personGraphId:profile.graph?.['@id']||null,
       personGraphVersion:profile.graph?.ontologyVersion||null,
@@ -196,6 +203,8 @@ function judgeGraphTarget(profile,target,lang='ar'){
       matchedCapabilities:met.length,
       evidencePathCount:semanticPaths.filter(path=>path.kind==='capability-match').length,
       academicContextCount:index.academicContexts.length,
+      knowledgeGraphId:targetGraph.knowledgeGraph?.id||null,
+      knowledgeGraphVersion:targetGraph.knowledgeGraph?.version||null,
     },
     decisionBasis:'person360-semantic-graph',
     calibrationStatus:'graph-rule-based-uncalibrated',

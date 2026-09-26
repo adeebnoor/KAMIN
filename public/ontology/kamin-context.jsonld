@@ -78,6 +78,21 @@
     "courseContext": {
       "@id": "kamin:courseContext",
       "@type": "@id"
+    },
+    "LearningOpportunity": "elm:LearningOpportunity",
+    "WorkActivity": "kamin:WorkActivity",
+    "OpportunityKnowledgeGraph": "kamin:OpportunityKnowledgeGraph",
+    "knowledgeAnchor": {
+      "@id": "kamin:knowledgeAnchor",
+      "@type": "@id"
+    },
+    "marketSignalsCapability": {
+      "@id": "kamin:marketSignalsCapability",
+      "@type": "@id"
+    },
+    "workActivity": {
+      "@id": "kamin:workActivity",
+      "@type": "@id"
     }
   }
 }

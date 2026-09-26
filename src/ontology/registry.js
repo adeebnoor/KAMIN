@@ -122,6 +122,7 @@ export const KAMIN_CLASSES = {
   Course: 'schema:Course',
   Occupation: 'schema:Occupation',
   Credential: 'ceterms:Credential',
+  LearningOpportunity: 'elm:LearningOpportunity',
   Competency: 'ceasn:Competency',
   ClassificationConcept: 'skos:Concept',
   Evidence: 'prov:Entity',
@@ -137,6 +138,8 @@ export const KAMIN_CLASSES = {
   FitAssessment: 'kamin:FitAssessment',
   FitMechanism: 'kamin:FitMechanism',
   Outcome: 'kamin:Outcome',
+  WorkActivity: 'kamin:WorkActivity',
+  OpportunityKnowledgeGraph: 'kamin:OpportunityKnowledgeGraph',
 }
 
 export const KAMIN_RELATIONS = {
@@ -167,6 +170,9 @@ export const KAMIN_RELATIONS = {
   supportsGoal: 'kamin:supportsGoal',
   compatiblePreference: 'kamin:compatiblePreference',
   classifiedAs: 'kamin:classifiedAs',
+  knowledgeAnchor: 'kamin:knowledgeAnchor',
+  marketSignalsCapability: 'kamin:marketSignalsCapability',
+  workActivity: 'kamin:workActivity',
 }
 
 export const JSON_LD_CONTEXT = {
@@ -195,6 +201,9 @@ export const JSON_LD_CONTEXT = {
   developsCapability: {'@id':'kamin:developsCapability','@type':'@id'},
   supportsGoal: {'@id':'kamin:supportsGoal','@type':'@id'},
   classifiedAs: {'@id':'kamin:classifiedAs','@type':'@id'},
+  knowledgeAnchor: {'@id':'kamin:knowledgeAnchor','@type':'@id'},
+  marketSignalsCapability: {'@id':'kamin:marketSignalsCapability','@type':'@id'},
+  workActivity: {'@id':'kamin:workActivity','@type':'@id'},
 }
 
 export const EXTERNAL_ID_POLICY = {

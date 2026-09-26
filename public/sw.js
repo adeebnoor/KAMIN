@@ -1,11 +1,12 @@
-const CACHE = 'kamin-public-v6'
+const CACHE = 'kamin-public-v7'
 const CORE = [
   '/favicon.svg',
   '/manifest.json',
   '/kamin-logo-v3.webp',
   '/icon-192.png',
   '/icon-512.png',
-  '/privacy.html'
+  '/privacy.html',
+  '/knowledge/ict-kg-v1.jsonld'
 ]
 
 self.addEventListener('install', event => {
@@ -42,6 +43,7 @@ self.addEventListener('fetch', event => {
   const immutable = url.pathname.startsWith('/assets/') ||
     url.pathname.startsWith('/ocr/') ||
     url.pathname.startsWith('/fonts/') ||
+    url.pathname.startsWith('/knowledge/') ||
     ['/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg'].includes(url.pathname)
 
   if (immutable) {

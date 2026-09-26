@@ -1,6 +1,7 @@
 import { cp, mkdir, readdir, copyFile, access, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
+import { ictKnowledgeGraph } from '../src/knowledge/ictKgV1.js'
 
 const root=process.cwd()
 const pub=path.join(root,'public')
@@ -8,9 +9,11 @@ const ocr=path.join(pub,'ocr')
 const coreOut=path.join(ocr,'core')
 const langOut=path.join(ocr,'lang')
 const fontsOut=path.join(pub,'fonts')
+const knowledgeOut=path.join(pub,'knowledge')
 await mkdir(coreOut,{recursive:true})
 await mkdir(langOut,{recursive:true})
 await mkdir(fontsOut,{recursive:true})
+await mkdir(knowledgeOut,{recursive:true})
 
 const copyIfExists=async(src,dst)=>{
   try{await access(src);await copyFile(src,dst);return true}catch{return false}
@@ -46,6 +49,8 @@ if(!arabicVariableFont) throw new Error('Noto Sans Arabic variable font asset no
 await copyFile(path.join(fontFilesDir,arabicVariableFont),path.join(fontsOut,'noto-sans-arabic.woff2'))
 await writeFile(path.join(fontsOut,'noto-sans-arabic.css'),`@font-face{font-family:"Noto Sans Arabic Variable";font-style:normal;font-display:swap;font-weight:100 900;src:url("/fonts/noto-sans-arabic.woff2") format("woff2")}\n`)
 
+await writeFile(path.join(knowledgeOut,'ict-kg-v1.jsonld'),JSON.stringify(ictKnowledgeGraph,null,2)+'\n')
+
 const logo=path.join(pub,'kamin-logo-v3.webp')
 for(const size of [192,512]){
   await sharp(logo).resize(size,size,{fit:'contain',background:'#ffffff'}).png({compressionLevel:9}).toFile(path.join(pub,`icon-${size}.png`))
@@ -64,4 +69,4 @@ await sharp({create:{width:1200,height:630,channels:3,background:'#f7f9fc'}})
   .jpeg({quality:88,mozjpeg:true})
   .toFile(path.join(pub,'og-kamin-1200x630.jpg'))
 
-console.log('Prepared Kamin icons, self-hosted Arabic font, social image, and fully self-hosted OCR assets.')
+console.log('Prepared Kamin icons, self-hosted Arabic font, ICT knowledge graph, social image, and fully self-hosted OCR assets.')
