@@ -267,6 +267,13 @@ function Landing({ lang, onTry }) {
           <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
           <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك Fit.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
         </div>
+        <div className="national-positioning">
+          <div><small>{lang === 'ar' ? 'التموضع الوطني' : 'National interoperability posture'}</small><h3>{lang === 'ar' ? 'مكمّل للبنية الوطنية للمهارات — لا منصة موازية.' : 'Complement national skills infrastructure — do not duplicate it.'}</h3></div>
+          <p>{lang === 'ar'
+            ? 'كامن يركز على طبقة الدليل الجامعي المملوكة للفرد: ترجمة السجل والمشاريع إلى أدلة قدرات قابلة للتفسير والنقل. مستقبلًا نصمم للتوافق مع التصنيفات الوطنية والتكامل عبر API إذا أصبح مسار رسمي متاحًا؛ لا يوجد تكامل أو اعتماد حكومي معلن اليوم.'
+            : 'Kamin focuses on the individual-owned university evidence layer: translating records and projects into portable, explainable capability evidence. We design for national taxonomy alignment and future API interoperability if an official path becomes available; there is no claimed government integration or endorsement today.'}</p>
+          <a href={lang==='ar'?'/interoperability.html?lang=ar':'/interoperability.html?lang=en'}>{lang==='ar'?'اقرأ قرار التموضع والتكامل':'Read the interoperability decision'}</a>
+        </div>
       </div>
     </section>
 
@@ -409,9 +416,9 @@ function StudentInsight({ lang, state, setState, log }) {
     <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
       <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
     </div>
-    <div className="app-title compact"><small>{lang==='ar'?'طبقات القياس':'Assessment layers'}</small><h2>{lang==='ar'?'مقاييس معيارية — لا أسئلة محلية':'Standard instruments — no home-grown psychometrics'}</h2></div>
+    <div className="app-title compact"><small>{lang==='ar'?'مسار بحثي منفصل':'Separate research track'}</small><h2>{lang==='ar'?'أدوات مرشحة للمعايرة السعودية — لا تؤثر على Fit':'Candidate instruments for Saudi validation — no Fit effect'}</h2></div>
     <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
-    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المنظمة تدخل المطابقة المفسّرة، بينما المقاييس السيكومترية لا تغيّر الحكم قبل التحقق المحلي. لا يوجد ربط مع MIYAR/معيار.':'In this version, structured preferences inform explained matching, while psychometric instruments do not change judgments before local validation. There is no MIYAR connection.'}</span></div>
+    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المصرح بها تدخل فقط كإشارات تفضيل. درجات IPIP/RIASEC لا تدخل الحكم إطلاقًا قبل دراسة سعودية موثقة للثبات والبنية والملاءمة الثقافية.':'In this version, self-declared preferences act only as preference signals. IPIP/RIASEC instrument scores do not enter judgments at all before documented Saudi reliability, structure, and cultural validation.'}</span></div>
   </div>
 }
 
