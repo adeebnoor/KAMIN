@@ -28,6 +28,7 @@ export function emptyPerson360(){
     '@type':'Person',
     ontologyVersion:KAMIN_ONTOLOGY_VERSION,
     psychometricRegistryVersion:PSYCHOMETRIC_REGISTRY_VERSION,
+    entities:[],
     claims:[],
     observations:[],
     goals:[],
@@ -109,6 +110,12 @@ export function createObservation({
   }
 }
 
+export function addEntity(graph,entity){
+  if(!entity?.['@id']) throw new Error('ENTITY_ID_REQUIRED')
+  const entities=[...(graph.entities||[]).filter(item=>item['@id']!==entity['@id']),entity]
+  return {...graph,entities,updatedAt:nowIso()}
+}
+
 export function addClaim(graph,claim){
   return {...graph,claims:[...(graph.claims||[]),claim],updatedAt:nowIso()}
 }
@@ -121,10 +128,12 @@ export function validatePerson360(graph){
   const errors=[]
   const warnings=[]
   if(!graph || graph['@type']!=='Person') errors.push('ROOT_MUST_BE_PERSON')
+  const entityIds=new Set((graph?.entities||[]).map(entity=>entity['@id']))
   for(const claim of graph?.claims||[]){
     if(!claim.predicate) errors.push(`CLAIM_MISSING_PREDICATE:${claim['@id']||'unknown'}`)
     if(!claim.source) errors.push(`CLAIM_MISSING_SOURCE:${claim['@id']||'unknown'}`)
     if(!claim.generatedAtTime) errors.push(`CLAIM_MISSING_TIME:${claim['@id']||'unknown'}`)
+    if(claim.source && !entityIds.has(claim.source) && !/^https?:|^urn:/.test(claim.source)) warnings.push(`CLAIM_SOURCE_NOT_IRI:${claim['@id']||'unknown'}`)
   }
   for(const obs of graph?.observations||[]){
     if(!obs.concept) errors.push(`OBSERVATION_MISSING_CONCEPT:${obs['@id']||'unknown'}`)
