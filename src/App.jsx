@@ -10,7 +10,8 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
-import { INSIGHT_DOMAINS, INSIGHT_ITEMS, INSIGHT_SCALE, computeInsightProfile, emptyInsightState, insightCompletion } from './insight.js'
+import { emptyInsightState } from './insight.js'
+import { projectStateToPerson360 } from './ontology/projector.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
@@ -394,7 +395,8 @@ function KaminApp({ lang, onClose }) {
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
   const exportProfile = () => {
-    const payload = { exportedAt:new Date().toISOString(), courses:state.courses, educationClassification, skills, judgments:recs, consents:state.consents, audit:state.audit }
+    const person360=projectStateToPerson360({state,skills,educationClassification})
+    const payload = { exportedAt:new Date().toISOString(), person360, courses:state.courses, educationClassification, skills, judgments:recs, insight:state.insight, consents:state.consents, audit:state.audit }
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}))
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
