@@ -1,24 +1,24 @@
 export const copy = {
   ar: {
     name: 'كامن',
-    tagline: 'خزنة قدراتك',
-    subTagline: 'المهارات الكامنة • الأدلة الأكاديمية',
+    tagline: 'شبكة ذكاء القدرات',
+    subTagline: 'Person 360 • الأدلة • المطابقة المفسّرة',
     nav: { home: 'الرئيسية', how: 'كيف يعمل', trust: 'الثقة والامتثال', app: 'تجربة كامن' },
     hero: {
-      eyebrow: 'السوق لم يعد يسأل: ما مسماك؟ بل: ماذا حققت؟',
-      title: 'قيمتك فيما تستطيع تحقيقه، لا في معدلك وحده.',
-      text: 'كامن يقرأ سجلك الأكاديمي كدليل: ما طبّقته، وما درسته، وما الذي ينقصك قبل أن تدفع وقتًا أو مالًا في خطوة لا تخدم هدفك.',
-      cta: 'اكتشف لحظة كامن',
-      secondary: 'شاهد مثالًا',
+      eyebrow: 'من أنت ← ماذا تستطيع ← ما الفرصة الأنسب',
+      title: 'اعرف ما لديك. افهم أين يناسب. وابنِ ما ينقصك.',
+      text: 'كامن يبني Person 360 من الأدلة والمهارات والتفضيلات والأهداف، ثم يربطك بالوظائف والتعلم والتدريب التي تناسبك — ويشرح لماذا وما الذي ينقصك.',
+      cta: 'ابدأ بناء ملفك',
+      secondary: 'كيف يفهمك كامن 360°',
       trust: 'في الإصدار العام، تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.',
       cards: [
-        ['دليل تطبيق', 'مشروع التخرج · تحليل المتطلبات'],
-        ['بعد دورة مناسبة', 'تبني تقريرًا أسبوعيًا آليًا بـ SQL']
+        ['ملفك الحي', 'أدلة · مهارات · تفضيلات · أهداف'],
+        ['من الملف إلى القرار', 'وظائف · تدريب · دورات · تخصصات']
       ]
     },
     value: {
       kicker: 'من سطر في السيرة إلى قيمة لها دليل',
-      title: 'الدليل قبل الادعاء، والنتيجة قبل اسم الدورة.',
+      title: 'ليس مجرد Match. كل توصية لها لماذا، وفجوة، وخطوة تالية.',
       intro: 'مثال توضيحي لطالبة افتراضية يبيّن كيف يغيّر كامن القرار دون أن يدّعي معرفة ما لا يدعمه السجل.',
       traditional: 'ما تقوله السيرة التقليدية',
       traditionalItems: ['سارة · خريجة نظم معلومات', 'معدل 3.6', 'أحب الإدارة', 'سأسجل في دورة PMP'],
@@ -34,11 +34,11 @@ export const copy = {
       demo: 'مثال توضيحي لطالبة افتراضية — وليس قصة مستخدم حقيقية.'
     },
     how: {
-      title: 'ثلاث خطوات فقط',
+      title: 'من الدليل إلى القرار في ثلاث طبقات',
       steps: [
-        ['أودع', 'ارفع كشف الدرجات. لن نستخدم أي نتيجة قبل أن تراجعها وتعتمدها.'],
-        ['اكتشف', 'شاهد المهارات المستنتجة مع المقرر والدليل ودرجة الثقة.'],
-        ['قرّر', 'قارن الدورات بحكم مفسّر، واعرف ما الذي ستستطيع تحقيقه بعد كل دورة.']
+        ['اجمع الأدلة', 'ابدأ بسجل أكاديمي أو بيانات توضيحية، وراجع كل ما تم استخراجه قبل اعتماده.'],
+        ['ابنِ Person 360', 'اربط المهارات والأدلة والتفضيلات والأهداف في ملف واحد قابل للمراجعة.'],
+        ['اتخذ القرار', 'قارن الفرص بحكم مفسّر: لماذا تناسبك، ما الفجوة، وما الخطوة التالية.']
       ]
     },
     trustTitle: 'الثقة ليست صفحة قانونية. هي جزء من المنتج.',
@@ -50,7 +50,7 @@ export const copy = {
     ],
     app: {
       title: 'تجربة كامن',
-      intro: 'ابدأ ببيانات توضيحية أو ارفع كشفًا حقيقيًا. المعالجة الحالية داخل المتصفح فقط.',
+      intro: 'ابدأ ببيانات توضيحية أو بسجلك الأكاديمي، ثم وسّع Person 360 بتفضيلاتك وأهدافك. المعالجة الحالية داخل المتصفح فقط.',
       demo: 'استخدم بيانات توضيحية',
       upload: 'ارفع كشف الدرجات',
       uploadHelp: 'PDF نصي أو ممسوح ضوئيًا، صورة، أو TXT. عند الحاجة يعمل OCR محليًا داخل جهازك وقد يستغرق وقتًا أطول.',
@@ -103,28 +103,28 @@ export const copy = {
       title: 'تصميم جاهز للامتثال — وليس ادعاء اعتماد',
       text: 'كامن يطبّق مبادئ تقليل البيانات، الموافقة المحددة بالغرض، قابلية السحب، التفسير، وإمكانية الوصول. الإطلاق المؤسسي ببيانات شخصية يتطلب اعتماد الاستضافة داخل المملكة وسياسة الاحتفاظ واتفاقية مشاركة البيانات والمراجعة النظامية.'
     },
-    footer: 'كامن — خزنة قدراتك. الإصدار العام 2026.'
+    footer: 'كامن — شبكة ذكاء القدرات. الإصدار العام 2026.'
   },
   en: {
     name: 'Kamin',
-    tagline: 'Your capability vault',
-    subTagline: 'Latent skills • Academic evidence',
+    tagline: 'Capability Intelligence Network',
+    subTagline: 'Person 360 • Evidence • Explainable matching',
     nav: { home: 'Home', how: 'How it works', trust: 'Trust & compliance', app: 'Try Kamin' },
     hero: {
-      eyebrow: 'The market is moving from titles to demonstrated value',
-      title: 'Your value is what you can achieve — not your GPA alone.',
-      text: 'Kamin reads your academic record as evidence: what you applied, what you studied, and what is still missing before you spend time or money on the next step.',
-      cta: 'Discover your Kamin moment',
-      secondary: 'See an example',
+      eyebrow: 'Who you are → what you can do → what fits next',
+      title: 'Know what you have. See where it fits. Build what is missing.',
+      text: 'Kamin builds an evidence-rich Person 360 from skills, preferences, goals, and achievements, then connects you to jobs, learning, and training — with an explanation of why and what is missing.',
+      cta: 'Build your profile',
+      secondary: 'How Kamin understands you 360°',
       trust: 'In this public release, files are processed locally on your device and are not uploaded to a Kamin server.',
       cards: [
-        ['Applied evidence', 'Graduation project · requirements analysis'],
-        ['After the right course', 'Build an automated weekly SQL report']
+        ['Your living profile', 'Evidence · skills · preferences · goals'],
+        ['From profile to decision', 'Jobs · training · courses · majors']
       ]
     },
     value: {
       kicker: 'From a CV line to evidence-backed value',
-      title: 'Evidence before claims. Outcomes before course names.',
+      title: 'Not just a match. Every recommendation has a why, a gap, and a next step.',
       intro: 'An illustrative fictional student shows how Kamin can change a decision without claiming more than the record supports.',
       traditional: 'What a traditional CV says',
       traditionalItems: ['Sara · Information Systems graduate', 'GPA 3.6', 'I like management', 'I will take PMP'],
@@ -140,11 +140,11 @@ export const copy = {
       demo: 'Illustrative fictional student — not a real user story.'
     },
     how: {
-      title: 'Only three steps',
+      title: 'From evidence to decision in three layers',
       steps: [
-        ['Deposit', 'Upload your transcript. Nothing is used until you review and approve the extraction.'],
-        ['Discover', 'See inferred skills with course evidence and confidence.'],
-        ['Decide', 'Compare courses with an explained judgment and the outcome you should be able to achieve afterward.']
+        ['Collect evidence', 'Start with a transcript or demo data, and review every extracted item before approval.'],
+        ['Build Person 360', 'Connect skills, evidence, preferences, and goals in one reviewable profile.'],
+        ['Make the decision', 'Compare opportunities with an explained judgment: why it fits, what is missing, and what to do next.']
       ]
     },
     trustTitle: 'Trust is not a legal page. It is part of the product.',
@@ -156,7 +156,7 @@ export const copy = {
     ],
     app: {
       title: 'Try Kamin',
-      intro: 'Start with demo data or upload a real transcript. Current processing runs inside your browser only.',
+      intro: 'Start with demo data or your academic record, then expand Person 360 with your preferences and goals. Current processing runs inside your browser only.',
       demo: 'Use demo data',
       upload: 'Upload transcript',
       uploadHelp: 'Text or scanned PDF, image, or TXT. OCR runs locally on your device when needed and can take longer.',
@@ -209,6 +209,6 @@ export const copy = {
       title: 'Compliance-ready design — not a certification claim',
       text: 'Kamin implements data minimization, purpose-specific consent, withdrawal, explainability, and accessibility. Institutional launch with personal data still requires Saudi-hosted processing, an approved retention policy, a data-sharing agreement, and legal review.'
     },
-    footer: 'Kamin — your capability vault. Public release 2026.'
+    footer: 'Kamin — Capability Intelligence Network. Public release 2026.'
   }
 }
