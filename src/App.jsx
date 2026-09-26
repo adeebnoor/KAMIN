@@ -10,7 +10,8 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
-import { emptyInsightState } from './insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
+import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
@@ -274,6 +275,41 @@ function FitCard({ item, lang, compared, toggle }) {
     <div className="fit-meta"><span>{item.duration[lang]}</span><span>{item.cost[lang]}</span></div>
     <button className={compared?'compare-button selected':'compare-button'} onClick={()=>toggle(item.id)}>{compared?<Check size={16}/>:<Plus size={16}/>} {lang==='ar'?'قارن':'Compare'}</button>
   </article>
+}
+
+function StudentInsight({ lang, state, setState, log }) {
+  const [agree,setAgree]=useState(false)
+  const insight=state.insight||emptyInsightState()
+  const grant=()=>{
+    if(!agree) return
+    setState(s=>({...s,consents:{...s.consents,insight:true},insight:{...emptyInsightState(),...(s.insight||{})},audit:[{label:lang==='ar'?'منح موافقة بصمة الطالب 360':'Student 360 consent granted',ts:Date.now()},...s.audit]}))
+    log(lang==='ar'?'بدء ملف Person 360':'Person 360 profile started')
+  }
+  const updatePreference=(schemeId,optionId)=>{
+    setState(s=>({...s,insight:setDeclaredPreference(s.insight||emptyInsightState(),schemeId,optionId)}))
+    log(lang==='ar'?'تحديث تفضيل منظم':'Structured preference updated')
+  }
+  if(!state.consents.insight){
+    return <div className="insight-intro">
+      <div className="app-title"><small>{lang==='ar'?'Person 360':'Person 360'}</small><h2>{lang==='ar'?'بصمتك قبل التوصية':'Your profile before recommendation'}</h2><p>{lang==='ar'?'نبني صورة منظمة ومتعددة الأبعاد عنك أولًا. لا يوجد تشخيص نفسي، ولا تأثير على قرارات الدورات أو الوظائف قبل التحقق العلمي من كل طبقة.':'We first build a structured, multi-dimensional picture of you. There is no psychological diagnosis and no impact on course or job decisions before each layer is scientifically validated.'}</p></div>
+      <div className="insight-privacy-grid">
+        <article><ShieldCheck/><strong>{lang==='ar'?'موافقة منفصلة':'Separate consent'}</strong><span>{lang==='ar'?'يمكنك بناء السجل الأكاديمي دون هذه الطبقة، أو سحب موافقتها وحدها لاحقًا.':'You can use the academic profile without this layer, or withdraw only this consent later.'}</span></article>
+        <article><SearchCheck/><strong>{lang==='ar'?'مدخلات منظمة':'Structured inputs'}</strong><span>{lang==='ar'?'لا يعتمد محرك القواعد على free text؛ نستخدم vocabularies ومقاييس معرّفة بإصداراتها.':'The rule engine does not rely on free text; inputs use versioned vocabularies and instruments.'}</span></article>
+        <article><Fingerprint/><strong>{lang==='ar'?'مصدر كل إشارة محفوظ':'Every signal has provenance'}</strong><span>{lang==='ar'?'الأداة والإصدار والوقت والموافقة والمصدر تبقى مرتبطة بالنتيجة.':'Instrument, version, timestamp, consent and source stay attached to each result.'}</span></article>
+      </div>
+      <label className="insight-consent"><input type="checkbox" checked={agree} onChange={e=>setAgree(e.target.checked)}/><span>{lang==='ar'?'أوافق على بناء ملف Person 360 وحفظ هذه المدخلات مؤقتًا داخل جلسة المتصفح.':'I consent to building my Person 360 profile and storing these inputs temporarily in this browser session.'}</span></label>
+      <button className="button primary" disabled={!agree} onClick={grant}>{lang==='ar'?'ابدأ بصمتي':'Start my profile'}</button>
+    </div>
+  }
+  return <div className="student-insight">
+    <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وليست نتائج سيكومترية. المقاييس المعيارية تظهر أدناه كطبقات مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared, not psychometric results. Standardized instruments are shown below as separate layers until implementation and validation are complete.'}</p></div>
+    <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
+      <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
+    </div>
+    <div className="app-title compact"><small>{lang==='ar'?'طبقات القياس':'Assessment layers'}</small><h2>{lang==='ar'?'مقاييس معيارية — لا أسئلة محلية':'Standard instruments — no home-grown psychometrics'}</h2></div>
+    <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
+    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: Person 360 مستقل عن محرك التوصية، ولا يوجد ربط مع MIYAR/معيار.':'In this version, Person 360 is independent of the recommendation engine and has no MIYAR connection.'}</span></div>
+  </div>
 }
 
 function Privacy({ lang, state, setState, log, onExport, onDelete }) {
