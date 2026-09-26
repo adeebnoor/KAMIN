@@ -1,7 +1,5 @@
-name: Deploy Kamin Pilot
+name: Deploy Kamin Pilot to GitHub Pages (Optional)
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,8 +19,6 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run build
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
