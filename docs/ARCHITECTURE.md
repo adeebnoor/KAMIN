@@ -16,9 +16,9 @@ Tesseract worker, WASM core, and `eng`/`ara` language data are built into the st
 
 ## Saudi academic classification context (SASCED-20)
 
-Kamin carries a separate academic-context layer based on the Saudi Standard Classification of Educational Levels and Specialties (SASCED-20), which is aligned to ISCED 2011/2013.
+Kamin carries one national academic-context reference in `src/reference/ssce.js`, based on the Saudi Standard Classification of Educational Levels and Specialties (SASCED-20 / SSCE), aligned to ISCED 2011/2013.
 
-`record/program text -> SASCED candidate -> user/institution confirmation -> academic context`
+`record/program text -> level + specialization candidate -> user/institution confirmation -> academic context`
 
 For the ICT pilot, the first explicit crosswalk includes:
 - 061201 Network Systems Administration
@@ -32,7 +32,9 @@ For the ICT pilot, the first explicit crosswalk includes:
 - 061902 Data Science
 - 068801 Health Informatics
 
-SASCED context does **not** create a skill and does **not** alter fit scores by itself. A text-derived SASCED match is shown only as a candidate until confirmed by the student or academic authority. Course-level SASCED tags are contextual crosswalks, not claims that the individual course is itself an educational specialty.
+The reference includes levels 0–8 and relevant ICT specialties. For the KAU FCIT pilot, explicit namespace mappings are `CPIT -> 061303` Information Technology, `CPCS -> 061301` Programming and Computer Science, and `CPIS -> 061304` Information Systems.
+
+SASCED/SSCE context does **not** create a skill and does **not** alter fit scores by itself. A text-derived match is shown only as a candidate until confirmed by the student or academic authority. Course-level context tags and institutional prefix mappings are contextual crosswalks, not claims that the individual course is itself an educational specialty.
 
 ## Evidence pipeline
 
@@ -79,21 +81,3 @@ If durable browser persistence is introduced later, it should use encrypted Inde
 - Manifest: short cache + explicit `application/manifest+json`.
 - Service worker: no-cache so updates propagate.
 - Navigation/HTML: network-first in the service worker.
-
-
-## Saudi education classification
-
-Kamin maintains the Saudi Standard Classification of Educational Levels and Specializations (SSCE) as a separate national-reference layer:
-
-`record -> course -> programme context (SSCE) -> approved CLO/skill evidence -> explained judgment`
-
-The SSCE context does **not** create a skill and does **not** override the department-approved course-to-learning-outcome mapping.
-
-Current pilot mappings for KAU FCIT course namespaces:
-- `CPIT -> 061303` Information Technology.
-- `CPCS -> 061301` Programming and Computer Science.
-- `CPIS -> 061304` Information Systems.
-
-The reference dataset also includes relevant ICT specializations such as Software Engineering `061302`, Information Security `061203`, Artificial Intelligence `061901`, Data Science `061902`, and Health Informatics `068801`.
-
-For a mixed transcript, Kamin may surface a dominant **contextual candidate**, but institutional confirmation is required before formal reporting.
