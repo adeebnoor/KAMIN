@@ -13,6 +13,7 @@ export const skills = {
   database: { id: 'database', labels: { ar: 'قواعد البيانات', en: 'Databases' } },
   project: { id: 'project', labels: { ar: 'إدارة المشاريع', en: 'Project management' } },
   statistics: { id: 'statistics', labels: { ar: 'التحليل الكمي', en: 'Quantitative analysis' } },
+  cyber: { id: 'cyber', labels: { ar: 'أساسيات الأمن السيبراني', en: 'Cybersecurity fundamentals' } },
   aiWork: { id: 'ai-work', labels: { ar: 'توظيف الذكاء الاصطناعي في العمل', en: 'AI use at work' } },
 }
 
