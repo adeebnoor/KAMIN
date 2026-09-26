@@ -10,6 +10,9 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
+import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
+import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
+import { projectStateToPerson360 } from './ontology/projector.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
@@ -17,7 +20,8 @@ const blankState = {
   courses: [],
   approved: false,
   goal: null,
-  consents: { analyze: false, advisor: false, research: false },
+  consents: { analyze: false, insight: false, advisor: false, research: false },
+  insight: emptyInsightState(),
   audit: [],
 }
 
@@ -33,7 +37,13 @@ const getSaved = () => {
       }
     }
     const parsed=JSON.parse(raw||'null')
-    return parsed && typeof parsed==='object' ? { ...blankState, ...parsed } : blankState
+    if(!parsed || typeof parsed!=='object') return blankState
+    return {
+      ...blankState,
+      ...parsed,
+      consents:{...blankState.consents,...(parsed.consents||{})},
+      insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})}},
+    }
   } catch {
     return blankState
   }
@@ -267,6 +277,41 @@ function FitCard({ item, lang, compared, toggle }) {
   </article>
 }
 
+function StudentInsight({ lang, state, setState, log }) {
+  const [agree,setAgree]=useState(false)
+  const insight=state.insight||emptyInsightState()
+  const grant=()=>{
+    if(!agree) return
+    setState(s=>({...s,consents:{...s.consents,insight:true},insight:{...emptyInsightState(),...(s.insight||{})},audit:[{label:lang==='ar'?'منح موافقة بصمة الطالب 360':'Student 360 consent granted',ts:Date.now()},...s.audit]}))
+    log(lang==='ar'?'بدء ملف Person 360':'Person 360 profile started')
+  }
+  const updatePreference=(schemeId,optionId)=>{
+    setState(s=>({...s,insight:setDeclaredPreference(s.insight||emptyInsightState(),schemeId,optionId)}))
+    log(lang==='ar'?'تحديث تفضيل منظم':'Structured preference updated')
+  }
+  if(!state.consents.insight){
+    return <div className="insight-intro">
+      <div className="app-title"><small>{lang==='ar'?'Person 360':'Person 360'}</small><h2>{lang==='ar'?'بصمتك قبل التوصية':'Your profile before recommendation'}</h2><p>{lang==='ar'?'نبني صورة منظمة ومتعددة الأبعاد عنك أولًا. لا يوجد تشخيص نفسي، ولا تأثير على قرارات الدورات أو الوظائف قبل التحقق العلمي من كل طبقة.':'We first build a structured, multi-dimensional picture of you. There is no psychological diagnosis and no impact on course or job decisions before each layer is scientifically validated.'}</p></div>
+      <div className="insight-privacy-grid">
+        <article><ShieldCheck/><strong>{lang==='ar'?'موافقة منفصلة':'Separate consent'}</strong><span>{lang==='ar'?'يمكنك بناء السجل الأكاديمي دون هذه الطبقة، أو سحب موافقتها وحدها لاحقًا.':'You can use the academic profile without this layer, or withdraw only this consent later.'}</span></article>
+        <article><SearchCheck/><strong>{lang==='ar'?'مدخلات منظمة':'Structured inputs'}</strong><span>{lang==='ar'?'لا يعتمد محرك القواعد على free text؛ نستخدم vocabularies ومقاييس معرّفة بإصداراتها.':'The rule engine does not rely on free text; inputs use versioned vocabularies and instruments.'}</span></article>
+        <article><Fingerprint/><strong>{lang==='ar'?'مصدر كل إشارة محفوظ':'Every signal has provenance'}</strong><span>{lang==='ar'?'الأداة والإصدار والوقت والموافقة والمصدر تبقى مرتبطة بالنتيجة.':'Instrument, version, timestamp, consent and source stay attached to each result.'}</span></article>
+      </div>
+      <label className="insight-consent"><input type="checkbox" checked={agree} onChange={e=>setAgree(e.target.checked)}/><span>{lang==='ar'?'أوافق على بناء ملف Person 360 وحفظ هذه المدخلات مؤقتًا داخل جلسة المتصفح.':'I consent to building my Person 360 profile and storing these inputs temporarily in this browser session.'}</span></label>
+      <button className="button primary" disabled={!agree} onClick={grant}>{lang==='ar'?'ابدأ بصمتي':'Start my profile'}</button>
+    </div>
+  }
+  return <div className="student-insight">
+    <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وليست نتائج سيكومترية. المقاييس المعيارية تظهر أدناه كطبقات مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared, not psychometric results. Standardized instruments are shown below as separate layers until implementation and validation are complete.'}</p></div>
+    <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
+      <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
+    </div>
+    <div className="app-title compact"><small>{lang==='ar'?'طبقات القياس':'Assessment layers'}</small><h2>{lang==='ar'?'مقاييس معيارية — لا أسئلة محلية':'Standard instruments — no home-grown psychometrics'}</h2></div>
+    <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
+    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: Person 360 مستقل عن محرك التوصية، ولا يوجد ربط مع MIYAR/معيار.':'In this version, Person 360 is independent of the recommendation engine and has no MIYAR connection.'}</span></div>
+  </div>
+}
+
 function Privacy({ lang, state, setState, log, onExport, onDelete }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
@@ -275,12 +320,21 @@ function Privacy({ lang, state, setState, log, onExport, onDelete }) {
       setState(s => ({...s,courses:[],approved:false,consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
+    if (key === 'insight' && state.consents.insight) {
+      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة Person 360 ومحو بياناتها':'Person 360 consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
+      return
+    }
     setState(s => ({...s,consents:{...s.consents,[key]:!s.consents[key]}}))
     log(lang==='ar'? `تغيير موافقة: ${t.consentItems[key]}` : `Consent changed: ${t.consentItems[key]}`)
   }
   return <div className="privacy-layout">
     <div className="panel"><div className="panel-head"><div><small>{t.consent}</small><h3>{lang==='ar'?'كل غرض له إذنه':'Each purpose has its own permission'}</h3></div></div>
-      <div className="consents">{Object.keys(state.consents).map(key=><label key={key}><span><strong>{t.consentItems[key]}</strong><small>{key==='analyze'?(lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval'):(lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>)}</div>
+      <div className="consents">{Object.keys(state.consents).map(key=>{const note=key==='analyze'
+        ? (lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval')
+        : key==='insight'
+          ? (lang==='ar'?'اختياري؛ يحفظ Person 360 مؤقتًا في الجلسة ويمكن سحبه مستقلاً':'Optional; stores Person 360 temporarily in-session and can be withdrawn independently')
+          : (lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')
+        return <label key={key}><span><strong>{t.consentItems[key]}</strong><small>{note}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>})}</div>
     </div>
     <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p><button className="button secondary" onClick={onExport}><Download size={17}/>{t.export}</button>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
   </div>
@@ -386,7 +440,8 @@ function KaminApp({ lang, onClose }) {
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
   const exportProfile = () => {
-    const payload = { exportedAt:new Date().toISOString(), courses:state.courses, educationClassification, skills, judgments:recs, consents:state.consents, audit:state.audit }
+    const person360=projectStateToPerson360({state,skills,educationClassification})
+    const payload = { exportedAt:new Date().toISOString(), person360, courses:state.courses, educationClassification, skills, judgments:recs, insight:state.insight, consents:state.consents, audit:state.audit }
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}))
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
@@ -397,6 +452,7 @@ function KaminApp({ lang, onClose }) {
   const nav = [
     ['dashboard',LayoutDashboard,t.app.dashboard],
     ['skills',GraduationCap,t.app.skills],
+    ['insight',Fingerprint,t.app.insight],
     ['courses',BookOpen,t.app.courses],
     ['compare',SearchCheck,t.app.compare],
     ['privacy',ShieldCheck,t.app.privacy],
@@ -407,7 +463,7 @@ function KaminApp({ lang, onClose }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="app-brand"><BrandMark/><div><strong>{t.name}</strong><small>{t.tagline}</small></div></div>
-        <nav>{nav.map(([id,Icon,label])=><button key={id} disabled={!state.approved && !['privacy','audit'].includes(id)} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/>{label}</button>)}</nav>
+        <nav>{nav.map(([id,Icon,label])=><button key={id} disabled={!state.approved && !['insight','privacy','audit'].includes(id)} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/>{label}</button>)}</nav>
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public pilot'}</span></div>
       </aside>
       <div className="app-main">
@@ -431,13 +487,14 @@ function KaminApp({ lang, onClose }) {
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
             <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>
           </section>}
+          {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log}/></section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في النسخة التجريبية، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The pilot shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onDelete={deleteAll}/></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-pilot profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
-        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
+        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['insight','privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
       </div>
     </div>
   </div>

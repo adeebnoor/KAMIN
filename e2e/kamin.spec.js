@@ -166,3 +166,47 @@ test('approved demo surfaces Saudi national classification context without turni
   await expect(page.getByText('061303').first()).toBeVisible()
   await expect(page.getByText(/لا ينتج هذا التصنيف مهارة بحد ذاته/)).toBeVisible()
 })
+
+
+test('Person 360 is optional, structured, and available before transcript approval', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: 'بصمتي' }).first().click()
+  await expect(page.getByText(/بصمتك قبل التوصية/)).toBeVisible()
+  await expect(page.getByText(/لا يوجد تشخيص نفسي/)).toBeVisible()
+
+  const consent=page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ })
+  await expect(consent).not.toBeChecked()
+  await consent.check()
+  await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
+
+  await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
+  await page.getByLabel('نمط التعاون').selectOption('small-team')
+  await page.getByLabel('إيقاع العمل').selectOption('mixed')
+  await expect(page.getByText(/مقاييس معيارية/)).toBeVisible()
+  await expect(page.getByText(/O\*NET Mini Interest Profiler/)).toBeVisible()
+  await expect(page.getByText(/IPIP 50-item Big-Five/)).toBeVisible()
+
+  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
+  expect(storage.consents.insight).toBe(true)
+  expect(storage.insight.declaredPreferences.workStructure).toBe('balanced')
+  expect(storage.insight.declaredPreferences.collaboration).toBe('small-team')
+})
+
+test('withdrawing Person 360 consent clears only the insight layer', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: 'بصمتي' }).first().click()
+  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
+  await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
+
+  await page.getByRole('button', { name: /الخصوصية/ }).first().click()
+  const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
+  await expect(insightConsent).toBeChecked()
+  await insightConsent.uncheck()
+
+  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
+  expect(storage.consents.insight).toBe(false)
+  expect(storage.insight.declaredPreferences).toEqual({})
+})

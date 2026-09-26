@@ -1,0 +1,77 @@
+export const PSYCHOMETRIC_REGISTRY_VERSION = '0.1.0'
+
+export const PSYCHOMETRIC_INSTRUMENTS = {
+  onetMiniIp30: {
+    id:'onet-mini-ip-30',
+    name:{ar:'O*NET Mini Interest Profiler',en:'O*NET Mini Interest Profiler'},
+    construct:'RIASEC occupational interests',
+    dimensions:['Realistic','Investigative','Artistic','Social','Enterprising','Conventional'],
+    items:30,
+    responseScale:{min:1,max:5,anchors:['Strongly Dislike','Dislike','Unsure','Like','Strongly Like']},
+    officialUrl:'https://www.onetcenter.org/IP.html',
+    sourceSystem:'O*NET',
+    sourceVersion:'current',
+    status:'approved-for-pilot-after-license-review',
+    decisionRole:'preference-fit',
+    notes:{
+      ar:'مناسب للربط المهني؛ لا يمثل تشخيصًا نفسيًا. يجب تثبيت خيار الترخيص قبل إعادة توزيع البنود داخل المنتج.',
+      en:'Suitable for career-interest alignment; not a psychological diagnosis. Lock the redistribution license before embedding items in the product.',
+    },
+  },
+  ipip50Arabic: {
+    id:'ipip-50-arabic',
+    name:{ar:'IPIP 50-item Big-Five markers — Arabic adaptation',en:'IPIP 50-item Big-Five markers — Arabic adaptation'},
+    construct:'Big Five personality markers',
+    dimensions:['Extraversion','Agreeableness','Conscientiousness','Emotional Stability','Openness/Intellect'],
+    items:50,
+    responseScale:{min:1,max:5,anchors:['Strongly Disagree','Disagree','Neutral','Agree','Strongly Agree']},
+    officialUrl:'https://ipip.ori.org/ArabicBigFiveFactorMarkers2.htm',
+    sourceSystem:'IPIP',
+    status:'candidate-for-saudi-validation',
+    decisionRole:'low-weight-context',
+    notes:{
+      ar:'البنود العامة في الملكية العامة. النسخة العربية المنشورة اختُبرت في عينة من بلاد الشام؛ لا تُعامل كمعايير سعودية قبل تحقق محلي.',
+      en:'IPIP items are public domain. The published Arabic adaptation was evaluated in a Levant sample; do not treat it as Saudi norms before local validation.',
+    },
+  },
+  onetWorkValues: {
+    id:'onet-work-values',
+    name:{ar:'O*NET Work Values',en:'O*NET Work Values'},
+    construct:'Work values',
+    dimensions:['Achievement','Independence','Recognition','Relationships','Support','Working Conditions'],
+    officialUrl:'https://www.onetcenter.org/database.html',
+    sourceSystem:'O*NET',
+    status:'reference-model',
+    decisionRole:'preference-fit',
+    notes:{
+      ar:'تُستخدم أبعاد القيم كنموذج دلالي وربط بالمهن. أداة القياس الموجهة للطالب تحتاج اختيار/تحقق منفصل.',
+      en:'Use the work-value dimensions as an occupational semantic model. The student-facing measurement instrument requires a separate validated design choice.',
+    },
+  },
+  onetWorkStyles: {
+    id:'onet-work-styles',
+    name:{ar:'O*NET Work Styles',en:'O*NET Work Styles'},
+    construct:'Work-related personality tendencies',
+    officialUrl:'https://www.onetcenter.org/database.html',
+    sourceSystem:'O*NET',
+    sourceVersion:'31.0',
+    status:'reference-model',
+    decisionRole:'work-environment-fit',
+    notes:{
+      ar:'O*NET يربط أنماط العمل بالمهن ويصدر البيانات بصيغ RDF/JSON-LD. نستخدم المفاهيم والروابط ولا نحول ratings المهنية إلى تشخيص للفرد.',
+      en:'O*NET links Work Styles to occupations and publishes RDF/JSON-LD. Reuse concepts and links without treating occupation ratings as a diagnosis of an individual.',
+    },
+  },
+}
+
+export const PSYCHOMETRIC_GOVERNANCE = {
+  rules:[
+    'No psychometric result may create or delete academic skill evidence.',
+    'No personality or interest result may satisfy a formal eligibility gate.',
+    'Every observation must retain instrument ID, version, timestamp, response scale, consent purpose, and provenance.',
+    'Raw item responses and derived scores are distinct data objects.',
+    'Use-case-specific weights must be learned or explicitly governed; never assume equal weights across domains.',
+    'Until Saudi validation is complete, results are descriptive tendencies, not normative percentile claims.',
+  ],
+  prohibitedLabels:['diagnosis','mental fitness','psychological suitability','normal/abnormal'],
+}
