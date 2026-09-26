@@ -20,6 +20,18 @@ export const sascedLevels = {
   '8': { ar:'الدكتوراه أو ما يعادلها', en:'Doctorate or Equivalent' },
 }
 
+export const sascedLevelAliases = {
+  '8': ['دكتوراه','الدكتوراه','doctorate','doctoral','phd'],
+  '7': ['ماجستير','الماجستير','master','masters','msc','ma degree'],
+  '6': ['بكالوريوس','البكالوريوس','bachelor','bachelors','bsc','ba degree'],
+  '5': ['دبلوم متوسط','intermediate diploma'],
+  '4': ['دبلوم مشارك','associate diploma','associate degree'],
+  '3': ['الثانوية','التعليم الثانوي','high school','upper secondary'],
+  '2': ['المتوسط','التعليم المتوسط','lower secondary'],
+  '1': ['الابتدائي','التعليم الابتدائي','primary education'],
+  '0': ['الطفولة المبكرة','رياض الاطفال','early childhood'],
+}
+
 export const sascedIctHierarchy = {
   broad: { code:'06', ar:'تقنية الاتصالات والمعلومات', en:'Information and Communication Technologies' },
   narrow: { code:'061', ar:'تقنية الاتصالات والمعلومات', en:'Information and Communication Technologies' },
@@ -55,7 +67,7 @@ const normalize = value => String(value||'')
   .replace(/[أإآ]/g,'ا')
   .replace(/ة/g,'ه')
   .replace(/[^؀-ۿa-z0-9]+/g,' ')
-  .replace(/s+/g,' ')
+  .replace(/\s+/g,' ')
   .trim()
 
 export const sascedAliases = {
@@ -85,6 +97,26 @@ export function getSascedSpecialty(code){
   }
 }
 
+export function findSascedLevelCandidates(text){
+  const n=normalize(text)
+  if(!n) return []
+  const padded=' '+n+' '
+  const matches=[]
+  for(const [code,aliases] of Object.entries(sascedLevelAliases)){
+    let best=null
+    for(const alias of aliases){
+      const a=normalize(alias)
+      if(!a) continue
+      const index=padded.indexOf(' '+a+' ')
+      if(index<0) continue
+      const score=Math.min(1,.8 + Math.min(.2,a.length/40))
+      if(!best || score>best.score) best={alias,score,index}
+    }
+    if(best) matches.push({code,...sascedLevels[code],match:best.alias,score:best.score,source:SASCED_SOURCE})
+  }
+  return matches.sort((a,b)=>b.score-a.score || Number(b.code)-Number(a.code))
+}
+
 export function findSascedCandidates(text){
   const n=normalize(text)
   if(!n) return []
@@ -94,7 +126,7 @@ export function findSascedCandidates(text){
     for(const alias of aliases){
       const a=normalize(alias)
       if(!a) continue
-      const index=n.indexOf(a)
+      const index=(' '+n+' ').indexOf(' '+a+' ')
       if(index<0) continue
       const score=Math.min(1,.72 + Math.min(.28,a.length/60))
       if(!best || score>best.score) best={alias,score,index}
