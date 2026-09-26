@@ -42,7 +42,7 @@ test('Arabic core journey requires explicit consent and produces traceable evide
   await expect(page.getByText(/قدراتك كما يدعمها الدليل/)).toBeVisible()
   await expect(page.getByText(/أدلة تطبيق/).first()).toBeVisible()
   await page.getByRole('button', { name: /قدراتي/ }).first().click()
-  await expect(page.getByText(/مخرج تعلم/)).toBeVisible()
+  await expect(page.getByRole('heading', { name: /كل مهارة مرتبطة بدليل ومخرج تعلم/ })).toBeVisible()
   await expect(page.getByText(/مؤشر دليل مبدئي/).first()).toBeVisible()
 })
 
@@ -57,7 +57,7 @@ test('student can deny an inferred skill and trigger recalculation', async ({ pa
 
 test('goal is not preselected and judgments stay in exploration mode until chosen', async ({ page }) => {
   await openDemo(page)
-  await expect(page.getByText(/لا أعرف بعد — أريد الاستكشاف/)).toBeVisible()
+  await expect(page.getByRole('button', { name: /لا أعرف بعد — أريد الاستكشاف/ })).toBeVisible()
   await page.getByRole('button', { name: /الدورات/ }).first().click()
   await expect(page.getByText(/لن نصدر حكمًا مبنيًا على هدف لم تختره/)).toBeVisible()
   await expect(page.locator('.status.explore').first()).toBeVisible()
@@ -79,7 +79,7 @@ test('vault exposes the ten-record vision while activating education only', asyn
   await page.getByRole('button', { name: /خزنتك/ }).first().click()
   await expect(page.locator('.vault-record')).toHaveCount(10)
   await expect(page.locator('.vault-record.available')).toHaveCount(1)
-  await expect(page.getByText('الصحي', { exact: true })).toBeVisible()
+  await expect(page.locator('.vault-record').filter({ hasText: 'الصحي' })).toBeVisible()
   await expect(page.getByText(/لا يُطلب إلا لهدف تختاره/).first()).toBeVisible()
 })
 
