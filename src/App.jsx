@@ -123,9 +123,9 @@ function Hero({ lang, onTry }) {
         <h1>{t.hero.title}</h1>
         <p>{t.hero.text}</p>
         <div className="hero-network-line" aria-label={lang === 'ar' ? 'رحلة كامن من الدليل إلى القرار' : 'Kamin journey from evidence to decision'}>
-          <span>{lang === 'ar' ? 'أدلة' : 'Evidence'}</span><b>→</b>
-          <span>Person 360</span><b>→</b>
-          <span>{lang === 'ar' ? 'ملاءمة مفسّرة' : 'Explainable fit'}</span><b>→</b>
+          <span>{lang === 'ar' ? 'أدلة' : 'Evidence'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>Person 360</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'ملاءمة مفسّرة' : 'Explainable fit'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
           <span>{lang === 'ar' ? 'خطوة تالية' : 'Next step'}</span>
         </div>
         <div className="hero-actions">
@@ -227,12 +227,12 @@ function Landing({ lang, onTry }) {
     <section id="decisions" className="section decision-universe">
       <div className="shell">
         <div className="section-title"><span>02</span><div><small className="value-kicker">{lang === 'ar' ? 'ملف واحد، قرارات كثيرة' : 'One profile, many decisions'}</small><h2>{lang === 'ar' ? 'لا نطابقك مع فرصة فقط. نبني طبقة قرار حولك.' : 'Not just opportunity matching — a decision layer around you.'}</h2><p className="section-lead">{lang === 'ar' ? 'النسخة العامة الحالية تفعّل قرارات التعلم وتعرض مطابقة تجريبية للوظائف والتدريب. نفس Person 360 هو الأساس لتوسيع الشبكة لاحقًا.' : 'The current public release activates learning decisions and pilots job/training matching. The same Person 360 is the foundation for the wider network.'}</p></div></div>
-        <div className="match-grid">{matchTypes.map(([title,text,status],i)=>{const Icon=[BookOpen,SearchCheck,Target,LayoutDashboard,GraduationCap,Sparkles][i];return <article className="match-card" key={title}><div className="match-card-head"><span className="match-icon"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
+        <div className="opportunity-grid">{matchTypes.map(([title,text,status],i)=>{const Icon=[BookOpen,SearchCheck,Target,LayoutDashboard,GraduationCap,Sparkles][i];return <article className="opportunity-card" key={title}><div className="opportunity-card-head"><span className="opportunity-icon"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
         <div className="ecosystem-flow" aria-label={lang === 'ar' ? 'من الملف إلى القرار' : 'From profile to decision'}>
-          <span>{lang === 'ar' ? 'Person 360' : 'Person 360'}</span><b>→</b>
-          <span>{lang === 'ar' ? 'متطلبات الفرصة' : 'Opportunity requirements'}</span><b>→</b>
-          <span>{lang === 'ar' ? 'سبب الملاءمة' : 'Fit rationale'}</span><b>→</b>
-          <span>{lang === 'ar' ? 'الفجوة' : 'Gap'}</span><b>→</b>
+          <span>{lang === 'ar' ? 'Person 360' : 'Person 360'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'متطلبات الفرصة' : 'Opportunity requirements'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'سبب الملاءمة' : 'Fit rationale'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'الفجوة' : 'Gap'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
           <span>{lang === 'ar' ? 'الخطوة التالية' : 'Next action'}</span>
         </div>
       </div>
@@ -428,7 +428,7 @@ function MatchExplorer({ lang, profile, matches }) {
     {groups.map(type=>{
       const items=matches.filter(item=>item.type===type)
       return <section className="match-group" key={type}><div className="panel-head"><div><small>{type==='job'?(lang==='ar'?'الوظائف والمسارات':'Jobs & careers'):(lang==='ar'?'التدريب والتطبيق':'Training & applied learning')}</small><h3>{lang==='ar'?'مطابقة على أكثر من بُعد':'Multi-dimensional matching'}</h3></div></div>
-        <div className="match-grid">{items.map(item=><article className="panel match-card" key={item.id}>
+        <div className="opportunity-grid">{items.map(item=><article className="panel match-card" key={item.id}>
           <div className="decision-head"><div><small>{item.subtitle[lang]}</small><h3>{item.title[lang]}</h3></div><span className={`status ${item.judgment==='fits'?'yes':item.judgment==='conditional'?'conditional':'no'}`}>{labels[item.judgment][lang]}</span></div>
           <p className="match-outcome">{item.outcome[lang]}</p>
           <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
