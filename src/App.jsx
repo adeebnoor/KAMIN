@@ -44,6 +44,16 @@ const normalizeState = parsed => {
   }
 }
 
+const hasMeaningfulProfileState = state => !!(
+  state?.approved ||
+  state?.courses?.length ||
+  state?.goal ||
+  state?.localPersistence ||
+  state?.consents?.insight ||
+  Object.keys(state?.insight?.declaredPreferences||{}).length ||
+  state?.audit?.length
+)
+
 const getSaved = () => {
   try {
     let raw=sessionStorage.getItem(STORAGE_KEY)
@@ -650,7 +660,8 @@ function KaminApp({ lang, onClose }) {
     return()=>{cancelled=true}
   },[])
   useEffect(()=>{
-    sessionStorage.setItem(STORAGE_KEY,JSON.stringify(state))
+    if(hasMeaningfulProfileState(state)) sessionStorage.setItem(STORAGE_KEY,JSON.stringify(state))
+    else sessionStorage.removeItem(STORAGE_KEY)
     if(state.localPersistence) void writeLocalProfile(state).catch(()=>{})
   },[state])
   useEffect(()=>{
