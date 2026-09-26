@@ -359,3 +359,78 @@ test('psychometric instruments are visibly research-only until Saudi validation'
   await expect(page.getByText(/لا تؤثر على Fit/)).toBeVisible()
   await expect(page.getByText(/research-candidate-saudi-validation-required/).first()).toBeVisible()
 })
+
+
+test('first-run onboarding is OCR-first with inline trust and mobile camera capture', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+
+  await expect(page.locator('.onboarding-upload')).toHaveCount(1)
+  await expect(page.locator('.onboarding-upload')).toContainText(/ارفع كشف الدرجات/)
+  await expect(page.locator('.inline-trust')).toContainText(/لا يغادر جهازك/)
+  await expect(page.getByRole('link', { name:/شاهد مثالًا وهميًا أولًا/ })).toHaveAttribute('href', /sample-report/)
+  await expect(page.getByRole('button', { name:/أو أدخل يدويًا/ })).toBeVisible()
+
+  const camera=page.locator('#kamin-transcript-camera')
+  await expect(camera).toHaveAttribute('accept','image/*')
+  await expect(camera).toHaveAttribute('capture','environment')
+})
+
+test('opt-in IndexedDB profile survives session loss and returns on the same device', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+
+  await page.getByRole('button', { name:/نعم، احتفظ بملفي/ }).click()
+  await expect(page.getByText(/محفوظ محليًا على هذا الجهاز/)).toBeVisible()
+
+  const persisted=await page.evaluate(async()=>{
+    const open=indexedDB.open('kamin-local-profile-v1',1)
+    const db=await new Promise((resolve,reject)=>{open.onsuccess=()=>resolve(open.result);open.onerror=()=>reject(open.error)})
+    const tx=db.transaction('profiles','readonly')
+    const req=tx.objectStore('profiles').get('current')
+    const value=await new Promise((resolve,reject)=>{req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})
+    db.close()
+    return value
+  })
+  expect(persisted.state.approved).toBe(true)
+  expect(persisted.state.localPersistence).toBe(true)
+
+  await page.evaluate(()=>sessionStorage.clear())
+  await page.reload()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
+  await expect(page.getByText(/أعدنا ملفك المحفوظ محليًا/)).toBeVisible()
+})
+
+test('clear my data removes session and IndexedDB profile residue', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await page.getByRole('button', { name:/نعم، احتفظ بملفي/ }).click()
+
+  await page.getByRole('button', { name:/الخصوصية/ }).first().click()
+  await expect(page.getByText(/ما المخزن عنك الآن؟/)).toBeVisible()
+  await page.getByRole('button', { name:/حذف بياناتي/ }).click()
+  await page.getByRole('button', { name:/نعم، احذف/ }).click()
+  await expect(page.locator('.onboarding-upload')).toBeVisible()
+
+  const residue=await page.evaluate(async()=>{
+    await new Promise(resolve=>setTimeout(resolve,50))
+    const dbNames=typeof indexedDB.databases==='function' ? (await indexedDB.databases()).map(db=>db.name) : []
+    return {
+      session:sessionStorage.getItem('kamin-session-v3'),
+      legacySession:sessionStorage.getItem('kamin-pilot-session-v2'),
+      legacyLocal:localStorage.getItem('kamin-pilot-v1'),
+      hasProfileDb:dbNames.includes('kamin-local-profile-v1'),
+    }
+  })
+  expect(residue.session).toBeNull()
+  expect(residue.legacySession).toBeNull()
+  expect(residue.legacyLocal).toBeNull()
+  expect(residue.hasProfileDb).toBe(false)
+})
