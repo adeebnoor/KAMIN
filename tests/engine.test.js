@@ -4,24 +4,52 @@ import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
 import { parseTranscriptText } from '../src/utils/transcript.js'
 
 describe('Kamin deterministic engine', () => {
-  it('infers evidence-backed skills from demo courses', () => {
-    const skills = inferSkills(demoCourses)
-    expect(skills.some((s) => s.id === 'requirements')).toBe(true)
-    expect(skills.every((s) => s.evidence.length > 0)).toBe(true)
+  it('infers only explicitly mapped evidence-backed skills', () => {
+    const skills=inferSkills(demoCourses)
+    expect(skills.some(s=>s.id==='requirements')).toBe(true)
+    expect(skills.every(s=>s.evidence.length>0)).toBe(true)
+    expect(inferSkills([{code:'MATH-301',name:'Real Analysis',grade:'A'}])).toHaveLength(0)
+    expect(inferSkills([{code:'EE-210',name:'Electrical Engineering Systems',grade:'A'}])).toHaveLength(0)
   })
 
-  it('keeps PMP as not-yet because of the formal gate', () => {
-    const skills = inferSkills(demoCourses)
-    const recs = judgeOpportunities(skills, 'management', 'en')
-    const pmp = recs.find((r) => r.id === 'pmp')
+  it('never treats failed, withdrawn, incomplete, or unknown grades as skill evidence', () => {
+    const rows=['F','W','WF','I','IP','NP','DN','هـ','ح','م'].map(grade=>({code:'CPIT-251',name:'Systems Analysis',grade}))
+    for(const row of rows) expect(inferSkills([row]), row.grade).toHaveLength(0)
+    expect(inferSkills([{code:'CPIT-251',name:'Systems Analysis',grade:'A'}]).length).toBeGreaterThan(0)
+  })
+
+  it('keeps PMP as not-yet with its formal gate and source', () => {
+    const skills=inferSkills(demoCourses)
+    const pmp=judgeOpportunities(skills,'management','en').find(r=>r.id==='pmp')
     expect(pmp.status).toBe('no')
-    expect(pmp.score).toBeLessThanOrEqual(48)
+    expect(pmp.gapType).toBe('Not yet')
+    expect(pmp.formalSource).toMatch(/pmi\.org/)
+    expect(pmp.reasons.join(' ')).toMatch(/36 months/)
   })
 
-  it('parses common transcript lines', () => {
-    const text = 'CPIT-251 Systems Analysis and Design A\nSTAT 201 Applied Statistics B+'
-    const rows = parseTranscriptText(text)
+  it('parses multiple English transcript rows including hours and points', () => {
+    const text='CPIT 251 Systems Analysis and Design 3 A 15.00\nCPIT 252 Software Engineering 3 B+ 13.50\nSTAT 201 Applied Statistics 3 B 12.00'
+    const rows=parseTranscriptText(text)
+    expect(rows).toHaveLength(3)
+    expect(rows[0]).toMatchObject({code:'CPIT-251',grade:'A',hours:3,name:'Systems Analysis and Design'})
+    expect(rows[1].grade).toBe('B+')
+  })
+
+  it('parses Arabic grades and reverse course-code order', () => {
+    const text='251 CPIT تحليل وتصميم النظم 3 أ+ 15.00\nSTAT 201 الإحصاء التطبيقي 3 ب 12.00'
+    const rows=parseTranscriptText(text)
     expect(rows).toHaveLength(2)
-    expect(rows[0].code).toBe('CPIT-251')
+    expect(rows[0]).toMatchObject({code:'CPIT-251',grade:'A+'})
+    expect(rows[1]).toMatchObject({code:'STAT-201',grade:'B'})
+  })
+
+  it('does not turn a course title keyword into a skill without an explicit mapping', () => {
+    const rows=[
+      {code:'MATH-410',name:'Real Analysis',grade:'A'},
+      {code:'EE-201',name:'Electrical Engineering Systems',grade:'A'},
+      {code:'GEN-101',name:'Introduction to Management',grade:'A'},
+      {code:'ISL-101',name:'الأمن الفكري',grade:'A'},
+    ]
+    expect(inferSkills(rows)).toHaveLength(0)
   })
 })
