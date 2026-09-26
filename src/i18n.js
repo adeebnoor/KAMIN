@@ -3,7 +3,7 @@ export const copy = {
     name: 'كامن',
     tagline: 'خزنة قدراتك',
     subTagline: 'المهارات الكامنة • الأدلة الأكاديمية',
-    nav: { home: 'الرئيسية', how: 'كيف يعمل', trust: 'الثقة والامتثال', app: 'تجربة كامن' },
+    nav: { home: 'الرئيسية', how: 'كيف يعمل', trust: 'الثقة والامتثال', app: 'ابدأ كامن' },
     hero: {
       eyebrow: 'السوق لم يعد يسأل: ما مسماك؟ بل: ماذا حققت؟',
       title: 'قيمتك فيما تستطيع تحقيقه، لا في معدلك وحده.',
@@ -49,7 +49,7 @@ export const copy = {
       ['سهولة وصول', 'واجهة عربية أولًا، ثنائية اللغة، لوحة مفاتيح، قارئات شاشة، وحركة منخفضة عند طلب المستخدم.']
     ],
     app: {
-      title: 'تجربة كامن',
+      title: 'كامن 1.0',
       intro: 'ابدأ ببيانات توضيحية أو ارفع كشفًا حقيقيًا. المعالجة الحالية داخل المتصفح فقط.',
       demo: 'استخدم بيانات توضيحية',
       upload: 'ارفع كشف الدرجات',
@@ -86,7 +86,7 @@ export const copy = {
       consent: 'الموافقات',
       consentItems: {
         analyze: 'تحليل السجل وبناء ملف المهارات',
-        insight: 'بناء بصمة الطالب الذاتية',
+        insight: 'Person 360 — بناء بصمة الطالب',
         advisor: 'مشاركة ملخص الملف مع المرشد',
         research: 'استخدام بيانات مجهولة الهوية لأغراض التحقق البحثي'
       },
@@ -109,7 +109,7 @@ export const copy = {
     name: 'Kamin',
     tagline: 'Your capability vault',
     subTagline: 'Latent skills • Academic evidence',
-    nav: { home: 'Home', how: 'How it works', trust: 'Trust & compliance', app: 'Try Kamin' },
+    nav: { home: 'Home', how: 'How it works', trust: 'Trust & compliance', app: 'Open Kamin' },
     hero: {
       eyebrow: 'The market is moving from titles to demonstrated value',
       title: 'Your value is what you can achieve — not your GPA alone.',
@@ -155,7 +155,7 @@ export const copy = {
       ['Accessible by design', 'Arabic-first bilingual UX with keyboard support, screen-reader semantics, and reduced motion.']
     ],
     app: {
-      title: 'Try Kamin',
+      title: 'Kamin 1.0',
       intro: 'Start with demo data or upload a real transcript. Current processing runs inside your browser only.',
       demo: 'Use demo data',
       upload: 'Upload transcript',
@@ -192,7 +192,7 @@ export const copy = {
       consent: 'Consents',
       consentItems: {
         analyze: 'Analyze transcript and build skills profile',
-        insight: 'Build my self-reported Student Insight profile',
+        insight: 'Person 360 — build my profile',
         advisor: 'Share profile summary with an advisor',
         research: 'Use anonymized data for research validation'
       },
