@@ -79,3 +79,21 @@ If durable browser persistence is introduced later, it should use encrypted Inde
 - Manifest: short cache + explicit `application/manifest+json`.
 - Service worker: no-cache so updates propagate.
 - Navigation/HTML: network-first in the service worker.
+
+
+## Saudi education classification
+
+Kamin maintains the Saudi Standard Classification of Educational Levels and Specializations (SSCE) as a separate national-reference layer:
+
+`record -> course -> programme context (SSCE) -> approved CLO/skill evidence -> explained judgment`
+
+The SSCE context does **not** create a skill and does **not** override the department-approved course-to-learning-outcome mapping.
+
+Current pilot mappings for KAU FCIT course namespaces:
+- `CPIT -> 061303` Information Technology.
+- `CPCS -> 061301` Programming and Computer Science.
+- `CPIS -> 061304` Information Systems.
+
+The reference dataset also includes relevant ICT specializations such as Software Engineering `061302`, Information Security `061203`, Artificial Intelligence `061901`, Data Science `061902`, and Health Informatics `068801`.
+
+For a mixed transcript, Kamin may surface a dominant **contextual candidate**, but institutional confirmation is required before formal reporting.
