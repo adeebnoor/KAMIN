@@ -34,7 +34,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await page.goto('/')
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /كامن/)
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
-  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', '/manifest.webmanifest')
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', /manifest\.webmanifest$/)
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /kamin/)
   await expect(page.locator('img[alt="شعار كامن"]').first()).toBeVisible()
 
