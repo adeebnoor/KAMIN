@@ -74,7 +74,7 @@ export function enrichTargetGraph(targetGraph,targetId){
   }
 }
 
-export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar'}={}){
+export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar',requiredCapabilityKeys=[]}={}){
   const slice=getTargetKnowledgeSlice(targetId)
   if(!slice){
     return {
@@ -82,6 +82,7 @@ export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar'}={}){
       externalOccupations:[],
       marketSignals:[],
       developmentGaps:[],
+      requiredGaps:[],
       bridges:[],
       workActivities:[],
     }
@@ -126,10 +127,22 @@ export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar'}={}){
     .sort((a,b)=>(b.observedShare||0)-(a.observedShare||0))
 
   const developmentGaps=marketSignals.filter(signal=>!signal.hasEvidence)
+  const requiredGaps=(requiredCapabilityKeys||[])
+    .filter(key=>(capabilities.get(key)||[]).length===0)
+    .map(key=>({
+      capabilityKey:key,
+      capabilityId:`urn:kamin:skill:${key}`,
+      label:localize(getKnowledgeEntity(`urn:kamin:skill:${key}`)?.label,lang)||key,
+      decisionRole:'required-gap',
+    }))
 
+  const bridgeGapIds=new Set([
+    ...developmentGaps.map(gap=>gap.capabilityId),
+    ...requiredGaps.map(gap=>gap.capabilityId),
+  ])
   const bridgeEdges=ictKnowledgeGraph.edges.filter(edge=>
     edge.predicate==='kamin:developsCapability' &&
-    developmentGaps.some(gap=>gap.capabilityId===edge.object)
+    bridgeGapIds.has(edge.object)
   )
   const bridgeMap=new Map()
   for(const edge of bridgeEdges){
@@ -142,7 +155,10 @@ export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar'}={}){
       status:entity.status||null,
       develops:[],
       source:getKnowledgeSource(edge.sourceId),
+      reasons:[],
     }
+    const isRequired=requiredGaps.some(gap=>gap.capabilityId===edge.object)
+    if(!current.reasons.includes(isRequired?'required-gap':'market-signal-gap')) current.reasons.push(isRequired?'required-gap':'market-signal-gap')
     current.develops.push({
       capabilityId:edge.object,
       capabilityKey:edge.objectKey||localSkillKey(edge.object),
@@ -169,6 +185,7 @@ export function deriveKnowledgeInsights(personIndex,targetId,{lang='ar'}={}){
     externalOccupations,
     marketSignals,
     developmentGaps,
+    requiredGaps,
     bridges:[...bridgeMap.values()],
     workActivities,
   }
