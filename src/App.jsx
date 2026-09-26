@@ -33,7 +33,7 @@ const timeText = (ts, lang) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA' :
 
 function Logo({ compact = false }) {
   return <span className={compact ? 'logo compact' : 'logo'}>
-    <img src="./kamin-logo.jpg" alt="" />
+    <img src="./kamin-logo-fixed.webp" alt="" />
   </span>
 }
 
