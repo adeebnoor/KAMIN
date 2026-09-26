@@ -58,6 +58,13 @@ function judgeGraphTarget(profile,target,lang='ar'){
   const semanticPaths=[]
 
   const requirementEdges=targetGraph.edges.filter(edge=>edge.subject===targetGraph['@id'] && edge.predicate==='kamin:requiresCapability')
+  const targetEntities=new Map((targetGraph.entities||[]).map(entity=>[entity['@id'],entity]))
+  const displayCapability=edge=>{
+    const entity=targetEntities.get(edge.object)
+    const label=entity?.label
+    if(typeof label==='string') return label
+    return label?.[lang]||label?.ar||label?.en||entity?.notation||edge.objectKey
+  }
   const missing=[]
   const met=[]
 
@@ -102,11 +109,14 @@ function judgeGraphTarget(profile,target,lang='ar'){
       `Kamin found ${met.length} valid evidence path(s) across ${requirementEdges.length} core required capabilities.`,
       lang,
     ))
-    if(missing.length) limits.push(text(
-      `لا يوجد حتى الآن مسار دليل معتمد إلى: ${missing.join('، ')}.`,
-      `No approved evidence path currently reaches: ${missing.join(', ')}.`,
-      lang,
-    ))
+    if(missing.length){
+      const missingLabels=requirementEdges.filter(edge=>missing.includes(edge.objectKey)).map(displayCapability)
+      limits.push(text(
+        `لا يوجد حتى الآن مسار دليل معتمد إلى: ${missingLabels.join('، ')}.`,
+        `No approved evidence path currently reaches: ${missingLabels.join(', ')}.`,
+        lang,
+      ))
+    }
   }else{
     support.push(text(
       'هذا المسار لا يفرض قدرة أكاديمية مسبقة في الرسم المرجعي الحالي.',

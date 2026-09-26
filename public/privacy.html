@@ -7,12 +7,14 @@
 <meta name="description" content="سياسة الخصوصية للنسخة التجريبية العامة من كامن.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
-body{font-family:"Noto Sans Arabic Variable","Noto Sans Arabic",Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8fb;line-height:1.9}.wrap{max-width:900px;margin:auto;padding:48px 22px}.card{background:#fff;border:1px solid #dce5ee;border-radius:20px;padding:32px}.brand{color:#0b2f5b}h1,h2{color:#0b2f5b}a{color:#0b2f5b;font-weight:700}.note{background:#edf8f4;border:1px solid #c7e7db;padding:14px;border-radius:12px}.en{direction:ltr;text-align:left;border-top:1px solid #dce5ee;margin-top:34px;padding-top:28px}
+[hidden]{display:none!important}body{font-family:"Noto Sans Arabic Variable","Noto Sans Arabic",Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8fb;line-height:1.9}.wrap{max-width:900px;margin:auto;padding:48px 22px}.card{background:#fff;border:1px solid #dce5ee;border-radius:20px;padding:32px}.brand{color:#0b2f5b}h1,h2{color:#0b2f5b}a{color:#0b2f5b;font-weight:700}.note{background:#edf8f4;border:1px solid #c7e7db;padding:14px;border-radius:12px}.en{direction:ltr;text-align:left;border-top:1px solid #dce5ee;margin-top:34px;padding-top:28px}
+html[lang="en"] body{font-family:Inter,Arial,sans-serif}.topline{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.lang-toggle{border:1px solid #dce5ee;background:#fff;color:#0b2f5b;border-radius:10px;padding:7px 10px;font-weight:900;cursor:pointer}
 </style>
 <link rel="stylesheet" href="/fonts/noto-sans-arabic.css">
-</head>
-<body><main class="wrap"><article class="card">
-<a href="/">← العودة إلى كامن</a>
+<script src="/static-i18n.js"></script></head>
+<body data-title-ar="سياسة الخصوصية | كامن" data-title-en="Privacy Policy | Kamin" data-description-ar="سياسة الخصوصية للنسخة التجريبية العامة من كامن." data-description-en="Privacy policy for the public Kamin release."><main class="wrap"><article class="card">
+<div class="topline"><a href="/">← <span data-kamin-lang="ar">العودة إلى كامن</span><span data-kamin-lang="en">Back to Kamin</span></a><button class="lang-toggle" type="button" data-language-toggle></button></div>
+<div data-kamin-lang="ar">
 <h1 class="brand">سياسة الخصوصية — كامن</h1>
 <p class="note"><strong>النسخة العامة الحالية:</strong> تتم قراءة كشف الدرجات ومعالجة النتائج داخل متصفح المستخدم. لا تُرفع صورة كشف الدرجات أو ملفه إلى خادم كامن في هذه النسخة.</p>
 <h2>ما الذي يُحفظ؟</h2><p>الوضع الافتراضي هو جلسة المتصفح فقط. إذا اختار المستخدم صراحةً «الاحتفاظ بملفي على هذا الجهاز»، تُحفظ المقررات المعتمدة وملف القدرات والموافقات وسجل الاستخدام محليًا على الجهاز عبر IndexedDB حتى يتم إيقاف الحفظ الدائم أو حذف البيانات. لا تُنشأ نسخة مركزية لدى كامن.</p>
@@ -22,7 +24,8 @@ body{font-family:"Noto Sans Arabic Variable","Noto Sans Arabic",Tahoma,Arial,san
 <h2>ما لا تفعله النسخة العامة</h2><p>لا تشارك بيانات الطالب مع المرشدين أو الباحثين أو أصحاب العمل أو مزودي التدريب فعليًا، ولا تُفعّل تخزينًا مؤسسيًا مركزيًا، ولا تستخدم بيانات الملف المحلي لتدريب نموذج مركزي. أي إطلاق مؤسسي يتطلب اتفاقيات بيانات وسياسة احتفاظ واستضافة معتمدة ومراجعة امتثال مستقلة.</p>
 <h2>ملفات تعريف الارتباط والتحليلات</h2><p>لا يحتاج كامن إلى ملفات تعريف ارتباط إعلانية أو تتبع تسويقي لبناء حكم الملاءمة. أدوات قياس الـpilot معطلة افتراضيًا في النسخة العامة. عند تفعيلها لدفعة تجريبية محددة، تقتصر على أحداث funnel مسماة مسبقًا مثل فتح الصفحة وبدء/إكمال الرفع والعودة للملف، دون محتوى كشف الدرجات أو بيانات تعريف شخصية. جمع الملاحظات/الاقتباسات يتطلب موافقة منفصلة وصريحة.</p>
 <h2>التحديثات</h2><p>آخر تحديث: 26 سبتمبر 2026.</p>
-<section class="en">
+</div>
+<section data-kamin-lang="en" hidden>
 <h1>Privacy Policy — Kamin</h1>
 <p class="note"><strong>Public pilot:</strong> Transcript reading and inference run inside the user's browser. The transcript file or image is not uploaded to a Kamin server in this release.</p>
 <h2>What is stored?</h2><p>The default is session-only storage. If the user explicitly chooses “Keep my profile on this device,” approved courses, the capability profile, consents, and the usage log persist locally on that device in IndexedDB until persistent saving is disabled or the data are deleted. Kamin does not create a central copy.</p>

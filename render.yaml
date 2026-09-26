@@ -17,6 +17,9 @@ services:
       - path: /knowledge/*
         name: Cache-Control
         value: public, max-age=31536000, immutable
+      - path: /mapping/*
+        name: Cache-Control
+        value: public, max-age=86400, must-revalidate
       - path: /kamin-logo-v3.webp
         name: Cache-Control
         value: public, max-age=31536000, immutable
@@ -38,6 +41,9 @@ services:
       - path: /favicon.svg
         name: Cache-Control
         value: public, max-age=604800
+      - path: /static-i18n.js
+        name: Cache-Control
+        value: public, max-age=3600, must-revalidate
       - path: /manifest.json
         name: Content-Type
         value: application/manifest+json; charset=utf-8
