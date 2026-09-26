@@ -54,7 +54,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   }
 })
 
-test('approved pilot session gives explicit local-save confirmation', async ({ page }) => {
+test('approved Kamin session gives explicit local-save confirmation', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
@@ -62,7 +62,7 @@ test('approved pilot session gives explicit local-save confirmation', async ({ p
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.getByRole('status')).toContainText(/تم اعتماد السجل/)
   const storage = await page.evaluate(() => ({
-    session: sessionStorage.getItem('kamin-pilot-session-v2'),
+    session: sessionStorage.getItem('kamin-session-v3'),
     legacy: localStorage.getItem('kamin-pilot-v1')
   }))
   expect(storage.session).toContain('"approved":true')
@@ -127,7 +127,7 @@ test('a failed upload path never injects demo courses', async ({ page }) => {
 })
 
 
-test('public pilot does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
+test('Kamin does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
   await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
@@ -187,7 +187,7 @@ test('Person 360 is optional, structured, and available before transcript approv
   await expect(page.getByText(/O\*NET Mini Interest Profiler/)).toBeVisible()
   await expect(page.getByText(/IPIP 50-item Big-Five/)).toBeVisible()
 
-  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
+  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
   expect(storage.consents.insight).toBe(true)
   expect(storage.insight.declaredPreferences.workStructure).toBe('balanced')
   expect(storage.insight.declaredPreferences.collaboration).toBe('small-team')
@@ -206,7 +206,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   await expect(insightConsent).toBeChecked()
   await insightConsent.uncheck()
 
-  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
+  const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
   expect(storage.consents.insight).toBe(false)
   expect(storage.insight.declaredPreferences).toEqual({})
 })
@@ -223,4 +223,36 @@ test('canonical JSON-LD ontology context is published with verified namespaces',
   expect(context.prov).toBe('http://www.w3.org/ns/prov#')
   expect(context.Credential).toBe('ceterms:Credential')
   expect(context.Competency).toBe('ceasn:Competency')
+})
+
+
+test('Kamin 1.0 production naming replaces prototype language', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await expect(page.getByText('كامن 1.0')).toBeVisible()
+  const body=await page.locator('body').innerText()
+  expect(body).not.toMatch(/public pilot|launch pilot|نسخة إطلاق تجريبية|نسخة تجريبية عامة/i)
+})
+
+test('legacy pilot session migrates once into Kamin 1.0 session storage', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => {
+    sessionStorage.clear()
+    sessionStorage.setItem('kamin-pilot-session-v2', JSON.stringify({
+      courses:[],
+      approved:false,
+      goal:'data',
+      consents:{analyze:false,insight:false,advisor:false,research:false},
+      insight:{version:'legacy',declaredPreferences:{workStructure:'balanced'}},
+      audit:[]
+    }))
+  })
+  await page.reload()
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  const storage=await page.evaluate(() => ({
+    current:sessionStorage.getItem('kamin-session-v3'),
+    legacy:sessionStorage.getItem('kamin-pilot-session-v2')
+  }))
+  expect(storage.current).toContain('"goal":"data"')
+  expect(storage.legacy).toBeNull()
 })
