@@ -98,9 +98,10 @@ function Header({ lang, setLang, onTry }) {
         <BrandMark/><span><strong>{t.name}</strong><small>{t.tagline}</small></span>
       </button>
       <nav id="mobile-nav" className={open ? 'main-nav open' : 'main-nav'} aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main navigation'}>
+        <button onClick={() => go('proof')}>{lang === 'ar' ? 'شاهد الدليل' : 'See proof'}</button>
         <button onClick={() => go('how')}>{t.nav.how}</button>
-        <button onClick={() => go('institutions')}>{lang === 'ar' ? 'للمؤسسات' : 'For institutions'}</button>
-        <button onClick={() => go('trust')}>{t.nav.trust}</button>
+        <button onClick={() => go('institutions')}>{lang === 'ar' ? 'للجامعات والشركات' : 'Universities & employers'}</button>
+        <a className="nav-link" href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'المنهجية' : 'Methodology'}</a>
         <button className="nav-primary" onClick={() => { onTry(); setOpen(false) }}>{t.nav.app}<Arrow size={16}/></button>
       </nav>
       <div className="header-tools">
@@ -119,25 +120,32 @@ function Hero({ lang, onTry }) {
   return <section id="home" className="hero">
     <div className="shell hero-grid">
       <div className="hero-copy">
-        <span className="eyebrow"><Sparkles size={16}/>{t.hero.eyebrow}</span>
+        <span className="eyebrow"><GraduationCap size={16}/>{t.hero.eyebrow}</span>
         <h1>{t.hero.title}</h1>
         <p>{t.hero.text}</p>
         <div className="hero-network-line" aria-label={lang === 'ar' ? 'رحلة كامن من الدليل إلى القرار' : 'Kamin journey from evidence to decision'}>
-          <span>{lang === 'ar' ? 'أدلة' : 'Evidence'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>Person 360</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'سجل + مشاريع' : 'Record + projects'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
+          <span>{lang === 'ar' ? 'ملف القدرات 360°' : 'Capability Profile 360°'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
           <span>{lang === 'ar' ? 'ملاءمة مفسّرة' : 'Explainable fit'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
           <span>{lang === 'ar' ? 'خطوة تالية' : 'Next step'}</span>
         </div>
         <div className="hero-actions">
           <button className="button primary" onClick={onTry}>{t.hero.cta}<Arrow size={18}/></button>
-          <button className="button secondary" onClick={() => document.getElementById('person360')?.scrollIntoView({ behavior:'smooth' })}>{t.hero.secondary}</button>
+          <a className="button secondary" href={lang === 'ar' ? '/sample-report.html?lang=ar' : '/sample-report.html?lang=en'}>{t.hero.secondary}</a>
         </div>
         <div className="privacy-chip"><ShieldCheck size={18}/><span>{t.hero.trust}</span></div>
       </div>
-      <div className="hero-preview" aria-label={lang === 'ar' ? 'معاينة شبكة قدرات كامن' : 'Kamin capability network preview'}>
-        <div className="logo-panel"><Logo lang={lang}/></div>
-        <div className="float-card top"><SearchCheck size={18}/><div><small>{t.hero.cards[0][0]}</small><strong>{t.hero.cards[0][1]}</strong></div></div>
-        <div className="float-card bottom"><BadgeCheck size={18}/><div><small>{t.hero.cards[1][0]}</small><strong>{t.hero.cards[1][1]}</strong></div></div>
+      <div className="hero-preview proof-preview" aria-label={lang === 'ar' ? 'معاينة تقرير قدرات كامن' : 'Kamin capability report preview'}>
+        <div className="proof-window">
+          <div className="proof-window-head"><span>{lang === 'ar' ? 'تقرير تجريبي · سارة' : 'Demo report · Sara'}</span><small>{lang === 'ar' ? 'بيانات وهمية' : 'Synthetic data'}</small></div>
+          <div className="proof-role"><small>{lang === 'ar' ? 'الهدف' : 'Target'}</small><strong>Junior Data Analyst</strong><span className="status conditional">{lang === 'ar' ? 'ملاءمة بشروط' : 'Fits with conditions'}</span></div>
+          <div className="proof-evidence">
+            <div><BadgeCheck size={17}/><span><b>SQL</b><small>{lang === 'ar' ? 'قواعد بيانات · دليل أكاديمي' : 'Database course · academic evidence'}</small></span></div>
+            <div><BadgeCheck size={17}/><span><b>Python</b><small>{lang === 'ar' ? 'مشروع تطبيقي' : 'Applied project'}</small></span></div>
+            <div className="proof-gap"><Target size={17}/><span><b>Cloud</b><small>{lang === 'ar' ? 'فجوة: لا يوجد دليل معتمد بعد' : 'Gap: no approved evidence yet'}</small></span></div>
+          </div>
+          <div className="proof-next"><strong>{lang === 'ar' ? 'الخطوة التالية' : 'Next step'}</strong><span>{lang === 'ar' ? 'أضف مشروعًا صغيرًا منشورًا على السحابة ثم أعد التقييم.' : 'Add a small cloud-deployed project, then re-evaluate.'}</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -162,45 +170,44 @@ function Landing({ lang, onTry }) {
   const stepIcons = [FileCheck2, Fingerprint, Target]
   const trustIcons = [Fingerprint, FileCheck2, ShieldCheck, SearchCheck]
   const personDimensions = lang === 'ar' ? [
-    ['01','ما تعرفه','المعارف التي اكتسبتها من الدراسة والتعلم والخبرة.'],
-    ['02','ما تستطيع فعله','قدرات ومهارات مرتبطة بأدلة يمكن الرجوع إليها.'],
-    ['03','ما أنجزته','مقررات ومشاريع وشهادات وخبرات تبني سجل القدرة.'],
-    ['04','كيف تفضّل أن تعمل','تفضيلات واهتمامات تختار أنت مشاركتها وتعديلها.'],
-    ['05','إلى أين تريد أن تصل','أهداف مهنية وتعليمية تجعل المطابقة مرتبطة بقرار حقيقي.'],
-    ['06','ما الذي ينقصك','فجوات واضحة تتحول إلى خطوة قابلة للتنفيذ بدل توصية غامضة.'],
+    ['01','أدلة أكاديمية','المقررات والنتائج التي راجعتها واعتمدتها أنت.'],
+    ['02','قدرات مرتبطة بمصدر','لا تظهر مهارة في الحكم دون أثر يمكن الرجوع إليه.'],
+    ['03','تفضيلات وأهداف','إشارات تختارها أنت لتخصيص القرار، ولا تتحول إلى دليل أكاديمي.'],
+    ['04','فجوات واضحة','ما لا نملك عليه دليلًا يبقى فجوة، لا استنتاجًا مخفيًا.'],
   ] : [
-    ['01','What you know','Knowledge built through study, learning, and experience.'],
-    ['02','What you can do','Capabilities and skills tied to evidence you can inspect.'],
-    ['03','What you have done','Courses, projects, credentials, and experience that form a capability record.'],
-    ['04','How you prefer to work','Preferences and interests that you choose to share and can change.'],
-    ['05','Where you want to go','Career and learning goals that anchor matching to a real decision.'],
-    ['06','What is missing','Visible gaps translated into an actionable next step instead of a vague recommendation.'],
+    ['01','Academic evidence','Courses and results that you reviewed and approved.'],
+    ['02','Source-linked capabilities','A skill does not enter a judgment without a traceable source.'],
+    ['03','Preferences and goals','Signals you choose for personalization; they do not become academic evidence.'],
+    ['04','Visible gaps','What lacks evidence remains a gap, not a hidden inference.'],
   ]
-  const matchTypes = lang === 'ar' ? [
-    ['الدورات','أي تعلم يستحق وقتك ومالك؟','متاح الآن'],
-    ['الوظائف','أين تدعم الأدلة ملاءمتك، وأين توجد الفجوة؟','تجريبي'],
-    ['التدريب','أي تجربة تطبيقية تسد أهم فجوة؟','تجريبي'],
-    ['المهن','ما المسارات الأقرب لقدراتك واتجاهك؟','قادم'],
-    ['التخصصات','أي مسار أكاديمي يتسق مع ملفك بصورة أفضل؟','قادم'],
-    ['الأشخاص','من يملك خبرة أو قدرة مكملة للتعلم أو التعاون؟','قادم'],
+  const liveNow = lang === 'ar' ? [
+    ['استخراج السجل محليًا','PDF وصور، مع OCR داخل المتصفح ومراجعة قبل الاعتماد.'],
+    ['مهارات مرتبطة بالأدلة','الربط المعتمد فقط يؤثر في الحكم؛ المقرر غير المربوط لا يولد مهارة.'],
+    ['قرارات تعلم مفسّرة','لماذا تناسبك الدورة، وما الفجوة، وما الذي يجعلها مناسبة لاحقًا.'],
+    ['مطابقة وظائف وتدريب تجريبية','تعرض آليات الملاءمة والحدود دون نسبة رقمية غير معايرة.'],
   ] : [
-    ['Courses','Which learning step is worth your time and money?','Live now'],
-    ['Jobs','Where does the evidence support fit, and where is the gap?','Pilot'],
-    ['Training','Which applied experience closes the most important gap?','Pilot'],
-    ['Careers','Which pathways are closest to your capabilities and direction?','Roadmap'],
-    ['Majors','Which academic pathway aligns better with your profile?','Roadmap'],
-    ['People','Who has complementary capability for learning or collaboration?','Roadmap'],
+    ['Local transcript ingestion','PDF and images with in-browser OCR and review before approval.'],
+    ['Evidence-linked skills','Only governed mappings affect judgments; unmapped courses create no skills.'],
+    ['Explainable learning decisions','Why a course fits, what is missing, and what could make it suitable later.'],
+    ['Pilot job & training matching','Shows fit mechanisms and limits without an uncalibrated numeric score.'],
   ]
-  const institutions = lang === 'ar' ? [
-    ['الجامعات','إرشاد شخصي للطالب مع مؤشرات جاهزية وفجوات على مستوى البرامج دون تحويله إلى رقم.'],
-    ['المدارس','مساعدة الطالب والأسرة والمرشد على فهم القدرات قبل اختيار المسار أو التخصص.'],
-    ['أصحاب العمل','بحث قائم على القدرات والأدلة بدل الاعتماد على المسمى والكلمات المفتاحية فقط.'],
-    ['جهات التدريب','ربط التدريب بالشخص الذي يحتاج المهارة فعلًا وقياس ما أضافه إلى ملف قدراته.'],
+  const notClaimed = lang === 'ar' ? [
+    'لا ننشر دقة نموذج غير مقاسة بعد.',
+    'لا ندّعي وجود شبكة شركات أو جامعات متعاقدة ما لم تكن موثقة.',
+    'لا توجد قرارات توظيف آلية أو حجب فرص عن المستخدم.',
+    'المدارس ومطابقة الأشخاص ليستا ضمن شريحة الإطلاق الأولى.',
   ] : [
-    ['Universities','Personalized student guidance plus readiness and gap signals at program level without reducing the learner to a score.'],
-    ['Schools','Help students, families, and counselors understand capability before pathway or major selection.'],
-    ['Employers','Capability- and evidence-based talent discovery beyond titles and keyword search.'],
-    ['Training providers','Reach people who genuinely need the skill and connect learning outcomes back to their capability profile.'],
+    'We do not publish model-accuracy claims before measurement.',
+    'We do not imply signed university or employer networks without evidence.',
+    'Kamin does not make automated hiring decisions or block opportunities.',
+    'Schools and people-matching are outside the first launch wedge.',
+  ]
+  const institutionCards = lang === 'ar' ? [
+    ['الجامعات ومراكز الإرشاد المهني','Pilot لطلاب السنة الأخيرة والخريجين: ملف قدرات مملوك للطالب + فجوات برامج مجمّعة لاحقًا بعد بوابة الامتثال.','المسار الأول'],
+    ['أصحاب العمل','Employer-Lite لاحقًا: فتح تقرير بموافقة المرشح، رؤية الدليل، فهم الفجوات، وإرسال feedback.','المسار الثاني'],
+  ] : [
+    ['Universities & career centers','Pilot for final-year students and recent graduates: student-owned profiles plus aggregate program gaps after the compliance gate.','Primary path'],
+    ['Employers','Employer-Lite next: open a candidate report with consent, inspect evidence, understand gaps, and provide feedback.','Second path'],
   ]
   return <>
     <Hero lang={lang} onTry={onTry}/>
@@ -208,33 +215,34 @@ function Landing({ lang, onTry }) {
     <section className="journey-strip" aria-label={lang === 'ar' ? 'نموذج كامن' : 'Kamin model'}>
       <div className="shell journey-grid">
         {[
-          [lang === 'ar' ? 'اجمع' : 'Collect', lang === 'ar' ? 'أدلتك' : 'evidence'],
-          [lang === 'ar' ? 'ابنِ' : 'Build', 'Person 360'],
-          [lang === 'ar' ? 'طابق' : 'Match', lang === 'ar' ? 'مع الفرص' : 'to opportunities'],
-          [lang === 'ar' ? 'افهم' : 'Explain', lang === 'ar' ? 'لماذا وما التالي' : 'why + what next'],
+          [lang === 'ar' ? 'اجمع' : 'Collect', lang === 'ar' ? 'الأدلة' : 'evidence'],
+          [lang === 'ar' ? 'ابنِ' : 'Build', lang === 'ar' ? 'ملف القدرات' : 'capability profile'],
+          [lang === 'ar' ? 'قارن' : 'Compare', lang === 'ar' ? 'بمتطلبات الفرصة' : 'to requirements'],
+          [lang === 'ar' ? 'افهم' : 'Explain', lang === 'ar' ? 'السبب والفجوة والتالي' : 'why, gap, next'],
         ].map(([verb,noun],i)=><div className="journey-node" key={verb+noun}><span>{String(i+1).padStart(2,'0')}</span><div><small>{verb}</small><strong>{noun}</strong></div></div>)}
+      </div>
+    </section>
+
+    <section id="proof" className="section proof-section">
+      <div className="shell">
+        <div className="section-title"><span>01</span><div><small className="value-kicker">{lang === 'ar' ? 'إثبات قبل التوسع' : 'Proof before expansion'}</small><h2>{lang === 'ar' ? 'ما الذي يعمل اليوم فعلًا؟' : 'What actually works today?'}</h2><p className="section-lead">{lang === 'ar' ? 'بدل قائمة وعود واسعة، هذه حدود النسخة العامة الحالية وما نرفض الادعاء به قبل القياس.' : 'Instead of a broad promise list, this is the current public-release boundary—and what we refuse to claim before measurement.'}</p></div></div>
+        <div className="proof-grid">
+          <div className="proof-live"><div className="proof-label live">{lang === 'ar' ? 'Operational الآن' : 'Operational now'}</div>{liveNow.map(([title,text])=><article key={title}><Check size={18}/><div><strong>{title}</strong><p>{text}</p></div></article>)}</div>
+          <div className="proof-boundary"><div className="proof-label boundary">{lang === 'ar' ? 'لا ندّعيه بعد' : 'Not claimed yet'}</div>{notClaimed.map(item=><p key={item}><X size={16}/><span>{item}</span></p>)}</div>
+        </div>
+        <div className="proof-actions">
+          <a className="button primary" href={lang === 'ar' ? '/sample-report.html?lang=ar' : '/sample-report.html?lang=en'}>{lang === 'ar' ? 'افتح تقريرًا تجريبيًا' : 'Open a sample report'}</a>
+          <a className="button secondary" href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'اقرأ المنهجية' : 'Read methodology'}</a>
+          <a className="button secondary" href={lang === 'ar' ? '/trust.html?lang=ar' : '/trust.html?lang=en'}>{lang === 'ar' ? 'مركز الثقة' : 'Trust center'}</a>
+        </div>
       </div>
     </section>
 
     <section id="person360" className="section person360-section">
       <div className="shell">
-        <div className="section-title"><span>01</span><div><small className="value-kicker">{lang === 'ar' ? 'كامن يبدأ بك أنت' : 'Kamin starts with you'}</small><h2>{lang === 'ar' ? 'ملف Person 360 حي، وليس اختبارًا تنهيه مرة واحدة.' : 'A living Person 360 profile, not a one-time test.'}</h2><p className="section-lead">{lang === 'ar' ? 'نبني صورة متدرجة من الأدلة التي تختار مشاركتها. كل طبقة تظل منفصلة وقابلة للمراجعة، ولا تتحول الاستنتاجات إلى حقائق لمجرد أن الذكاء الاصطناعي قالها.' : 'Kamin builds a progressive picture from evidence you choose to share. Layers stay distinct and reviewable; an AI inference does not become a fact simply because a model produced it.'}</p></div></div>
-        <div className="person360-grid">{personDimensions.map(([n,title,text])=><article className="dimension-card" key={n}><span className="dimension-number">{n}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
-        <div className="network-note"><ShieldCheck size={19}/><div><strong>{lang === 'ar' ? 'أنت صاحب الملف.' : 'You own the profile.'}</strong><span>{lang === 'ar' ? 'التقنية تستخرج وتقترح؛ أنت تراجع وتعتمد وتقرر ما يُشارك.' : 'Technology extracts and suggests; you review, approve, and decide what is shared.'}</span></div></div>
-      </div>
-    </section>
-
-    <section id="decisions" className="section decision-universe">
-      <div className="shell">
-        <div className="section-title"><span>02</span><div><small className="value-kicker">{lang === 'ar' ? 'ملف واحد، قرارات كثيرة' : 'One profile, many decisions'}</small><h2>{lang === 'ar' ? 'لا نطابقك مع فرصة فقط. نبني طبقة قرار حولك.' : 'Not just opportunity matching — a decision layer around you.'}</h2><p className="section-lead">{lang === 'ar' ? 'النسخة العامة الحالية تفعّل قرارات التعلم وتعرض مطابقة تجريبية للوظائف والتدريب. نفس Person 360 هو الأساس لتوسيع الشبكة لاحقًا.' : 'The current public release activates learning decisions and pilots job/training matching. The same Person 360 is the foundation for the wider network.'}</p></div></div>
-        <div className="opportunity-grid">{matchTypes.map(([title,text,status],i)=>{const Icon=[BookOpen,SearchCheck,Target,LayoutDashboard,GraduationCap,Sparkles][i];return <article className="opportunity-card" key={title}><div className="opportunity-card-head"><span className="opportunity-icon"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
-        <div className="ecosystem-flow" aria-label={lang === 'ar' ? 'من الملف إلى القرار' : 'From profile to decision'}>
-          <span>{lang === 'ar' ? 'Person 360' : 'Person 360'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'متطلبات الفرصة' : 'Opportunity requirements'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'سبب الملاءمة' : 'Fit rationale'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'الفجوة' : 'Gap'}</span><b>{lang === 'ar' ? '←' : '→'}</b>
-          <span>{lang === 'ar' ? 'الخطوة التالية' : 'Next action'}</span>
-        </div>
+        <div className="section-title"><span>02</span><div><small className="value-kicker">{lang === 'ar' ? 'ملف القدرات 360°' : 'Capability Profile 360°'}</small><h2>{lang === 'ar' ? 'ملف تملكه أنت، وليس “تقييمًا شاملًا” تملكه المؤسسة.' : 'A profile you own—not a 360° assessment owned by an institution.'}</h2><p className="section-lead">{lang === 'ar' ? 'الاسم الداخلي للمعمارية هو Person 360، لكن تجربة المستخدم تركز على ملكيتك لملف القدرات: أدلة، قدرات، تفضيلات، أهداف وفجوات منفصلة وقابلة للمراجعة.' : 'The internal architecture uses Person 360, but the user experience centers ownership: evidence, capabilities, preferences, goals, and gaps remain distinct and reviewable.'}</p></div></div>
+        <div className="person360-grid compact">{personDimensions.map(([n,title,text])=><article className="dimension-card" key={n}><span className="dimension-number">{n}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+        <div className="network-note"><ShieldCheck size={19}/><div><strong>{lang === 'ar' ? 'الذكاء الاصطناعي يقترح. الدليل يبرر. وأنت تقرر.' : 'AI suggests. Evidence justifies. You decide.'}</strong><span>{lang === 'ar' ? 'في النسخة العامة، البيانات تبقى في جلسة المتصفح ولا تُستخدم لتدريب نموذج مركزي.' : 'In the public release, profile data stays in the browser session and is not used to train a central model.'}</span></div></div>
       </div>
     </section>
 
@@ -242,7 +250,7 @@ function Landing({ lang, onTry }) {
 
     <section id="how" className="section">
       <div className="shell">
-        <div className="section-title"><span>04</span><h2>{t.how.title}</h2></div>
+        <div className="section-title"><span>04</span><div><small className="value-kicker">{lang === 'ar' ? 'أول 10 دقائق' : 'The first 10 minutes'}</small><h2>{t.how.title}</h2></div></div>
         <div className="cards-3">{t.how.steps.map(([title, text], i) => {
           const Icon = stepIcons[i]
           return <article className="info-card" key={title}><div className="icon-box"><Icon/></div><small>{String(i+1).padStart(2,'0')}</small><h3>{title}</h3><p>{text}</p></article>
@@ -252,18 +260,18 @@ function Landing({ lang, onTry }) {
 
     <section id="institutions" className="section institutions-section">
       <div className="shell">
-        <div className="section-title"><span>05</span><div><small className="value-kicker">{lang === 'ar' ? 'كامن للمؤسسات' : 'Kamin for institutions'}</small><h2>{lang === 'ar' ? 'عندما نفهم الفرد بصورة أفضل، تصبح قرارات المؤسسة أذكى.' : 'When the individual is understood better, institutional decisions get smarter.'}</h2><p className="section-lead">{lang === 'ar' ? 'نفس طبقة Person 360 يمكن أن تخدم الإرشاد، الجاهزية، التدريب، اكتشاف المواهب وتحليل فجوات القدرات — مع فصل واضح بين بيانات الفرد والرؤية المؤسسية.' : 'The same Person 360 layer can support guidance, readiness, training, talent discovery, and capability-gap intelligence while keeping personal data and institutional insight clearly separated.'}</p></div></div>
-        <div className="institution-grid">{institutions.map(([title,text],i)=>{const Icon=[GraduationCap,BookOpen,SearchCheck,Target][i];return <article className="institution-card" key={title}><span className="institution-badge"><Icon size={20}/></span><h3>{title}</h3><p>{text}</p></article>})}</div>
+        <div className="section-title"><span>05</span><div><small className="value-kicker">{lang === 'ar' ? 'تركيز الإطلاق' : 'Launch wedge'}</small><h2>{lang === 'ar' ? 'طلاب السنة الأخيرة والخريجون أولًا. الجامعات والشركات ثانيًا.' : 'Final-year students and recent graduates first. Universities and employers second.'}</h2><p className="section-lead">{lang === 'ar' ? 'لا نستهدف المدارس أو كل فئات السوق بنفس القوة في البداية. المسار التجاري الأول هو B2B2C عبر جامعة أو برنامج واضح، ثم Employer-Lite لقياس الثقة والأثر.' : 'We are not targeting schools or every market segment equally at launch. The first commercial path is B2B2C through a focused university/program, followed by Employer-Lite to measure trust and outcomes.'}</p></div></div>
+        <div className="institution-grid focused">{institutionCards.map(([title,text,status],i)=>{const Icon=[GraduationCap,SearchCheck][i];return <article className="institution-card" key={title}><div className="institution-head"><span className="institution-badge"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
         <div className="business-principle">
-          <div><small>{lang === 'ar' ? 'نموذج العمل' : 'Business model'}</small><strong>{lang === 'ar' ? 'الأفراد يبدأون مجانًا. المؤسسات تدفع مقابل التشغيل والتكامل والتحليلات.' : 'Individuals start free. Institutions pay for deployment, integration, and intelligence.'}</strong></div>
-          <p>{lang === 'ar' ? 'قاعدة غير قابلة للمساومة: الشراكة أو الإعلان لا يستطيعان شراء Fit أعلى. محرك الملاءمة يبقى منفصلًا عن القيمة التجارية.' : 'Non-negotiable rule: partnership or promotion cannot buy a higher fit judgment. Matching stays isolated from commercial value.'}</p>
+          <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
+          <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك Fit.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
         </div>
       </div>
     </section>
 
     <section id="trust" className="section trust">
       <div className="shell trust-grid">
-        <div className="trust-copy"><span className="eyebrow"><LockKeyhole size={16}/>Privacy by design</span><h2>{t.trustTitle}</h2><p>{t.compliance.text}</p><div className="compliance-pill"><ShieldCheck size={18}/>{t.compliance.title}</div></div>
+        <div className="trust-copy"><span className="eyebrow"><LockKeyhole size={16}/>Privacy by design</span><h2>{t.trustTitle}</h2><p>{t.compliance.text}</p><div className="trust-links"><a href={lang === 'ar' ? '/trust.html?lang=ar' : '/trust.html?lang=en'}>{lang === 'ar' ? 'مركز الثقة' : 'Trust center'}</a><a href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'المنهجية والحدود' : 'Methodology & limits'}</a><a href="./privacy.html">{lang === 'ar' ? 'سياسة الخصوصية' : 'Privacy policy'}</a></div></div>
         <div className="trust-cards">{t.trustItems.map(([title,text],i) => {
           const Icon = trustIcons[i]
           return <article key={title}><Icon/><h3>{title}</h3><p>{text}</p></article>
@@ -275,23 +283,15 @@ function Landing({ lang, onTry }) {
       <div className="shell faq-grid">
         <div className="section-title"><span>07</span><h2>{lang === 'ar' ? 'أسئلة قبل أن تثق بالتوصية' : 'Questions before you trust a recommendation'}</h2></div>
         <div className="faq-list">
-          <details>
-            <summary>{lang === 'ar' ? 'هل الدرجة وحدها تكفي؟' : 'Is a grade enough on its own?'}</summary>
-            <p>{lang === 'ar' ? 'لا. كامن يربط المقرر ومخرجات تعلمه بمهارة معتمدة، ثم يستخدم الدرجة كجزء من قوة الدليل، وليس كحكم منفرد.' : 'No. Kamin links an approved course and its learning outcomes to a skill, then uses the grade as part of the evidence strength—not as a standalone judgment.'}</p>
-          </details>
-          <details>
-            <summary>{lang === 'ar' ? 'هل توصية كامن قرار نهائي؟' : 'Is a Kamin recommendation a final decision?'}</summary>
-            <p>{lang === 'ar' ? 'لا. الحكم مفسّر وغير حاكم. ترى الأسباب والفجوات وما الذي قد يغيّر الحكم، ويبقى القرار لك.' : 'No. Judgments are explained and non-binding. You can inspect reasons, gaps, and what could change the judgment; the decision remains yours.'}</p>
-          </details>
-          <details>
-            <summary>{lang === 'ar' ? 'أين تُحفظ بيانات النسخة العامة؟' : 'Where is public-release data stored?'}</summary>
-            <p>{lang === 'ar' ? 'في جهازك ومتصفحك فقط. يمكنك تصدير الجلسة أو حذفها بالكامل. أي انتقال إلى تخزين مؤسسي مركزي يخضع لبوابة امتثال مستقلة.' : 'On your device and in your browser only. You can export or fully delete the session. Any move to centralized institutional storage requires a separate compliance gate.'}</p>
-          </details>
+          <details><summary>{lang === 'ar' ? 'هل كامن يقرر من يوظف؟' : 'Does Kamin decide who gets hired?'}</summary><p>{lang === 'ar' ? 'لا. النسخة الحالية أداة دعم قرار للفرد. لا تتخذ قرار توظيف، ولا تمنعك من فرصة، ولا تعرض نسبة Fit غير معايرة.' : 'No. The current release is decision support for the individual. It does not make hiring decisions, block opportunities, or show an uncalibrated fit percentage.'}</p></details>
+          <details><summary>{lang === 'ar' ? 'من أين تأتي المهارات؟' : 'Where do skills come from?'}</summary><p>{lang === 'ar' ? 'لا يكفي اسم المقرر وحده. الحكم يستخدم فقط روابط مقررات → مخرجات تعلم → مهارات تم تعريفها صراحةً في طبقة الربط. المقرر غير المربوط يبقى ظاهرًا لكنه لا يولد مهارة.' : 'A course title is not enough. Judgments use only explicit course → learning-outcome → skill mappings. An unmapped course remains visible but creates no skill.'}</p></details>
+          <details><summary>{lang === 'ar' ? 'هل لديكم أرقام دقة منشورة؟' : 'Do you publish accuracy metrics?'}</summary><p>{lang === 'ar' ? 'ليس بعد. نعرض معايير التحقق المستهدفة في صفحة المنهجية، لكننا لا نقدم target على أنه result. أي precision/recall أو pilot metric يجب أن يأتي من اختبار موثق.' : 'Not yet. Methodology lists validation targets, but a target is never presented as a result. Precision, recall, and pilot metrics must come from documented evaluation.'}</p></details>
+          <details><summary>{lang === 'ar' ? 'أين تُحفظ بيانات النسخة العامة؟' : 'Where is public-release data stored?'}</summary><p>{lang === 'ar' ? 'داخل جلسة المتصفح الحالية. لا يوجد تخزين مركزي لملفك في هذه النسخة، ويمكنك تصدير البيانات أو حذف الجلسة.' : 'Inside the current browser session. This release has no central profile storage; you can export your data or delete the session.'}</p></details>
         </div>
       </div>
     </section>
 
-    <section className="final-cta"><div className="shell final-cta-row"><div><small>{t.name}</small><h2>{lang === 'ar' ? 'اعرف ما لديك. افهم أين يناسب. وابنِ ما ينقصك.' : 'Know what you have. See where it fits. Build what is missing.'}</h2><p>{lang === 'ar' ? 'ابدأ بملف واحد، ثم اجعل كل فرصة ودورة وقرار قابلًا للتفسير.' : 'Start with one profile, then make every opportunity, learning step, and decision explainable.'}</p></div><button className="button light" onClick={onTry}>{t.hero.cta}{lang === 'ar' ? <ArrowLeft/> : <ArrowRight/>}</button></div></section>
+    <section className="final-cta"><div className="shell final-cta-row"><div><small>{t.name}</small><h2>{lang === 'ar' ? 'من شهادة يصعب شرحها إلى ملف قدرات يمكن الدفاع عنه.' : 'From a hard-to-explain degree to a defensible capability profile.'}</h2><p>{lang === 'ar' ? 'ابدأ ببيانات وهمية، راجع كل دليل، وشاهد كيف يتحول إلى حكم مفسّر قبل رفع أي ملف حقيقي.' : 'Start with synthetic data, inspect every evidence link, and see how it becomes an explainable judgment before uploading a real file.'}</p></div><button className="button light" onClick={onTry}>{lang === 'ar' ? 'جرّب الديمو' : 'Try the demo'}{lang === 'ar' ? <ArrowLeft/> : <ArrowRight/>}</button></div></section>
   </>
 }
 
@@ -648,10 +648,10 @@ export default function App() {
   const t = copy[lang]
   useEffect(()=>{
     const ar = lang === 'ar'
-    const title = ar ? 'كامن | شبكة ذكاء القدرات' : 'Kamin | Capability Intelligence Network'
+    const title = ar ? 'كامن | ملف قدرات موثّق وملاءمة مفسّرة' : 'Kamin | Evidence-backed capability profiles'
     const description = ar
-      ? 'كامن يبني ملف Person 360 من الأدلة والمهارات والتفضيلات والأهداف، ثم يحوّله إلى مطابقة مفسّرة للوظائف والتعلم والتدريب والخطوات التالية.'
-      : 'Kamin builds an evidence-rich Person 360 profile, then turns it into explainable matching for jobs, learning, training, and next-step decisions.'
+      ? 'كامن يحوّل السجل الأكاديمي والمشاريع إلى ملف قدرات تملكه، ثم يشرح أي فرص تناسبك، لماذا، وما الذي ينقصك.'
+      : 'Kamin turns academic records and projects into a capability profile you own, then explains what fits, why, and what is missing.'
     const origin = window.location.origin
     const publicOrigin = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       ? 'https://kamin-12mf.onrender.com'
@@ -692,7 +692,7 @@ export default function App() {
   return <>
     <Header lang={lang} setLang={setLang} onTry={()=>setAppOpen(true)}/>
     <main id="main"><Landing lang={lang} onTry={()=>setAppOpen(true)}/></main>
-    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><button onClick={()=>document.getElementById('trust')?.scrollIntoView({behavior:'smooth'})}>{t.nav.trust}</button><a href="./privacy.html">{lang==='ar'?'سياسة الخصوصية':'Privacy policy'}</a><a href="#faq">{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a><span>PDPL · DGA aligned design</span></div></div></footer>
+    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href="./privacy.html">{lang==='ar'?'الخصوصية':'Privacy'}</a><a href="#faq">{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a></div></div></footer>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={()=>setAppOpen(false)}><KaminApp lang={lang} onClose={()=>setAppOpen(false)}/></AppErrorBoundary>}
   </>
 }
