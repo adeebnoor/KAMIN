@@ -116,7 +116,7 @@ function pageLineCandidates(items = []) {
   }
 
   groups.sort((a, b) => b.y - a.y)
-  return groups.flatMap((group) => {
+  return groups.map((group) => {
     const asc = group.items.slice().sort((a, b) => a.x - b.x).map((i) => i.text).join(' ')
     const desc = group.items.slice().sort((a, b) => b.x - a.x).map((i) => i.text).join(' ')
     return asc === desc ? [asc] : [asc, desc]
@@ -126,14 +126,24 @@ function pageLineCandidates(items = []) {
 function parsePageItems(items, source = 'pdf') {
   const results = []
   const seenCodes = new Set()
-  const candidates = pageLineCandidates(items)
-  for (const candidate of candidates) {
-    const row = parseLine(candidate, source)
+  const lineGroups = pageLineCandidates(items)
+
+  for (const candidates of lineGroups) {
+    const parsed = candidates
+      .map((candidate) => parseLine(candidate, source))
+      .filter(Boolean)
+      .sort((a, b) => {
+        const qualityA = (a.reviewRequired ? 0 : 1000) + String(a.name || '').length
+        const qualityB = (b.reviewRequired ? 0 : 1000) + String(b.name || '').length
+        return qualityB - qualityA
+      })
+    const row = parsed[0]
     if (!row || seenCodes.has(row.code)) continue
     seenCodes.add(row.code)
     results.push(row)
   }
-  return { rows: results, text: candidates.join('\n') }
+
+  return { rows: results, text: lineGroups.flat().join('\n') }
 }
 
 export async function extractTranscript(file, onProgress = () => {}) {
