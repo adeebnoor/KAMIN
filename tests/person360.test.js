@@ -36,6 +36,8 @@ describe('Kamin ontology stack', () => {
     expect(KAMIN_CLASSES.Competency).toBe('ceasn:Competency')
     expect(KAMIN_CLASSES.Claim).toBe('kamin:Claim')
     expect(KAMIN_RELATIONS.instrument).toBe('kamin:instrument')
+    expect(KAMIN_RELATIONS.requiresCapability).toBe('kamin:requiresCapability')
+    expect(KAMIN_RELATIONS.pursuesGoal).toBe('kamin:pursuesGoal')
     expect(expandTerm('prov:Entity')).toBe('http://www.w3.org/ns/prov#Entity')
   })
 })
