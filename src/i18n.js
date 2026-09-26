@@ -58,6 +58,7 @@ export const copy = {
       approve: 'أعتمد السجل',
       addRow: 'إضافة مقرر يدويًا',
       skills: 'مهاراتي',
+      insight: 'بصمتي',
       goal: 'هدفي',
       courses: 'الدورات',
       compare: 'المقارنة',
@@ -84,6 +85,7 @@ export const copy = {
       consent: 'الموافقات',
       consentItems: {
         analyze: 'تحليل السجل وبناء ملف المهارات',
+        insight: 'بناء بصمة الطالب الذاتية',
         advisor: 'مشاركة ملخص الملف مع المرشد',
         research: 'استخدام بيانات مجهولة الهوية لأغراض التحقق البحثي'
       },
@@ -161,6 +163,7 @@ export const copy = {
       approve: 'Approve transcript',
       addRow: 'Add course manually',
       skills: 'My skills',
+      insight: 'My insight',
       goal: 'My goal',
       courses: 'Courses',
       compare: 'Compare',
@@ -187,6 +190,7 @@ export const copy = {
       consent: 'Consents',
       consentItems: {
         analyze: 'Analyze transcript and build skills profile',
+        insight: 'Build my self-reported Student Insight profile',
         advisor: 'Share profile summary with an advisor',
         research: 'Use anonymized data for research validation'
       },
