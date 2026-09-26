@@ -45,8 +45,8 @@ await sharp(logo).resize(180,180,{fit:'contain',background:'#ffffff'}).png({comp
 
 const overlay=Buffer.from(`<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
 <text x="600" y="250" font-family="Arial,sans-serif" font-weight="700" font-size="72" fill="#0b2f5b">Kamin</text>
-<text x="600" y="330" font-family="Arial,sans-serif" font-size="34" fill="#334a62">Evidence-backed capabilities</text>
-<text x="600" y="380" font-family="Arial,sans-serif" font-size="30" fill="#6b7280">Explainable learning-fit decisions</text>
+<text x="600" y="330" font-family="Arial,sans-serif" font-size="34" fill="#334a62">Evidence-backed capability profile</text>
+<text x="600" y="380" font-family="Arial,sans-serif" font-size="30" fill="#6b7280">Explainable fit · visible gaps · next steps</text>
 <line x1="600" y1="420" x2="1040" y2="420" stroke="#c99a3d" stroke-width="4"/>
 </svg>`)
 const logoPanel=await sharp(logo).resize(430,540,{fit:'contain',background:{r:247,g:249,b:252,alpha:1}}).toBuffer()
