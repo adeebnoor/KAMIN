@@ -1,6 +1,6 @@
 export const TARGET_CATALOG_VERSION='kamin-targets-v1'
 
-export const targetProfiles=[
+const rawTargetProfiles=[
   {
     id:'job-business-analyst',type:'job',
     title:{ar:'محلل أعمال',en:'Business Analyst'},
@@ -92,6 +92,13 @@ export const targetProfiles=[
     outcome:{ar:'تحويل مشكلة مستخدم إلى فرضيات ومتطلبات ونموذج قرار أولي.',en:'Turn a user problem into hypotheses, requirements, and an initial decision model.'},
   },
 ]
+
+export const targetProfiles=rawTargetProfiles.map(target=>({
+  ...target,
+  occupationCodes:target.type==='job'
+    ? {onet:null,esco:null,ssco:null,...(target.occupationCodes||{})}
+    : undefined,
+}))
 
 export const targetTypes={
   job:{ar:'وظائف ومسارات مهنية',en:'Jobs & career paths'},
