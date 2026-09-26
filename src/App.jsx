@@ -330,6 +330,9 @@ export default function App() {
       ? 'كامن يحوّل السجل الأكاديمي إلى مهارات موثقة وأحكام ملاءمة مفسّرة تساعد الطالب على اتخاذ قرار تعلم أوضح.'
       : 'Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments for clearer student decisions.'
     const origin = window.location.origin
+    const publicOrigin = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+      ? 'https://kamin-12mf.onrender.com'
+      : origin
     document.documentElement.lang=lang
     document.documentElement.dir=ar?'rtl':'ltr'
     document.title=title
@@ -339,9 +342,9 @@ export default function App() {
     setMeta('og:locale', ar ? 'ar_SA' : 'en_US', 'property')
     setMeta('twitter:title', title)
     setMeta('twitter:description', description)
-    setMeta('og:image', origin + '/kamin-logo-fixed.webp', 'property')
+    setMeta('og:image', publicOrigin + '/kamin-logo-fixed.webp', 'property')
     const canonical = document.head.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.setAttribute('href', origin + '/')
+    if (canonical) canonical.setAttribute('href', publicOrigin + '/')
     const ld = document.getElementById('kamin-ld')
     if (ld) ld.textContent = JSON.stringify({
       '@context':'https://schema.org',
@@ -350,11 +353,11 @@ export default function App() {
       alternateName: ar ? 'Kamin' : 'كامن',
       applicationCategory:'EducationalApplication',
       operatingSystem:'Web',
-      url: origin + '/',
+      url: publicOrigin + '/',
       description,
       inLanguage: ar ? 'ar-SA' : 'en',
       offers:{'@type':'Offer',price:'0',priceCurrency:'SAR'},
-      privacyPolicy: origin + '/privacy.html'
+      privacyPolicy: publicOrigin + '/privacy.html'
     })
     localStorage.setItem('kamin-lang',lang)
   },[lang])
