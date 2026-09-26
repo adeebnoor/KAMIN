@@ -2,19 +2,19 @@
 
 **خزنة قدراتك — Your capability vault**
 
-🌐 **Live public pilot:** https://kamin-12mf.onrender.com
+🌐 **Live public release:** https://kamin-12mf.onrender.com
 
-The pilot is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
+The release is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
-Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public pilot experience built from BRD v3.1.
+Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public release built from BRD v3.1.
 
-## Public pilot privacy model
+## Public release privacy model
 
 - Transcript parsing and OCR run inside the browser.
 - OCR worker, WASM core, and Arabic/English language data are served from the Kamin origin; transcript content is not sent to an OCR API.
-- No transcript is centrally stored by this static pilot.
+- No transcript is centrally stored by this static public release.
 - Extracted courses are shown for user review before any inference.
-- Pilot profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` data are migrated out and removed.
+- Public-release profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` data are migrated out and removed.
 - Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
 
 ## Evidence and skill mapping
