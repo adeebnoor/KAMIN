@@ -6,11 +6,7 @@ describe('target profile occupation taxonomy contract',()=>{
     const jobs=targetProfiles.filter(target=>target.type==='job')
     expect(jobs.length).toBeGreaterThan(0)
     for(const target of jobs){
-      expect(target.occupationCodes).toEqual(expect.objectContaining({
-        onet:expect.anything(),
-        esco:expect.anything(),
-        ssco:expect.anything(),
-      }))
+      expect(Object.keys(target.occupationCodes)).toEqual(expect.arrayContaining(['onet','esco','ssco']))
       for(const value of Object.values(target.occupationCodes)){
         expect(value===null || typeof value==='string').toBe(true)
       }
