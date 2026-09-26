@@ -436,3 +436,20 @@ test('clear my data removes session and IndexedDB profile residue', async ({ pag
   expect(residue.legacyLocal).toBeNull()
   expect(residue.hasProfileDb).toBe(false)
 })
+
+
+test('Matches exposes Person360 semantic evidence paths', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await page.getByRole('button', { name: /فرصي/ }).first().click()
+
+  const dataCard=page.locator('article.match-card').filter({hasText:'محلل بيانات'})
+  await expect(dataCard).toBeVisible()
+  await expect(dataCard).toContainText('مسار الدليل في الشبكة')
+  await expect(dataCard).toContainText('CPIT-260')
+  await expect(dataCard).toContainText('STAT-201')
+  await expect(dataCard).toContainText('kamin-graph-fit-v1')
+})
