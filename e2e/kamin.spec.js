@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1')).toContainText('حوّل شهادتك ومشاريعك')
+  await expect(page.locator('h1:visible')).toContainText('حوّل شهادتك ومشاريعك')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
@@ -20,7 +20,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1')).toContainText('Turn your degree and projects')
+  await expect(page.locator('h1:visible')).toContainText('Turn your degree and projects')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {
@@ -291,18 +291,18 @@ test('legacy pilot session migrates once into Kamin 1.0 session storage', async 
 
 test('expert-review trust surfaces are honest and navigable', async ({ page }) => {
   await page.goto('/methodology.html?lang=ar')
-  await expect(page.locator('h1')).toContainText('كيف ينتقل كامن من الدليل إلى الحكم؟')
+  await expect(page.locator('h1:visible')).toContainText('كيف ينتقل كامن من الدليل إلى الحكم؟')
   await expect(page.getByText(/Targets وليست Results/)).toBeVisible()
   await expect(page.getByText(/لا توجد أرقام دقة منشورة بعد/)).toBeVisible()
 
   await page.goto('/sample-report.html?lang=ar')
-  await expect(page.locator('h1')).toContainText('سارة')
+  await expect(page.locator('h1:visible')).toContainText('سارة')
   await expect(page.getByText(/بيانات وهمية بالكامل/)).toBeVisible()
   await expect(page.getByText(/تناسبك بشروط/)).toBeVisible()
   await expect(page.getByText(/لا يوجد دليل معتمد في الملف الحالي/)).toBeVisible()
 
   await page.goto('/trust.html?lang=ar')
-  await expect(page.locator('h1')).toContainText('الثقة آلية في المنتج')
+  await expect(page.locator('h1:visible')).toContainText('الثقة آلية في المنتج')
   await expect(page.getByText(/حفظ محلي باختيارك/)).toBeVisible()
 })
 
@@ -345,7 +345,7 @@ test('national positioning is complementary and makes no government integration 
   const response=await request.get('/interoperability.html')
   expect(response.ok()).toBeTruthy()
   await page.goto('/interoperability.html?lang=ar')
-  await expect(page.locator('h1')).toContainText('مكمّل للبنية الوطنية للمهارات')
+  await expect(page.locator('h1:visible')).toContainText('مكمّل للبنية الوطنية للمهارات')
   await expect(page.getByRole('heading', { name: 'منصة وطنية موازية' })).toBeVisible()
   await expect(page.getByText('لا نبني').first()).toBeVisible()
   await expect(page.getByText(/لا يوجد API أو اعتماد\/شراكة حكومية معلنة/)).toBeVisible()
@@ -498,7 +498,7 @@ test('static routes honor URL, stored preference, and bilingual direction', asyn
     await page.goto(route+'?lang=en')
     await expect(page.locator('html')).toHaveAttribute('lang','en')
     await expect(page.locator('html')).toHaveAttribute('dir','ltr')
-    await expect(page.locator('h1').first()).toContainText(heading)
+    await expect(page.locator('h1:visible')).toContainText(heading)
   }
 
   await page.goto('/?lang=en')
@@ -506,12 +506,12 @@ test('static routes honor URL, stored preference, and bilingual direction', asyn
   await page.goto('/trust.html')
   await expect(page.locator('html')).toHaveAttribute('lang','en')
   await expect(page.locator('html')).toHaveAttribute('dir','ltr')
-  await expect(page.locator('h1').first()).toContainText('Trust is a product mechanism')
+  await expect(page.locator('h1:visible').first()).toContainText('Trust is a product mechanism')
 
   await page.goto('/privacy.html?lang=ar')
   await expect(page.locator('html')).toHaveAttribute('lang','ar')
   await expect(page.locator('html')).toHaveAttribute('dir','rtl')
-  await expect(page.locator('h1').first()).toContainText('سياسة الخصوصية')
+  await expect(page.locator('h1:visible').first()).toContainText('سياسة الخصوصية')
 })
 
 test('static internal links preserve the resolved language', async ({ page }) => {
@@ -556,7 +556,8 @@ test('zero-evidence approved profile does not receive a next-decision judgment',
 test('locked navigation explains how to unlock protected sections', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
-  const dashboard=page.getByRole('button',{name:/لوحة قدراتي.*اعتمد سجلًا للفتح/})
+  const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]').first()
+  await expect(dashboard).toBeVisible()
   await expect(dashboard).toBeDisabled()
   await expect(dashboard).toHaveAttribute('title',/اعتمد سجلًا أولًا/)
 })
@@ -610,7 +611,7 @@ test('dedicated FAQ and branded 404 assets are shipped', async ({ page, request 
   expect((await request.get('/faq.html')).ok()).toBeTruthy()
   expect((await request.get('/404.html')).ok()).toBeTruthy()
   await page.goto('/faq.html?lang=en')
-  await expect(page.locator('h1')).toContainText('Questions before you trust a recommendation')
+  await expect(page.locator('h1:visible')).toContainText('Questions before you trust a recommendation')
   await page.goto('/404.html?lang=ar')
-  await expect(page.locator('h1')).toContainText('هذه الصفحة غير موجودة')
+  await expect(page.locator('h1:visible')).toContainText('هذه الصفحة غير موجودة')
 })
