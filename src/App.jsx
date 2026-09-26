@@ -289,7 +289,7 @@ function Landing({ lang, onTry }) {
         </div>
         <div className="business-principle">
           <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
-          <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك Fit.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
+          <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك الملاءمة.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
         </div>
         <div className="national-positioning">
           <div><small>{lang === 'ar' ? 'التموضع الوطني' : 'National interoperability posture'}</small><h3>{lang === 'ar' ? 'مكمّل للبنية الوطنية للمهارات — لا منصة موازية.' : 'Complement national skills infrastructure — do not duplicate it.'}</h3></div>
@@ -315,7 +315,7 @@ function Landing({ lang, onTry }) {
       <div className="shell faq-grid">
         <div className="section-title"><span>07</span><h2>{lang === 'ar' ? 'أسئلة قبل أن تثق بالتوصية' : 'Questions before you trust a recommendation'}</h2></div>
         <div className="faq-list">
-          <details><summary>{lang === 'ar' ? 'هل كامن يقرر من يوظف؟' : 'Does Kamin decide who gets hired?'}</summary><p>{lang === 'ar' ? 'لا. النسخة الحالية أداة دعم قرار للفرد. لا تتخذ قرار توظيف، ولا تمنعك من فرصة، ولا تعرض نسبة Fit غير معايرة.' : 'No. The current release is decision support for the individual. It does not make hiring decisions, block opportunities, or show an uncalibrated fit percentage.'}</p></details>
+          <details><summary>{lang === 'ar' ? 'هل كامن يقرر من يوظف؟' : 'Does Kamin decide who gets hired?'}</summary><p>{lang === 'ar' ? 'لا. النسخة الحالية أداة دعم قرار للفرد. لا تتخذ قرار توظيف، ولا تمنعك من فرصة، ولا تعرض نسبة ملاءمة غير معايرة.' : 'No. The current release is decision support for the individual. It does not make hiring decisions, block opportunities, or show an uncalibrated fit percentage.'}</p></details>
           <details><summary>{lang === 'ar' ? 'من أين تأتي المهارات؟' : 'Where do skills come from?'}</summary><p>{lang === 'ar' ? 'لا يكفي اسم المقرر وحده. الحكم يستخدم فقط روابط مقررات → مخرجات تعلم → مهارات تم تعريفها صراحةً في طبقة الربط. المقرر غير المربوط يبقى ظاهرًا لكنه لا يولد مهارة.' : 'A course title is not enough. Judgments use only explicit course → learning-outcome → skill mappings. An unmapped course remains visible but creates no skill.'}</p></details>
           <details><summary>{lang === 'ar' ? 'هل لديكم أرقام دقة منشورة؟' : 'Do you publish accuracy metrics?'}</summary><p>{lang === 'ar' ? 'ليس بعد. نعرض معايير التحقق المستهدفة في صفحة المنهجية، لكننا لا نقدم target على أنه result. أي precision/recall أو pilot metric يجب أن يأتي من اختبار موثق.' : 'Not yet. Methodology lists validation targets, but a target is never presented as a result. Precision, recall, and pilot metrics must come from documented evaluation.'}</p></details>
           <details><summary>{lang === 'ar' ? 'أين تُحفظ بيانات النسخة العامة؟' : 'Where is public-release data stored?'}</summary><p>{lang === 'ar' ? 'محليًا داخل متصفحك. يمكنك اختيار حفظ الملف على هذا الجهاز عبر IndexedDB بموافقة صريحة، أو إبقاءه مؤقتًا للجلسة فقط. لا يوجد تخزين مركزي لملفك في النسخة العامة.' : 'Locally in your browser. With explicit consent you can keep the profile on this device in IndexedDB, or leave it session-only. This public release has no central profile storage.'}</p></details>
@@ -468,7 +468,7 @@ function KnowledgeMatchContext({ item, lang }) {
     </div>
     {activities.length>0&&<div className="knowledge-activity"><SearchCheck size={15}/><span><strong>{lang==='ar'?'نشاط مهني مرجعي':'Reference work activity'}</strong>{activities.slice(0,2).map(activity=><small key={activity.id}>{activity.label}</small>)}</span></div>}
     {gaps.length>0&&<div className="knowledge-development">
-      <strong>{lang==='ar'?'إشارات تطويرية — لا تغيّر حكم Fit':'Development signals — do not change Fit'}</strong>
+      <strong>{lang==='ar'?'إشارات تطويرية — لا تغيّر حكم الملاءمة':'Development signals — do not change Fit'}</strong>
       <div>{gaps.slice(0,4).map(gap=><span key={gap.capabilityId}>{gap.label}</span>)}</div>
       <small>{lang==='ar'?'مأخوذة من سياق O*NET السوقي الحالي؛ نستخدمها لتوجيه التعلم فقط، لا كبوابة توظيف.':'Current O*NET market context; used only to guide development, never as a hiring gate.'}</small>
     </div>}
