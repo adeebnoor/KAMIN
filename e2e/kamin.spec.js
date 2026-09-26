@@ -185,7 +185,7 @@ test('Person 360 is optional, structured, and available before transcript approv
   await page.getByLabel('إيقاع العمل').selectOption('mixed')
   await expect(page.getByText(/مقاييس معيارية/)).toBeVisible()
   await expect(page.getByText(/O\*NET Mini Interest Profiler/)).toBeVisible()
-  await expect(page.getByText(/IPIP 50-item Big-Five/)).toBeVisible()
+  await expect(page.getByText(/IPIP 50 Big-Five/)).toBeVisible()
 
   const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
   expect(storage.consents.insight).toBe(true)

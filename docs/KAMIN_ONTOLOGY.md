@@ -49,14 +49,15 @@ Kamin will not create one monolithic local ontology. It composes existing standa
 | Domain | Standard / vocabulary | Kamin use |
 |---|---|---|
 | Person | Schema.org Person | canonical person type and basic metadata |
-| Learner-owned record | 1EdTech CLR 2.0 | verifiable courses, achievements, competencies and employment learning |
-| Competencies / CLOs | 1EdTech CASE 1.1 | learning outcomes, competencies, rubrics, framework associations |
+| Learner-owned record | 1EdTech CLR 2.0 | learner-controlled achievements, courses, competencies and verifiable longitudinal records |
+| Competencies / CLOs | 1EdTech CASE 1.1 | system-to-system exchange of learning outcomes, competencies, rubrics and framework associations using stable GUIDs |
 | Skills / occupations | ESCO | multilingual skill and occupation URIs |
 | Workforce properties | O*NET 31.0 RDF + Content Model | interests, work styles, abilities, knowledge, activities, context, occupations |
 | Credentials / pathways | Credential Engine CTDL + CTDL-ASN | credentials, assessments, pathways and competency framework alignment |
 | Taxonomies | W3C SKOS | SASCED, controlled vocabularies, hierarchy and mappings |
 | Provenance | W3C PROV-O | evidence lineage, extraction/assessment activity, source agents and timestamps |
 | Consent / purpose | W3C DPV 2.0 | purpose-specific consent and withdrawal lifecycle |
+| Signed credentials | W3C Verifiable Credentials 2.0 | machine-verifiable issuer/holder/verifier credential exchange |
 | Psychometric instruments | O*NET Interest Profiler + IPIP | assessment instruments; not ontologies themselves |
 
 ### 3.1 Why O*NET matters
@@ -172,13 +173,13 @@ Each observation must preserve:
 ### 8.1 Initial instrument registry
 
 **Career interests**  
-O*NET Mini Interest Profiler (30 items), RIASEC.
+O*NET Mini Interest Profiler (30 items), RIASEC. The official current web/API instrument is available in English/Spanish. An Arabic version inside Kamin requires a documented adaptation and the appropriate O*NET license path before activation.
 
 **Personality tendencies**  
-IPIP 50-item Big-Five markers, Arabic adaptation as a candidate instrument.
+IPIP 50-item Big-Five markers with published Arabic adaptations are candidate instruments. Kamin records the exact adaptation/version and does not treat Levantine or Yemeni validation samples as Saudi norms.
 
 **Work values**  
-Use the O*NET Work Values content model for semantic alignment. Student-facing measurement must be separately selected/validated.
+The historic O*NET Work Values dimensions remain useful as a research vocabulary, but they are not a current O*NET 31.0 occupation data file. Kamin therefore treats them as legacy reference concepts only. Student-facing values are structured declared preferences until a current, validated measurement instrument is selected.
 
 **Work styles**  
 Use O*NET Work Styles as the occupation-side semantic model. Do not infer an individual's Work Style merely from occupational ratings.
@@ -276,7 +277,7 @@ Person ↔ Training
 
 ### 12.3 No equal weights
 
-Kamin explicitly rejects default equal weighting across all domains.
+Kamin explicitly rejects default equal weighting across all domains. This carries forward a limitation identified in the D3 thesis: equal feature weighting can let weak similarities compensate for failures in more relevant dimensions.
 
 ```
 weight(feature | use_case, target_type, evidence_quality, model_version)
