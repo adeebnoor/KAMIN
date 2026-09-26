@@ -287,3 +287,16 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 @media(prefers-color-scheme:dark){
   .main-nav .nav-link{color:#eaf2fb}.proof-window,.proof-live,.proof-boundary{background:#111b28;border-color:#31465e}.proof-window-head span,.proof-role strong,.proof-live strong{color:#eaf2fb}.proof-evidence>div{background:#162333;border-color:#31465e}.proof-evidence .proof-gap{background:#2b2518;border-color:#5a4924}.proof-section{background:#0d1622}.institution-head small{background:#1b3046;color:#d8e7f5}.trust-links a{color:#d9e9f8}
 }
+
+
+/* Encrypted local portability + national interoperability */
+@media(min-width:901px){.start-grid{grid-template-columns:repeat(3,1fr)}}
+.portable-backup{display:grid;gap:14px;border-inline-start:4px solid var(--navy)}
+.portable-head{display:flex;gap:12px;align-items:center}.portable-head>svg{color:var(--gold);flex:0 0 auto}.portable-head div{display:grid;gap:2px}.portable-head small{color:var(--muted);font-weight:800}.portable-head h3{margin:0;color:var(--navy)}
+.portable-backup>p{margin:0;color:var(--muted);font-size:.9rem}.portable-field{display:grid;gap:6px}.portable-field span{font-size:.8rem;font-weight:900;color:var(--navy)}.portable-field input{width:100%}
+.portable-actions{display:flex;gap:9px;flex-wrap:wrap}.portable-note{color:var(--muted);line-height:1.6}.portable-status{padding:10px 12px;border-radius:10px;background:var(--navy-3);color:var(--navy);font-size:.84rem;font-weight:800}
+.national-positioning{margin-top:16px;background:#fff;border:1px solid var(--line);border-inline-start:4px solid var(--gold);border-radius:18px;padding:22px;display:grid;grid-template-columns:.8fr 1.4fr auto;gap:18px;align-items:center}
+.national-positioning small{color:#7a5512;font-weight:900}.national-positioning h3{margin:4px 0 0;color:var(--navy)}.national-positioning p{margin:0;color:var(--muted);font-size:.9rem}.national-positioning a{color:var(--navy);font-weight:900;text-decoration:none;white-space:nowrap}
+@media(max-width:900px){.national-positioning{grid-template-columns:1fr}.national-positioning a{white-space:normal}}
+@media(max-width:600px){.portable-actions{flex-direction:column}.portable-actions .button{width:100%}}
+@media(prefers-color-scheme:dark){.portable-backup,.national-positioning{background:#111b28;border-color:#31465e}.portable-head h3,.portable-field span,.portable-status,.national-positioning h3,.national-positioning a{color:#eaf2fb}.portable-status{background:#1b3046}}

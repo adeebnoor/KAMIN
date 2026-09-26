@@ -16,7 +16,8 @@ body{font-family:Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8
 <p class="note"><strong>النسخة العامة الحالية:</strong> تتم قراءة كشف الدرجات ومعالجة النتائج داخل متصفح المستخدم. لا تُرفع صورة كشف الدرجات أو ملفه إلى خادم كامن في هذه النسخة.</p>
 <h2>ما الذي يُحفظ؟</h2><p>تُحفظ المقررات المعتمدة وملف القدرات والموافقات وسجل الاستخدام في sessionStorage داخل جلسة المتصفح. تُمسح الجلسة عند إغلاق المتصفح، ويمكن للمستخدم أيضًا حذفها يدويًا من داخل كامن.</p>
 <h2>رفع الصور وOCR</h2><p>تتم عملية التعرف البصري داخل المتصفح. ملفات OCR العربية والإنجليزية وملفات التشغيل تُخدم من نفس نطاق كامن في النسخة الحالية؛ صورة كشف الدرجات نفسها لا تُرسل إلى OCR API خارجي.</p>
-<h2>حقوق المستخدم</h2><p>يمكن للمستخدم مراجعة البيانات قبل اعتمادها، تصحيحها، تصدير ملفه، وسحب أو حذف بيانات الجلسة المحلية.</p>
+<h2>حقوق المستخدم واستمرارية الملف</h2><p>يمكن للمستخدم مراجعة البيانات قبل اعتمادها، تصحيحها، حذف بيانات الجلسة، وإنشاء نسخة محلية مشفّرة لاستعادتها في جلسة لاحقة. النسخة المشفّرة تحتوي حالة الاستعادة وJSON-LD لملف القدرات؛ وتُشفّر داخل المتصفح باستخدام AES-GCM ومفتاح مشتق من عبارة مرور يختارها المستخدم.</p>
+<h2>عبارة المرور</h2><p>عبارة مرور النسخة المشفّرة لا تُرسل إلى كامن ولا تُخزن لديه. إذا فُقدت العبارة، لا يستطيع كامن استعادة الملف. عند الاستيراد يعاد حساب المهارات والأحكام من الأدلة، ولا تُعاد موافقات المشاركة الخارجية تلقائيًا.</p>
 <h2>ما لا تفعله النسخة العامة</h2><p>لا تشارك بيانات الطالب مع المرشدين أو الباحثين أو أصحاب العمل أو مزودي التدريب فعليًا، ولا تُفعّل تخزينًا مؤسسيًا مركزيًا، ولا تستخدم بيانات الجلسة لتدريب نموذج مركزي. أي إطلاق مؤسسي يتطلب اتفاقيات بيانات وسياسة احتفاظ واستضافة معتمدة ومراجعة امتثال مستقلة.</p>
 <h2>ملفات تعريف الارتباط والتحليلات</h2><p>لا يحتاج كامن في النسخة الحالية إلى ملفات تعريف ارتباط إعلانية أو تتبع تسويقي لبناء حكم الملاءمة.</p>
 <h2>التحديثات</h2><p>آخر تحديث: 26 سبتمبر 2026.</p>
@@ -25,7 +26,8 @@ body{font-family:Tahoma,Arial,sans-serif;color:#10243f;margin:0;background:#f6f8
 <p class="note"><strong>Public pilot:</strong> Transcript reading and inference run inside the user's browser. The transcript file or image is not uploaded to a Kamin server in this release.</p>
 <h2>What is stored?</h2><p>Approved courses, the capability profile, consents, and the usage log use sessionStorage in the current browser session. The session clears when the browser closes, and the user can also delete it manually.</p>
 <h2>Image OCR</h2><p>Optical character recognition runs in the browser. Arabic/English OCR language data and runtime assets are served from the Kamin origin in the current release; the transcript image itself is not sent to an external OCR API.</p>
-<h2>Your controls</h2><p>You can review and correct extracted data before approval, export your profile, and delete the local pilot session.</p>
+<h2>Your controls and continuity</h2><p>You can review and correct extracted data before approval, delete the local session, and create an encrypted local backup for later restore. The backup contains restore state plus the capability JSON-LD graph and is encrypted in-browser with AES-GCM using a key derived from your passphrase.</p>
+<h2>Your passphrase</h2><p>The backup passphrase is never sent to or stored by Kamin. If you lose it, Kamin cannot recover the backup. On import, skills and judgments are recomputed from evidence and external-sharing consents are not automatically restored.</p>
 <h2>Institutional deployment</h2><p>Advisor/employer/research sharing and central institutional storage are not operational in the public release. Session data are not used to train a central model. Institutional deployment requires approved hosting, retention rules, data agreements and compliance review.</p>
 <p>Last updated: 26 September 2026.</p>
 </section>

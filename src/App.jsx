@@ -14,6 +14,7 @@ import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference }
 import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
+import { buildPortableProfile, decryptPortableProfile, encryptPortableProfile, normalizePortableState } from './utils/portableProfile.js'
 
 const STORAGE_KEY = 'kamin-session-v3'
 const LEGACY_SESSION_KEY = 'kamin-pilot-session-v2'
@@ -266,6 +267,13 @@ function Landing({ lang, onTry }) {
           <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
           <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك Fit.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
         </div>
+        <div className="national-positioning">
+          <div><small>{lang === 'ar' ? 'التموضع الوطني' : 'National interoperability posture'}</small><h3>{lang === 'ar' ? 'مكمّل للبنية الوطنية للمهارات — لا منصة موازية.' : 'Complement national skills infrastructure — do not duplicate it.'}</h3></div>
+          <p>{lang === 'ar'
+            ? 'كامن يركز على طبقة الدليل الجامعي المملوكة للفرد: ترجمة السجل والمشاريع إلى أدلة قدرات قابلة للتفسير والنقل. مستقبلًا نصمم للتوافق مع التصنيفات الوطنية والتكامل عبر API إذا أصبح مسار رسمي متاحًا؛ لا يوجد تكامل أو اعتماد حكومي معلن اليوم.'
+            : 'Kamin focuses on the individual-owned university evidence layer: translating records and projects into portable, explainable capability evidence. We design for national taxonomy alignment and future API interoperability if an official path becomes available; there is no claimed government integration or endorsement today.'}</p>
+          <a href={lang==='ar'?'/interoperability.html?lang=ar':'/interoperability.html?lang=en'}>{lang==='ar'?'اقرأ قرار التموضع والتكامل':'Read the interoperability decision'}</a>
+        </div>
       </div>
     </section>
 
@@ -408,9 +416,9 @@ function StudentInsight({ lang, state, setState, log }) {
     <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
       <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
     </div>
-    <div className="app-title compact"><small>{lang==='ar'?'طبقات القياس':'Assessment layers'}</small><h2>{lang==='ar'?'مقاييس معيارية — لا أسئلة محلية':'Standard instruments — no home-grown psychometrics'}</h2></div>
+    <div className="app-title compact"><small>{lang==='ar'?'مسار بحثي منفصل':'Separate research track'}</small><h2>{lang==='ar'?'أدوات مرشحة للمعايرة السعودية — لا تؤثر على Fit':'Candidate instruments for Saudi validation — no Fit effect'}</h2></div>
     <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
-    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المنظمة تدخل المطابقة المفسّرة، بينما المقاييس السيكومترية لا تغيّر الحكم قبل التحقق المحلي. لا يوجد ربط مع MIYAR/معيار.':'In this version, structured preferences inform explained matching, while psychometric instruments do not change judgments before local validation. There is no MIYAR connection.'}</span></div>
+    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المصرح بها تدخل فقط كإشارات تفضيل. درجات IPIP/RIASEC لا تدخل الحكم إطلاقًا قبل دراسة سعودية موثقة للثبات والبنية والملاءمة الثقافية.':'In this version, self-declared preferences act only as preference signals. IPIP/RIASEC instrument scores do not enter judgments at all before documented Saudi reliability, structure, and cultural validation.'}</span></div>
   </div>
 }
 
@@ -440,31 +448,90 @@ function MatchExplorer({ lang, profile, matches }) {
   </div>
 }
 
-function Privacy({ lang, state, setState, log, onExport, onDelete }) {
+function Privacy({ lang, state, setState, log, onExport, onImport, onDelete }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
+  const [backupPassphrase,setBackupPassphrase] = useState('')
+  const [backupConfirm,setBackupConfirm] = useState('')
+  const [backupStatus,setBackupStatus] = useState('')
+  const [backupBusy,setBackupBusy] = useState(false)
+  const backupFileRef = useRef(null)
+
   const toggle = (key) => {
     if (key === 'analyze' && state.approved) {
       setState(s => ({...s,courses:[],approved:false,consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
     if (key === 'insight' && state.consents.insight) {
-      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة Person 360 ومحو بياناتها':'Person 360 consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
       return
     }
     setState(s => ({...s,consents:{...s.consents,[key]:!s.consents[key]}}))
     log(lang==='ar'? `تغيير موافقة: ${t.consentItems[key]}` : `Consent changed: ${t.consentItems[key]}`)
   }
+
+  const messageFor = error => ({
+    PASSPHRASE_TOO_SHORT:lang==='ar'?'استخدم عبارة مرور من 12 حرفًا على الأقل.':'Use a passphrase of at least 12 characters.',
+    BACKUP_DECRYPT_FAILED:lang==='ar'?'تعذر فتح النسخة: عبارة المرور خاطئة أو الملف عُدّل/تلف.':'Could not open the backup: wrong passphrase or the file was modified/corrupted.',
+    UNSUPPORTED_ENCRYPTED_PROFILE:lang==='ar'?'صيغة النسخة غير مدعومة.':'Unsupported backup format.',
+    UNSUPPORTED_PORTABLE_PROFILE:lang==='ar'?'إصدار ملف كامن غير مدعوم.':'Unsupported Kamin profile version.',
+    BACKUP_TOO_LARGE:lang==='ar'?'ملف النسخة أكبر من الحد المسموح.':'The backup file is larger than allowed.',
+    INVALID_BACKUP_FILE:lang==='ar'?'الملف ليس نسخة كامن مشفّرة صالحة.':'This is not a valid encrypted Kamin backup.',
+  }[error?.message] || (lang==='ar'?'تعذر إكمال العملية.':'The operation could not be completed.'))
+
+  const exportBackup = async () => {
+    if (backupPassphrase.length < 12) { setBackupStatus(messageFor(new Error('PASSPHRASE_TOO_SHORT'))); return }
+    if (backupPassphrase !== backupConfirm) { setBackupStatus(lang==='ar'?'عبارتا المرور غير متطابقتين.':'Passphrases do not match.'); return }
+    setBackupBusy(true); setBackupStatus('')
+    try {
+      await onExport(backupPassphrase)
+      setBackupStatus(lang==='ar'?'تم إنشاء نسخة مشفّرة محلية. احفظها مع عبارة المرور في مكان آمن.':'Encrypted local backup created. Keep it and the passphrase in a safe place.')
+      setBackupPassphrase(''); setBackupConfirm('')
+    } catch (error) { setBackupStatus(messageFor(error)) }
+    finally { setBackupBusy(false) }
+  }
+
+  const importBackup = async file => {
+    if (!file) return
+    if (backupPassphrase.length < 12) { setBackupStatus(messageFor(new Error('PASSPHRASE_TOO_SHORT'))); return }
+    setBackupBusy(true); setBackupStatus('')
+    try {
+      await onImport(file,backupPassphrase)
+      setBackupStatus(lang==='ar'?'تمت استعادة الملف وإعادة حساب النتائج من الأدلة المحفوظة.':'Profile restored and derived results were recomputed from the saved evidence.')
+      setBackupPassphrase(''); setBackupConfirm('')
+    } catch (error) { setBackupStatus(messageFor(error)) }
+    finally { setBackupBusy(false); if(backupFileRef.current) backupFileRef.current.value='' }
+  }
+
   return <div className="privacy-layout">
     <div className="panel"><div className="panel-head"><div><small>{t.consent}</small><h3>{lang==='ar'?'كل غرض له إذنه':'Each purpose has its own permission'}</h3></div></div>
       <div className="consents">{Object.keys(state.consents).map(key=>{const note=key==='analyze'
         ? (lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval')
         : key==='insight'
-          ? (lang==='ar'?'اختياري؛ يحفظ Person 360 مؤقتًا في الجلسة ويمكن سحبه مستقلاً':'Optional; stores Person 360 temporarily in-session and can be withdrawn independently')
+          ? (lang==='ar'?'اختياري؛ يحفظ ملف القدرات مؤقتًا في الجلسة ويمكن سحبه مستقلاً':'Optional; stores the capability profile temporarily in-session and can be withdrawn independently')
           : (lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public release')
         return <label key={key}><span><strong>{t.consentItems[key]}</strong><small>{note}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>})}</div>
     </div>
-    <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p><button className="button secondary" onClick={onExport}><Download size={17}/>{t.export}</button>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
+
+    <div className="panel portable-backup">
+      <div className="portable-head"><LockKeyhole size={30}/><div><small>{lang==='ar'?'استمرارية بلا حساب مركزي':'Continuity without a central account'}</small><h3>{lang==='ar'?'نسخة محلية مشفّرة':'Encrypted local backup'}</h3></div></div>
+      <p>{lang==='ar'
+        ? 'تحتوي النسخة على حالة الاستعادة وJSON-LD لملف القدرات، وتُشفّر محليًا بـ AES-GCM. عبارة المرور لا تُرسل ولا تُحفظ، لذلك لا يستطيع كامن استعادتها إذا نسيتها.'
+        : 'The backup contains restore state plus the capability JSON-LD graph and is encrypted locally with AES-GCM. The passphrase is never sent or stored, so Kamin cannot recover it if you forget it.'}</p>
+      <label className="portable-field"><span>{lang==='ar'?'عبارة المرور':'Passphrase'}</span><input type="password" autoComplete="new-password" value={backupPassphrase} onChange={e=>setBackupPassphrase(e.target.value)} placeholder={lang==='ar'?'12 حرفًا على الأقل':'At least 12 characters'}/></label>
+      <label className="portable-field"><span>{lang==='ar'?'تأكيد العبارة — مطلوب للتصدير فقط':'Confirm — export only'}</span><input type="password" autoComplete="new-password" value={backupConfirm} onChange={e=>setBackupConfirm(e.target.value)} placeholder={lang==='ar'?'أعد كتابة العبارة':'Repeat passphrase'}/></label>
+      <div className="portable-actions">
+        <button className="button primary" disabled={backupBusy || (!state.approved && !state.consents.insight)} onClick={exportBackup}><Download size={17}/>{lang==='ar'?'تنزيل نسخة مشفّرة':'Download encrypted backup'}</button>
+        <button className="button secondary" disabled={backupBusy} onClick={()=>backupFileRef.current?.click()}><UploadCloud size={17}/>{lang==='ar'?'استعادة نسخة':'Restore backup'}</button>
+        <input ref={backupFileRef} className="sr-only" type="file" accept=".kamin,application/json" onChange={e=>importBackup(e.target.files?.[0])}/>
+      </div>
+      <small className="portable-note">{lang==='ar'
+        ? 'عند الاستعادة يعيد كامن حساب المهارات والملاءمة من الأدلة؛ ولا يعيد تفعيل موافقات المشاركة مع المرشد/البحث تلقائيًا.'
+        : 'On restore, Kamin recomputes skills and fit from evidence; advisor/research sharing consents are not automatically re-enabled.'}</small>
+      {backupStatus&&<div className="portable-status" role="status" aria-live="polite">{backupStatus}</div>}
+    </div>
+
+    <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
   </div>
 }
 
@@ -569,11 +636,39 @@ function KaminApp({ lang, onClose }) {
   }
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
-  const exportProfile = () => {
+  const exportProfile = async passphrase => {
     const person360=projectStateToPerson360({state,skills,educationClassification})
-    const payload = { exportedAt:new Date().toISOString(), person360, courses:state.courses, educationClassification, skills, judgments:recs, targetMatches:matches, insight:state.insight, consents:state.consents, audit:state.audit }
-    const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}))
-    const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
+    const payload=buildPortableProfile({state,person360,appVersion:'1.0.0'})
+    const envelope=await encryptPortableProfile(payload,passphrase)
+    const url=URL.createObjectURL(new Blob([JSON.stringify(envelope,null,2)],{type:'application/vnd.kamin.profile+json'}))
+    const a=document.createElement('a')
+    a.href=url
+    a.download=`kamin-profile-${new Date().toISOString().slice(0,10)}.kamin`
+    a.click()
+    URL.revokeObjectURL(url)
+    log(lang==='ar'?'إنشاء نسخة محلية مشفّرة':'Encrypted local backup created')
+  }
+  const importProfile = async (file,passphrase) => {
+    if (!file || file.size > 10*1024*1024) throw new Error('BACKUP_TOO_LARGE')
+    let envelope
+    try { envelope=JSON.parse(await file.text()) } catch { throw new Error('INVALID_BACKUP_FILE') }
+    const payload=await decryptPortableProfile(envelope,passphrase)
+    const restored=normalizePortableState(payload)
+    const next={
+      ...blankState,
+      ...restored,
+      consents:{...blankState.consents,...restored.consents,advisor:false,research:false},
+      insight:{...emptyInsightState(),...(restored.insight||{}),responses:{...(restored.insight?.responses||{})}},
+      audit:[{label:lang==='ar'?'استعادة نسخة محلية مشفّرة وإعادة الحساب':'Encrypted local backup restored and recomputed',ts:Date.now()},...(restored.audit||[])].slice(0,100),
+    }
+    setState(next)
+    setDraft(next.courses)
+    setValidation(null)
+    setCompareIds([])
+    setReviewConsent(false)
+    setFileError('')
+    setView(next.approved?'dashboard':'start')
+    setNotice(lang==='ar'?'تمت استعادة ملفك محليًا. أُعيد حساب النتائج من الأدلة، ولم تُفعّل موافقات المشاركة الخارجية.':'Your profile was restored locally. Derived results were recomputed from evidence; external sharing consents remain off.')
   }
   const deleteAll = () => {
     sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(LEGACY_SESSION_KEY); localStorage.removeItem(LEGACY_STORAGE_KEY); setState(blankState); setDraft([]); setValidation(null); setCompareIds([]); setReviewConsent(false); setView('start')
@@ -603,7 +698,7 @@ function KaminApp({ lang, onClose }) {
         <div className="app-content-wrap" role="main">
           {view==='start' && <section className="app-content">
             <div className="app-title"><small>01</small><h2>{t.app.title}</h2><p>{t.app.intro}</p></div>
-            <div className="start-grid"><button className="start-card" onClick={loadDemo}><div className="start-icon"><Sparkles/></div><h3>{t.app.demo}</h3><p>{lang==='ar'?'شاهد الرحلة كاملة ببيانات غير حقيقية.':'See the full journey with synthetic data.'}</p></button><button className="start-card" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></button></div>
+            <div className="start-grid"><button className="start-card" onClick={loadDemo}><div className="start-icon"><Sparkles/></div><h3>{t.app.demo}</h3><p>{lang==='ar'?'شاهد الرحلة كاملة ببيانات غير حقيقية.':'See the full journey with synthetic data.'}</p></button><button className="start-card" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></button><button className="start-card" onClick={()=>setView('privacy')}><div className="start-icon"><LockKeyhole/></div><h3>{lang==='ar'?'استعد ملفك':'Restore your profile'}</h3><p>{lang==='ar'?'افتح نسخة كامن مشفّرة حفظتها سابقًا — بدون حساب مركزي.':'Open an encrypted Kamin backup you saved earlier — no central account required.'}</p></button></div>
             <label className="sr-only" htmlFor="kamin-transcript-file">{lang==='ar'?'اختر ملف كشف الدرجات':'Choose transcript file'}</label><input id="kamin-transcript-file" className="sr-only" ref={fileRef} type="file" accept=".pdf,image/png,image/jpeg,image/webp,.txt" onChange={e=>upload(e.target.files?.[0])}/>
             {processing&&<div className="processing" role="status" aria-live="polite"><div className="processing-row"><div className="spinner"/><strong>{t.app.processing}</strong><b>{progress}%</b></div><div className="progress" aria-label={lang==='ar'?'تقدم قراءة الملف':'File reading progress'}><i style={{width:`${progress}%`}}/></div><small>{t.app.localOnly}</small></div>}
             <div className="privacy-promise"><ShieldCheck/><div><strong>{lang==='ar'?'وعد الخصوصية في النسخة العامة':'Public-release privacy promise'}</strong><p>{t.app.localOnly}</p></div></div>
@@ -623,7 +718,7 @@ function KaminApp({ lang, onClose }) {
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
-          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onDelete={deleteAll}/></section>}
+          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll}/></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
         <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['insight','matches','privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>

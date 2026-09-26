@@ -74,7 +74,7 @@ test('proof-first landing exposes fictional evidence and transparent boundaries'
   await expect(page.locator('#example')).toContainText('مثال توضيحي لطالبة افتراضية')
   await expect(page.locator('#example')).toContainText('PMP')
 
-  for (const path of ['/sample-report.html','/methodology.html','/trust.html']) {
+  for (const path of ['/sample-report.html','/methodology.html','/trust.html','/interoperability.html']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -185,7 +185,7 @@ test('Person 360 is optional, structured, and available before transcript approv
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByLabel('نمط التعاون').selectOption('small-team')
   await page.getByLabel('إيقاع العمل').selectOption('mixed')
-  await expect(page.getByText(/مقاييس معيارية/)).toBeVisible()
+  await expect(page.getByText(/أدوات مرشحة للمعايرة السعودية/)).toBeVisible()
   await expect(page.getByText(/O\*NET Mini Interest Profiler/)).toBeVisible()
   await expect(page.getByText(/IPIP 50-item Big-Five/)).toBeVisible()
 
@@ -302,4 +302,60 @@ test('expert-review trust surfaces are honest and navigable', async ({ page }) =
   await page.goto('/trust.html?lang=ar')
   await expect(page.locator('h1')).toContainText('الثقة آلية في المنتج')
   await expect(page.getByText(/لا تستخدم بيانات الجلسة لتدريب نموذج مركزي/)).toBeVisible()
+})
+
+
+test('encrypted local backup survives session loss and restores source-of-truth state', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات (?:تجريبية|توضيحية)/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await page.getByRole('button', { name: /الخصوصية/ }).first().click()
+
+  const pass='correct horse battery staple'
+  await page.getByLabel('عبارة المرور', { exact:true }).fill(pass)
+  await page.getByLabel(/تأكيد العبارة/).fill(pass)
+  const downloadPromise=page.waitForEvent('download')
+  await page.getByRole('button', { name: /تنزيل نسخة مشفّرة/ }).click()
+  const download=await downloadPromise
+  const backupPath=await download.path()
+  expect(backupPath).toBeTruthy()
+
+  await page.evaluate(()=>sessionStorage.clear())
+  await page.reload()
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: /استعد ملفك/ }).click()
+  await page.getByLabel('عبارة المرور', { exact:true }).fill(pass)
+  await page.locator('input[type="file"][accept*=".kamin"]').setInputFiles(backupPath)
+
+  await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
+  const restored=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
+  expect(restored.approved).toBe(true)
+  expect(restored.courses.length).toBeGreaterThan(0)
+  expect(restored.consents.analyze).toBe(true)
+  expect(restored.consents.advisor).toBe(false)
+  expect(restored.consents.research).toBe(false)
+  expect(restored.audit[0].label).toMatch(/استعادة نسخة محلية مشفّرة/)
+})
+
+test('national positioning is complementary and makes no government integration claim', async ({ page, request }) => {
+  const response=await request.get('/interoperability.html')
+  expect(response.ok()).toBeTruthy()
+  await page.goto('/interoperability.html?lang=ar')
+  await expect(page.locator('h1')).toContainText('مكمّل للبنية الوطنية للمهارات')
+  await expect(page.getByRole('heading', { name: 'منصة وطنية موازية' })).toBeVisible()
+  await expect(page.getByText('لا نبني').first()).toBeVisible()
+  await expect(page.getByText(/لا يوجد API أو اعتماد\/شراكة حكومية معلنة/)).toBeVisible()
+  await expect(page.getByRole('heading', { name:'KAU-only' })).toBeVisible()
+})
+
+test('psychometric instruments are visibly research-only until Saudi validation', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /جرّب ببيانات وهمية/ }).first().click()
+  await page.getByRole('button', { name: 'بصمتي' }).first().click()
+  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
+  await expect(page.getByText(/لا تؤثر على Fit/)).toBeVisible()
+  await expect(page.getByText(/research-candidate-saudi-validation-required/).first()).toBeVisible()
 })
