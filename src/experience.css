@@ -12,3 +12,6 @@
 @media print{.studio-controls,.studio-tabs,.app-sidebar,.bottom-nav,.app-topbar{display:none}.studio-plan{break-inside:avoid}}
 
 .network-canvas .network-path-missing{stroke:#97a5ae;stroke-dasharray:4 6}.graph-node:focus-visible{outline:3px solid #956b15;outline-offset:4px}
+
+/* Small section labels must retain AA text contrast on white panels. */
+.panel-head small,.decision-head small{color:#526879}
