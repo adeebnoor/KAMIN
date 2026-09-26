@@ -14,8 +14,8 @@ const STORAGE_KEY = 'kamin-pilot-v1'
 const blankState = {
   courses: [],
   approved: false,
-  goal: 'management',
-  consents: { analyze: true, advisor: false, research: false },
+  goal: null,
+  consents: { analyze: false, advisor: false, research: false },
   audit: [],
 }
 
@@ -29,7 +29,7 @@ const getSaved = () => {
 }
 
 const localized = (value, lang) => typeof value === 'string' ? value : value?.[lang] || value?.ar || value?.en || ''
-const timeText = (ts, lang) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts))
+const timeText = (ts, lang) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA-u-ca-gregory' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts))
 
 function setMeta(name, content, attr = 'name') {
   const el = document.head.querySelector(`meta[${attr}="${name}"]`)
@@ -83,15 +83,29 @@ function Hero({ lang, onTry }) {
         <p>{t.hero.text}</p>
         <div className="hero-actions">
           <button className="button primary" onClick={onTry}>{t.hero.cta}<Arrow size={18}/></button>
-          <button className="button secondary" onClick={() => document.getElementById('how')?.scrollIntoView({ behavior:'smooth' })}>{t.hero.secondary}</button>
+          <button className="button secondary" onClick={() => document.getElementById('example')?.scrollIntoView({ behavior:'smooth' })}>{t.hero.secondary}</button>
         </div>
         <div className="privacy-chip"><ShieldCheck size={18}/><span>{t.hero.trust}</span></div>
       </div>
       <div className="hero-preview" aria-label={lang === 'ar' ? 'معاينة ملف كامن' : 'Kamin profile preview'}>
         <div className="logo-panel"><Logo lang={lang}/></div>
-        <div className="float-card top"><SearchCheck size={18}/><div><small>{lang === 'ar' ? 'مهارة مكتشفة' : 'Skill discovered'}</small><strong>{lang === 'ar' ? 'تحليل المتطلبات' : 'Requirements analysis'}</strong></div><b>88%</b></div>
-        <div className="float-card bottom"><BadgeCheck size={18}/><div><small>{lang === 'ar' ? 'حكم مفسّر' : 'Explained fit'}</small><strong>{lang === 'ar' ? 'تناسبك بشروط' : 'Fits with conditions'}</strong></div></div>
+        <div className="float-card top"><SearchCheck size={18}/><div><small>{t.hero.cards[0][0]}</small><strong>{t.hero.cards[0][1]}</strong></div></div>
+        <div className="float-card bottom"><BadgeCheck size={18}/><div><small>{t.hero.cards[1][0]}</small><strong>{t.hero.cards[1][1]}</strong></div></div>
       </div>
+    </div>
+  </section>
+}
+
+function ValueExample({ lang }) {
+  const v = copy[lang].value
+  return <section id="example" className="section value-section">
+    <div className="shell">
+      <div className="section-title"><span>01</span><div><small className="value-kicker">{v.kicker}</small><h2>{v.title}</h2><p>{v.intro}</p></div></div>
+      <div className="value-grid">
+        <article className="value-card traditional"><small>{v.traditional}</small><h3>{v.traditionalItems[0]}</h3><ul>{v.traditionalItems.slice(1).map(item=><li key={item}>{item}</li>)}</ul></article>
+        <article className="value-card kamin-value"><small>{v.kamin}</small><div className="value-signals">{v.signals.map(([type,title,evidence])=><div className="value-signal" key={type+title}><span>{type}</span><div><strong>{title}</strong><small>{evidence}</small></div></div>)}</div></article>
+      </div>
+      <div className="value-result"><ShieldCheck size={18}/><div><strong>{lang==='ar'?'النتيجة':'Outcome'}</strong><p>{v.result}</p><small>{v.demo}</small></div></div>
     </div>
   </section>
 }
@@ -102,6 +116,7 @@ function Landing({ lang, onTry }) {
   const trustIcons = [Fingerprint, FileCheck2, ShieldCheck, SearchCheck]
   return <>
     <Hero lang={lang} onTry={onTry}/>
+    <ValueExample lang={lang}/>
     <section id="how" className="section">
       <div className="shell">
         <div className="section-title"><span>01</span><h2>{t.how.title}</h2></div>
@@ -143,7 +158,7 @@ function Landing({ lang, onTry }) {
   </>
 }
 
-function CourseReview({ lang, rows, setRows, onApprove }) {
+function CourseReview({ lang, rows, setRows, onApprove, consent, setConsent }) {
   const t = copy[lang].app
   const [formOpen, setFormOpen] = useState(false)
   const [form, setForm] = useState({ code:'', name:'', grade:'' })
@@ -158,7 +173,7 @@ function CourseReview({ lang, rows, setRows, onApprove }) {
     <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
       {rows.map((r,i)=><tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>)}
     </tbody></table></div>
-    <div className="approval"><div><FileCheck2/><span>{lang === 'ar' ? 'لن تُستنتج أي مهارة قبل اعتمادك لهذه البيانات.' : 'No skill will be inferred until you approve these data.'}</span></div><button className="button primary" disabled={!rows.length} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
+    <div className="approval approval-consent"><label><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>{lang === 'ar' ? 'أوافق صراحةً على تحليل هذا السجل لبناء ملف مهاراتي بعد مراجعتي له.' : 'I explicitly consent to analyzing this record to build my skills profile after reviewing it.'}</span></label><button className="button primary" disabled={!rows.length || !consent} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
   </div>
 }
 
@@ -171,7 +186,7 @@ function FitCard({ item, lang, compared, toggle }) {
   const t = copy[lang].app
   return <article className="fit-card">
     <div className="fit-head"><div><small>{item.provider}</small><h3>{item.title[lang]}</h3></div><span className={`status ${item.status}`}>{t.fit[item.status]}</span></div>
-    <div className="fit-score"><strong>{item.score}%</strong><span>{lang==='ar'?'ملاءمة مفسّرة':'explained fit'}</span></div>
+    <div className="fit-score"><strong>{item.score}%</strong><span>{lang==='ar'?'مؤشر مبدئي مفسّر':'preliminary explained indicator'}</span></div>
     <div className="why"><h4>{t.why}</h4>{item.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}</div>
     <div className="gap"><small>{item.gapType}</small><p><strong>{t.becomes}</strong> {item.becomes}</p></div>
     <div className="fit-meta"><span>{item.duration[lang]}</span><span>{item.cost[lang]}</span></div>
@@ -181,16 +196,20 @@ function FitCard({ item, lang, compared, toggle }) {
 
 function Privacy({ lang, state, setState, log, onExport, onDelete }) {
   const t = copy[lang].app
+  const [confirmDelete,setConfirmDelete] = useState(false)
   const toggle = (key) => {
-    if (key === 'analyze' && state.approved) return
+    if (key === 'analyze' && state.approved) {
+      setState(s => ({...s,courses:[],approved:false,consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
+      return
+    }
     setState(s => ({...s,consents:{...s.consents,[key]:!s.consents[key]}}))
     log(lang==='ar'? `تغيير موافقة: ${t.consentItems[key]}` : `Consent changed: ${t.consentItems[key]}`)
   }
   return <div className="privacy-layout">
     <div className="panel"><div className="panel-head"><div><small>{t.consent}</small><h3>{lang==='ar'?'كل غرض له إذنه':'Each purpose has its own permission'}</h3></div></div>
-      <div className="consents">{Object.keys(state.consents).map(key=><label key={key}><span><strong>{t.consentItems[key]}</strong><small>{key==='analyze'?(lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval'):(lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')}</small></span><input type="checkbox" checked={!!state.consents[key]} disabled={key==='analyze'&&state.approved} onChange={()=>toggle(key)}/></label>)}</div>
+      <div className="consents">{Object.keys(state.consents).map(key=><label key={key}><span><strong>{t.consentItems[key]}</strong><small>{key==='analyze'?(lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval'):(lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>)}</div>
     </div>
-    <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p><button className="button secondary" onClick={onExport}><Download size={17}/>{t.export}</button><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{t.delete}</button></div>
+    <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p><button className="button secondary" onClick={onExport}><Download size={17}/>{t.export}</button>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
   </div>
 }
 
@@ -225,7 +244,11 @@ function KaminApp({ lang, onClose }) {
   const [progress,setProgress] = useState(0)
   const [compareIds,setCompareIds] = useState([])
   const [notice,setNotice] = useState('')
+  const [reviewConsent,setReviewConsent] = useState(false)
+  const [fileError,setFileError] = useState('')
   const fileRef = useRef(null)
+  const dialogRef = useRef(null)
+  const closeButtonRef = useRef(null)
   const skills = useMemo(()=>state.approved?inferSkills(state.courses):[],[state])
   const recs = useMemo(()=>judgeOpportunities(skills,state.goal,lang),[skills,state.goal,lang])
   const compared = recs.filter(r=>compareIds.includes(r.id))
@@ -236,26 +259,45 @@ function KaminApp({ lang, onClose }) {
     const timer = setTimeout(()=>setNotice(''), 4200)
     return ()=>clearTimeout(timer)
   },[notice])
+  useEffect(()=>{
+    closeButtonRef.current?.focus()
+    const dialog=dialogRef.current
+    const onKey=(event)=>{
+      if(event.key==='Escape'){ event.preventDefault(); onClose(); return }
+      if(event.key!=='Tab' || !dialog) return
+      const focusable=[...dialog.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>!el.hasAttribute('hidden'))
+      if(!focusable.length) return
+      const first=focusable[0], last=focusable[focusable.length-1]
+      if(event.shiftKey && document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey && document.activeElement===last){event.preventDefault();first.focus()}
+    }
+    dialog?.addEventListener('keydown',onKey)
+    return()=>dialog?.removeEventListener('keydown',onKey)
+  },[onClose])
   const log = (label) => setState(s=>({...s,audit:[{label,ts:Date.now()},...s.audit].slice(0,100)}))
-  const loadDemo = () => { setDraft(demoCourses); setView('review'); log(lang==='ar'?'تحميل بيانات تجريبية':'Demo data loaded') }
+  const loadDemo = () => { setDraft(demoCourses); setReviewConsent(false); setFileError(''); setView('review'); log(lang==='ar'?'تحميل بيانات تجريبية':'Demo data loaded') }
   const upload = async (file) => {
     if (!file) return
     setProcessing(true); setProgress(2)
     try {
       const result = await extractTranscript(file,setProgress)
       setDraft(result.courses)
+      setReviewConsent(false)
+      setFileError(result.courses.length ? '' : (lang==='ar' ? 'لم نتمكن من قراءة المقررات من هذا الملف. جرّب PDF نصيًا أو أضف المقررات يدويًا.' : 'We could not read courses from this file. Try a text PDF or add courses manually.'))
       setView('review')
       log(lang==='ar'? `قراءة ملف محلي: ${file.name}` : `Local file read: ${file.name}`)
       if (!result.courses.length) setDraft([])
     } catch (err) {
       console.error(err)
-      alert(lang==='ar'?'تعذر قراءة الملف. يمكنك إضافة المقررات يدويًا.':'Could not read this file. You can add courses manually.')
+      setFileError(lang==='ar'?'تعذر قراءة الملف بأمان. جرّب PDF نصيًا أو أضف المقررات يدويًا.':'The file could not be read safely. Try a text PDF or add courses manually.')
       setDraft([])
+      setReviewConsent(false)
       setView('review')
     } finally { setProcessing(false); setProgress(0) }
   }
   const approve = () => {
-    setState(s=>({...s,courses:draft,approved:true,consents:{...s.consents,analyze:true},audit:[{label:lang==='ar'?'اعتماد السجل وإعادة الحساب':'Transcript approved and recalculated',ts:Date.now()},...s.audit]}))
+    if (!reviewConsent) return
+    setState(s=>({...s,courses:draft,approved:true,consents:{...s.consents,analyze:true},audit:[{label:lang==='ar'?'منح موافقة تحليل السجل واعتماده':'Transcript analysis consent granted and record approved',ts:Date.now()},...s.audit]}))
     setView('dashboard')
     setNotice(lang==='ar' ? 'تم اعتماد السجل وحفظ الجلسة محليًا على هذا الجهاز.' : 'Transcript approved. This session is saved locally on this device.')
   }
@@ -267,8 +309,7 @@ function KaminApp({ lang, onClose }) {
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
   const deleteAll = () => {
-    if (!confirm(t.app.deleteConfirm)) return
-    localStorage.removeItem(STORAGE_KEY); setState(blankState); setDraft([]); setCompareIds([]); setView('start')
+    localStorage.removeItem(STORAGE_KEY); setState(blankState); setDraft([]); setCompareIds([]); setReviewConsent(false); setView('start')
   }
 
   const nav = [
@@ -280,7 +321,7 @@ function KaminApp({ lang, onClose }) {
     ['audit',ClipboardCheck,t.app.audit],
   ]
 
-  return <div className="app-overlay" role="dialog" aria-modal="true" aria-label={t.app.title}>
+  return <div className="app-overlay" role="dialog" aria-modal="true" aria-label={t.app.title} ref={dialogRef}>
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="app-brand"><Logo compact lang={lang}/><div><strong>{t.name}</strong><small>{t.tagline}</small></div></div>
@@ -288,32 +329,32 @@ function KaminApp({ lang, onClose }) {
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public pilot'}</span></div>
       </aside>
       <div className="app-main">
-        <header className="app-topbar"><div><small>{t.app.title}</small><strong>{state.approved?(lang==='ar'?'ملف معتمد':'Approved profile'):(lang==='ar'?'نسخة إطلاق تجريبية':'Public launch pilot')}</strong></div><div><button className="icon-button" onClick={onClose} aria-label={lang==='ar'?'إغلاق':'Close'}><X/></button></div></header>
+        <header className="app-topbar"><div><small>{t.app.title}</small><strong>{state.approved?(lang==='ar'?'ملف معتمد':'Approved profile'):(lang==='ar'?'نسخة إطلاق تجريبية':'Public launch pilot')}</strong></div><div><button ref={closeButtonRef} className="icon-button" onClick={onClose} aria-label={lang==='ar'?'إغلاق':'Close'}><X/></button></div></header>
         {notice&&<div className="toast" role="status" aria-live="polite"><Check size={18}/><span>{notice}</span></div>}
-        <main className="app-content-wrap">
+        <div className="app-content-wrap" role="main">
           {view==='start' && <section className="app-content">
             <div className="app-title"><small>01</small><h2>{t.app.title}</h2><p>{t.app.intro}</p></div>
             <div className="start-grid"><button className="start-card" onClick={loadDemo}><div className="start-icon"><Sparkles/></div><h3>{t.app.demo}</h3><p>{lang==='ar'?'شاهد الرحلة كاملة ببيانات غير حقيقية.':'See the full journey with synthetic data.'}</p></button><button className="start-card" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></button></div>
-            <input className="sr-only" ref={fileRef} type="file" accept=".pdf,image/*,.txt" onChange={e=>upload(e.target.files?.[0])}/>
-            {processing&&<div className="processing" role="status" aria-live="polite"><div className="processing-row"><div className="spinner"/><strong>{t.app.processing}</strong><b>{progress}%</b></div><div className="progress" aria-label={lang==='ar'?'تقدم قراءة الملف':'File reading progress'}><i style={{width:`${progress}%`}}/></div><small>{t.app.localOnly} {lang==='ar'?'قد يتم تنزيل نموذج OCR مرة واحدة؛ صورة كشفك لا تُرسل إليه.':'An OCR language model may be downloaded once; your transcript image is not sent to it.'}</small></div>}
+            <label className="sr-only" htmlFor="kamin-transcript-file">{lang==='ar'?'اختر ملف كشف الدرجات':'Choose transcript file'}</label><input id="kamin-transcript-file" className="sr-only" ref={fileRef} type="file" accept=".pdf,.txt" onChange={e=>upload(e.target.files?.[0])}/>
+            {processing&&<div className="processing" role="status" aria-live="polite"><div className="processing-row"><div className="spinner"/><strong>{t.app.processing}</strong><b>{progress}%</b></div><div className="progress" aria-label={lang==='ar'?'تقدم قراءة الملف':'File reading progress'}><i style={{width:`${progress}%`}}/></div><small>{t.app.localOnly}</small></div>}
             <div className="privacy-promise"><ShieldCheck/><div><strong>{lang==='ar'?'وعد الخصوصية في النسخة العامة':'Public-pilot privacy promise'}</strong><p>{t.app.localOnly}</p></div></div>
           </section>}
-          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div><CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve}/></section>}
+          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div>{fileError&&<div className="error-banner" role="alert">{fileError}</div>}<CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve} consent={reviewConsent} setConsent={setReviewConsent}/></section>}
           {state.approved && view==='dashboard' && <section className="app-content">
-            <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل رقم هنا قابل للرجوع إلى دليل في سجلك المعتمد.':'Every number here can be traced to evidence in your approved record.'}</p></div>
+            <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل مؤشر هنا مبدئي وقابل للرجوع إلى دليل في سجلك المعتمد.':'Every indicator here is preliminary and traceable to evidence in your approved record.'}</p></div>
             <div className="session-banner"><ShieldCheck size={17}/><span>{lang==='ar'?'هذه الجلسة محفوظة محليًا في هذا المتصفح. لا تُستخدم كسجل مؤسسي أو نسخة احتياطية.':'This session is saved locally in this browser. It is not an institutional record or backup.'}</span></div>
-            <div className="metrics"><article><span>{lang==='ar'?'مهارات موثقة':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى ثقة':'Highest confidence'}</span><strong>{skills[0]?.confidence||0}%</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'أفضل ملاءمة':'Top fit'}</span><strong>{recs[0]?.score||0}%</strong><small>{recs[0]?.title[lang]||'—'}</small></article></div>
+            <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى مؤشر مبدئي':'Highest preliminary indicator'}</span><strong>{skills[0]?.confidence||0}%</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'أعلى مؤشر ملاءمة مبدئي':'Top preliminary fit'}</span><strong>{recs[0]?.score||0}%</strong><small>{recs[0]?.title[lang]||'—'}</small></article></div>
             <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=><div className="skill-row" key={s.id}><span>{s.labels[lang]}</span><div><i style={{width:`${s.confidence}%`}}/></div><b>{s.confidence}%</b></div>)}</div>
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
             <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?.score}%</strong><small>{lang==='ar'?'ملاءمة مفسّرة':'explained fit'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>
           </section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'الثقة هي ثقة النظام في أن سجلك يدعم المهارة، وليست حكمًا عليك.':'Confidence is the system’s confidence in the evidence, not a judgment about you.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
-          {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal} onChange={e=>chooseGoal(e.target.value)} aria-label={t.app.goal}>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
+          {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onDelete={deleteAll}/></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-pilot profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
-        </main>
-        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.slice(0,5).map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&id!=='privacy'} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
+        </div>
+        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
       </div>
     </div>
   </div>
