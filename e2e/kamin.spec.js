@@ -139,3 +139,18 @@ test('public pilot does not present heuristic mastery or fit percentages as cali
   await expect(page.locator('.fit-card').first()).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
   await expect(page.locator('.fit-card')).not.toContainText(/\d+%/)
 })
+
+
+test('upload validation surfaces a non-binding SASCED academic context candidate', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  const input=page.locator('#kamin-transcript-file')
+  await input.setInputFiles({
+    name:'it-transcript.txt',
+    mimeType:'text/plain',
+    buffer:Buffer.from('بكالوريوس تقنية المعلومات\nCPIT 251 Systems Analysis and Design 3 A 15.00')
+  })
+  await expect(page.getByText(/SASCED-20/)).toBeVisible()
+  await expect(page.getByText(/061303/)).toBeVisible()
+  await expect(page.getByText(/لا يصبح تصنيفًا معتمدًا/)).toBeVisible()
+})
