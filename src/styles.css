@@ -177,3 +177,8 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .meter.categorical i.high,.skill-row i.high{width:100%}
 .meter.categorical i.medium,.skill-row i.medium{width:66%}
 .meter.categorical i.low,.skill-row i.low{width:33%}
+
+.sasced-candidate{display:grid;gap:6px;padding:12px 14px;border:1px solid #c8d8e7;border-radius:11px;background:#f3f8fc}
+.sasced-candidate>div{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sasced-candidate strong{color:var(--navy);font-size:.82rem}.sasced-candidate span{font-weight:900;color:#40576f}.sasced-candidate small{color:var(--muted);line-height:1.65}
+@media(prefers-color-scheme:dark){.sasced-candidate{background:#122538;border-color:#34516b}.sasced-candidate span{color:#c8d7e7}}
