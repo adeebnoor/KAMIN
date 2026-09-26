@@ -638,15 +638,16 @@ test('BRD visibility surfaces are public and explicitly non-operational where re
 
 test('validation page resolves prototype decisions without inventing research results', async ({ page }) => {
   await page.goto('/validation.html?lang=ar')
+  const ar=page.locator('[data-kamin-lang="ar"]:visible')
   await expect(page.locator('h1:visible')).toContainText('ما حُسم، وما بقي بحثيًا')
-  await expect(page.getByText('D-05')).toBeVisible()
-  await expect(page.getByText(/قسم تقنية المعلومات/)).toBeVisible()
-  await expect(page.getByText('D-01')).toBeVisible()
-  await expect(page.getByText(/لا يوجد نموذج عربي توليدي/)).toBeVisible()
-  await expect(page.getByText('H3')).toBeVisible()
-  await expect(page.getByText(/خطة — لا نتائج/).first()).toBeVisible()
-  await expect(page.getByText('H4')).toBeVisible()
-  await expect(page.getByText(/لا تدعي وجود موافقة أخلاقية/)).toBeVisible()
+  await expect(ar.getByText('D-05')).toBeVisible()
+  await expect(ar.getByText(/قسم تقنية المعلومات/)).toBeVisible()
+  await expect(ar.getByText('D-01')).toBeVisible()
+  await expect(ar.getByText(/لا يوجد نموذج عربي توليدي/)).toBeVisible()
+  await expect(ar.getByText('H3')).toBeVisible()
+  await expect(ar.getByText(/خطة — لا نتائج/).first()).toBeVisible()
+  await expect(ar.getByText('H4')).toBeVisible()
+  await expect(ar.getByText(/لا تدعي وجود موافقة أخلاقية/)).toBeVisible()
 })
 
 test('FR-09 what-changed message appears after deposit and approval', async ({ page }) => {
