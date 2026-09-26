@@ -238,11 +238,11 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .network-note div{display:grid;gap:3px}.network-note span{color:#47665c;font-size:.9rem}
 .decision-universe{background:#0b2f5b;color:#fff}
 .decision-universe .section-title h2,.decision-universe .value-kicker{color:#fff}.decision-universe .section-lead{color:#c8d6e5}
-.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
-.match-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:22px;min-height:178px}
-.match-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.match-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#fff;color:var(--navy)}
-.match-card-head small{border:1px solid rgba(234,211,152,.45);color:#f3dda6;border-radius:999px;padding:5px 8px;font-size:.7rem;font-weight:800}
-.match-card h3{margin:18px 0 7px;color:#fff}.match-card p{margin:0;color:#d1ddea;font-size:.9rem}
+.opportunity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+.opportunity-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:22px;min-height:178px}
+.opportunity-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.opportunity-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#fff;color:var(--navy)}
+.opportunity-card-head small{border:1px solid rgba(234,211,152,.45);color:#f3dda6;border-radius:999px;padding:5px 8px;font-size:.7rem;font-weight:800}
+.opportunity-card h3{margin:18px 0 7px;color:#fff}.opportunity-card p{margin:0;color:#d1ddea;font-size:.9rem}
 .ecosystem-flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:24px;padding:15px;border:1px solid rgba(255,255,255,.13);border-radius:15px;background:rgba(0,0,0,.08)}
 .ecosystem-flow span{font-size:.78rem;font-weight:800}.ecosystem-flow b{color:var(--gold)}
 .institutions-section{background:#f7f9fc}
@@ -257,15 +257,15 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
   .journey-grid{grid-template-columns:repeat(2,1fr)}
   .journey-node:nth-child(2){border-inline-end:0}
   .journey-node:nth-child(-n+2){border-bottom:1px solid var(--line)}
-  .person360-grid,.match-grid{grid-template-columns:repeat(2,1fr)}
+  .person360-grid,.opportunity-grid{grid-template-columns:repeat(2,1fr)}
   .institution-grid{grid-template-columns:repeat(2,1fr)}
   .business-principle{grid-template-columns:1fr}
 }
 @media (max-width:600px){
   .hero-network-line{gap:6px}.hero-network-line span{padding:6px 8px;font-size:.75rem}
-  .journey-grid,.person360-grid,.match-grid,.institution-grid{grid-template-columns:1fr}
+  .journey-grid,.person360-grid,.opportunity-grid,.institution-grid{grid-template-columns:1fr}
   .journey-node{border-inline-end:0;border-bottom:1px solid var(--line);min-height:auto}
   .journey-node:last-child{border-bottom:0}
-  .dimension-card,.match-card,.institution-card{min-height:auto}
+  .dimension-card,.opportunity-card,.institution-card{min-height:auto}
   .business-principle{padding:20px}
 }
