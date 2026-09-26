@@ -1,81 +1,117 @@
-import { emptyPerson360 } from './person360.js'
+import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 
 export const INSIGHT_VERSION='kamin-insight-v2'
 
-/*
- * Declared preferences are structured product inputs, not psychometric scores.
- * They intentionally use controlled lists instead of free text so rules are
- * deterministic and auditable.
- */
-export const DECLARED_PREFERENCE_SCHEMES = {
-  workStructure:{
-    label:{ar:'درجة هيكلة العمل',en:'Work structure'},
-    options:[
-      {id:'structured',label:{ar:'هيكلة وخطة واضحة',en:'Highly structured'}},
-      {id:'balanced',label:{ar:'مزيج بين الهيكلة والمرونة',en:'Balanced'}},
-      {id:'flexible',label:{ar:'مرونة وتجريب',en:'Flexible / exploratory'}},
-    ],
-  },
-  collaboration:{
-    label:{ar:'نمط التعاون',en:'Collaboration style'},
-    options:[
-      {id:'independent',label:{ar:'عمل فردي في الغالب',en:'Mostly independent'}},
-      {id:'small-team',label:{ar:'فريق صغير',en:'Small team'}},
-      {id:'cross-functional',label:{ar:'فريق متعدد التخصصات',en:'Cross-functional team'}},
-      {id:'high-collaboration',label:{ar:'تعاون مكثف',en:'Highly collaborative'}},
-    ],
-  },
-  pace:{
-    label:{ar:'إيقاع العمل',en:'Work pace'},
-    options:[
-      {id:'stable',label:{ar:'مستقر ومتوقع',en:'Stable and predictable'}},
-      {id:'mixed',label:{ar:'متنوع',en:'Mixed'}},
-      {id:'fast-changing',label:{ar:'سريع التغير',en:'Fast-changing'}},
-    ],
-  },
-  responsibility:{
-    label:{ar:'نوع المسؤولية المرغوبة',en:'Preferred responsibility'},
-    options:[
-      {id:'individual-contributor',label:{ar:'مساهم فردي',en:'Individual contributor'}},
-      {id:'project-owner',label:{ar:'مسؤولية مشروع',en:'Project ownership'}},
-      {id:'team-lead',label:{ar:'قيادة فريق',en:'Team leadership'}},
-      {id:'organizational-leadership',label:{ar:'قيادة تنظيمية',en:'Organizational leadership'}},
-    ],
-  },
-  learningMode:{
-    label:{ar:'طريقة التعلم المفضلة',en:'Preferred learning mode'},
-    options:[
-      {id:'self-paced',label:{ar:'ذاتي السرعة',en:'Self-paced'}},
-      {id:'instructor-led',label:{ar:'بإشراف مدرب',en:'Instructor-led'}},
-      {id:'project-based',label:{ar:'بالمشاريع',en:'Project-based'}},
-      {id:'cohort',label:{ar:'ضمن مجموعة',en:'Cohort-based'}},
-    ],
-  },
-}
+export const DECLARED_PREFERENCE_OPTIONS=Object.freeze({
+  workEnvironment:[
+    {id:'highly-structured',ar:'منظم جدًا',en:'Highly structured'},
+    {id:'moderately-structured',ar:'منظم بدرجة متوسطة',en:'Moderately structured'},
+    {id:'flexible',ar:'مرن',en:'Flexible'},
+    {id:'exploratory',ar:'استكشافي وتجريبي',en:'Exploratory'},
+  ],
+  teamMode:[
+    {id:'mostly-independent',ar:'عمل فردي غالبًا',en:'Mostly independent'},
+    {id:'small-team',ar:'فريق صغير',en:'Small team'},
+    {id:'cross-functional',ar:'فريق متعدد التخصصات',en:'Cross-functional team'},
+    {id:'highly-collaborative',ar:'تعاون مكثف',en:'Highly collaborative'},
+  ],
+  workPace:[
+    {id:'stable',ar:'إيقاع مستقر',en:'Stable pace'},
+    {id:'mixed',ar:'مزيج بين الاستقرار والتغيير',en:'Mixed pace'},
+    {id:'fast-changing',ar:'سريع التغيير',en:'Fast-changing'},
+  ],
+  responsibility:[
+    {id:'individual-contributor',ar:'مساهم فردي',en:'Individual contributor'},
+    {id:'project-owner',ar:'مالك مشروع',en:'Project ownership'},
+    {id:'team-lead',ar:'قيادة فريق',en:'Team leadership'},
+    {id:'organizational-leadership',ar:'قيادة تنظيمية',en:'Organizational leadership'},
+  ],
+  learningFormat:[
+    {id:'self-paced',ar:'تعلم ذاتي',en:'Self-paced'},
+    {id:'instructor-led',ar:'بقيادة مدرب',en:'Instructor-led'},
+    {id:'project-based',ar:'قائم على مشروع',en:'Project-based'},
+    {id:'cohort',ar:'مجموعة تعلم',en:'Cohort-based'},
+    {id:'blended',ar:'مدمج',en:'Blended'},
+  ],
+})
 
 export function emptyInsightState(){
   return {
     version:INSIGHT_VERSION,
-    personGraph:emptyPerson360(),
     declaredPreferences:{},
-    assessments:{},
+    observations:[],
     completedInstruments:[],
     updatedAt:null,
   }
 }
 
-export function setDeclaredPreference(insight,schemeId,optionId){
-  const scheme=DECLARED_PREFERENCE_SCHEMES[schemeId]
-  if(!scheme) throw new Error('UNKNOWN_PREFERENCE_SCHEME')
-  if(!scheme.options.some(option=>option.id===optionId)) throw new Error('UNKNOWN_PREFERENCE_OPTION')
+export function setDeclaredPreference(insight,key,value){
+  const allowed=DECLARED_PREFERENCE_OPTIONS[key]
+  if(!allowed) throw new Error('UNKNOWN_PREFERENCE')
+  const values=Array.isArray(value)?value:[value]
+  for(const v of values){
+    if(!allowed.some(option=>option.id===v)) throw new Error('INVALID_PREFERENCE_VALUE')
+  }
   return {
+    ...emptyInsightState(),
     ...insight,
-    version:INSIGHT_VERSION,
-    declaredPreferences:{...(insight?.declaredPreferences||{}),[schemeId]:optionId},
-    updatedAt:new Date().toISOString(),
+    declaredPreferences:{...(insight?.declaredPreferences||{}),[key]:value},
+    updatedAt:Date.now(),
   }
 }
 
-export function clearInsight(){
-  return emptyInsightState()
+export function createPsychometricObservation({
+  instrumentId,dimensionId,value,scale=null,source='self-report',consentPurpose='student-insight',
+  instrumentVersion=null,timestamp=Date.now(),
+}){
+  const instrument=PSYCHOMETRIC_INSTRUMENTS[instrumentId]
+  if(!instrument) throw new Error('UNKNOWN_INSTRUMENT')
+  if(!dimensionId) throw new Error('MISSING_DIMENSION')
+  if(value===undefined || value===null) throw new Error('MISSING_VALUE')
+  return {
+    id:`obs-${instrumentId}-${dimensionId}-${timestamp}`,
+    type:'kamin:Observation',
+    construct:instrument.construct,
+    dimensionId,
+    value,
+    scale,
+    source,
+    instrumentId,
+    instrumentVersion:instrumentVersion||instrument.sourceVersion||instrument.version||'unspecified',
+    consentPurpose,
+    generatedAt:timestamp,
+    status:'self-reported',
+  }
 }
+
+export function addPsychometricObservation(insight,observation){
+  if(!observation?.instrumentId) throw new Error('INVALID_OBSERVATION')
+  return {
+    ...emptyInsightState(),
+    ...insight,
+    observations:[...(insight?.observations||[]),observation],
+    updatedAt:Date.now(),
+  }
+}
+
+export function markInstrumentCompleted(insight,instrumentId,{version=null,timestamp=Date.now()}={}){
+  if(!PSYCHOMETRIC_INSTRUMENTS[instrumentId]) throw new Error('UNKNOWN_INSTRUMENT')
+  const existing=(insight?.completedInstruments||[]).filter(item=>item.instrumentId!==instrumentId)
+  return {
+    ...emptyInsightState(),
+    ...insight,
+    completedInstruments:[...existing,{instrumentId,version,timestamp}],
+    updatedAt:timestamp,
+  }
+}
+
+/*
+ * Intentionally absent:
+ * - no locally invented psychometric questions
+ * - no normative percentiles
+ * - no diagnosis labels
+ * - no universal Person↔Opportunity score
+ *
+ * Instruments are loaded only after their exact items/scoring/licensing and
+ * Arabic validation status are pinned in the psychometric registry.
+ */
