@@ -241,7 +241,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByRole('button', { name: /فرصي/ }).first().click()
   await expect(page.getByText(/فرصك المفسّرة/)).toBeVisible()
-  await expect(page.getByText(/محلل بيانات/)).toBeVisible()
+  await expect(page.getByRole('dialog').getByRole('heading',{name:'محلل بيانات',exact:true})).toBeVisible()
   await expect(page.getByText(/فجوات أو حدود/).first()).toBeVisible()
   await expect(page.locator('.match-explorer')).not.toContainText(/\d+%/)
   await expect(page.getByText(/غير معاير رقميًا/).first()).toBeVisible()

@@ -19,7 +19,7 @@ test('guide and plan use selected target without creating new evidence',async({p
  await openProfile(page)
  await page.getByRole('button',{name:'افتح شبكتي ومساعدي'}).click()
  await page.getByLabel('المسار الذي أريد استكشافه').selectOption('job-cyber-analyst')
- await expect(page.locator('.network-explanation')).toBeVisible()
+ await expect(page.getByRole('dialog').locator('.network-explanation')).toBeVisible()
  const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
  await page.getByRole('tab',{name:'مساعد القرار'}).click()
  await page.getByLabel('اختر سؤالك').selectOption('missing')
