@@ -58,13 +58,13 @@ const post = async (rawEndpoint,record) => {
 
 export function trackPilotEvent(event){
   if(!EVENT_ALLOWLIST.has(event)) throw new Error('PILOT_EVENT_NOT_ALLOWED')
+  if(!PILOT_ANALYTICS_ENABLED) return {recorded:false,record:null}
   const record={
     event,
     at:new Date().toISOString(),
     anonymousId:anonymousId(),
     schema:'kamin-pilot-funnel-v1',
   }
-  if(!PILOT_ANALYTICS_ENABLED) return {recorded:false,record}
   appendLocal(EVENT_QUEUE_KEY,record)
   void post(analyticsEndpoint(),record).catch(()=>{})
   return {recorded:true,record}
@@ -74,6 +74,7 @@ export async function submitPilotFeedback({text,consent}={}){
   if(consent!==true) throw new Error('FEEDBACK_CONSENT_REQUIRED')
   const clean=String(text||'').trim().slice(0,1200)
   if(!clean) throw new Error('FEEDBACK_TEXT_REQUIRED')
+  if(!PILOT_ANALYTICS_ENABLED) return {submitted:false,storedLocally:false,disabled:true}
   const record={
     feedback:clean,
     consent:true,
@@ -82,7 +83,7 @@ export async function submitPilotFeedback({text,consent}={}){
     schema:'kamin-pilot-feedback-v1',
   }
   appendLocal(FEEDBACK_QUEUE_KEY,record)
-  if(!PILOT_ANALYTICS_ENABLED || !feedbackEndpoint()) return {submitted:false,storedLocally:true}
+  if(!feedbackEndpoint()) return {submitted:false,storedLocally:true}
   const submitted=await post(feedbackEndpoint(),record)
   return {submitted,storedLocally:!submitted}
 }
