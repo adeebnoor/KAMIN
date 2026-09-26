@@ -125,3 +125,17 @@ test('a failed upload path never injects demo courses', async ({ page }) => {
   await expect(page.getByRole('alert')).toContainText(/لم نتعرف على مقررات/)
   await expect(page.getByText(/6 مقررات مستخرجة/)).toHaveCount(0)
 })
+
+
+test('public pilot does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await expect(page.locator('.skill-row').first()).toContainText(/مرتفعة|متوسطة|محدودة|مبدئية/)
+  await expect(page.locator('.metrics')).not.toContainText(/\d+%/)
+  await page.getByRole('button', { name: /الدورات/ }).first().click()
+  await expect(page.locator('.fit-card').first()).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
+  await expect(page.locator('.fit-card')).not.toContainText(/\d+%/)
+})
