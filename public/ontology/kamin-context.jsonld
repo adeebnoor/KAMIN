@@ -74,6 +74,10 @@
     "classifiedAs": {
       "@id": "kamin:classifiedAs",
       "@type": "@id"
+    },
+    "courseContext": {
+      "@id": "kamin:courseContext",
+      "@type": "@id"
     }
   }
 }
