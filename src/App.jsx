@@ -563,7 +563,7 @@ function WhatChanged({change,lang}){
     items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها من طبقة Person 360.` : `${change.preferences} declared preference(s) were removed from Person 360.`)
     items.push(lang==='ar'?'الأدلة الأكاديمية بقيت كما هي؛ الذي تغير هو سياق التخصيص فقط.':'Academic evidence remains unchanged; only personalization context changed.')
   }
-  return <div className="what-changed" role="status" aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
+  return <div className="what-changed" role="region" aria-label={title[lang]} aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
 }
 
 function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary }) {
@@ -763,8 +763,22 @@ function KaminApp({ lang, onClose }) {
     return()=>dialog?.removeEventListener('keydown',onKey)
   },[onClose])
   const log = (label) => setState(s=>({...s,audit:[{label,ts:Date.now()},...s.audit].slice(0,100)}))
-  const loadDemo = () => { setDraft(demoCourses); setValidation({recognized:demoCourses.length,rejected:[],usedOcr:false,mode:'demo'}); setReviewConsent(false); setFileError(''); setView('review'); log(lang==='ar'?'تحميل بيانات تجريبية منفصلة':'Separate demo data loaded') }
-  const startManual = () => { setDraft([]); setValidation({recognized:0,rejected:[],usedOcr:false,mode:'manual'}); setReviewConsent(false); setFileError(''); setView('review') }
+  const loadDemo = () => {
+    setDraft(demoCourses)
+    setValidation({recognized:demoCourses.length,rejected:[],usedOcr:false,mode:'demo'})
+    setChangeSummary({
+      type:'upload',
+      recognized:demoCourses.length,
+      mapped:demoCourses.filter(course=>isMappedCourse(course.code)).length,
+      rejected:0,
+      ts:Date.now(),
+    })
+    setReviewConsent(false)
+    setFileError('')
+    setView('review')
+    log(lang==='ar'?'تحميل إيداع تجريبي توضيحي':'Synthetic demonstration deposit loaded')
+  }
+  const startManual = () => { setDraft([]); setValidation({recognized:0,rejected:[],usedOcr:false,mode:'manual'}); setChangeSummary(null); setReviewConsent(false); setFileError(''); setView('review') }
   const upload = async (file) => {
     if (!file) return
     trackPilotEvent('upload_started')
