@@ -13,6 +13,7 @@ import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/
 import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
 import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
+import { buildMatchingProfile, matchTargets } from './matching/engine.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
@@ -302,13 +303,39 @@ function StudentInsight({ lang, state, setState, log }) {
     </div>
   }
   return <div className="student-insight">
-    <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وليست نتائج سيكومترية. المقاييس المعيارية تظهر أدناه كطبقات مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared, not psychometric results. Standardized instruments are shown below as separate layers until implementation and validation are complete.'}</p></div>
+    <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وتدخل الآن فقط كإشارات تفضيل منخفضة المخاطر في المطابقة. المقاييس السيكومترية المعيارية تبقى مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared and now act only as low-risk preference signals in matching. Standardized psychometric instruments remain separate until implementation and validation are complete.'}</p></div>
     <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختيارات مضبوطة بدل النص الحر':'Controlled choices instead of free text'}</h3></div></div>
       <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>e.target.value&&updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'اختر…':'Choose…'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
     </div>
     <div className="app-title compact"><small>{lang==='ar'?'طبقات القياس':'Assessment layers'}</small><h2>{lang==='ar'?'مقاييس معيارية — لا أسئلة محلية':'Standard instruments — no home-grown psychometrics'}</h2></div>
     <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
-    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: Person 360 مستقل عن محرك التوصية، ولا يوجد ربط مع MIYAR/معيار.':'In this version, Person 360 is independent of the recommendation engine and has no MIYAR connection.'}</span></div>
+    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المنظمة تدخل المطابقة المفسّرة، بينما المقاييس السيكومترية لا تغيّر الحكم قبل التحقق المحلي. لا يوجد ربط مع MIYAR/معيار.':'In this version, structured preferences inform explained matching, while psychometric instruments do not change judgments before local validation. There is no MIYAR connection.'}</span></div>
+  </div>
+}
+
+function MatchExplorer({ lang, profile, matches }) {
+  const labels={
+    fits:{ar:'تناسبك',en:'Fits'},
+    conditional:{ar:'تناسبك بشروط',en:'Fits with conditions'},
+    exploratory:{ar:'استكشافي',en:'Exploratory'},
+    'not-yet':{ar:'ليس الآن',en:'Not yet'},
+  }
+  const groups=['job','training']
+  return <div className="match-explorer">
+    <div className="app-title"><small>{lang==='ar'?'Person 360 → Opportunity':'Person 360 → Opportunity'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'المحرك يطبق البوابات والأدلة والتفضيلات المنظمة، ثم يعرض آليات الدعم والفجوات. لا توجد نسبة ملاءمة غير معايرة.':'The engine applies gates, evidence, and structured preferences, then exposes supporting mechanisms and gaps. No uncalibrated fit percentage is shown.'}</p></div>
+    {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من لوحة القدرات لتحويل النتائج من استكشاف عام إلى توصية موجهة.':'Choose a goal on the dashboard to move from broad exploration to goal-directed matching.'}</span></div>}
+    {groups.map(type=>{
+      const items=matches.filter(item=>item.type===type)
+      return <section className="match-group" key={type}><div className="panel-head"><div><small>{type==='job'?(lang==='ar'?'الوظائف والمسارات':'Jobs & careers'):(lang==='ar'?'التدريب والتطبيق':'Training & applied learning')}</small><h3>{lang==='ar'?'مطابقة على أكثر من بُعد':'Multi-dimensional matching'}</h3></div></div>
+        <div className="match-grid">{items.map(item=><article className="panel match-card" key={item.id}>
+          <div className="decision-head"><div><small>{item.subtitle[lang]}</small><h3>{item.title[lang]}</h3></div><span className={`status ${item.judgment==='fits'?'yes':item.judgment==='conditional'?'conditional':'no'}`}>{labels[item.judgment][lang]}</span></div>
+          <p className="match-outcome">{item.outcome[lang]}</p>
+          <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
+          {item.limitingMechanisms.length>0&&<div className="mechanism-block limits"><strong>{lang==='ar'?'فجوات أو حدود':'Gaps / limits'}</strong>{item.limitingMechanisms.map((m,i)=><p key={i}><span aria-hidden="true">△</span>{m}</p>)}</div>}
+          <footer className="match-meta"><span>{item.ruleVersion}</span><span>{lang==='ar'?'غير معاير رقميًا':'not numerically calibrated'}</span></footer>
+        </article>)}</div>
+      </section>
+    })}
   </div>
 }
 
@@ -381,6 +408,8 @@ function KaminApp({ lang, onClose }) {
   const recs = useMemo(()=>judgeOpportunities(skills,state.goal,lang),[skills,state.goal,lang])
   const educationClassification = useMemo(()=>state.approved?inferTranscriptSsces(state.courses):{primary:null},[state])
   const compared = recs.filter(r=>compareIds.includes(r.id))
+  const matchProfile = useMemo(()=>buildMatchingProfile({skills,goal:state.goal,insight:state.insight}),[skills,state.goal,state.insight])
+  const matches = useMemo(()=>matchTargets(matchProfile,{lang}),[matchProfile,lang])
 
   useEffect(()=>sessionStorage.setItem(STORAGE_KEY,JSON.stringify(state)),[state])
   useEffect(()=>{
@@ -441,7 +470,7 @@ function KaminApp({ lang, onClose }) {
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
   const exportProfile = () => {
     const person360=projectStateToPerson360({state,skills,educationClassification})
-    const payload = { exportedAt:new Date().toISOString(), person360, courses:state.courses, educationClassification, skills, judgments:recs, insight:state.insight, consents:state.consents, audit:state.audit }
+    const payload = { exportedAt:new Date().toISOString(), person360, courses:state.courses, educationClassification, skills, judgments:recs, targetMatches:matches, insight:state.insight, consents:state.consents, audit:state.audit }
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}))
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
@@ -453,6 +482,7 @@ function KaminApp({ lang, onClose }) {
     ['dashboard',LayoutDashboard,t.app.dashboard],
     ['skills',GraduationCap,t.app.skills],
     ['insight',Fingerprint,t.app.insight],
+    ['matches',SearchCheck,t.app.matches],
     ['courses',BookOpen,t.app.courses],
     ['compare',SearchCheck,t.app.compare],
     ['privacy',ShieldCheck,t.app.privacy],
@@ -463,7 +493,7 @@ function KaminApp({ lang, onClose }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="app-brand"><BrandMark/><div><strong>{t.name}</strong><small>{t.tagline}</small></div></div>
-        <nav>{nav.map(([id,Icon,label])=><button key={id} disabled={!state.approved && !['insight','privacy','audit'].includes(id)} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/>{label}</button>)}</nav>
+        <nav>{nav.map(([id,Icon,label])=><button key={id} disabled={!state.approved && !['insight','matches','privacy','audit'].includes(id)} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/>{label}</button>)}</nav>
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public pilot'}</span></div>
       </aside>
       <div className="app-main">
@@ -488,13 +518,14 @@ function KaminApp({ lang, onClose }) {
             <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>
           </section>}
           {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log}/></section>}
+          {view==='matches' && <section className="app-content"><MatchExplorer lang={lang} profile={matchProfile} matches={matches}/></section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في النسخة التجريبية، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The pilot shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onDelete={deleteAll}/></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-pilot profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
-        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['insight','privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
+        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['insight','matches','privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
       </div>
     </div>
   </div>
