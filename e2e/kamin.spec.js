@@ -261,7 +261,7 @@ test('academic evidence can move a reference job from conditional to fits while 
   await page.getByRole('button', { name: /فرصي/ }).first().click()
   const card=page.locator('.match-card').filter({hasText:'منسق مشاريع تقنية'})
   await expect(card).toContainText(/تناسبك/)
-  await expect(card).toContainText(/مهارات أساسية|الهدف الذي اخترته/)
+  await expect(card).toContainText(/مسار دليل صالح|هدفك المصرح به/)
 })
 
 
