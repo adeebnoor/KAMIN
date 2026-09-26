@@ -35,6 +35,27 @@ export const ONTOLOGY_STACK = {
     terms: ['ClrCredential','AchievementCredential','Achievement'],
     role: 'Learner-controlled, verifiable achievements and longitudinal learner record',
   },
+  openBadges: {
+    standard: '1EdTech Open Badges',
+    version: '3.0',
+    source: 'https://www.1edtech.org/standards/open-badges',
+    terms: ['AchievementCredential','Achievement','Evidence'],
+    role: 'Portable, verifiable learner achievements with issuer, criteria and evidence metadata',
+  },
+  verifiableCredentials: {
+    standard: 'W3C Verifiable Credentials Data Model',
+    version: '2.0 Recommendation',
+    source: 'https://www.w3.org/TR/vc-data-model/',
+    terms: ['vc:VerifiableCredential'],
+    role: 'Tamper-evident, privacy-aware exchange of future verified claims',
+  },
+  learningModel: {
+    standard: 'European Learning Model',
+    version: '3.3',
+    source: 'https://europass.europa.eu/en/qdr-european-learning-model',
+    terms: ['elm:LearningOpportunity','elm:LearningAchievementSpecification','elm:LearningOutcome'],
+    role: 'Interoperable learning opportunities, qualifications, outcomes, accreditations and credentials',
+  },
   competency: {
     standard: '1EdTech CASE',
     version: '1.1',
@@ -76,6 +97,13 @@ export const ONTOLOGY_STACK = {
     source: 'https://www.w3.org/TR/prov-o/',
     terms: ['prov:Entity','prov:Activity','prov:Agent','prov:wasDerivedFrom','prov:wasGeneratedBy','prov:generatedAtTime'],
     role: 'Evidence lineage, extraction/assessment activities and accountable source agents',
+  },
+  graphValidation: {
+    standard: 'W3C SHACL',
+    version: '2017 Recommendation',
+    source: 'https://www.w3.org/TR/shacl/',
+    terms: ['sh:NodeShape','sh:PropertyShape'],
+    role: 'Machine-validatable structural and provenance constraints for Kamin RDF graphs',
   },
   privacy: {
     standard: 'W3C Data Privacy Vocabularies and Controls CG — DPV',
