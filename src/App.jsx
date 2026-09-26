@@ -329,7 +329,12 @@ function Privacy({ lang, state, setState, log, onExport, onDelete }) {
   }
   return <div className="privacy-layout">
     <div className="panel"><div className="panel-head"><div><small>{t.consent}</small><h3>{lang==='ar'?'كل غرض له إذنه':'Each purpose has its own permission'}</h3></div></div>
-      <div className="consents">{Object.keys(state.consents).map(key=><label key={key}><span><strong>{t.consentItems[key]}</strong><small>{key==='analyze'?(lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval'):(lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>)}</div>
+      <div className="consents">{Object.keys(state.consents).map(key=>{const note=key==='analyze'
+        ? (lang==='ar'?'ضروري فقط بعد اعتماد السجل':'Required only after transcript approval')
+        : key==='insight'
+          ? (lang==='ar'?'اختياري؛ يحفظ Person 360 مؤقتًا في الجلسة ويمكن سحبه مستقلاً':'Optional; stores Person 360 temporarily in-session and can be withdrawn independently')
+          : (lang==='ar'?'اختياري وغير مفعّل تشغيليًا في النسخة العامة':'Optional and not operational in the public pilot')
+        return <label key={key}><span><strong>{t.consentItems[key]}</strong><small>{note}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>})}</div>
     </div>
     <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p><button className="button secondary" onClick={onExport}><Download size={17}/>{t.export}</button>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
   </div>
