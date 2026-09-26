@@ -74,7 +74,7 @@ function Header({ lang, setLang, onTry }) {
   return <header className="site-header">
     <div className="shell header-row">
       <button className="brand" onClick={() => go('home')} aria-label={t.nav.home}>
-        <Logo compact lang={lang} /><span><strong>{t.name}</strong><small>{t.tagline}</small></span>
+        <BrandMark/><span><strong>{t.name}</strong><small>{t.tagline}</small></span>
       </button>
       <nav id="mobile-nav" className={open ? 'main-nav open' : 'main-nav'} aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main navigation'}>
         <button onClick={() => go('how')}>{t.nav.how}</button>
