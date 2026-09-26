@@ -312,6 +312,40 @@ function StudentInsight({ lang, state, setState, log }) {
   </div>
 }
 
+function Profile360({ lang, state, setState, skills, educationClassification, log }) {
+  const t=copy[lang].app
+  const [agree,setAgree]=useState(false)
+  const prefs=state.insight?.declaredPreferences||{}
+  const primary=educationClassification?.primary||null
+  const preferenceLabels={
+    workEnvironment:{ar:'بيئة العمل المفضلة',en:'Preferred work environment'},
+    teamMode:{ar:'نمط العمل مع الفريق',en:'Preferred team mode'},
+    workPace:{ar:'إيقاع العمل',en:'Preferred work pace'},
+    responsibility:{ar:'مستوى المسؤولية المستهدف',en:'Target responsibility level'},
+    learningFormat:{ar:'طريقة التعلم المفضلة',en:'Preferred learning format'},
+  }
+  const changePreference=(key,value)=>{
+    setState(s=>({...s,insight:setDeclaredPreference(s.insight,key,value)}))
+    log(lang==='ar'?`تحديث تفضيل 360: ${preferenceLabels[key].ar}`:`360 preference updated: ${preferenceLabels[key].en}`)
+  }
+  const grant=()=>{
+    if(!agree) return
+    setState(s=>({...s,consents:{...s.consents,insight:true},audit:[{label:lang==='ar'?'منح موافقة بصمة الطالب 360':'Person 360 consent granted',ts:Date.now()},...s.audit]}))
+  }
+  const instruments=[PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30,PSYCHOMETRIC_INSTRUMENTS.ipip50ArabicLevant,PSYCHOMETRIC_INSTRUMENTS.onetWorkStyles31].filter(Boolean)
+  return <section className="app-content person360">
+    <div className="app-title"><small>{t.insight}</small><h2>{lang==='ar'?'بصمتي 360':'My 360 Profile'}</h2><p>{lang==='ar'?'ملف واحد يجمع الأدلة الأكاديمية والمهارات والتفضيلات والملاحظات السيكومترية المعيارية مع مصدر كل معلومة. لا يوجد رقم سحري واحد يختصر الإنسان.':'One profile combines academic evidence, skills, declared preferences and standards-based psychometric observations with provenance for every claim. There is no single magic number for a person.'}</p></div>
+    <div className="person360-grid">
+      <article className="panel p360-card"><small>{lang==='ar'?'السياق الأكاديمي':'Academic context'}</small><h3>{primary?`${primary.code} · ${primary.labels?.[lang]||primary.labels?.ar}`:(lang==='ar'?'لم يُثبت بعد':'Not established yet')}</h3><p>{state.courses?.length?`${state.courses.length} ${lang==='ar'?'مقررًا في السجل الحالي':'courses in the current record'}`:(lang==='ar'?'ارفع السجل لإضافة هذه الطبقة.':'Upload a transcript to add this layer.')}</p></article>
+      <article className="panel p360-card"><small>{lang==='ar'?'القدرات':'Capabilities'}</small><h3>{skills.length}</h3><p>{lang==='ar'?'مهارات مدعومة حاليًا بأدلة وربط معتمد في التجربة.':'skills currently supported by evidence and approved pilot mappings.'}</p></article>
+      <article className="panel p360-card"><small>{lang==='ar'?'التفضيلات':'Declared preferences'}</small><h3>{Object.keys(prefs).length}</h3><p>{lang==='ar'?'حقول منظمة يصرّح بها الطالب؛ لا تُعامل كدليل أكاديمي.':'structured student-declared fields; never treated as academic evidence.'}</p></article>
+      <article className="panel p360-card"><small>{lang==='ar'?'السيكومتريكس':'Psychometrics'}</small><h3>{state.insight?.completedInstruments?.length||0}</h3><p>{lang==='ar'?'لا تُفعّل أي أداة قبل تثبيت النسخة والترخيص والتحقق العربي.':'No instrument is activated until its exact version, license and Arabic validation status are pinned.'}</p></article>
+    </div>
+    {!state.consents.insight ? <div className="panel p360-consent"><Fingerprint size={30}/><h3>{lang==='ar'?'أضف طبقة التفضيلات الذاتية':'Add your self-declared preference layer'}</h3><p>{lang==='ar'?'هذه البيانات اختيارية، تبقى في جلسة المتصفح الحالية، ويمكن مسحها وحدها بسحب الموافقة من شاشة الخصوصية.':'This data is optional, remains in the current browser session, and can be erased independently by withdrawing consent in Privacy.'}</p><label><input type="checkbox" checked={agree} onChange={e=>setAgree(e.target.checked)}/><span>{lang==='ar'?'أوافق على حفظ تفضيلاتي المنظمة مؤقتًا ضمن بصمتي 360.':'I consent to temporarily storing structured preferences in my 360 profile.'}</span></label><button className="button primary" disabled={!agree} onClick={grant}>{lang==='ar'?'فعّل تفضيلاتي':'Enable preferences'}</button></div> : <div className="panel p360-preferences"><div className="panel-head"><div><small>{lang==='ar'?'إدخال موجّه':'Structured input'}</small><h3>{lang==='ar'?'تفضيلاتي الحالية':'My current preferences'}</h3></div><span className="mapping-badge mapped">{lang==='ar'?'مصدرها: الطالب':'Source: self-report'}</span></div><div className="p360-form">{Object.entries(DECLARED_PREFERENCE_OPTIONS).map(([key,options])=><label key={key}><span>{preferenceLabels[key]?.[lang]||key}</span><select value={prefs[key]||''} onChange={e=>changePreference(key,e.target.value)}><option value="">{lang==='ar'?'اختر':'Choose'}</option>{options.map(option=><option value={option.id} key={option.id}>{option[lang]}</option>)}</select></label>)}</div></div>}
+    <div className="panel p360-instruments"><div className="panel-head"><div><small>{lang==='ar'?'أدوات معيارية مرشحة':'Standards-based instrument candidates'}</small><h3>{lang==='ar'?'لا توجد أسئلة مخترعة محليًا':'No locally invented psychometric questionnaire'}</h3></div></div><div className="instrument-grid">{instruments.map(item=><article key={item.id}><strong>{item.name[lang]}</strong><span>{item.construct}</span><small>{item.notes?.[lang]}</small><b>{item.status}</b></article>)}</div></div>
+    <div className="insight-boundary"><ShieldCheck size={18}/><span>{lang==='ar'?'Person 360 لا يؤثر بعد على محرك توصية الدورات. سيتم إدخاله في القرار فقط عبر Mechanisms of Fit وقواعد متحققة لكل use case.':'Person 360 does not yet alter course recommendations. It enters decisions only later through validated, use-case-specific Mechanisms of Fit.'}</span></div>
+  </section>
+}
 function Privacy({ lang, state, setState, log, onExport, onDelete }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
