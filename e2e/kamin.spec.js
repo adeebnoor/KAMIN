@@ -5,7 +5,7 @@ test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('h1')).toContainText('حوّل شهادتك ومشاريعك')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
@@ -55,7 +55,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
 test('approved Kamin session gives explicit local-save confirmation', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.getByRole('status')).toContainText(/تم اعتماد السجل/)
@@ -84,7 +84,7 @@ test('proof-first landing exposes fictional evidence and transparent boundaries'
 test('analysis consent is off by default and gates approval', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   const consent=page.getByRole('checkbox', { name: /أوافق صراحةً/ })
   await expect(consent).not.toBeChecked()
   await expect(page.getByRole('button', { name: /أعتمد السجل/ })).toBeDisabled()
@@ -134,7 +134,7 @@ test('a failed upload path never injects demo courses', async ({ page }) => {
 test('Kamin does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.locator('.skill-row').first()).toContainText(/مرتفعة|متوسطة|محدودة|مبدئية/)
@@ -163,7 +163,7 @@ test('upload validation surfaces a non-binding SASCED academic context candidate
 test('approved demo surfaces Saudi national classification context without turning it into a skill', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.getByText(/التصنيف السعودي الموحد/)).toBeVisible()
@@ -250,7 +250,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
 test('academic evidence can move a reference job from conditional to fits while psychometrics never override gaps', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /الإدارة والمشاريع/ }).click()
@@ -310,7 +310,7 @@ test('expert-review trust surfaces are honest and navigable', async ({ page }) =
 test('encrypted local backup survives session loss and restores source-of-truth state', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /الخصوصية/ }).first().click()
@@ -381,7 +381,7 @@ test('first-run onboarding is OCR-first with inline trust and mobile camera capt
 test('opt-in IndexedDB profile survives session loss and returns on the same device', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
 
@@ -410,7 +410,7 @@ test('opt-in IndexedDB profile survives session loss and returns on the same dev
 test('clear my data removes session and IndexedDB profile residue', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name:/نعم، احتفظ بملفي/ }).click()
@@ -441,7 +441,7 @@ test('clear my data removes session and IndexedDB profile residue', async ({ pag
 test('Matches exposes Person360 semantic evidence paths', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /فرصي/ }).first().click()
@@ -464,7 +464,7 @@ test('Data Analyst golden path exposes external knowledge and learning bridges',
 
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
+  await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /فرصي/ }).first().click()
@@ -564,7 +564,7 @@ test('locked navigation explains how to unlock protected sections', async ({ pag
 test('next decision excludes courses that only repeat already evidenced capability', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
-  await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).last().click()
+  await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
   await page.getByRole('button',{name:/تحليل البيانات/}).click()
@@ -593,7 +593,7 @@ test('mapping coverage and governed adapter artefacts are public and consistent'
 
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
-  await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).last().click()
+  await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await expect(page.locator('.mapping-coverage')).toContainText('6/6')
   await expect(page.getByRole('link',{name:'منهجية الربط'})).toHaveAttribute('href',/mapping\.html\?lang=ar/)
 })
