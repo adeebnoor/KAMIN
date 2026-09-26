@@ -526,7 +526,35 @@ function PilotFeedback({lang}) {
   </div>
 }
 
-function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange }) {
+function WhatChanged({change,lang}){
+  if(!change) return null
+  const title={
+    upload:{ar:'ما الذي تغيّر بعد الإيداع؟',en:'What changed after deposit?'},
+    approve:{ar:'ما الذي تغيّر بعد الاعتماد؟',en:'What changed after approval?'},
+    'withdraw-analyze':{ar:'ما الذي تغيّر بعد سحب موافقة السجل؟',en:'What changed after transcript-consent withdrawal?'},
+    'withdraw-insight':{ar:'ما الذي تغيّر بعد سحب موافقة البصمة؟',en:'What changed after profile-consent withdrawal?'},
+  }[change.type]||{ar:'ما الذي تغيّر؟',en:'What changed?'}
+  const items=[]
+  if(change.type==='upload'){
+    items.push(lang==='ar'? `${change.recognized} مقرر تم التعرف عليه؛ ${change.mapped} منها لها ربط قدرات محكوم حاليًا.` : `${change.recognized} courses were recognized; ${change.mapped} currently have governed capability mappings.`)
+    if(change.rejected) items.push(lang==='ar'? `${change.rejected} سطر بقي للمراجعة ولم يدخل الحكم.` : `${change.rejected} row(s) remain for review and do not enter judgment.`)
+  }
+  if(change.type==='approve'){
+    items.push(lang==='ar'? `أصبح ${change.courses} مقررًا جزءًا من سجل الأدلة المعتمد.` : `${change.courses} course(s) are now part of the approved evidence record.`)
+    items.push(lang==='ar'? `أُنشئت ${change.skills} قدرة مدعومة بالدليل من الروابط المحكومة فقط.` : `${change.skills} evidence-backed capability/capabilities were created from governed mappings only.`)
+  }
+  if(change.type==='withdraw-analyze'){
+    items.push(lang==='ar'? `أزيل ${change.courses} مقررًا و${change.skills} قدرة مشتقة من السجل من الحساب الحالي.` : `${change.courses} course(s) and ${change.skills} derived capability/capabilities were removed from the current calculation.`)
+    items.push(lang==='ar'?'أحكام الملاءمة التي تعتمد على هذه الأدلة أُعيد حسابها فورًا.':'Judgments that depended on that evidence were immediately recomputed.')
+  }
+  if(change.type==='withdraw-insight'){
+    items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها من طبقة Person 360.` : `${change.preferences} declared preference(s) were removed from Person 360.`)
+    items.push(lang==='ar'?'الأدلة الأكاديمية بقيت كما هي؛ الذي تغير هو سياق التخصيص فقط.':'Academic evidence remains unchanged; only personalization context changed.')
+  }
+  return <div className="what-changed" role="status" aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
+}
+
+function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
   const [backupPassphrase,setBackupPassphrase] = useState('')
@@ -538,10 +566,15 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
 
   const toggle = (key) => {
     if (key === 'analyze' && state.approved) {
+      const coursesRemoved=state.courses?.length||0
+      const skillsRemoved=inferSkills(state.courses||[]).length
+      onChangeSummary?.({type:'withdraw-analyze',courses:coursesRemoved,skills:skillsRemoved,ts:Date.now()})
       setState(s => ({...s,courses:[],approved:false,consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
     if (key === 'insight' && state.consents.insight) {
+      const preferenceCountBefore=Object.keys(state.insight?.declaredPreferences||{}).length
+      onChangeSummary?.({type:'withdraw-insight',preferences:preferenceCountBefore,ts:Date.now()})
       setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
       return
     }
@@ -659,6 +692,7 @@ function KaminApp({ lang, onClose }) {
   const [fileError,setFileError] = useState('')
   const [validation,setValidation] = useState(null)
   const [persistenceDismissed,setPersistenceDismissed] = useState(false)
+  const [changeSummary,setChangeSummary] = useState(null)
   const fileRef = useRef(null)
   const cameraRef = useRef(null)
   const initialSessionRef = useRef(Boolean(sessionStorage.getItem(STORAGE_KEY)||sessionStorage.getItem(LEGACY_SESSION_KEY)))
@@ -728,6 +762,13 @@ function KaminApp({ lang, onClose }) {
       const result = await extractTranscript(file,setProgress)
       setDraft(result.courses)
       setValidation(result.validation||null)
+      setChangeSummary({
+        type:'upload',
+        recognized:result.courses.length,
+        mapped:result.courses.filter(course=>isMappedCourse(course.code)).length,
+        rejected:(result.validation?.rejected||[]).length,
+        ts:Date.now(),
+      })
       setReviewConsent(false)
       setFileError(result.courses.length ? '' : (lang==='ar' ? 'لم نتعرف على مقررات قابلة للاعتماد. لم يتم تحميل أي بيانات تجريبية؛ راجع ملخص التحقق أو أضف المقررات يدويًا.' : 'No approvable courses were recognized. No demo data were loaded; review the validation summary or add courses manually.'))
       setView('review')
@@ -750,6 +791,8 @@ function KaminApp({ lang, onClose }) {
   }
   const approve = () => {
     if (!reviewConsent) return
+    const approvedSkills=inferSkills(draft)
+    setChangeSummary({type:'approve',courses:draft.length,skills:approvedSkills.length,ts:Date.now()})
     setState(s=>({...s,courses:draft,approved:true,consents:{...s.consents,analyze:true},audit:[{label:lang==='ar'?'منح موافقة تحليل السجل واعتماده':'Transcript analysis consent granted and record approved',ts:Date.now()},...s.audit]}))
     setView('dashboard')
     trackPilotEvent('profile_completed')
@@ -858,9 +901,10 @@ function KaminApp({ lang, onClose }) {
             <label className="sr-only" htmlFor="kamin-transcript-camera">{lang==='ar'?'صوّر كشف الدرجات بالكاميرا':'Photograph transcript with camera'}</label><input id="kamin-transcript-camera" className="sr-only" ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={e=>upload(e.target.files?.[0])}/>
             {processing&&<div className="processing" role="status" aria-live="polite"><div className="processing-row"><div className="spinner"/><strong>{t.app.processing}</strong><b>{progress}%</b></div><div className="progress" aria-label={lang==='ar'?'تقدم قراءة الملف':'File reading progress'}><i style={{width:`${progress}%`}}/></div><small>{trustMicrocopy('transcript',lang)}</small></div>}
           </section>}
-          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div>{fileError&&<div className="error-banner" role="alert">{fileError}</div>}<ValidationSummary lang={lang} validation={validation}/><CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve} consent={reviewConsent} setConsent={setReviewConsent}/></section>}
+          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div>{fileError&&<div className="error-banner" role="alert">{fileError}</div>}<ValidationSummary lang={lang} validation={validation}/><WhatChanged change={changeSummary?.type==='upload'?changeSummary:null} lang={lang}/><CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve} consent={reviewConsent} setConsent={setReviewConsent}/></section>}
           {state.approved && view==='dashboard' && <section className="app-content">
             <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل مؤشر هنا مبدئي وقابل للرجوع إلى دليل في سجلك المعتمد.':'Every indicator here is preliminary and traceable to evidence in your approved record.'}</p></div>
+            <WhatChanged change={changeSummary?.type==='approve'?changeSummary:null} lang={lang}/>
             <div className="session-banner"><ShieldCheck size={17}/><span>{state.localPersistence
               ? (lang==='ar'?'ملفك محفوظ محليًا على هذا الجهاز بموافقتك. لا توجد نسخة مركزية لدى كامن.':'Your profile is persistently saved on this device with your consent. Kamin keeps no central copy.')
               : (lang==='ar'?'ملفك مؤقت في جلسة المتصفح الحالية فقط. فعّل الحفظ المحلي أدناه إذا أردت العودة إليه لاحقًا.':'Your profile is session-only right now. Enable local device saving below if you want to return later.')}</span></div>
@@ -876,7 +920,7 @@ function KaminApp({ lang, onClose }) {
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
-          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence}/></section>}
+          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary}/></></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
         <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=>{const locked=!state.approved&&!['insight','matches','privacy','audit'].includes(id);return <button key={id} className={view===id?'active':''} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>})}</nav>
