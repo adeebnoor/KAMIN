@@ -1,12 +1,12 @@
 # Kamin | كامن
 
-**خزنة قدراتك — Your capability vault**
+**شبكة ذكاء القدرات — Capability Intelligence Network**
 
 🌐 **Live public release:** https://kamin-12mf.onrender.com
 
 The release is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
-Kamin 1.0 builds an evidence-rich Person 360 profile from academic evidence and structured user inputs, then produces explainable fit judgments for learning, jobs, and training. This repository contains the production handoff baseline built from BRD v3.1 and the Person 360 semantic architecture.
+Kamin 1.0 builds an evidence-rich Person 360 profile from academic evidence and structured user inputs, then produces explainable fit judgments for learning, jobs, and training. The product direction expands that same governed profile into a capability-intelligence network spanning careers, majors, people, and institutional guidance without allowing commercial relationships to alter fit judgments. This repository contains the production handoff baseline built from BRD v3.1 and the Person 360 semantic architecture.
 
 ## Kamin 1.0 baseline
 
