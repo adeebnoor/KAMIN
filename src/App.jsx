@@ -253,6 +253,7 @@ function Landing({ lang, onTry }) {
           <a className="button primary" href={lang === 'ar' ? '/sample-report.html?lang=ar' : '/sample-report.html?lang=en'}>{lang === 'ar' ? 'افتح تقريرًا تجريبيًا' : 'Open a sample report'}</a>
           <a className="button secondary" href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'اقرأ المنهجية' : 'Read methodology'}</a>
           <a className="button secondary" href={lang === 'ar' ? '/trust.html?lang=ar' : '/trust.html?lang=en'}>{lang === 'ar' ? 'مركز الثقة' : 'Trust center'}</a>
+          <button className="button secondary" onClick={onTry}>{lang==='ar'?'جرّب رفع سجل ومقارنة حتى 3 دورات':'Try transcript upload & compare up to 3 courses'}</button>
         </div>
       </div>
     </section>
@@ -281,6 +282,11 @@ function Landing({ lang, onTry }) {
       <div className="shell">
         <div className="section-title"><span>05</span><div><small className="value-kicker">{lang === 'ar' ? 'تركيز الإطلاق' : 'Launch wedge'}</small><h2>{lang === 'ar' ? 'طلاب السنة الأخيرة والخريجون أولًا. الجامعات والشركات ثانيًا.' : 'Final-year students and recent graduates first. Universities and employers second.'}</h2><p className="section-lead">{lang === 'ar' ? 'لا نستهدف المدارس أو كل فئات السوق بنفس القوة في البداية. المسار التجاري الأول هو B2B2C عبر جامعة أو برنامج واضح، ثم Employer-Lite لقياس الثقة والأثر.' : 'We are not targeting schools or every market segment equally at launch. The first commercial path is B2B2C through a focused university/program, followed by Employer-Lite to measure trust and outcomes.'}</p></div></div>
         <div className="institution-grid focused">{institutionCards.map(([title,text,status],i)=>{const Icon=[GraduationCap,SearchCheck][i];return <article className="institution-card" key={title}><div className="institution-head"><span className="institution-badge"><Icon size={20}/></span><small>{status}</small></div><h3>{title}</h3><p>{text}</p></article>})}</div>
+        <div className="institution-demo-links">
+          <a href={lang==='ar'?'/advisor.html?lang=ar':'/advisor.html?lang=en'}><SearchCheck size={17}/><span><strong>{lang==='ar'?'عرض المرشد التجريبي':'Advisor demo'}</strong><small>{lang==='ar'?'بيانات وهمية · لا مشاركة فعلية':'Synthetic data · no live sharing'}</small></span></a>
+          <a href={lang==='ar'?'/admin.html?lang=ar':'/admin.html?lang=en'}><LayoutDashboard size={17}/><span><strong>{lang==='ar'?'عرض الإدارة التجريبي':'Administration demo'}</strong><small>{lang==='ar'?'تجميع وهمي · ليس analytics حقيقيًا':'Synthetic aggregate · not live analytics'}</small></span></a>
+          <a href={lang==='ar'?'/validation.html?lang=ar':'/validation.html?lang=en'}><ClipboardCheck size={17}/><span><strong>{lang==='ar'?'خطة التحقق H3/H4':'H3/H4 validation plan'}</strong><small>{lang==='ar'?'Protocol فقط · لا نتائج':'Protocol only · no results'}</small></span></a>
+        </div>
         <div className="business-principle">
           <div><small>{lang === 'ar' ? 'نموذج العمل الأول' : 'Initial business model'}</small><strong>{lang === 'ar' ? 'الطالب يبدأ مجانًا. الجامعة تدفع مقابل الـpilot والتشغيل المؤسسي لاحقًا. الشركات تدخل عبر تجربة Employer-Lite بعد إثبات القيمة.' : 'Students start free. Universities fund pilots and later institutional deployment. Employers enter through Employer-Lite after value is proven.'}</strong></div>
           <p>{lang === 'ar' ? 'قاعدة الحياد: أي شراكة أو عمولة أو ظهور مدفوع لا يغير حكم الملاءمة. إذا أضفنا محتوى ممولًا لاحقًا فسيظهر بوضوح خارج محرك Fit.' : 'Neutrality rule: partnership, commission, or paid placement cannot change fit. Any future sponsored content must be clearly disclosed and isolated from the fit engine.'}</p>
@@ -999,7 +1005,7 @@ export default function App() {
   return <>
     <Header lang={lang} setLang={setLang} onTry={openApp}/>
     <main id="main"><Landing lang={lang} onTry={openApp}/></main>
-    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href={lang==='ar'?'/privacy.html?lang=ar':'/privacy.html?lang=en'}>{lang==='ar'?'الخصوصية':'Privacy'}</a><a href={lang==='ar'?'/faq.html?lang=ar':'/faq.html?lang=en'}>{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a></div></div></footer>
+    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href={lang==='ar'?'/privacy.html?lang=ar':'/privacy.html?lang=en'}>{lang==='ar'?'الخصوصية':'Privacy'}</a><a href={lang==='ar'?'/faq.html?lang=ar':'/faq.html?lang=en'}>{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a><a href={lang==='ar'?'/stories.html?lang=ar':'/stories.html?lang=en'}>{lang==='ar'?'قصص المستخدمين':'User stories'}</a><a href={lang==='ar'?'/validation.html?lang=ar':'/validation.html?lang=en'}>{lang==='ar'?'التحقق':'Validation'}</a></div></div></footer>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp}/></AppErrorBoundary>}
   </>
 }
