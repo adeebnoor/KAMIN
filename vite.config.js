@@ -5,4 +5,7 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   build: { target: 'es2022', sourcemap: false },
+  test: {
+    include: ['tests/**/*.test.js'],
+  },
 })
