@@ -75,6 +75,7 @@ export function inferSkills(courses, { deniedSkillIds = [] } = {}) {
         code: normalizeCourseCode(course.code),
         name: course.name,
         grade,
+        gradeStrength: strength,
         source: course.source || 'manual',
         reliability,
         courseType: mapping.courseType,
