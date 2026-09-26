@@ -6,7 +6,7 @@ import {
   UploadCloud, X,
 } from 'lucide-react'
 import { copy } from './i18n.js'
-import { demoCourses } from './data.js'
+import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
 
@@ -38,6 +38,8 @@ const getSaved = () => {
 }
 
 const localized = (value, lang) => typeof value === 'string' ? value : value?.[lang] || value?.ar || value?.en || ''
+const normalizeCourseCode = (code) => String(code||'').trim().toUpperCase().replace(/\s+/g,'-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/,'$1-$2')
+const isMappedCourse = (code) => !!courseSkillMap[normalizeCourseCode(code)]
 const timeText = (ts, lang) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA-u-ca-gregory' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts))
 
 function setMeta(name, content, attr = 'name') {
@@ -199,9 +201,10 @@ function CourseReview({ lang, rows, setRows, onApprove, consent, setConsent }) {
   return <div className="panel">
     <div className="panel-head"><div><small>{t.review}</small><h3>{lang === 'ar' ? `${rows.length} مقررات مستخرجة` : `${rows.length} extracted courses`}</h3></div><button className="text-button" onClick={() => setFormOpen(v => !v)}><Plus size={17}/>{t.addRow}</button></div>
     {formOpen && <div className="manual-row"><input aria-label={t.courseCode} placeholder="CPIT-251" value={form.code} onChange={e=>setForm({...form,code:e.target.value})}/><input aria-label={t.courseName} placeholder={t.courseName} value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/><input aria-label={t.grade} placeholder="A / B+" value={form.grade} onChange={e=>setForm({...form,grade:e.target.value})}/><button onClick={add}>{t.save}</button></div>}
-    <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
-      {rows.map((r,i)=><tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>)}
+    <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th>{lang==='ar'?'حالة الربط':'Mapping'}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
+      {rows.map((r,i)=><tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><span className={isMappedCourse(r.code)?'mapping-badge mapped':'mapping-badge unmapped'}>{isMappedCourse(r.code)?(lang==='ar'?'ربط معتمد في التجربة':'Pilot mapping'):(lang==='ar'?'غير مربوط بعد':'Not mapped yet')}</span></td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>)}
     </tbody></table></div>
+    {rows.some(r=>!isMappedCourse(r.code))&&<div className="mapping-note"><SearchCheck size={17}/><span>{lang==='ar'?'المقرر غير المربوط يبقى في سجلك لكنه لا ينتج مهارة أو يؤثر في الحكم حتى يعتمد القسم ربطه بمخرج تعلم ومهارة.':'An unmapped course stays in your record but creates no skill and affects no judgment until the department approves a learning-outcome-to-skill mapping.'}</span></div>}
     <div className="approval approval-consent"><label><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>{lang === 'ar' ? 'أوافق صراحةً على تحليل هذا السجل لبناء ملف مهاراتي بعد مراجعتي له.' : 'I explicitly consent to analyzing this record to build my skills profile after reviewing it.'}</span></label><button className="button primary" disabled={!rows.length || !consent} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
   </div>
 }
