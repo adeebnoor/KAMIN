@@ -9,8 +9,9 @@ export const NAMESPACES = {
   prov: 'http://www.w3.org/ns/prov#',
   dpv: 'https://w3id.org/dpv#',
   esco: 'http://data.europa.eu/esco/',
+  ceterms: 'https://purl.org/ctdl/terms/',
   ctdl: 'https://purl.org/ctdl/terms/',
-  ceasn: 'https://purl.org/ceasn/terms/',
+  ceasn: 'https://purl.org/ctdlasn/terms/',
   kamin: 'urn:kamin:',
 }
 
@@ -57,7 +58,7 @@ export const ONTOLOGY_STACK = {
   },
   credentialsPathways: {
     standard: 'Credential Engine CTDL / CTDL-ASN',
-    version: '2026-08',
+    version: 'current',
     source: 'https://credentialengine.org/credential-transparency/ctdl/',
     terms: ['ceterms:Credential','ceasn:Competency','ceasn:CompetencyFramework'],
     role: 'Credentials, assessments, pathways, occupation alignment and competency frameworks',
@@ -77,7 +78,7 @@ export const ONTOLOGY_STACK = {
     role: 'Evidence lineage, extraction/assessment activities and accountable source agents',
   },
   privacy: {
-    standard: 'W3C DPV',
+    standard: 'W3C Data Privacy Vocabularies and Controls CG — DPV',
     version: '2.0',
     source: 'https://www.w3.org/community/reports/dpvcg/CG-FINAL-dpv-20240801/',
     terms: ['dpv:Consent','dpv:ExplicitlyExpressedConsent','dpv:ConsentGiven','dpv:ConsentWithdrawn','dpv:Purpose'],
@@ -89,7 +90,7 @@ export const KAMIN_CLASSES = {
   Person: 'schema:Person',
   Course: 'schema:Course',
   Occupation: 'schema:Occupation',
-  Credential: 'ctdl:Credential',
+  Credential: 'ceterms:Credential',
   Competency: 'ceasn:Competency',
   ClassificationConcept: 'skos:Concept',
   Evidence: 'prov:Entity',
@@ -133,7 +134,7 @@ export const JSON_LD_CONTEXT = {
   Person: 'schema:Person',
   Course: 'schema:Course',
   Occupation: 'schema:Occupation',
-  Credential: 'ctdl:Credential',
+  Credential: 'ceterms:Credential',
   Competency: 'ceasn:Competency',
   Claim: 'kamin:Claim',
   Observation: 'kamin:Observation',
