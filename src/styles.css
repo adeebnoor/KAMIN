@@ -3,12 +3,14 @@
   --ink:#10243f;--muted:#607087;--line:#dce5ee;--paper:#fff;--soft:#f6f8fb;
   --success:#146c55;--success-bg:#e8f6f0;--warn:#815900;--warn-bg:#fff4d6;
   --danger:#9a3030;--danger-bg:#fff0f0;--shadow:0 22px 70px rgba(11,47,91,.13);
-  --radius:20px;--font-ar:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,Arial,sans-serif;
+  --radius:20px;--font-ar:"Noto Sans Arabic Variable","Noto Sans Arabic",Tahoma,Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:#fff}
 body{margin:0;color:var(--ink);background:#fff;font-family:var(--font-ar);-webkit-font-smoothing:antialiased}
 html[lang="en"] body{font-family:Inter,Arial,sans-serif}
+:lang(ar){font-family:var(--font-ar)}
+.language-button span[lang="ar"]{font-family:var(--font-ar)!important}
 button,input,select{font:inherit}
 button{color:inherit}
 button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid rgba(201,154,61,.48);outline-offset:3px}
