@@ -1,6 +1,6 @@
 # Kamin Person 360 Ontology & Semantic Matching Architecture
 
-Status: **Architecture decision — pilot 0.1**  
+Status: **Kamin 1.0 architecture baseline**  
 Owner: Kamin  
 Date: 2026-09-26
 
@@ -92,7 +92,7 @@ Kamin must record the source version on every imported external concept bundle. 
 
 ## 4. Kamin local namespace
 
-Pilot local terms use `urn:kamin:` identifiers.
+Kamin 1.0 local terms use `urn:kamin:` identifiers.
 
 This is deliberate. The Render domain is temporary and must **not** become a persistent ontology namespace.
 
