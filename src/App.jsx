@@ -9,6 +9,7 @@ import { copy } from './i18n.js'
 import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { extractTranscript } from './utils/transcript.js'
+import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
 
 const STORAGE_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
@@ -39,6 +40,11 @@ const getSaved = () => {
 }
 
 const localized = (value, lang) => typeof value === 'string' ? value : value?.[lang] || value?.ar || value?.en || ''
+const evidenceStrengthText = (level,lang) => ({
+  high:{ar:'مرتفعة',en:'High'},
+  medium:{ar:'متوسطة',en:'Medium'},
+  low:{ar:'محدودة',en:'Limited'},
+}[level]?.[lang] || (lang==='ar'?'مبدئية':'Preliminary'))
 const normalizeCourseCode = (code) => String(code||'').trim().toUpperCase().replace(/\s+/g,'-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/,'$1-$2')
 const isMappedCourse = (code) => !!courseSkillMap[normalizeCourseCode(code)]
 const timeText = (ts, lang) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-SA-u-ca-gregory' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts))
@@ -180,12 +186,24 @@ function Landing({ lang, onTry }) {
 function ValidationSummary({lang,validation}) {
   if(!validation) return null
   const rejected=validation.rejected||[]
+  const ssceText=validation.ssceCandidates?.[0]||null
+  const ssceLevel=validation.ssceLevelCandidates?.[0]||null
   return <div className="validation-summary" role="status" aria-live="polite">
     <div><strong>{lang==='ar'?'ملخص التحقق':'Validation summary'}</strong><span>{lang==='ar'? `${validation.recognized||0} مقرر تم التعرف عليه` : `${validation.recognized||0} courses recognized`}</span></div>
     <div className="validation-badges">
       <span>{validation.usedOcr?(lang==='ar'?'OCR محلي':'Local OCR'):(lang==='ar'?'نص رقمي':'Digital text')}</span>
       <span>{rejected.length ? (lang==='ar'? `${rejected.length} سطر يحتاج مراجعة` : `${rejected.length} rows need review`) : (lang==='ar'?'لا توجد أسطر مشتبهة':'No suspicious rows')}</span>
+      {Number.isFinite(validation.extractionCoverage)&&<span>{lang==='ar'? `تغطية الاستخراج: ${Math.round(validation.extractionCoverage*100)}%` : `Extraction coverage: ${Math.round(validation.extractionCoverage*100)}%`}</span>}
     </div>
+    {(ssceText||ssceLevel)&&<div className="sasced-candidate">
+      <div><strong>{lang==='ar'?'سياق أكاديمي مرشح — SASCED-20':'Academic context candidate — SASCED-20'}</strong>
+        <span>{[
+          ssceLevel ? (lang==='ar'? `المستوى ${ssceLevel.code}: ${ssceLevel.labels.ar}` : `Level ${ssceLevel.code}: ${ssceLevel.labels.en}`) : null,
+          ssceText ? `${ssceText.code} · ${ssceText.labels[lang]}` : null
+        ].filter(Boolean).join(' · ')}</span>
+      </div>
+      <small>{lang==='ar'?'اقتراح من النص فقط؛ لا يصبح تصنيفًا معتمدًا ولا يؤثر في الحكم حتى يؤكده الطالب أو الجهة الأكاديمية.':'Text-derived candidate only; it is not an approved classification and does not affect judgment until confirmed by the student or academic authority.'}</small>
+    </div>}
     {rejected.length>0&&<details><summary>{lang==='ar'?'عرض الأسطر التي تعذر تحليلها':'Show rows that could not be parsed'}</summary>{rejected.slice(0,12).map((r,i)=><code key={i}>{r.line}</code>)}</details>}
   </div>
 }
@@ -202,24 +220,46 @@ function CourseReview({ lang, rows, setRows, onApprove, consent, setConsent }) {
   return <div className="panel">
     <div className="panel-head"><div><small>{t.review}</small><h3>{lang === 'ar' ? `${rows.length} مقررات مستخرجة` : `${rows.length} extracted courses`}</h3></div><button className="text-button" onClick={() => setFormOpen(v => !v)}><Plus size={17}/>{t.addRow}</button></div>
     {formOpen && <div className="manual-row"><input aria-label={t.courseCode} placeholder="CPIT-251" value={form.code} onChange={e=>setForm({...form,code:e.target.value})}/><input aria-label={t.courseName} placeholder={t.courseName} value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/><input aria-label={t.grade} placeholder="A / B+" value={form.grade} onChange={e=>setForm({...form,grade:e.target.value})}/><button onClick={add}>{t.save}</button></div>}
-    <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th>{lang==='ar'?'حالة الربط':'Mapping'}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
-      {rows.map((r,i)=><tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><span className={isMappedCourse(r.code)?'mapping-badge mapped':'mapping-badge unmapped'}>{isMappedCourse(r.code)?(lang==='ar'?'ربط معتمد في التجربة':'Pilot mapping'):(lang==='ar'?'غير مربوط بعد':'Not mapped yet')}</span></td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>)}
+    <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th>{lang==='ar'?'حالة الربط':'Mapping'}</th><th>{lang==='ar'?'سياق البرنامج الوطني':'National programme context'}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
+      {rows.map((r,i)=>{const national=ssceForCourse(r);return <tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><span className={isMappedCourse(r.code)?'mapping-badge mapped':'mapping-badge unmapped'}>{isMappedCourse(r.code)?(lang==='ar'?'ربط مهارة معتمد في التجربة':'Pilot skill mapping'):(lang==='ar'?'غير مربوط بمهارة بعد':'Not skill-mapped yet')}</span></td><td>{national?<span className="ssce-inline"><b>{national.code}</b><small>{national.labels[lang]}</small></span>:<span className="ssce-none">{lang==='ar'?'غير مستدل من رمز المقرر':'Not inferred from course namespace'}</span>}</td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>})}
     </tbody></table></div>
     {rows.some(r=>!isMappedCourse(r.code))&&<div className="mapping-note"><SearchCheck size={17}/><span>{lang==='ar'?'المقرر غير المربوط يبقى في سجلك لكنه لا ينتج مهارة أو يؤثر في الحكم حتى يعتمد القسم ربطه بمخرج تعلم ومهارة.':'An unmapped course stays in your record but creates no skill and affects no judgment until the department approves a learning-outcome-to-skill mapping.'}</span></div>}
     <div className="approval approval-consent"><label><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>{lang === 'ar' ? 'أوافق صراحةً على تحليل هذا السجل لبناء ملف مهاراتي بعد مراجعتي له.' : 'I explicitly consent to analyzing this record to build my skills profile after reviewing it.'}</span></label><button className="button primary" disabled={!rows.length || !consent} onClick={onApprove}><Check size={17}/>{t.approve}</button></div>
   </div>
 }
 
+function EducationClassificationCard({lang,classification}) {
+  const primary=classification?.primary
+  if(!primary) return null
+  const label=primary.labels[lang]
+  const detailed=primary.detailed?.labels?.[lang]
+  return <div className="panel ssce-card">
+    <div className="panel-head"><div><small>{lang==='ar'?'مرجع وطني للتخصص':'National education reference'}</small><h3>{ssceReference.name[lang]}</h3></div><span className="ssce-code">{primary.code}</span></div>
+    <div className="ssce-hierarchy">
+      <span><b>06</b>{primary.broad.labels[lang]}</span>
+      <span><b>061</b>{primary.narrow.labels[lang]}</span>
+      {primary.detailed&&<span><b>{primary.detailed.code}</b>{detailed}</span>}
+      <span className="current"><b>{primary.code}</b>{label}</span>
+    </div>
+    <p>{lang==='ar'
+      ? `سياق أكاديمي مستدل من namespace مقررات KAU-FCIT: ${primary.count} من ${classification.totalCourses} مقررات. لا ينتج هذا التصنيف مهارة بحد ذاته.`
+      : `Academic context inferred from the KAU-FCIT course namespace: ${primary.count} of ${classification.totalCourses} courses. This classification does not create skill evidence by itself.`}</p>
+    {classification.isMixed&&<p className="ssce-warning">{lang==='ar'?'السجل يحتوي أكثر من سياق تخصصي؛ اعتمد التصنيف المؤسسي قبل الاستخدام الرسمي.':'The record contains more than one programme context; confirm the institutional classification before formal use.'}</p>}
+    <div className="ssce-links"><a href={ssceReference.sourceUrl} target="_blank" rel="noreferrer">{lang==='ar'?'دليل التصنيف الوطني':'National classification guide'}</a><a href={primary.mappingSourceUrl} target="_blank" rel="noreferrer">{lang==='ar'?'مصدر ربط رمز البرنامج':'Programme-code mapping source'}</a></div>
+  </div>
+}
+
 function SkillCard({ skill, lang }) {
   const t = copy[lang].app
-  return <article className="skill-card"><div className="skill-top"><div><small>{t.confidence}</small><h3>{skill.labels[lang]}</h3></div><strong>{skill.confidence}%</strong></div><div className="meter"><i style={{width:`${skill.confidence}%`}}/></div><div className="evidence"><small>{t.evidence}</small>{skill.evidence.map((e,i)=><p key={i}><BookOpen size={15}/><span>{e.code} · {localized(e.name,lang)}</span><b>{e.grade}</b></p>)}</div></article>
+  const strength=evidenceStrengthText(skill.confidenceLabel,lang)
+  return <article className="skill-card"><div className="skill-top"><div><small>{lang==='ar'?'قوة الدليل — مبدئية':'Evidence strength — preliminary'}</small><h3>{skill.labels[lang]}</h3></div><strong>{strength}</strong></div><div className="meter categorical" aria-label={`${lang==='ar'?'قوة الدليل':'Evidence strength'}: ${strength}`}><i className={skill.confidenceLabel||'low'}/></div><div className="evidence"><small>{t.evidence}</small>{skill.evidence.map((e,i)=><p key={i}><BookOpen size={15}/><span>{e.code} · {localized(e.name,lang)}</span><b>{e.grade}</b></p>)}</div></article>
 }
 
 function FitCard({ item, lang, compared, toggle }) {
   const t = copy[lang].app
   return <article className="fit-card">
     <div className="fit-head"><div><small>{item.provider}</small><h3>{item.title[lang]}</h3></div><span className={`status ${item.status}`}>{t.fit[item.status]}</span></div>
-    <div className="fit-score"><strong>{item.score}%</strong><span>{lang==='ar'?'مؤشر مبدئي مفسّر':'preliminary explained indicator'}</span></div>
+    <div className="fit-score"><strong>{lang==='ar'?'ترتيب مبدئي':'Preliminary ranking'}</strong><span>{lang==='ar'?'النسبة مخفية حتى المعايرة البحثية':'percentage hidden until research calibration'}</span></div>
     <div className="why"><h4>{t.why}</h4>{item.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}</div>
     <div className="gap"><small>{item.gapType}</small><p><strong>{t.becomes}</strong> {item.becomes}</p></div>
     <div className="fit-meta"><span>{item.duration[lang]}</span><span>{item.cost[lang]}</span></div>
@@ -258,7 +298,7 @@ function Compare({ lang, items }) {
       <thead><tr><th>{lang==='ar'?'البعد':'Dimension'}</th>{items.map(item=><th key={item.id}>{item.title[lang]}</th>)}</tr></thead>
       <tbody>
         <tr><th>{lang==='ar'?'الحكم':'Judgment'}</th>{items.map(item=><td key={item.id}><span className={`status ${item.status}`}>{t.fit[item.status]}</span></td>)}</tr>
-        <tr><th>{lang==='ar'?'الملاءمة':'Fit'}</th>{items.map(item=><td key={item.id}><strong className="compare-score">{item.score}%</strong></td>)}</tr>
+
         <tr><th>{lang==='ar'?'الفجوة':'Gap'}</th>{items.map(item=><td key={item.id}>{item.gapType}</td>)}</tr>
         <tr><th>{lang==='ar'?'المدة':'Duration'}</th>{items.map(item=><td key={item.id}>{item.duration[lang]}</td>)}</tr>
         <tr><th>{lang==='ar'?'الكلفة':'Cost'}</th>{items.map(item=><td key={item.id}>{item.cost[lang]}</td>)}</tr>
@@ -285,6 +325,7 @@ function KaminApp({ lang, onClose }) {
   const closeButtonRef = useRef(null)
   const skills = useMemo(()=>state.approved?inferSkills(state.courses):[],[state])
   const recs = useMemo(()=>judgeOpportunities(skills,state.goal,lang),[skills,state.goal,lang])
+  const educationClassification = useMemo(()=>state.approved?inferTranscriptSsces(state.courses):{primary:null},[state])
   const compared = recs.filter(r=>compareIds.includes(r.id))
 
   useEffect(()=>sessionStorage.setItem(STORAGE_KEY,JSON.stringify(state)),[state])
@@ -345,7 +386,7 @@ function KaminApp({ lang, onClose }) {
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
   const exportProfile = () => {
-    const payload = { exportedAt:new Date().toISOString(), courses:state.courses, skills, judgments:recs, consents:state.consents, audit:state.audit }
+    const payload = { exportedAt:new Date().toISOString(), courses:state.courses, educationClassification, skills, judgments:recs, consents:state.consents, audit:state.audit }
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}))
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
@@ -384,12 +425,13 @@ function KaminApp({ lang, onClose }) {
           {state.approved && view==='dashboard' && <section className="app-content">
             <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل مؤشر هنا مبدئي وقابل للرجوع إلى دليل في سجلك المعتمد.':'Every indicator here is preliminary and traceable to evidence in your approved record.'}</p></div>
             <div className="session-banner"><ShieldCheck size={17}/><span>{lang==='ar'?'هذه جلسة مؤقتة داخل المتصفح وتُمسح عند إغلاقه. لا تُستخدم كسجل مؤسسي أو نسخة احتياطية.':'This is a temporary browser session and clears when the browser closes. It is not an institutional record or backup.'}</span></div>
-            <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى مؤشر مبدئي':'Highest preliminary indicator'}</span><strong>{skills[0]?.confidence||0}%</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'أعلى مؤشر ملاءمة مبدئي':'Top preliminary fit'}</span><strong>{recs[0]?.score||0}%</strong><small>{recs[0]?.title[lang]||'—'}</small></article></div>
-            <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=><div className="skill-row" key={s.id}><span>{s.labels[lang]}</span><div><i style={{width:`${s.confidence}%`}}/></div><b>{s.confidence}%</b></div>)}</div>
+            <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى قوة دليل':'Highest evidence strength'}</span><strong>{skills[0]?evidenceStrengthText(skills[0].confidenceLabel,lang):'—'}</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'الحكم الأعلى حاليًا':'Current top judgment'}</span><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{recs[0]?.title[lang]||'—'}</small></article></div>
+            <EducationClassificationCard lang={lang} classification={educationClassification}/>
+            <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=><div className="skill-row" key={s.id}><span>{s.labels[lang]}</span><div><i className={s.confidenceLabel||'low'}/></div><b>{evidenceStrengthText(s.confidenceLabel,lang)}</b></div>)}</div>
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
-            <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?.score}%</strong><small>{lang==='ar'?'ملاءمة مفسّرة':'explained fit'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>
+            <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>
           </section>}
-          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'الثقة هي ثقة النظام في أن سجلك يدعم المهارة، وليست حكمًا عليك.':'Confidence is the system’s confidence in the evidence, not a judgment about you.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
+          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في النسخة التجريبية، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The pilot shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared}/></section>}
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onDelete={deleteAll}/></section>}

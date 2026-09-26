@@ -172,3 +172,24 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .mapping-note{display:flex;gap:9px;align-items:flex-start;margin-top:13px;padding:12px 14px;border-radius:11px;background:#fff8e8;border:1px solid #ecd49b;color:#655126;font-size:.82rem;line-height:1.65}
 .mapping-note svg{flex:0 0 auto;color:var(--gold);margin-top:3px}
 @media(prefers-color-scheme:dark){.mapping-note{background:#2b2518;border-color:#5a4924;color:#dbc99f}}
+
+/* Categorical evidence strength: public pilot hides uncalibrated numeric percentages. */
+.meter.categorical i.high,.skill-row i.high{width:100%}
+.meter.categorical i.medium,.skill-row i.medium{width:66%}
+.meter.categorical i.low,.skill-row i.low{width:33%}
+
+.sasced-candidate{display:grid;gap:6px;padding:12px 14px;border:1px solid #c8d8e7;border-radius:11px;background:#f3f8fc}
+.sasced-candidate>div{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sasced-candidate strong{color:var(--navy);font-size:.82rem}.sasced-candidate span{font-weight:900;color:#40576f}.sasced-candidate small{color:var(--muted);line-height:1.65}
+@media(prefers-color-scheme:dark){.sasced-candidate{background:#122538;border-color:#34516b}.sasced-candidate span{color:#c8d7e7}}
+
+/* Saudi education classification */
+.ssce-inline{display:grid;gap:2px;min-width:150px}.ssce-inline b{color:var(--navy);font-size:.78rem}.ssce-inline small{color:var(--muted);line-height:1.4}
+.ssce-none{color:var(--muted);font-size:.74rem}
+.ssce-card{margin-bottom:16px;border-inline-start:4px solid var(--gold)}
+.ssce-code{font-weight:900;color:var(--navy);background:var(--navy-3);border-radius:999px;padding:7px 11px}
+.ssce-hierarchy{display:flex;gap:8px;flex-wrap:wrap}.ssce-hierarchy span{display:flex;align-items:center;gap:6px;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:.78rem;color:var(--muted)}
+.ssce-hierarchy span b{color:var(--navy)}.ssce-hierarchy .current{background:#fff8e8;border-color:#ecd49b;color:#655126}
+.ssce-card>p{margin:12px 0 0;color:var(--muted);font-size:.84rem}.ssce-card .ssce-warning{color:var(--warn)}
+.ssce-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.ssce-links a{color:var(--navy);font-weight:800;font-size:.78rem}
+@media(prefers-color-scheme:dark){.ssce-hierarchy .current{background:#2b2518;border-color:#5a4924;color:#dbc99f}.ssce-links a{color:#d9e9f8}.ssce-code{color:#eaf2fb}}

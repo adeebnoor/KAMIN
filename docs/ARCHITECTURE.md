@@ -14,6 +14,28 @@ The public pilot is a browser-side application. Transcript files are not uploade
 
 Tesseract worker, WASM core, and `eng`/`ara` language data are built into the static deployment and served from the Kamin origin.
 
+## Saudi academic classification context (SASCED-20)
+
+Kamin carries one national academic-context reference in `src/reference/ssce.js`, based on the Saudi Standard Classification of Educational Levels and Specialties (SASCED-20 / SSCE), aligned to ISCED 2011/2013.
+
+`record/program text -> level + specialization candidate -> user/institution confirmation -> academic context`
+
+For the ICT pilot, the first explicit crosswalk includes:
+- 061201 Network Systems Administration
+- 061202 Technical Support
+- 061203 Information Security / cybersecurity context
+- 061301 Programming and Computer Science
+- 061302 Software Engineering
+- 061303 Information Technology
+- 061304 Information Systems
+- 061901 Artificial Intelligence
+- 061902 Data Science
+- 068801 Health Informatics
+
+The reference includes levels 0–8 and relevant ICT specialties. For the KAU FCIT pilot, explicit namespace mappings are `CPIT -> 061303` Information Technology, `CPCS -> 061301` Programming and Computer Science, and `CPIS -> 061304` Information Systems.
+
+SASCED/SSCE context does **not** create a skill and does **not** alter fit scores by itself. A text-derived match is shown only as a candidate until confirmed by the student or academic authority. Course-level context tags and institutional prefix mappings are contextual crosswalks, not claims that the individual course is itself an educational specialty.
+
 ## Evidence pipeline
 
 `record -> extracted row -> approved course mapping -> skill evidence -> explained judgment`

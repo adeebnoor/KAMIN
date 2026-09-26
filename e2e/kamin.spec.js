@@ -125,3 +125,44 @@ test('a failed upload path never injects demo courses', async ({ page }) => {
   await expect(page.getByRole('alert')).toContainText(/لم نتعرف على مقررات/)
   await expect(page.getByText(/6 مقررات مستخرجة/)).toHaveCount(0)
 })
+
+
+test('public pilot does not present heuristic mastery or fit percentages as calibrated measurements', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await expect(page.locator('.skill-row').first()).toContainText(/مرتفعة|متوسطة|محدودة|مبدئية/)
+  await expect(page.locator('.metrics')).not.toContainText(/\d+%/)
+  await page.getByRole('button', { name: /الدورات/ }).first().click()
+  await expect(page.locator('.fit-card').first()).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
+  expect((await page.locator('.fit-card').allTextContents()).join('\n')).not.toMatch(/\d+%/)
+})
+
+
+test('upload validation surfaces a non-binding SASCED academic context candidate', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  const input=page.locator('#kamin-transcript-file')
+  await input.setInputFiles({
+    name:'it-transcript.txt',
+    mimeType:'text/plain',
+    buffer:Buffer.from('بكالوريوس تقنية المعلومات\nCPIT 251 Systems Analysis and Design 3 A 15.00')
+  })
+  await expect(page.getByText(/SASCED-20/)).toBeVisible()
+  await expect(page.getByText(/061303/).first()).toBeVisible()
+  await expect(page.getByText(/لا يصبح تصنيفًا معتمدًا/)).toBeVisible()
+})
+
+
+test('approved demo surfaces Saudi national classification context without turning it into a skill', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن/ }).first().click()
+  await page.getByRole('button', { name: /استخدم بيانات تجريبية/ }).click()
+  await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
+  await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await expect(page.getByText(/التصنيف السعودي الموحد/)).toBeVisible()
+  await expect(page.getByText('061303').first()).toBeVisible()
+  await expect(page.getByText(/لا ينتج هذا التصنيف مهارة بحد ذاته/)).toBeVisible()
+})
