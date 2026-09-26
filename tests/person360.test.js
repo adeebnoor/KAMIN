@@ -71,6 +71,11 @@ describe('Psychometric governance', () => {
   it('registers standards-based instruments and no home-grown diagnostic instrument', () => {
     expect(PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30.dimensions).toEqual(['Realistic','Investigative','Artistic','Social','Enterprising','Conventional'])
     expect(PSYCHOMETRIC_INSTRUMENTS.ipip50Arabic.items).toBe(50)
+    expect(PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30.productionUse).toBe(false)
+    expect(PSYCHOMETRIC_INSTRUMENTS.ipip50Arabic.productionUse).toBe(false)
+    expect(PSYCHOMETRIC_INSTRUMENTS.onetMiniIp30.decisionRole).toBe('none-until-saudi-validation')
+    expect(PSYCHOMETRIC_INSTRUMENTS.ipip50Arabic.decisionRole).toBe('none-until-saudi-validation')
+    expect(PSYCHOMETRIC_GOVERNANCE.rules.join(' ')).toMatch(/must not affect Fit judgments/i)
     expect(PSYCHOMETRIC_GOVERNANCE.rules.join(' ')).toMatch(/never assume equal weights/i)
     expect(PSYCHOMETRIC_GOVERNANCE.prohibitedLabels).toContain('diagnosis')
   })
