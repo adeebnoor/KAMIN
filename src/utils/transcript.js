@@ -1,3 +1,5 @@
+import { findSascedCandidates } from '../taxonomies/sasced.js'
+
 const ARABIC_DIGITS='٠١٢٣٤٥٦٧٨٩'
 const PERSIAN_DIGITS='۰۱۲۳۴۵۶۷۸۹'
 const normalizeDigits=(value)=>String(value||'')
@@ -231,6 +233,7 @@ function finalize(text,source,mode,extra={}){
       usedOcr:!!extra.usedOcr,
       pages:extra.pages||null,
       mode,
+      sascedCandidates:findSascedCandidates(text).slice(0,5),
     },
     mode,
   }
