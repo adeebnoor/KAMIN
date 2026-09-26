@@ -665,6 +665,10 @@ function KaminApp({ lang, onClose }) {
   const closeButtonRef = useRef(null)
   const skills = useMemo(()=>state.approved?inferSkills(state.courses):[],[state])
   const recs = useMemo(()=>judgeOpportunities(skills,state.goal,lang),[skills,state.goal,lang])
+  const nextDecision = useMemo(()=>{
+    if(!state.approved || skills.length===0) return null
+    return recs.find(item=>item.gapCode!=='repetition')||null
+  },[state.approved,skills,recs])
   const educationClassification = useMemo(()=>state.approved?inferTranscriptSsces(state.courses):{primary:null},[state])
   const compared = recs.filter(r=>compareIds.includes(r.id))
   const personGraph = useMemo(()=>projectStateToPerson360({state,skills,educationClassification}),[state,skills,educationClassification])
@@ -829,7 +833,7 @@ function KaminApp({ lang, onClose }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="app-brand"><BrandMark/><div><strong>{t.name}</strong><small>{t.tagline}</small></div></div>
-        <nav>{nav.map(([id,Icon,label])=><button key={id} disabled={!state.approved && !['insight','matches','privacy','audit'].includes(id)} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/>{label}</button>)}</nav>
+        <nav>{nav.map(([id,Icon,label])=>{const locked=!state.approved && !['insight','matches','privacy','audit'].includes(id);return <button key={id} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/><span className="nav-copy"><span>{label}</span>{locked&&<small>{lang==='ar'?'اعتمد سجلًا للفتح':'Approve a transcript to unlock'}</small>}</span></button>})}</nav>
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public release'}</span></div>
       </aside>
       <div className="app-main">
@@ -839,7 +843,7 @@ function KaminApp({ lang, onClose }) {
           {view==='start' && <section className="app-content onboarding">
             <div className="app-title"><small>01</small><h2>{t.app.title}</h2><p>{t.app.intro}</p></div>
             <div className="onboarding-primary">
-              <a className="sample-first-link" href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد مثالًا وهميًا أولًا — بدون رفع أي ملف':'See a synthetic example first — no upload required'}</a>
+              <a className="sample-first-link" href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد التقرير التوضيحي أولًا — بدون رفع أي ملف':'View the synthetic report first — no upload required'}</a>
               <button className="onboarding-upload" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><div><small>{lang==='ar'?'المسار الموصى به':'Recommended start'}</small><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></div></button>
               <div className="inline-trust"><ShieldCheck size={19}/><strong>{trustMicrocopy('transcript',lang)}</strong></div>
               <div className="onboarding-secondary">
@@ -860,11 +864,11 @@ function KaminApp({ lang, onClose }) {
               ? (lang==='ar'?'ملفك محفوظ محليًا على هذا الجهاز بموافقتك. لا توجد نسخة مركزية لدى كامن.':'Your profile is persistently saved on this device with your consent. Kamin keeps no central copy.')
               : (lang==='ar'?'ملفك مؤقت في جلسة المتصفح الحالية فقط. فعّل الحفظ المحلي أدناه إذا أردت العودة إليه لاحقًا.':'Your profile is session-only right now. Enable local device saving below if you want to return later.')}</span></div>
             {!state.localPersistence&&!persistenceDismissed&&<div className="local-save-prompt"><div><LockKeyhole size={20}/><span><strong>{lang==='ar'?'هل تريد الاحتفاظ بملفك على هذا الجهاز؟':'Keep your profile on this device?'}</strong><small>{lang==='ar'?'يُحفظ محليًا عبر IndexedDB بعد موافقتك، ويمكنك حذفه بالكامل في أي وقت.':'With your consent it is stored locally in IndexedDB and can be fully deleted at any time.'}</small></span></div><div><button className="button primary" onClick={()=>changePersistence(true)}>{lang==='ar'?'نعم، احتفظ بملفي':'Yes, keep my profile'}</button><button className="button secondary" onClick={()=>setPersistenceDismissed(true)}>{lang==='ar'?'ليس الآن':'Not now'}</button></div></div>}
-            <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى قوة دليل':'Highest evidence strength'}</span><strong>{skills[0]?evidenceStrengthText(skills[0].confidenceLabel,lang):'—'}</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'الحكم الأعلى حاليًا':'Current top judgment'}</span><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{recs[0]?.title[lang]||'—'}</small></article></div>
+            <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى قوة دليل':'Highest evidence strength'}</span><strong>{skills[0]?evidenceStrengthText(skills[0].confidenceLabel,lang):'—'}</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'الحكم الأعلى حاليًا':'Current top judgment'}</span><strong>{nextDecision?t.app.fit[nextDecision.status]:'—'}</strong><small>{nextDecision?.title[lang]||(lang==='ar'?'أضف دليلًا معتمدًا أولًا':'Add approved evidence first')}</small></article></div>
             <EducationClassificationCard lang={lang} classification={educationClassification}/>
             <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=><div className="skill-row" key={s.id}><span>{s.labels[lang]}</span><div><i className={s.confidenceLabel||'low'}/></div><b>{evidenceStrengthText(s.confidenceLabel,lang)}</b></div>)}</div>
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
-            <div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{recs[0]?.title[lang]}</h3></div><span className={`status ${recs[0]?.status}`}>{t.app.fit[recs[0]?.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{recs[0]?t.app.fit[recs[0].status]:'—'}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{recs[0]?.reasons.map((r,i)=><p key={i}><Check size={15}/>{r}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {recs[0]?.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div><PilotFeedback lang={lang}/>
+            {nextDecision?<div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{nextDecision.title[lang]}</h3></div><span className={`status ${nextDecision.status}`}>{t.app.fit[nextDecision.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{t.app.fit[nextDecision.status]}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{nextDecision.reasons.map((reason,i)=><p key={i}><Check size={15}/>{reason}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {nextDecision.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>:<div className="panel decision decision-locked"><LockKeyhole size={28}/><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{lang==='ar'?'أضف أو اعتمد مقررًا مرتبطًا بقدرة لفتح أول توصية':'Add or approve capability-linked coursework to unlock your first recommendation'}</h3><p>{lang==='ar'?'لا يعرض كامن حكم دورة عندما لا توجد أي مهارة مدعومة بالدليل. يمكنك مراجعة السجل أو إضافة مقرر يدويًا.':'Kamin does not render a course judgment when the profile has zero evidence-backed skills. Review your transcript or add a course manually.'}</p></div></div>}<PilotFeedback lang={lang}/>
           </section>}
           {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer lang={lang} profile={matchProfile} matches={matches}/></section>}
@@ -874,7 +878,7 @@ function KaminApp({ lang, onClose }) {
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence}/></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
-        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=><button key={id} className={view===id?'active':''} disabled={!state.approved&&!['insight','matches','privacy','audit'].includes(id)} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>)}</nav>
+        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=>{const locked=!state.approved&&!['insight','matches','privacy','audit'].includes(id);return <button key={id} className={view===id?'active':''} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>})}</nav>
       </div>
     </div>
   </div>
@@ -893,6 +897,9 @@ class AppErrorBoundary extends Component {
 export default function App() {
   const [lang,setLang] = useState(()=>new URLSearchParams(window.location.search).get('lang')||localStorage.getItem('kamin-lang')||'ar')
   const [appOpen,setAppOpen] = useState(false)
+  const appTriggerRef=useRef(null)
+  const openApp=()=>{appTriggerRef.current=document.activeElement;setAppOpen(true)}
+  const closeApp=()=>{setAppOpen(false);requestAnimationFrame(()=>appTriggerRef.current?.focus?.())}
   const t = copy[lang]
   useEffect(()=>{trackPilotEvent('landing')},[])
   useEffect(()=>{
@@ -939,9 +946,9 @@ export default function App() {
   },[lang])
   useEffect(()=>{ document.body.style.overflow=appOpen?'hidden':''; return()=>{document.body.style.overflow=''} },[appOpen])
   return <>
-    <Header lang={lang} setLang={setLang} onTry={()=>setAppOpen(true)}/>
-    <main id="main"><Landing lang={lang} onTry={()=>setAppOpen(true)}/></main>
-    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href="./privacy.html">{lang==='ar'?'الخصوصية':'Privacy'}</a><a href="#faq">{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a></div></div></footer>
-    {appOpen&&<AppErrorBoundary lang={lang} onClose={()=>setAppOpen(false)}><KaminApp lang={lang} onClose={()=>setAppOpen(false)}/></AppErrorBoundary>}
+    <Header lang={lang} setLang={setLang} onTry={openApp}/>
+    <main id="main"><Landing lang={lang} onTry={openApp}/></main>
+    <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href={lang==='ar'?'/privacy.html?lang=ar':'/privacy.html?lang=en'}>{lang==='ar'?'الخصوصية':'Privacy'}</a><a href={lang==='ar'?'/faq.html?lang=ar':'/faq.html?lang=en'}>{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a></div></div></footer>
+    {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp}/></AppErrorBoundary>}
   </>
 }
