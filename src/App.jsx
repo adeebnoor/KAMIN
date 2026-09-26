@@ -56,7 +56,7 @@ function Header({ lang, setLang, onTry }) {
         <button className="language-button" onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')} aria-label={lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}>
           <Languages size={18}/><span>{lang === 'ar' ? 'EN' : 'العربية'}</span>
         </button>
-        <button className="menu-button" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(v => !v)}>{open ? <X/> : <Menu/>}</button>
+        <button className="menu-button" aria-label={lang === 'ar' ? (open ? 'إغلاق القائمة' : 'فتح القائمة') : (open ? 'Close menu' : 'Open menu')} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(v => !v)}>{open ? <X/> : <Menu/>}</button>
       </div>
     </div>
   </header>
