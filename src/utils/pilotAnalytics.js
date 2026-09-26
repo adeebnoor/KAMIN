@@ -5,13 +5,14 @@ const EVENT_ALLOWLIST = new Set([
   'upload_completed',
   'profile_returned_to',
   'profile_completed',
+  'feedback_submitted',
 ])
 
 const EVENT_QUEUE_KEY='kamin-pilot-events-v1'
 const FEEDBACK_QUEUE_KEY='kamin-pilot-feedback-v1'
 const ANON_KEY='kamin-pilot-anon-v1'
 
-const enabled = () => String(import.meta.env.VITE_PILOT_ANALYTICS_ENABLED||'').toLowerCase()==='true'
+export const PILOT_ANALYTICS_ENABLED = String(import.meta.env.VITE_PILOT_ANALYTICS_ENABLED||'').toLowerCase()==='true'
 const analyticsEndpoint = () => import.meta.env.VITE_PILOT_ANALYTICS_ENDPOINT||''
 const feedbackEndpoint = () => import.meta.env.VITE_PILOT_FEEDBACK_ENDPOINT||''
 
@@ -63,7 +64,7 @@ export function trackPilotEvent(event){
     anonymousId:anonymousId(),
     schema:'kamin-pilot-funnel-v1',
   }
-  if(!enabled()) return {recorded:false,record}
+  if(!PILOT_ANALYTICS_ENABLED) return {recorded:false,record}
   appendLocal(EVENT_QUEUE_KEY,record)
   void post(analyticsEndpoint(),record).catch(()=>{})
   return {recorded:true,record}
@@ -81,9 +82,17 @@ export async function submitPilotFeedback({text,consent}={}){
     schema:'kamin-pilot-feedback-v1',
   }
   appendLocal(FEEDBACK_QUEUE_KEY,record)
-  if(!enabled() || !feedbackEndpoint()) return {submitted:false,storedLocally:true}
+  if(!PILOT_ANALYTICS_ENABLED || !feedbackEndpoint()) return {submitted:false,storedLocally:true}
   const submitted=await post(feedbackEndpoint(),record)
   return {submitted,storedLocally:!submitted}
+}
+
+export function clearPilotLocalData(){
+  try{
+    localStorage.removeItem(EVENT_QUEUE_KEY)
+    localStorage.removeItem(FEEDBACK_QUEUE_KEY)
+    localStorage.removeItem(ANON_KEY)
+  }catch{}
 }
 
 export const PILOT_EVENT_NAMES = Object.freeze([...EVENT_ALLOWLIST])
