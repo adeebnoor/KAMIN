@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;background:#fff}
 body{margin:0;color:var(--ink);background:#fff;font-family:var(--font-ar);-webkit-font-smoothing:antialiased}
-html[lang="en"] body{font-family:Inter,Arial,sans-serif}\n:lang(ar){font-family:var(--font-ar)}
+html[lang="en"] body{font-family:Inter,Arial,sans-serif}\n:lang(ar){font-family:var(--font-ar)}\n.language-button span[lang="ar"]{font-family:var(--font-ar)!important}
 button,input,select{font:inherit}
 button{color:inherit}
 button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid rgba(201,154,61,.48);outline-offset:3px}
