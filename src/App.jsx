@@ -440,6 +440,32 @@ function StudentInsight({ lang, state, setState, log }) {
   </div>
 }
 
+function KnowledgeMatchContext({ item, lang }) {
+  const knowledge=item.knowledgeInsights
+  if(!knowledge) return null
+  const external=knowledge.externalOccupations||[]
+  const activities=knowledge.workActivities||[]
+  const gaps=knowledge.developmentGaps||[]
+  const bridges=knowledge.bridges||[]
+  if(!external.length&&!activities.length&&!gaps.length&&!bridges.length) return null
+  return <div className="knowledge-context">
+    <div className="knowledge-context-head">
+      <div><Sparkles size={16}/><span><strong>{lang==='ar'?'شبكة الفرصة':'Opportunity knowledge graph'}</strong><small>{item.graphTrace?.knowledgeGraphVersion||'kamin-ict-kg-v1'}</small></span></div>
+      <div className="knowledge-source-chips">{external.map(ref=><a key={ref.id} href={ref.sourceUrl||'#'} target="_blank" rel="noreferrer" title={ref.reviewStatus||''}>{ref.conceptScheme} {ref.notation}</a>)}</div>
+    </div>
+    {activities.length>0&&<div className="knowledge-activity"><SearchCheck size={15}/><span><strong>{lang==='ar'?'نشاط مهني مرجعي':'Reference work activity'}</strong>{activities.slice(0,2).map(activity=><small key={activity.id}>{activity.label}</small>)}</span></div>}
+    {gaps.length>0&&<div className="knowledge-development">
+      <strong>{lang==='ar'?'إشارات تطويرية — لا تغيّر حكم Fit':'Development signals — do not change Fit'}</strong>
+      <div>{gaps.slice(0,4).map(gap=><span key={gap.capabilityId}>{gap.label}</span>)}</div>
+      <small>{lang==='ar'?'مأخوذة من سياق O*NET السوقي الحالي؛ نستخدمها لتوجيه التعلم فقط، لا كبوابة توظيف.':'Current O*NET market context; used only to guide development, never as a hiring gate.'}</small>
+    </div>}
+    {bridges.length>0&&<div className="knowledge-bridges">
+      <strong>{lang==='ar'?'الجسر التالي المقترح':'Suggested next bridge'}</strong>
+      {bridges.slice(0,3).map(bridge=><div key={bridge.id}><BookOpen size={15}/><span><b>{bridge.label}</b><small>{bridge.develops.map(x=>x.label).join(' · ')}</small></span><em>{bridge.reasons?.includes('required-gap')?(lang==='ar'?'يسد فجوة أساسية':'closes a required gap'):(lang==='ar'?'يقوي ملفك':'strengthens the profile')}</em></div>)}
+    </div>}
+  </div>
+}
+
 function MatchExplorer({ lang, profile, matches }) {
   const labels={
     fits:{ar:'تناسبك',en:'Fits'},
@@ -459,6 +485,7 @@ function MatchExplorer({ lang, profile, matches }) {
           <p className="match-outcome">{item.outcome[lang]}</p>
           <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
           {item.semanticPaths?.some(path=>path.kind==='capability-match')&&<div className="semantic-path-block"><strong>{lang==='ar'?'مسار الدليل في الشبكة':'Evidence paths in the graph'}</strong>{item.semanticPaths.filter(path=>path.kind==='capability-match').map((path,i)=><div className="semantic-path" key={path.claimId||i}><span>{path.courseCode||'Evidence'}</span><b>→</b><span>{localized(path.capabilityLabel,lang)||path.capabilityKey}</span><b>→</b><span>{item.title[lang]}</span></div>)}</div>}
+          <KnowledgeMatchContext item={item} lang={lang}/>
           {item.limitingMechanisms.length>0&&<div className="mechanism-block limits"><strong>{lang==='ar'?'فجوات أو حدود':'Gaps / limits'}</strong>{item.limitingMechanisms.map((m,i)=><p key={i}><span aria-hidden="true">△</span>{m}</p>)}</div>}
           <footer className="match-meta"><span>{item.ruleVersion}</span><span>{item.graphTrace?(item.graphTrace.evidencePathCount+'/'+item.graphTrace.requiredCapabilities+' '+(lang==='ar'?'مسارات دليل · غير معاير رقميًا':'evidence paths · not numerically calibrated')):(lang==='ar'?'غير معاير رقميًا':'not numerically calibrated')}</span></footer>
         </article>)}</div>
