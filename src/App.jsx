@@ -415,7 +415,7 @@ export default function App() {
     const ar = lang === 'ar'
     const title = ar ? 'كامن | خزنة قدراتك' : 'Kamin | Your capability vault'
     const description = ar
-      ? 'كامن يحوّل السجل الأكاديمي إلى مهارات موثقة وأحكام ملاءمة مفسّرة تساعد الطالب على اتخاذ قرار تعلم أوضح.'
+      ? 'كامن يحوّل السجل الأكاديمي إلى مهارات مدعومة بأدلة وأحكام ملاءمة مفسّرة تساعد الطالب على اتخاذ قرار تعلم أوضح.'
       : 'Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments for clearer student decisions.'
     const origin = window.location.origin
     const publicOrigin = ['localhost', '127.0.0.1'].includes(window.location.hostname)
@@ -430,9 +430,9 @@ export default function App() {
     setMeta('og:locale', ar ? 'ar_SA' : 'en_US', 'property')
     setMeta('twitter:title', title)
     setMeta('twitter:description', description)
-    setMeta('og:image', publicOrigin + '/kamin-logo-fixed.webp', 'property')
+    setMeta('og:image', publicOrigin + '/og-kamin-1200x630.jpg', 'property')\n    setMeta('twitter:image', publicOrigin + '/og-kamin-1200x630.jpg')
     const canonical = document.head.querySelector('link[rel="canonical"]')
-    if (canonical) canonical.setAttribute('href', publicOrigin + '/')
+    if (canonical) canonical.setAttribute('href', publicOrigin + '/?lang=' + lang)
     const ld = document.getElementById('kamin-ld')
     if (ld) ld.textContent = JSON.stringify({
       '@context':'https://schema.org',
