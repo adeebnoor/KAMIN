@@ -21,6 +21,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kamin-12mf.onrender.com/interoperability.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://kamin-12mf.onrender.com/privacy.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
