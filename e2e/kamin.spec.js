@@ -36,6 +36,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /كامن/)
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', /manifest\.json$/)
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('type', 'application/manifest+json')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /kamin/)
   await expect(page.locator('img[src*="kamin-logo-fixed"]')).toHaveCount(0)
   await expect(page.locator('link[rel="alternate"][hreflang="ar-SA"]')).toHaveAttribute('href', /lang=ar/)
@@ -106,6 +107,7 @@ test('app dialog supports Escape and mobile usage log navigation', async ({ page
 test('manifest uses installable PNG icons and local OCR assets are same-origin', async ({ request }) => {
   const manifestResponse=await request.get('/manifest.json')
   expect(manifestResponse.ok()).toBeTruthy()
+  expect(manifestResponse.headers()['content-type']).not.toContain('octet-stream')
   const manifest=await manifestResponse.json()
   expect(manifest.icons.map(icon=>icon.src)).toEqual(expect.arrayContaining(['/icon-192.png','/icon-512.png']))
   for(const icon of ['/icon-192.png','/icon-512.png']){
