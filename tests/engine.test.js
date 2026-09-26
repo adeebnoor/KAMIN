@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { demoCourses } from '../src/data.js'
 import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
 import { parseTranscriptText, parseTranscriptTextDetailed } from '../src/utils/transcript.js'
+import { inferTranscriptSsces, ssceForCourse, ssceIct } from '../src/reference/ssce.js'
 import { findSascedCandidates, getSascedSpecialty, courseSascedContexts } from '../src/taxonomies/sasced.js'
 
 describe('Kamin deterministic engine', () => {
@@ -121,5 +122,33 @@ describe('SASCED-20 academic context layer', () => {
   it('keeps course-to-SASCED links as context tags rather than skill evidence', () => {
     expect(courseSascedContexts['CPIT-305']).toContain('061303')
     expect(courseSascedContexts['CPIT-252']).toContain('061302')
+  })
+})
+
+
+describe('Saudi education classification context', () => {
+  it('maps KAU FCIT course namespaces to national educational specializations', () => {
+    expect(ssceForCourse({code:'CPIT-250'})?.code).toBe('061303')
+    expect(ssceForCourse({code:'CPCS-204'})?.code).toBe('061301')
+    expect(ssceForCourse({code:'CPIS-220'})?.code).toBe('061304')
+    expect(ssceForCourse({code:'STAT-201'})).toBeNull()
+  })
+
+  it('keeps the official ICT hierarchy separate from skill evidence', () => {
+    expect(ssceIct.broad.code).toBe('06')
+    expect(ssceIct.narrow.code).toBe('061')
+    expect(ssceIct.specializations['061302'].labels.ar).toBe('هندسة البرمجيات')
+    expect(ssceIct.specializations['061901'].labels.ar).toBe('الذكاء الاصطناعي')
+    expect(ssceIct.specializations['061902'].labels.ar).toBe('علوم البيانات')
+  })
+
+  it('selects a dominant transcript programme context without classifying unrelated courses', () => {
+    const result=inferTranscriptSsces([
+      {code:'CPIT-250'},{code:'CPIT-251'},{code:'CPIT-260'},{code:'STAT-201'}
+    ])
+    expect(result.primary.code).toBe('061303')
+    expect(result.primary.count).toBe(3)
+    expect(result.mappedCourses).toBe(3)
+    expect(result.totalCourses).toBe(4)
   })
 })
