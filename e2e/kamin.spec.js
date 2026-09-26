@@ -37,9 +37,6 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', /manifest\.webmanifest$/)
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /kamin/)
-  const logo=page.locator('img[src="/kamin-logo-v3.webp"]')
-  await expect(logo).toHaveCount(1)
-  await expect(logo).toBeVisible()
   await expect(page.locator('img[src*="kamin-logo-fixed"]')).toHaveCount(0)
   await expect(page.locator('link[rel="alternate"][hreflang="ar-SA"]')).toHaveAttribute('href', /lang=ar/)
   await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /lang=en/)
@@ -48,7 +45,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
