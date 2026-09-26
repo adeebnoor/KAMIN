@@ -12,6 +12,7 @@ import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/
 import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
 import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
+import { projectStateToPerson360 } from './ontology/projector.js'
 import { clearLocalProfile, readLocalProfile, writeLocalProfile } from './utils/localProfileStore.js'
 import { trustMicrocopy } from './content/trustCopy.js'
 import { PILOT_ANALYTICS_ENABLED, clearPilotLocalData, submitPilotFeedback, trackPilotEvent } from './utils/pilotAnalytics.js'
