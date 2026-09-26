@@ -1,7 +1,7 @@
 {
   "name": "Kamin | كامن",
   "short_name": "Kamin",
-  "description": "Evidence-rich Person 360 profiles and explainable matching for learning, jobs, training, and next-step decisions.",
+  "description": "Evidence-backed capability profiles for graduates, with explainable fit, visible gaps, and actionable next steps.",
   "id": "/",
   "start_url": "/?lang=ar",
   "scope": "/",
