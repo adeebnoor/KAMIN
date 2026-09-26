@@ -816,7 +816,7 @@ function KaminApp({ lang, onClose }) {
                 <button className="text-button" onClick={()=>cameraRef.current?.click()}><UploadCloud size={16}/>{lang==='ar'?'صوّر بالكاميرا':'Use camera'}</button>
                 <button className="text-button" onClick={loadDemo}><Sparkles size={16}/>{t.app.demo}</button>
                 <button className="text-button" onClick={startManual}><Plus size={16}/>{lang==='ar'?'أو أدخل يدويًا':'or enter manually'}</button>
-                <button className="text-button" onClick={()=>setView('privacy')}><LockKeyhole size={16}/>{lang==='ar'?'استعد نسخة مشفّرة':'Restore encrypted backup'}</button>
+                <button className="text-button" onClick={()=>setView('privacy')}><LockKeyhole size={16}/>{lang==='ar'?'استعد ملفك':'Restore your profile'}</button>
               </div>
             </div>
             <label className="sr-only" htmlFor="kamin-transcript-file">{lang==='ar'?'اختر ملف كشف الدرجات':'Choose transcript file'}</label><input id="kamin-transcript-file" className="sr-only" ref={fileRef} type="file" accept=".pdf,image/png,image/jpeg,image/webp,.txt" onChange={e=>upload(e.target.files?.[0])}/>
