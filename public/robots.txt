@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kamin-12mf.onrender.com/sitemap.xml
