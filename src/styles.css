@@ -348,3 +348,9 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .decision-locked h3{margin:3px 0 5px;color:var(--navy)}
 .decision-locked p{margin:0;color:var(--muted)}
 @media(prefers-color-scheme:dark){.decision-locked{background:#162333}.decision-locked>svg,.decision-locked h3{color:#eaf2fb}}
+
+
+.mapping-coverage{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--navy-3);border:1px solid #d4e0eb;border-radius:11px;padding:9px 11px;margin-bottom:12px;color:var(--muted);font-size:.76rem}
+.mapping-coverage strong{font-size:1rem;color:var(--navy)}
+.mapping-coverage a{margin-inline-start:auto;color:var(--navy);font-weight:900;text-decoration:none}
+@media(prefers-color-scheme:dark){.mapping-coverage{background:#162333;border-color:#31465e}.mapping-coverage strong,.mapping-coverage a{color:#eaf2fb}}
