@@ -165,3 +165,10 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
   .button.secondary,.text-button,.compare-button{background:#162333;color:#e7eef7;border-color:#40566d}
 }
 @media(max-width:600px){.validation-summary>div:first-child{align-items:flex-start;flex-direction:column}.delete-confirm>div{flex-direction:column}}
+
+.mapping-badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:.7rem;font-weight:900;white-space:nowrap}
+.mapping-badge.mapped{background:var(--success-bg);color:var(--success)}
+.mapping-badge.unmapped{background:var(--warn-bg);color:var(--warn)}
+.mapping-note{display:flex;gap:9px;align-items:flex-start;margin-top:13px;padding:12px 14px;border-radius:11px;background:#fff8e8;border:1px solid #ecd49b;color:#655126;font-size:.82rem;line-height:1.65}
+.mapping-note svg{flex:0 0 auto;color:var(--gold);margin-top:3px}
+@media(prefers-color-scheme:dark){.mapping-note{background:#2b2518;border-color:#5a4924;color:#dbc99f}}
