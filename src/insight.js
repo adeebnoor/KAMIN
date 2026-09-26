@@ -8,6 +8,30 @@ export const INSIGHT_VERSION='kamin-insight-v2'
  * deterministic and auditable.
  */
 export const DECLARED_PREFERENCE_SCHEMES = {
+  careerInterest:{
+    label:{ar:'اهتمامي المهني الأقرب',en:'Primary career interest'},
+    options:[
+      {id:'realistic',label:{ar:'عملي وتطبيقي',en:'Realistic / hands-on'}},
+      {id:'investigative',label:{ar:'تحليلي واستقصائي',en:'Investigative / analytical'}},
+      {id:'artistic',label:{ar:'إبداعي وتصميمي',en:'Artistic / creative'}},
+      {id:'social',label:{ar:'مساعدة وتطوير الآخرين',en:'Social / helping'}},
+      {id:'enterprising',label:{ar:'مبادرة وتأثير وقيادة',en:'Enterprising / influence'}},
+      {id:'conventional',label:{ar:'تنظيم ودقة وإجراءات',en:'Conventional / structured'}},
+    ],
+    source:'O*NET RIASEC construct labels — self-declared, not Interest Profiler scores',
+  },
+  workValue:{
+    label:{ar:'قيمة العمل الأهم بالنسبة لي',en:'Most important work value'},
+    options:[
+      {id:'achievement',label:{ar:'الإنجاز',en:'Achievement'}},
+      {id:'independence',label:{ar:'الاستقلالية',en:'Independence'}},
+      {id:'recognition',label:{ar:'التقدير',en:'Recognition'}},
+      {id:'relationships',label:{ar:'العلاقات',en:'Relationships'}},
+      {id:'support',label:{ar:'الدعم',en:'Support'}},
+      {id:'conditions',label:{ar:'ظروف العمل',en:'Working conditions'}},
+    ],
+    source:'O*NET Work Values semantic dimensions — self-declared',
+  },
   workStructure:{
     label:{ar:'درجة هيكلة العمل',en:'Work structure'},
     options:[
