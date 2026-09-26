@@ -410,7 +410,7 @@ function SkillCard({ skill, lang, override, onOverride }) {
         <div><small>{skill.confidenceLabel[lang]}</small><h3>{skill.labels[lang]}</h3></div>
         <div className="provisional-score"><strong>{skill.confidence}</strong><span>/100</span></div>
       </div>
-      <div className="meter" aria-label={skill.confidenceLabel[lang]}><i style={{ width: `${skill.confidence}%` }} /></div>
+      <div className="meter" role="progressbar" aria-label={skill.confidenceLabel[lang]} aria-valuemin="0" aria-valuemax="100" aria-valuenow={skill.confidence}><i style={{ width: `${skill.confidence}%` }} /></div>
       {groups.map(([groupLabel, evidence]) => (
         <div className="evidence-group" key={groupLabel}>
           <small>{groupLabel}</small>
