@@ -49,14 +49,18 @@ Kamin will not create one monolithic local ontology. It composes existing standa
 | Domain | Standard / vocabulary | Kamin use |
 |---|---|---|
 | Person | Schema.org Person | canonical person type and basic metadata |
-| Learner-owned record | 1EdTech CLR 2.0 | verifiable courses, achievements, competencies and employment learning |
-| Competencies / CLOs | 1EdTech CASE 1.1 | learning outcomes, competencies, rubrics, framework associations |
-| Skills / occupations | ESCO | multilingual skill and occupation URIs |
-| Workforce properties | O*NET 31.0 RDF + Content Model | interests, work styles, abilities, knowledge, activities, context, occupations |
+| Learner-owned record | 1EdTech CLR 2.0 | verifiable courses, achievements, competencies and longitudinal learner record |
+| Portable achievements | 1EdTech Open Badges 3.0 | issuer, criteria, alignment and evidence for portable achievements |
+| Verifiable claims | W3C Verifiable Credentials Data Model 2.0 | machine-verifiable future claims and credentials |
+| Competencies / CLOs | 1EdTech CASE 1.1 | learning outcomes, competencies, rubrics and framework associations |
+| Learning model | European Learning Model (ELM) 3.3 | learning opportunities, qualifications, outcomes, accreditations and credentials |
+| Skills / occupations | ESCO 1.2.1 | multilingual skill and occupation URIs |
+| Workforce properties | O*NET 31.0 RDF + Content Model | interests, work styles, abilities, knowledge, activities, context and occupations |
 | Credentials / pathways | Credential Engine CTDL + CTDL-ASN | credentials, assessments, pathways and competency framework alignment |
 | Taxonomies | W3C SKOS | SASCED, controlled vocabularies, hierarchy and mappings |
 | Provenance | W3C PROV-O | evidence lineage, extraction/assessment activity, source agents and timestamps |
-| Consent / purpose | W3C DPV 2.0 | purpose-specific consent and withdrawal lifecycle |
+| Consent / purpose | W3C Data Privacy Vocabularies and Controls CG — DPV 2.0 | purpose-specific consent and withdrawal lifecycle metadata |
+| Graph validation | W3C SHACL 2017 Recommendation | machine-validatable structural and provenance constraints |
 | Psychometric instruments | O*NET Interest Profiler + IPIP | assessment instruments; not ontologies themselves |
 
 ### 3.1 Why O*NET matters
@@ -73,6 +77,18 @@ They serve overlapping but different roles.
 - O*NET is preferred for richer occupation-linked worker/job characteristics such as RIASEC interests, Work Styles, work context and occupational ratings.
 
 Crosswalks are qualified mappings with provenance; they are never silently treated as `owl:sameAs`.
+
+### 3.3 Namespace/version decisions
+
+- CTDL terms use the `ceterms:` shorthand over `https://purl.org/ctdl/terms/`.
+- CTDL-ASN uses the `ceasn:` shorthand and canonical term URIs under `https://purl.org/ctdlasn/terms/`.
+- ELM uses the current 2026 ontology namespace `http://data.europa.eu/snb/model/ontology/`.
+- O*NET is pinned to production database 31.0 (August 2026) when importing workforce RDF.
+- ESCO imports must record the selected ESCO release; the current registry target is 1.2.1.
+- DPV 2.0 is a W3C Community Group Final Specification, not a W3C Recommendation.
+- SHACL 2017 Recommendation is the production constraint baseline; newer SHACL drafts are not used as normative production dependencies yet.
+
+Kamin must record the source version on every imported external concept bundle. No external taxonomy is treated as timeless.
 
 ## 4. Kamin local namespace
 
@@ -349,7 +365,17 @@ Students must not without architecture review:
 - treat closeMatch as sameAs
 - assign arbitrary equal weights and present them as scientific
 
-## 16. Implementation path
+## 16. Machine validation artifacts
+
+The repository publishes:
+
+- `ontology/kamin-core.ttl` — the thin Kamin RDF extension vocabulary.
+- `ontology/kamin-shapes.ttl` — SHACL constraints for claims and observations.
+- `public/ontology/kamin-context.jsonld` — JSON-LD context for exported Person 360 graphs.
+
+The JavaScript validator remains an application guardrail, while SHACL defines the interoperable graph contract for future graph stores and external integrations.
+
+## 17. Implementation path
 
 ### Phase A — now
 - ontology registry

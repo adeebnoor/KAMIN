@@ -48,7 +48,7 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
 
-  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html']) {
+  for (const path of ['/favicon.ico','/favicon.svg','/manifest.webmanifest','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/ontology/kamin-context.jsonld']) {
     const response = await request.get(path)
     expect(response.ok(), `${path} should return 2xx`).toBeTruthy()
   }
@@ -209,4 +209,18 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-pilot-session-v2')))
   expect(storage.consents.insight).toBe(false)
   expect(storage.insight.declaredPreferences).toEqual({})
+})
+
+
+test('canonical JSON-LD ontology context is published with verified namespaces', async ({ request }) => {
+  const response=await request.get('/ontology/kamin-context.jsonld')
+  expect(response.ok()).toBeTruthy()
+  const payload=await response.json()
+  const context=payload['@context']
+  expect(context.ceterms).toBe('https://purl.org/ctdl/terms/')
+  expect(context.ceasn).toBe('https://purl.org/ctdlasn/terms/')
+  expect(context.elm).toBe('http://data.europa.eu/snb/model/ontology/')
+  expect(context.prov).toBe('http://www.w3.org/ns/prov#')
+  expect(context.Credential).toBe('ceterms:Credential')
+  expect(context.Competency).toBe('ceasn:Competency')
 })
