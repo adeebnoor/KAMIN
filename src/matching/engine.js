@@ -1,19 +1,210 @@
 import { targetProfiles } from './targets.js'
+import {
+  GRAPH_MATCHING_VERSION,
+  buildTargetSemanticGraph,
+  describeCapabilityPath,
+  indexPersonGraph,
+  strongestCapabilityPath,
+} from './graph.js'
 
+const text=(ar,en,lang)=>lang==='ar'?ar:en
 const pref=(profile,key)=>profile?.preferences?.[key]||null
 const hasSkill=(profile,id)=>new Set(profile?.skills||[]).has(id)
 
-const text=(ar,en,lang)=>lang==='ar'?ar:en
+const preferenceObject=index=>Object.fromEntries(
+  [...(index?.preferences||new Map()).entries()].map(([scheme,value])=>[scheme,value.key])
+)
 
-export function buildMatchingProfile({skills=[],goal=null,insight=null}={}){
+export function buildMatchingProfile({graph=null,skills=[],goal=null,insight=null}={}){
+  if(graph?.['@type']==='Person'){
+    const index=indexPersonGraph(graph)
+    return {
+      mode:'person360-graph',
+      graph,
+      index,
+      skills:[...index.capabilities.keys()],
+      goal:index.goal?.key||null,
+      preferences:preferenceObject(index),
+    }
+  }
   return {
+    mode:'legacy-flat',
     skills:(skills||[]).map(skill=>skill.id),
     goal:goal||null,
     preferences:{...(insight?.declaredPreferences||{})},
   }
 }
 
-function judgeTarget(profile,target,lang='ar'){
+function graphCapabilitySummary(path,target,lang){
+  const course=path?.courseCode||text('دليل معتمد','approved evidence',lang)
+  const capability=typeof path?.capabilityLabel==='string'
+    ? path.capabilityLabel
+    : path?.capabilityLabel?.[lang]||path?.capabilityLabel?.ar||path?.capabilityLabel?.en||path?.capabilityKey
+  const title=target.title?.[lang]||target.title?.ar||target.title?.en||target.id
+  return text(
+    `المسار الدلالي: ${course} → ${capability} → ${title}.`,
+    `Semantic path: ${course} → ${capability} → ${title}.`,
+    lang,
+  )
+}
+
+function judgeGraphTarget(profile,target,lang='ar'){
+  const index=profile.index
+  const targetGraph=buildTargetSemanticGraph(target)
+  const support=[]
+  const limits=[]
+  const hardGates=[]
+  const semanticPaths=[]
+
+  const requirementEdges=targetGraph.edges.filter(edge=>edge.predicate==='kamin:requiresCapability')
+  const missing=[]
+  const met=[]
+
+  for(const edge of requirementEdges){
+    const candidatePaths=index.capabilities.get(edge.objectKey)||[]
+    const best=strongestCapabilityPath(candidatePaths)
+    if(best){
+      met.push(edge.objectKey)
+      semanticPaths.push({
+        ...best,
+        kind:'capability-match',
+        targetId:target.id,
+        targetNode:targetGraph['@id'],
+        targetRelation:edge.predicate,
+        targetCapabilityId:edge.object,
+        pathText:describeCapabilityPath(best,target,lang),
+        relationChain:[
+          best.courseId ? {from:best.evidenceId,predicate:'kamin:courseContext',to:best.courseId} : null,
+          {from:best.personId,predicate:'kamin:demonstrates',to:best.capabilityId,claimId:best.claimId},
+          {from:targetGraph['@id'],predicate:'kamin:requiresCapability',to:edge.object},
+        ].filter(Boolean),
+      })
+      support.push(graphCapabilitySummary(best,target,lang))
+    }else{
+      missing.push(edge.objectKey)
+      semanticPaths.push({
+        kind:'capability-gap',
+        status:'missing',
+        targetId:target.id,
+        targetNode:targetGraph['@id'],
+        targetRelation:edge.predicate,
+        targetCapabilityId:edge.object,
+        capabilityKey:edge.objectKey,
+        relationChain:[{from:targetGraph['@id'],predicate:'kamin:requiresCapability',to:edge.object}],
+      })
+    }
+  }
+
+  if(requirementEdges.length){
+    if(met.length) support.unshift(text(
+      `وجد كامن ${met.length} مسار دليل صالح من أصل ${requirementEdges.length} قدرات أساسية مطلوبة.`,
+      `Kamin found ${met.length} valid evidence path(s) across ${requirementEdges.length} core required capabilities.`,
+      lang,
+    ))
+    if(missing.length) limits.push(text(
+      `لا يوجد حتى الآن مسار دليل معتمد إلى: ${missing.join('، ')}.`,
+      `No approved evidence path currently reaches: ${missing.join(', ')}.`,
+      lang,
+    ))
+  }else{
+    support.push(text(
+      'هذا المسار لا يفرض قدرة أكاديمية مسبقة في الرسم المرجعي الحالي.',
+      'This pathway has no academic capability prerequisite in the current reference graph.',
+      lang,
+    ))
+  }
+
+  const targetGoalEdges=targetGraph.edges.filter(edge=>edge.predicate==='kamin:supportsGoal')
+  const selectedGoal=index.goal?.key||null
+  const goalMatch=selectedGoal ? targetGoalEdges.some(edge=>edge.objectKey===selectedGoal) : null
+  if(selectedGoal){
+    const edge=targetGoalEdges.find(item=>item.objectKey===selectedGoal)
+    semanticPaths.push({
+      kind:'goal-alignment',
+      status:edge?'supported':'outside-current-goal',
+      targetId:target.id,
+      personClaimId:index.goal.claimId,
+      personGoalId:index.goal.objectId,
+      goal:selectedGoal,
+      targetRelation:'kamin:supportsGoal',
+      targetGoalId:edge?.object||null,
+    })
+  }
+  if(goalMatch===true) support.push(text(
+    'هدفك المصرح به متصل بهذا المسار داخل الرسم الدلالي.',
+    'Your declared goal is connected to this pathway in the semantic graph.',
+    lang,
+  ))
+  else if(goalMatch===false) limits.push(text(
+    'هذا المسار خارج الهدف الذي اخترته حاليًا؛ يبقى للاستكشاف ولا يُعد توصية رئيسية.',
+    'This pathway sits outside your current goal; it remains exploratory rather than a primary recommendation.',
+    lang,
+  ))
+
+  const preferenceSpecs=[
+    ['careerInterest','preferredInterests',text('الاهتمام المهني','career interest',lang)],
+    ['workValue','preferredValues',text('قيمة العمل','work value',lang)],
+    ['workStructure','preferredWorkStructure',text('درجة الهيكلة','work structure',lang)],
+    ['collaboration','preferredCollaboration',text('نمط التعاون','collaboration style',lang)],
+  ]
+  for(const [scheme,targetField,label] of preferenceSpecs){
+    const personPreference=index.preferences.get(scheme)
+    if(!personPreference) continue
+    const aligned=(target[targetField]||[]).includes(personPreference.key)
+    semanticPaths.push({
+      kind:'preference-alignment',
+      status:aligned?'supported':'context-only',
+      targetId:target.id,
+      scheme,
+      option:personPreference.key,
+      personClaimId:personPreference.claimId,
+      personPreferenceId:personPreference.objectId,
+      targetRelation:`kamin:compatiblePreference:${scheme}`,
+    })
+    if(aligned) support.push(text(
+      `${label} الذي اخترته متوافق مع هذا المسار.`,
+      `Your declared ${label} aligns with this pathway.`,
+      lang,
+    ))
+    else if(scheme==='careerInterest' && target[targetField]?.length) limits.push(text(
+      'اهتمامك المهني المصرح به أقل ارتباطًا بهذا المسار؛ هذه إشارة سياقية وليست مانعًا.',
+      'Your declared career interest is less connected to this pathway; this is contextual, not a gate.',
+      lang,
+    ))
+  }
+
+  let judgment='exploratory'
+  if(hardGates.length) judgment='not-yet'
+  else if(missing.length) judgment='conditional'
+  else if(goalMatch===false) judgment='exploratory'
+  else if(requirementEdges.length===0 || met.length===requirementEdges.length) judgment='fits'
+
+  return {
+    ...target,
+    judgment,
+    hardGates,
+    supportingMechanisms:support,
+    limitingMechanisms:limits,
+    missingSkills:missing,
+    semanticPaths,
+    graphTrace:{
+      personGraphId:profile.graph?.['@id']||null,
+      personGraphVersion:profile.graph?.ontologyVersion||null,
+      targetGraphId:targetGraph['@id'],
+      targetGraphVersion:targetGraph.version,
+      requiredCapabilities:requirementEdges.length,
+      matchedCapabilities:met.length,
+      evidencePathCount:semanticPaths.filter(path=>path.kind==='capability-match').length,
+      academicContextCount:index.academicContexts.length,
+    },
+    decisionBasis:'person360-semantic-graph',
+    calibrationStatus:'graph-rule-based-uncalibrated',
+    ruleVersion:'kamin-graph-fit-v1',
+    semanticMatchingVersion:GRAPH_MATCHING_VERSION,
+  }
+}
+
+function judgeLegacyTarget(profile,target,lang='ar'){
   const support=[]
   const limits=[]
   const hardGates=[]
@@ -42,10 +233,8 @@ function judgeTarget(profile,target,lang='ar'){
 
   const value=pref(profile,'workValue')
   if(value && (target.preferredValues||[]).includes(value)) support.push(text('قيمة العمل التي اخترتها تجد دعمًا في هذا المسار المرجعي.','Your selected work value is supported by this reference pathway.',lang))
-
   const structure=pref(profile,'workStructure')
   if(structure && target.preferredWorkStructure?.includes(structure)) support.push(text('درجة الهيكلة التي تفضلها متوافقة مع البيئة المرجعية للمسار.','Your preferred level of structure aligns with the reference environment.',lang))
-
   const collaboration=pref(profile,'collaboration')
   if(collaboration && target.preferredCollaboration?.includes(collaboration)) support.push(text('نمط التعاون الذي اخترته متوافق مع طبيعة العمل المرجعية.','Your declared collaboration style aligns with the reference environment.',lang))
 
@@ -62,6 +251,8 @@ function judgeTarget(profile,target,lang='ar'){
     supportingMechanisms:support,
     limitingMechanisms:limits,
     missingSkills:missing,
+    semanticPaths:[],
+    decisionBasis:'legacy-flat-profile',
     calibrationStatus:'rule-based-uncalibrated',
     ruleVersion:'kamin-fit-v1',
   }
@@ -70,8 +261,9 @@ function judgeTarget(profile,target,lang='ar'){
 const ORDER={fits:0,conditional:1,exploratory:2,'not-yet':3}
 
 export function matchTargets(profile,{type=null,lang='ar'}={}){
+  const graphMode=profile?.mode==='person360-graph' && profile?.index
   return targetProfiles
     .filter(target=>!type || target.type===type)
-    .map(target=>judgeTarget(profile,target,lang))
+    .map(target=>graphMode?judgeGraphTarget(profile,target,lang):judgeLegacyTarget(profile,target,lang))
     .sort((a,b)=>ORDER[a.judgment]-ORDER[b.judgment] || a.id.localeCompare(b.id))
 }

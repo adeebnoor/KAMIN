@@ -19,11 +19,65 @@
     "Claim": "kamin:Claim",
     "Observation": "kamin:Observation",
     "Evidence": "prov:Entity",
-    "source": {"@id":"prov:wasDerivedFrom","@type":"@id"},
-    "generatedBy": {"@id":"prov:wasGeneratedBy","@type":"@id"},
-    "generatedAtTime": {"@id":"prov:generatedAtTime","@type":"http://www.w3.org/2001/XMLSchema#dateTime"},
-    "subject": {"@id":"kamin:subject","@type":"@id"},
-    "object": {"@id":"kamin:object","@type":"@id"},
-    "consentPurpose": {"@id":"kamin:consentPurpose","@type":"@id"}
+    "source": {
+      "@id": "prov:wasDerivedFrom",
+      "@type": "@id"
+    },
+    "generatedBy": {
+      "@id": "prov:wasGeneratedBy",
+      "@type": "@id"
+    },
+    "generatedAtTime": {
+      "@id": "prov:generatedAtTime",
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    },
+    "subject": {
+      "@id": "kamin:subject",
+      "@type": "@id"
+    },
+    "object": {
+      "@id": "kamin:object",
+      "@type": "@id"
+    },
+    "consentPurpose": {
+      "@id": "kamin:consentPurpose",
+      "@type": "@id"
+    },
+    "studied": {
+      "@id": "kamin:studied",
+      "@type": "@id"
+    },
+    "demonstrates": {
+      "@id": "kamin:demonstrates",
+      "@type": "@id"
+    },
+    "academicContext": {
+      "@id": "kamin:academicContext",
+      "@type": "@id"
+    },
+    "pursuesGoal": {
+      "@id": "kamin:pursuesGoal",
+      "@type": "@id"
+    },
+    "requiresCapability": {
+      "@id": "kamin:requiresCapability",
+      "@type": "@id"
+    },
+    "developsCapability": {
+      "@id": "kamin:developsCapability",
+      "@type": "@id"
+    },
+    "supportsGoal": {
+      "@id": "kamin:supportsGoal",
+      "@type": "@id"
+    },
+    "classifiedAs": {
+      "@id": "kamin:classifiedAs",
+      "@type": "@id"
+    },
+    "courseContext": {
+      "@id": "kamin:courseContext",
+      "@type": "@id"
+    }
   }
 }

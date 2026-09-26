@@ -5,6 +5,7 @@ const courseId=code=>`urn:kamin:course:${slug(code)}`
 const evidenceId=(type,key)=>`urn:kamin:evidence:${type}:${slug(key)}`
 const skillId=id=>`urn:kamin:skill:${slug(id)}`
 const preferenceId=(scheme,option)=>`urn:kamin:preference:${slug(scheme)}:${slug(option)}`
+const goalId=goal=>`urn:kamin:goal:${slug(goal)}`
 
 export function projectStateToPerson360({state,skills=[],educationClassification=null}){
   let graph=emptyPerson360()
@@ -46,6 +47,7 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     graph=addEntity(graph,{
       '@id':sid,
       '@type':'Competency',
+      notation:skill.id,
       label:skill.labels||skill.label||skill.id,
       alignmentStatus:skill.uri?'externally-aligned':'pilot-local-unmapped',
     })
@@ -87,6 +89,26 @@ export function projectStateToPerson360({state,skills=[],educationClassification
       evidenceStrength:'contextual-candidate',
       consentPurpose:'urn:kamin:purpose:academic-profile',
       metadata:{coverage:educationClassification.coverage??null,isMixed:!!educationClassification.isMixed},
+    }))
+  }
+
+  if(state?.goal){
+    const gid=goalId(state.goal)
+    graph=addEntity(graph,{
+      '@id':gid,
+      '@type':'Goal',
+      notation:state.goal,
+      goalType:'career-direction',
+    })
+    graph=addClaim(graph,createClaim({
+      id:`urn:kamin:claim:goal:${slug(state.goal)}`,
+      predicate:'kamin:pursuesGoal',
+      object:gid,
+      source:'urn:kamin:evidence:self-declaration',
+      sourceType:'self-declared',
+      generatedBy:'urn:kamin:activity:goal-selection',
+      evidenceStrength:'self-reported',
+      consentPurpose:'urn:kamin:purpose:student-insight',
     }))
   }
 
