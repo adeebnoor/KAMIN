@@ -486,7 +486,7 @@ test('Data Analyst golden path exposes external knowledge and learning bridges',
 
 test('static routes honor URL, stored preference, and bilingual direction', async ({ page }) => {
   const routes=[
-    ['/sample-report.html','Sample Report'],
+    ['/sample-report.html','Sara · Information Systems graduate'],
     ['/methodology.html','How does Kamin move from evidence to judgment?'],
     ['/trust.html','Trust is a product mechanism'],
     ['/interoperability.html','Kamin complements national skills infrastructure'],
@@ -556,7 +556,7 @@ test('zero-evidence approved profile does not receive a next-decision judgment',
 test('locked navigation explains how to unlock protected sections', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
-  const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]').first()
+  const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]:visible').first()
   await expect(dashboard).toBeVisible()
   await expect(dashboard).toBeDisabled()
   await expect(dashboard).toHaveAttribute('title',/اعتمد سجلًا أولًا/)
