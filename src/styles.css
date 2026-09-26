@@ -122,3 +122,14 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
   .button,.status,.panel,.start-card,.skill-card,.fit-card,.faq-list details{forced-color-adjust:auto}
   .meter i,.skill-row i{background:CanvasText}
 }
+
+/* BRD 3.1 value-first landing */
+.value-section{background:linear-gradient(180deg,#f7f9fc 0%,#fff 100%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.value-section .section-title{align-items:flex-start}.value-section .section-title>div{max-width:860px}.value-section .section-title h2{margin:5px 0 10px}.value-section .section-title p{color:var(--muted);margin:0}
+.value-kicker{color:var(--gold);font-weight:900}.value-grid{display:grid;grid-template-columns:.72fr 1.28fr;gap:18px;align-items:stretch}
+.value-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 10px 35px rgba(11,47,91,.05)}.value-card>small{color:var(--gold);font-weight:900}.value-card h3{color:var(--navy);margin:8px 0 16px}.value-card ul{margin:0;padding-inline-start:20px;color:var(--muted);line-height:2}
+.kamin-value{border-top:3px solid var(--navy)}.value-signals{display:grid;gap:10px;margin-top:12px}.value-signal{display:grid;grid-template-columns:minmax(105px,.36fr) 1fr;gap:14px;align-items:start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fbfcfe}.value-signal>span{font-size:.76rem;font-weight:900;color:var(--navy);background:var(--navy-3);padding:6px 8px;border-radius:999px;text-align:center}.value-signal strong,.value-signal small{display:block}.value-signal strong{color:var(--ink)}.value-signal small{color:var(--muted);margin-top:3px;line-height:1.55}
+.value-result{display:flex;gap:12px;align-items:flex-start;margin-top:18px;padding:17px 19px;border:1px solid #ecd49b;border-radius:14px;background:#fff8e8}.value-result svg{color:var(--gold);flex:0 0 auto;margin-top:3px}.value-result strong{color:var(--navy)}.value-result p{margin:3px 0;color:#5c4b2c}.value-result small{color:#7a6a4b}
+.approval-consent label{display:flex;align-items:flex-start;gap:10px;max-width:720px;line-height:1.6}.approval-consent label input{width:20px;height:20px;flex:0 0 auto;margin-top:2px}.error-banner{background:var(--danger-bg);border:1px solid #efcaca;color:var(--danger);padding:13px 15px;border-radius:12px;margin-bottom:12px}
+@media(max-width:900px){.value-grid{grid-template-columns:1fr}.bottom-nav{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:600px){.value-signal{grid-template-columns:1fr}.value-signal>span{justify-self:start}.value-card{padding:18px}.value-result{padding:14px}}
