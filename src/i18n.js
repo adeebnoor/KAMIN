@@ -43,14 +43,14 @@ export const copy = {
     },
     trustTitle: 'الثقة ليست صفحة قانونية. هي جزء من المنتج.',
     trustItems: [
-      ['بياناتك لك', 'يمكنك حفظ نسخة مشفّرة محلية، استعادتها لاحقًا، أو حذف كل بيانات الجلسة من جهازك.'],
+      ['بياناتك لك', 'يمكنك الاحتفاظ بملفك محليًا على هذا الجهاز بموافقتك، أو حفظ نسخة مشفّرة، أو حذف كل بياناتك في أي وقت.'],
       ['كل حكم له دليل', 'لا توجد نسبة بلا أسباب، ولا مهارة بلا أثر أكاديمي يمكن الرجوع إليه.'],
       ['الملاءمة لا تُشترى', 'الترتيب مبني على الأدلة والهدف فقط، ومصمم ليبقى معزولًا عن أي قيمة تجارية.'],
       ['سهولة وصول', 'واجهة عربية أولًا، ثنائية اللغة، لوحة مفاتيح، قارئات شاشة، وحركة منخفضة عند طلب المستخدم.']
     ],
     app: {
       title: 'تجربة كامن',
-      intro: 'ابدأ ببيانات توضيحية أو بسجلك الأكاديمي، ثم وسّع ملف القدرات 360° بتفضيلاتك وأهدافك. المعالجة داخل المتصفح، ويمكنك حفظ نسخة مشفّرة للعودة لاحقًا.',
+      intro: 'ابدأ برفع/تصوير سجلك الأكاديمي، أو شاهد مثالًا وهميًا أولًا. المعالجة داخل المتصفح، ويمكنك بموافقتك الاحتفاظ بملفك محليًا على هذا الجهاز أو تصدير نسخة مشفّرة.',
       demo: 'استخدم بيانات توضيحية',
       upload: 'ارفع كشف الدرجات',
       uploadHelp: 'PDF نصي أو ممسوح ضوئيًا، صورة، أو TXT. عند الحاجة يعمل OCR محليًا داخل جهازك وقد يستغرق وقتًا أطول.',
@@ -90,7 +90,7 @@ export const copy = {
         advisor: 'مشاركة ملخص الملف مع المرشد',
         research: 'استخدام بيانات مجهولة الهوية لأغراض التحقق البحثي'
       },
-      privacyNote: 'لا يوجد تخزين مركزي للملف. البيانات التشغيلية تبقى في جلسة المتصفح، ويمكنك إنشاء نسخة محلية مشفّرة لاستعادتها لاحقًا. لكل طبقة موافقة مستقلة، والمشاركة مع المرشد والبحث غير مفعّلين في النسخة العامة.',
+      privacyNote: 'لا يوجد تخزين مركزي للملف. يمكنك إبقاء البيانات للجلسة فقط أو الموافقة على حفظها محليًا على هذا الجهاز عبر IndexedDB، مع نسخة مشفّرة اختيارية. لكل طبقة موافقة مستقلة، والمشاركة مع المرشد والبحث عرض تجريبي وغير مفعّلة تشغيليًا.',
       deleteConfirm: 'سيتم حذف السجل وملف القدرات والمهارات والأحكام وسجل الاستخدام من هذه الجلسة. النسخ المشفّرة التي نزّلتها تبقى لديك. هل تريد المتابعة؟',
       manual: 'إضافة مقرر',
       courseCode: 'رمز المقرر',
@@ -149,14 +149,14 @@ export const copy = {
     },
     trustTitle: 'Trust is not a legal page. It is part of the product.',
     trustItems: [
-      ['Your data, yours', 'Create an encrypted local backup, restore it later, or delete all session data from this device.'],
+      ['Your data, yours', 'With your consent, keep your profile locally on this device, create an encrypted backup, or delete all your data at any time.'],
       ['Every judgment has evidence', 'No score without reasons and no skill without traceable academic evidence.'],
       ['Fit is not for sale', 'Ranking is based on evidence and goals only, designed to stay isolated from commercial values.'],
       ['Accessible by design', 'Arabic-first bilingual UX with keyboard support, screen-reader semantics, and reduced motion.']
     ],
     app: {
       title: 'Try Kamin',
-      intro: 'Start with demo data or your academic record, then expand Capability Profile 360° with preferences and goals. Processing stays in-browser, and you can save an encrypted backup for later.',
+      intro: 'Start by uploading or photographing your academic record, or view a synthetic example first. Processing stays in-browser; with your consent you can keep the profile locally on this device or export an encrypted backup.',
       demo: 'Use demo data',
       upload: 'Upload transcript',
       uploadHelp: 'Text or scanned PDF, image, or TXT. OCR runs locally on your device when needed and can take longer.',
@@ -196,7 +196,7 @@ export const copy = {
         advisor: 'Share profile summary with an advisor',
         research: 'Use anonymized data for research validation'
       },
-      privacyNote: 'No profile is stored centrally. Operational data stay in the browser session, and you can create an encrypted local backup for later restore. Each layer has separate consent; advisor/research sharing is not operational in the public release.',
+      privacyNote: 'No profile is stored centrally. Data can remain session-only or, with your consent, persist locally on this device in IndexedDB, with an optional encrypted backup. Each layer has separate consent; advisor/research sharing is demonstration-only and not operational in the public release.',
       deleteConfirm: 'This will delete the transcript, capability profile, skills, judgments, and usage log from this session. Encrypted backups you downloaded remain yours. Continue?',
       manual: 'Add course',
       courseCode: 'Course code',
