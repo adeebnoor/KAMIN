@@ -610,6 +610,11 @@ function KaminApp({ lang, onClose }) {
   }, [notice])
 
   useEffect(() => {
+    if (!dialog) return
+    requestAnimationFrame(() => dialogRef.current?.querySelector('.system-dialog button')?.focus())
+  }, [dialog])
+
+  useEffect(() => {
     const previous = document.activeElement
     const oldOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -1025,8 +1030,8 @@ function KaminApp({ lang, onClose }) {
             ))}
           </nav>
         </div>
+        <SystemDialog lang={lang} dialog={dialog} onCancel={() => setDialog(null)} />
       </div>
-      <SystemDialog lang={lang} dialog={dialog} onCancel={() => setDialog(null)} />
     </div>
   )
 }
