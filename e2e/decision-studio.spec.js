@@ -20,6 +20,12 @@ test('guide and plan use selected target without creating new evidence',async({p
  await page.getByRole('button',{name:'افتح شبكتي ومساعدي'}).click()
  await page.getByLabel('المسار الذي أريد استكشافه').selectOption('job-cyber-analyst')
  await expect(page.getByRole('dialog').locator('.network-explanation')).toBeVisible()
+ await expect(page.getByRole('button',{name:'إغلاق',exact:true})).toBeInViewport()
+ if(page.viewportSize().width>900){
+  const sidebar=await page.locator('.app-sidebar').boundingBox()
+  const main=await page.locator('.app-main').boundingBox()
+  expect(sidebar.x).toBeGreaterThan(main.x)
+ }
  const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
  await page.getByRole('tab',{name:'مساعد القرار'}).click()
  await page.getByLabel('اختر سؤالك').selectOption('missing')
