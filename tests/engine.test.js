@@ -3,6 +3,10 @@ import { demoCourses } from '../src/data.js'
 import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
 import { parseTranscriptText, parseTranscriptTextDetailed } from '../src/utils/transcript.js'
 import { inferTranscriptSsces, ssceForCourse, ssceIct, findSsceSpecializationCandidates, findSsceLevelCandidates, getSsceSpecialization, courseSsceContexts } from '../src/reference/ssce.js'
+import { buildPerson360Graph, validatePerson360Graph } from '../src/ontology/personGraph.js'
+import { validateMatchingModel } from '../src/ontology/matching.js'
+import { ONTOLOGY_STACK, KAMIN_ONTOLOGY_VERSION } from '../src/ontology/registry.js'
+import { createPsychometricObservation, emptyInsightState } from '../src/insight.js'
 
 describe('Kamin deterministic engine', () => {
   it('infers only explicitly mapped evidence-backed skills', () => {
@@ -155,5 +159,68 @@ describe('Saudi education classification context', () => {
     expect(result.primary.count).toBe(3)
     expect(result.mappedCourses).toBe(3)
     expect(result.totalCourses).toBe(4)
+  })
+})
+
+
+describe('Person 360 ontology architecture', () => {
+  it('uses verified external standards as the stack instead of a monolithic Kamin ontology', () => {
+    expect(KAMIN_ONTOLOGY_VERSION).toBe('0.2.0')
+    expect(ONTOLOGY_STACK.learnerRecord.version).toBe('2.0')
+    expect(ONTOLOGY_STACK.competencyExchange.version).toBe('1.1')
+    expect(ONTOLOGY_STACK.skillsOccupations.version).toBe('1.2.1')
+    expect(ONTOLOGY_STACK.workforceModel.version).toBe('31.0')
+    expect(ONTOLOGY_STACK.provenance.standard).toContain('PROV-O')
+    expect(ONTOLOGY_STACK.privacy.version).toBe('2.0')
+    expect(ONTOLOGY_STACK.verifiableCredentials.version).toBe('2.0')
+  })
+
+  it('builds a provenance-bearing graph from the existing approved pilot profile', () => {
+    const skills=inferSkills(demoCourses)
+    const classification=inferTranscriptSsces(demoCourses)
+    const state={
+      courses:demoCourses,
+      approved:true,
+      consents:{analyze:true,insight:false,advisor:false,research:false},
+      insight:emptyInsightState(),
+    }
+    const graph=buildPerson360Graph({state,skills,educationClassification:classification,personId:'test-person',generatedAt:'2026-09-26T15:00:00.000Z'})
+    const validation=validatePerson360Graph(graph)
+    expect(validation).toEqual({valid:true,errors:[]})
+    expect(graph['@graph'].some(node=>node['@type']==='kamin:Claim')).toBe(true)
+    const claims=graph['@graph'].filter(node=>node['@type']==='kamin:Claim')
+    expect(claims.every(item=>item['prov:wasDerivedFrom'])).toBe(true)
+    expect(JSON.stringify(graph)).not.toContain('student_id')
+  })
+
+  it('keeps psychometric observations separate from academic evidence and includes them only with consent', () => {
+    const observation=createPsychometricObservation({
+      instrumentId:'ipip-50-arabic-levant',
+      dimensionId:'Conscientiousness',
+      value:4,
+      scale:'1-5',
+      timestamp:1790434800000,
+    })
+    const insight={...emptyInsightState(),observations:[observation]}
+    const withoutConsent=buildPerson360Graph({
+      state:{courses:[],approved:false,consents:{insight:false},insight},
+      personId:'p1',
+      generatedAt:'2026-09-26T15:00:00.000Z',
+    })
+    expect(JSON.stringify(withoutConsent)).not.toContain('Conscientiousness')
+
+    const withConsent=buildPerson360Graph({
+      state:{courses:[],approved:false,consents:{insight:true},insight},
+      personId:'p1',
+      generatedAt:'2026-09-26T15:00:00.000Z',
+    })
+    const text=JSON.stringify(withConsent)
+    expect(text).toContain('Conscientiousness')
+    expect(text).toContain('ipip-50-arabic-levant')
+    expect(validatePerson360Graph(withConsent).valid).toBe(true)
+  })
+
+  it('defines use-case-specific matching without equal-weight assumptions', () => {
+    expect(validateMatchingModel()).toEqual({valid:true,errors:[]})
   })
 })
