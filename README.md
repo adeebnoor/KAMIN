@@ -33,3 +33,24 @@ The production build also generates PWA icons, a horizontal social card, and sel
 ## Compliance posture
 
 The product is designed around Saudi PDPL principles, DGA digital-experience/accessibility guidance, WCAG 2.1 AA targets, purpose-specific consent, data minimization, explainability, withdrawal and auditability. This is a compliance-by-design posture, not a legal certification.
+
+
+## Person 360 semantic architecture
+
+Kamin is evolving from a transcript-to-course recommender into an evidence-rich **Person 360 semantic graph**.
+
+The architecture reuses external standards rather than inventing one monolithic ontology:
+
+- Schema.org for the canonical person type.
+- 1EdTech CLR 2.0 for learner-controlled achievements and records.
+- 1EdTech CASE 1.1 for competencies and learning outcomes.
+- ESCO for multilingual skill and occupation concepts.
+- O*NET RDF/Content Model for occupation-linked interests, work styles, abilities, knowledge, activities and context.
+- Credential Engine CTDL / CTDL-ASN for credentials, pathways and competency frameworks.
+- W3C SKOS for taxonomies such as SASCED and crosswalks.
+- W3C PROV-O for evidence provenance.
+- W3C DPV for consent-purpose metadata.
+
+Psychometric instruments are registered separately from the ontology. Current candidate instruments include O*NET Mini Interest Profiler (RIASEC) and the public-domain IPIP Big Five Arabic adaptation. They do not create academic skill evidence or override formal eligibility gates.
+
+See `docs/KAMIN_ONTOLOGY.md` for the frozen architecture and student-project guardrails.
