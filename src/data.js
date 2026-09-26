@@ -1,0 +1,72 @@
+export const demoCourses = [
+  { code: 'CPIT-251', name: { ar: 'تحليل وتصميم النظم', en: 'Systems Analysis & Design' }, grade: 'A' },
+  { code: 'CPIT-252', name: { ar: 'هندسة البرمجيات', en: 'Software Engineering' }, grade: 'B+' },
+  { code: 'CPIT-260', name: { ar: 'قواعد البيانات', en: 'Database Systems' }, grade: 'B' },
+  { code: 'CPIT-305', name: { ar: 'إدارة المشاريع التقنية', en: 'IT Project Management' }, grade: 'A-' },
+  { code: 'STAT-201', name: { ar: 'الإحصاء التطبيقي', en: 'Applied Statistics' }, grade: 'B+' },
+  { code: 'CPIT-380', name: { ar: 'تطوير تطبيقات الويب', en: 'Web Application Development' }, grade: 'B' },
+]
+
+export const skillRules = [
+  { id: 'requirements', labels: { ar: 'تحليل المتطلبات', en: 'Requirements analysis' }, keywords: ['analysis', 'تحليل', 'requirements', 'متطلبات', 'systems'], base: 88 },
+  { id: 'software', labels: { ar: 'هندسة البرمجيات', en: 'Software engineering' }, keywords: ['software', 'برمجيات', 'engineering', 'هندسة'], base: 84 },
+  { id: 'database', labels: { ar: 'قواعد البيانات', en: 'Databases' }, keywords: ['database', 'قواعد البيانات', 'sql'], base: 80 },
+  { id: 'project', labels: { ar: 'إدارة المشاريع', en: 'Project management' }, keywords: ['project', 'مشاريع', 'management', 'إدارة'], base: 76 },
+  { id: 'statistics', labels: { ar: 'التحليل الكمي', en: 'Quantitative analysis' }, keywords: ['statistics', 'إحصاء', 'stat', 'quantitative'], base: 74 },
+  { id: 'web', labels: { ar: 'تطوير الويب', en: 'Web development' }, keywords: ['web', 'ويب', 'application', 'تطبيقات'], base: 72 },
+  { id: 'programming', labels: { ar: 'البرمجة وحل المشكلات', en: 'Programming & problem solving' }, keywords: ['program', 'برمج', 'coding', 'algorithm', 'خوارزم'], base: 70 },
+  { id: 'cyber', labels: { ar: 'أساسيات الأمن السيبراني', en: 'Cybersecurity foundations' }, keywords: ['security', 'أمن', 'cyber', 'شبكات', 'network'], base: 68 },
+]
+
+export const opportunities = [
+  {
+    id: 'ba',
+    title: { ar: 'أساسيات تحليل الأعمال', en: 'Business Analysis Foundations' },
+    provider: 'Kamin Catalog',
+    duration: { ar: '6 أسابيع', en: '6 weeks' },
+    cost: { ar: 'منخفضة', en: 'Low' },
+    goals: ['management', 'product'],
+    requires: ['requirements'],
+    bonus: ['project', 'database'],
+  },
+  {
+    id: 'sql',
+    title: { ar: 'SQL للمحللين', en: 'SQL for Analysts' },
+    provider: 'Kamin Catalog',
+    duration: { ar: '5 أسابيع', en: '5 weeks' },
+    cost: { ar: 'منخفضة', en: 'Low' },
+    goals: ['data', 'product'],
+    requires: ['database'],
+    bonus: ['statistics'],
+  },
+  {
+    id: 'capm',
+    title: { ar: 'CAPM — تأسيس إدارة المشاريع', en: 'CAPM — Project Management Foundation' },
+    provider: 'Kamin Catalog',
+    duration: { ar: '8 أسابيع', en: '8 weeks' },
+    cost: { ar: 'متوسطة', en: 'Medium' },
+    goals: ['management'],
+    requires: ['project'],
+    bonus: ['requirements'],
+  },
+  {
+    id: 'pmp',
+    title: { ar: 'PMP — محترف إدارة المشاريع', en: 'PMP — Project Management Professional' },
+    provider: 'PMI',
+    duration: { ar: 'حسب الاستعداد', en: 'Depends on readiness' },
+    cost: { ar: 'مرتفعة', en: 'High' },
+    goals: ['management'],
+    requires: ['project'],
+    formalGate: true,
+  },
+  {
+    id: 'cyber-foundations',
+    title: { ar: 'أساسيات الأمن السيبراني', en: 'Cybersecurity Foundations' },
+    provider: 'Kamin Catalog',
+    duration: { ar: '7 أسابيع', en: '7 weeks' },
+    cost: { ar: 'متوسطة', en: 'Medium' },
+    goals: ['cyber'],
+    requires: ['cyber'],
+    bonus: ['programming'],
+  },
+]
