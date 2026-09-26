@@ -168,3 +168,8 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
   .evidence-line{grid-template-columns:auto 1fr}.evidence-badges{grid-column:2;justify-items:start;display:flex;flex-wrap:wrap}
   .skill-verify{grid-template-columns:1fr}.footer-row>div:last-child{justify-content:flex-start}
 }
+
+/* WCAG AA: darken gold when it carries small text, keep brand gold for decorative icons. */
+.app-title>small,.panel-head small,.decision-head small,
+.value-cv>small,.value-kamin>small,.vault-preview small,
+.evidence-group>small,.vault-record-head>span,.example-label{color:#75530f}
