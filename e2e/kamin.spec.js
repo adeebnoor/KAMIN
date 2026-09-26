@@ -303,7 +303,7 @@ test('expert-review trust surfaces are honest and navigable', async ({ page }) =
 
   await page.goto('/trust.html?lang=ar')
   await expect(page.locator('h1')).toContainText('الثقة آلية في المنتج')
-  await expect(page.getByText(/لا تستخدم بيانات الجلسة لتدريب نموذج مركزي/)).toBeVisible()
+  await expect(page.getByText(/حفظ محلي باختيارك/)).toBeVisible()
 })
 
 
