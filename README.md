@@ -2,6 +2,10 @@
 
 **خزنة قدراتك — Your capability vault**
 
+🌐 **Live public pilot:** https://kamin-12mf.onrender.com
+
+The pilot is continuously deployed from `main` after code changes and protected by a GitHub quality gate (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
+
 Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public pilot experience built from BRD v3.0.
 
 ## Public pilot privacy model
