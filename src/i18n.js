@@ -43,14 +43,14 @@ export const copy = {
     },
     trustTitle: 'الثقة ليست صفحة قانونية. هي جزء من المنتج.',
     trustItems: [
-      ['بياناتك لك', 'يمكنك التصدير أو السحب أو حذف كل بيانات الإصدار العام من جهازك.'],
+      ['بياناتك لك', 'يمكنك حفظ نسخة مشفّرة محلية، استعادتها لاحقًا، أو حذف كل بيانات الجلسة من جهازك.'],
       ['كل حكم له دليل', 'لا توجد نسبة بلا أسباب، ولا مهارة بلا أثر أكاديمي يمكن الرجوع إليه.'],
       ['الملاءمة لا تُشترى', 'الترتيب مبني على الأدلة والهدف فقط، ومصمم ليبقى معزولًا عن أي قيمة تجارية.'],
       ['سهولة وصول', 'واجهة عربية أولًا، ثنائية اللغة، لوحة مفاتيح، قارئات شاشة، وحركة منخفضة عند طلب المستخدم.']
     ],
     app: {
       title: 'تجربة كامن',
-      intro: 'ابدأ ببيانات توضيحية أو بسجلك الأكاديمي، ثم وسّع Person 360 بتفضيلاتك وأهدافك. المعالجة الحالية داخل المتصفح فقط.',
+      intro: 'ابدأ ببيانات توضيحية أو بسجلك الأكاديمي، ثم وسّع ملف القدرات 360° بتفضيلاتك وأهدافك. المعالجة داخل المتصفح، ويمكنك حفظ نسخة مشفّرة للعودة لاحقًا.',
       demo: 'استخدم بيانات توضيحية',
       upload: 'ارفع كشف الدرجات',
       uploadHelp: 'PDF نصي أو ممسوح ضوئيًا، صورة، أو TXT. عند الحاجة يعمل OCR محليًا داخل جهازك وقد يستغرق وقتًا أطول.',
@@ -65,7 +65,7 @@ export const copy = {
       compare: 'المقارنة',
       privacy: 'الخصوصية',
       audit: 'سجل الاستخدام',
-      export: 'تصدير ملفي',
+      export: 'نسخة مشفّرة',
       delete: 'حذف بياناتي',
       dashboard: 'لوحة قدراتي',
       noData: 'لم تعتمد كشف درجات بعد.',
@@ -90,8 +90,8 @@ export const copy = {
         advisor: 'مشاركة ملخص الملف مع المرشد',
         research: 'استخدام بيانات مجهولة الهوية لأغراض التحقق البحثي'
       },
-      privacyNote: 'لا يوجد تخزين مركزي للملفات. السجل وPerson 360 يبقيان في جلسة المتصفح المؤقتة ويُمسحان عند إغلاقه. لكل طبقة موافقة مستقلة. OCR يعمل محليًا، والمشاركة مع المرشد والبحث غير مفعّلين حتى اعتماد الاستضافة السعودية واتفاقيات البيانات.',
-      deleteConfirm: 'سيتم حذف السجل وPerson 360 والمهارات والأحكام وسجل الاستخدام من هذا المتصفح. هل تريد المتابعة؟',
+      privacyNote: 'لا يوجد تخزين مركزي للملف. البيانات التشغيلية تبقى في جلسة المتصفح، ويمكنك إنشاء نسخة محلية مشفّرة لاستعادتها لاحقًا. لكل طبقة موافقة مستقلة، والمشاركة مع المرشد والبحث غير مفعّلين في النسخة العامة.',
+      deleteConfirm: 'سيتم حذف السجل وملف القدرات والمهارات والأحكام وسجل الاستخدام من هذه الجلسة. النسخ المشفّرة التي نزّلتها تبقى لديك. هل تريد المتابعة؟',
       manual: 'إضافة مقرر',
       courseCode: 'رمز المقرر',
       courseName: 'اسم المقرر',
@@ -149,14 +149,14 @@ export const copy = {
     },
     trustTitle: 'Trust is not a legal page. It is part of the product.',
     trustItems: [
-      ['Your data, yours', 'Export, withdraw, or delete all public-release data from this device.'],
+      ['Your data, yours', 'Create an encrypted local backup, restore it later, or delete all session data from this device.'],
       ['Every judgment has evidence', 'No score without reasons and no skill without traceable academic evidence.'],
       ['Fit is not for sale', 'Ranking is based on evidence and goals only, designed to stay isolated from commercial values.'],
       ['Accessible by design', 'Arabic-first bilingual UX with keyboard support, screen-reader semantics, and reduced motion.']
     ],
     app: {
       title: 'Try Kamin',
-      intro: 'Start with demo data or your academic record, then expand Person 360 with your preferences and goals. Current processing runs inside your browser only.',
+      intro: 'Start with demo data or your academic record, then expand Capability Profile 360° with preferences and goals. Processing stays in-browser, and you can save an encrypted backup for later.',
       demo: 'Use demo data',
       upload: 'Upload transcript',
       uploadHelp: 'Text or scanned PDF, image, or TXT. OCR runs locally on your device when needed and can take longer.',
@@ -171,7 +171,7 @@ export const copy = {
       compare: 'Compare',
       privacy: 'Privacy',
       audit: 'Usage log',
-      export: 'Export my profile',
+      export: 'Encrypted backup',
       delete: 'Delete my data',
       dashboard: 'Capability dashboard',
       noData: 'No transcript has been approved yet.',
@@ -196,8 +196,8 @@ export const copy = {
         advisor: 'Share profile summary with an advisor',
         research: 'Use anonymized data for research validation'
       },
-      privacyNote: 'No profile data is stored centrally. The transcript and Person 360 stay in a temporary browser session and clear when the browser closes. Each layer has separate consent. OCR runs locally; advisor sharing and research remain disabled until Saudi-hosted infrastructure and data agreements are approved.',
-      deleteConfirm: 'This will delete the transcript, Person 360, skills, judgments, and usage log from this browser. Continue?',
+      privacyNote: 'No profile is stored centrally. Operational data stay in the browser session, and you can create an encrypted local backup for later restore. Each layer has separate consent; advisor/research sharing is not operational in the public release.',
+      deleteConfirm: 'This will delete the transcript, capability profile, skills, judgments, and usage log from this session. Encrypted backups you downloaded remain yours. Continue?',
       manual: 'Add course',
       courseCode: 'Course code',
       courseName: 'Course name',
