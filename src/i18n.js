@@ -89,8 +89,8 @@ export const copy = {
         advisor: 'مشاركة ملخص الملف مع المرشد',
         research: 'استخدام بيانات مجهولة الهوية لأغراض التحقق البحثي'
       },
-      privacyNote: 'لا يوجد تخزين مركزي للملفات. بيانات التجربة تبقى في جلسة المتصفح المؤقتة وتُمسح عند إغلاقه. OCR يعمل محليًا، والمشاركة مع المرشد والبحث غير مفعّلين حتى اعتماد الاستضافة السعودية واتفاقيات البيانات.',
-      deleteConfirm: 'سيتم حذف السجل والمهارات والأحكام وسجل الاستخدام من هذا المتصفح. هل تريد المتابعة؟',
+      privacyNote: 'لا يوجد تخزين مركزي للملفات. السجل وPerson 360 يبقيان في جلسة المتصفح المؤقتة ويُمسحان عند إغلاقه. لكل طبقة موافقة مستقلة. OCR يعمل محليًا، والمشاركة مع المرشد والبحث غير مفعّلين حتى اعتماد الاستضافة السعودية واتفاقيات البيانات.',
+      deleteConfirm: 'سيتم حذف السجل وPerson 360 والمهارات والأحكام وسجل الاستخدام من هذا المتصفح. هل تريد المتابعة؟',
       manual: 'إضافة مقرر',
       courseCode: 'رمز المقرر',
       courseName: 'اسم المقرر',
@@ -194,8 +194,8 @@ export const copy = {
         advisor: 'Share profile summary with an advisor',
         research: 'Use anonymized data for research validation'
       },
-      privacyNote: 'No transcript is stored centrally. Pilot data stays in a temporary browser session and clears when the browser closes. OCR runs locally; advisor sharing and research remain disabled until Saudi-hosted infrastructure and data agreements are approved.',
-      deleteConfirm: 'This will delete the transcript, skills, judgments, and usage log from this browser. Continue?',
+      privacyNote: 'No profile data is stored centrally. The transcript and Person 360 stay in a temporary browser session and clear when the browser closes. Each layer has separate consent. OCR runs locally; advisor sharing and research remain disabled until Saudi-hosted infrastructure and data agreements are approved.',
+      deleteConfirm: 'This will delete the transcript, Person 360, skills, judgments, and usage log from this browser. Continue?',
       manual: 'Add course',
       courseCode: 'Course code',
       courseName: 'Course name',
