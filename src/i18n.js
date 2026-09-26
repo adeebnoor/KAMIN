@@ -10,7 +10,7 @@ export const copy = {
       text: 'كامن يقرأ سجلك الأكاديمي كدليل: ما طبّقته، وما درسته، وما الذي ينقصك قبل أن تدفع وقتًا أو مالًا في خطوة لا تخدم هدفك.',
       cta: 'اكتشف لحظة كامن',
       secondary: 'شاهد مثالًا',
-      trust: 'في النسخة التجريبية العامة، تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.',
+      trust: 'تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.',
       cards: [
         ['دليل تطبيق', 'مشروع التخرج · تحليل المتطلبات'],
         ['بعد دورة مناسبة', 'تبني تقريرًا أسبوعيًا آليًا بـ SQL']
@@ -43,14 +43,14 @@ export const copy = {
     },
     trustTitle: 'الثقة ليست صفحة قانونية. هي جزء من المنتج.',
     trustItems: [
-      ['بياناتك لك', 'يمكنك التصدير أو السحب أو حذف كل بيانات النسخة التجريبية من جهازك.'],
+      ['بياناتك لك', 'يمكنك التصدير أو سحب الموافقة أو حذف كل بيانات كامن من جهازك.'],
       ['كل حكم له دليل', 'لا توجد نسبة بلا أسباب، ولا مهارة بلا أثر أكاديمي يمكن الرجوع إليه.'],
       ['الملاءمة لا تُشترى', 'الترتيب مبني على الأدلة والهدف فقط، ومصمم ليبقى معزولًا عن أي قيمة تجارية.'],
       ['سهولة وصول', 'واجهة عربية أولًا، ثنائية اللغة، لوحة مفاتيح، قارئات شاشة، وحركة منخفضة عند طلب المستخدم.']
     ],
     app: {
       title: 'تجربة كامن',
-      intro: 'ابدأ ببيانات تجريبية أو ارفع كشفًا حقيقيًا. المعالجة الحالية داخل المتصفح فقط.',
+      intro: 'ابدأ ببيانات مثال منفصلة أو ارفع كشفًا حقيقيًا. المعالجة داخل المتصفح فقط.',
       demo: 'استخدم بيانات تجريبية',
       upload: 'ارفع كشف الدرجات',
       uploadHelp: 'PDF نصي أو ممسوح ضوئيًا، صورة، أو TXT. عند الحاجة يعمل OCR محليًا داخل جهازك وقد يستغرق وقتًا أطول.',
@@ -102,7 +102,7 @@ export const copy = {
       title: 'تصميم جاهز للامتثال — وليس ادعاء اعتماد',
       text: 'كامن يطبّق مبادئ تقليل البيانات، الموافقة المحددة بالغرض، قابلية السحب، التفسير، وإمكانية الوصول. الإطلاق المؤسسي ببيانات شخصية يتطلب اعتماد الاستضافة داخل المملكة وسياسة الاحتفاظ واتفاقية مشاركة البيانات والمراجعة النظامية.'
     },
-    footer: 'كامن — خزنة قدراتك. نسخة إطلاق تجريبية 2026.'
+    footer: 'كامن — خزنة قدراتك. الإصدار 1.0 · 2026.'
   },
   en: {
     name: 'Kamin',
@@ -115,7 +115,7 @@ export const copy = {
       text: 'Kamin reads your academic record as evidence: what you applied, what you studied, and what is still missing before you spend time or money on the next step.',
       cta: 'Discover your Kamin moment',
       secondary: 'See an example',
-      trust: 'In this public pilot, files are processed locally on your device and are not uploaded to a Kamin server.',
+      trust: 'Files are processed locally on your device and are not uploaded to a Kamin server.',
       cards: [
         ['Applied evidence', 'Graduation project · requirements analysis'],
         ['After the right course', 'Build an automated weekly SQL report']
@@ -148,7 +148,7 @@ export const copy = {
     },
     trustTitle: 'Trust is not a legal page. It is part of the product.',
     trustItems: [
-      ['Your data, yours', 'Export, withdraw, or delete all pilot data from this device.'],
+      ['Your data, yours', 'Export, withdraw consent, or delete all Kamin data from this device.'],
       ['Every judgment has evidence', 'No score without reasons and no skill without traceable academic evidence.'],
       ['Fit is not for sale', 'Ranking is based on evidence and goals only, designed to stay isolated from commercial values.'],
       ['Accessible by design', 'Arabic-first bilingual UX with keyboard support, screen-reader semantics, and reduced motion.']
@@ -174,7 +174,7 @@ export const copy = {
       dashboard: 'Capability dashboard',
       noData: 'No transcript has been approved yet.',
       processing: 'Reading file locally…',
-      localOnly: 'The file does not leave your device in this pilot.',
+      localOnly: 'The file does not leave your device.',
       approved: 'Transcript approved and skills recalculated.',
       goals: {
         management: 'Management & projects',
@@ -207,6 +207,6 @@ export const copy = {
       title: 'Compliance-ready design — not a certification claim',
       text: 'Kamin implements data minimization, purpose-specific consent, withdrawal, explainability, and accessibility. Institutional launch with personal data still requires Saudi-hosted processing, an approved retention policy, a data-sharing agreement, and legal review.'
     },
-    footer: 'Kamin — your capability vault. Public pilot 2026.'
+    footer: 'Kamin — your capability vault. Version 1.0 · 2026.'
   }
 }
