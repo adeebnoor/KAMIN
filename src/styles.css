@@ -269,3 +269,21 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
   .dimension-card,.opportunity-card,.institution-card{min-height:auto}
   .business-principle{padding:20px}
 }
+
+
+/* Expert-review pass: focus, proof, and trust */
+.main-nav .nav-link{display:inline-flex;align-items:center;padding:11px 15px;border-radius:12px;font-weight:700;color:#314861;text-decoration:none}
+.main-nav .nav-link:hover{background:var(--navy-3);color:var(--navy)}
+.proof-preview{min-height:500px}.proof-window{width:min(440px,94%);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px;display:grid;gap:18px}
+.proof-window-head,.proof-role{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.proof-window-head{padding-bottom:14px;border-bottom:1px solid var(--line)}.proof-window-head span{font-weight:900;color:var(--navy)}.proof-window-head small{background:var(--navy-3);color:var(--navy);border-radius:999px;padding:5px 9px;font-weight:800}
+.proof-role{align-items:flex-end}.proof-role>small{color:var(--muted)}.proof-role strong{font-size:1.12rem;color:var(--navy)}.proof-evidence{display:grid;gap:10px}.proof-evidence>div{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfcfe}.proof-evidence svg{color:var(--success);flex:0 0 auto;margin-top:2px}.proof-evidence span{display:grid;gap:2px}.proof-evidence small{color:var(--muted)}.proof-evidence .proof-gap{background:#fff8e8;border-color:#ecd49b}.proof-evidence .proof-gap svg{color:var(--gold)}
+.proof-next{display:grid;gap:5px;padding:13px 14px;border-radius:12px;background:var(--navy);color:#fff}.proof-next span{color:#d8e5f1;font-size:.86rem;line-height:1.6}
+.proof-section{background:#f7f9fc;border-block:1px solid var(--line)}.proof-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:30px}.proof-live,.proof-boundary{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px}.proof-label{display:inline-flex;border-radius:999px;padding:6px 10px;font-size:.75rem;font-weight:900;margin-bottom:16px}.proof-label.live{background:var(--success-bg);color:var(--success)}.proof-label.boundary{background:var(--warn-bg);color:var(--warn)}
+.proof-live article{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}.proof-live article:first-of-type{border-top:0}.proof-live svg{color:var(--success);flex:0 0 auto;margin-top:3px}.proof-live strong{color:var(--navy)}.proof-live p{margin:3px 0 0;color:var(--muted);font-size:.88rem}
+.proof-boundary p{display:flex;gap:9px;align-items:flex-start;margin:0;padding:10px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}.proof-boundary p:first-of-type{border-top:0}.proof-boundary svg{color:var(--warn);flex:0 0 auto;margin-top:4px}.proof-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.person360-grid.compact{grid-template-columns:repeat(4,1fr)}.institution-grid.focused{grid-template-columns:repeat(2,minmax(0,1fr));max-width:900px}.institution-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.institution-head small{background:var(--navy-3);color:var(--navy);border-radius:999px;padding:5px 8px;font-size:.72rem;font-weight:900}.trust-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.trust-links a{color:var(--navy);font-weight:900;text-decoration:none;border-bottom:1px solid rgba(11,47,91,.25)}
+@media(max-width:900px){.proof-grid{grid-template-columns:1fr}.person360-grid.compact{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.person360-grid.compact,.institution-grid.focused{grid-template-columns:1fr}.proof-window{padding:16px}.proof-actions .button{width:100%}}
+@media(prefers-color-scheme:dark){
+  .main-nav .nav-link{color:#eaf2fb}.proof-window,.proof-live,.proof-boundary{background:#111b28;border-color:#31465e}.proof-window-head span,.proof-role strong,.proof-live strong{color:#eaf2fb}.proof-evidence>div{background:#162333;border-color:#31465e}.proof-evidence .proof-gap{background:#2b2518;border-color:#5a4924}.proof-section{background:#0d1622}.institution-head small{background:#1b3046;color:#d8e7f5}.trust-links a{color:#d9e9f8}
+}
