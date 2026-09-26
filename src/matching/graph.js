@@ -1,3 +1,5 @@
+import { enrichTargetGraph } from '../knowledge/query.js'
+
 export const GRAPH_MATCHING_VERSION='kamin-semantic-match-v1'
 
 const localSkillId=id=>`urn:kamin:skill:${String(id||'').trim().toLowerCase()}`
@@ -70,13 +72,13 @@ export function buildTargetSemanticGraph(target){
     edges.push({subject:tid,predicate:'kamin:classifiedAs',object:cid,scheme,objectKey:code})
   }
 
-  return {
+  return enrichTargetGraph({
     '@id':tid,
     '@type':'SemanticTargetGraph',
     version:GRAPH_MATCHING_VERSION,
     entities:[...new Map(entities.map(entity=>[entity['@id'],entity])).values()],
     edges,
-  }
+  },target.id)
 }
 
 export function indexPersonGraph(graph){
