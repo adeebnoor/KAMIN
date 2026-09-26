@@ -347,7 +347,7 @@ test('national positioning is complementary and makes no government integration 
   await expect(page.getByRole('heading', { name: 'منصة وطنية موازية' })).toBeVisible()
   await expect(page.getByText('لا نبني').first()).toBeVisible()
   await expect(page.getByText(/لا يوجد API أو اعتماد\/شراكة حكومية معلنة/)).toBeVisible()
-  await expect(page.getByText(/KAU-only/)).toBeVisible()
+  await expect(page.getByRole('heading', { name:'KAU-only' })).toBeVisible()
 })
 
 test('psychometric instruments are visibly research-only until Saudi validation', async ({ page }) => {
