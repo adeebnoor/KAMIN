@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ONTOLOGY_STACK, KAMIN_CLASSES, KAMIN_RELATIONS, expandTerm } from '../src/ontology/registry.js'
+import { ONTOLOGY_STACK, NAMESPACES, KAMIN_CLASSES, KAMIN_RELATIONS, expandTerm } from '../src/ontology/registry.js'
 import { PSYCHOMETRIC_INSTRUMENTS, PSYCHOMETRIC_GOVERNANCE } from '../src/psychometrics/registry.js'
 import { addClaim, addEntity, addObservation, createClaim, createObservation, emptyPerson360, SIMILARITY_POLICY, validatePerson360 } from '../src/person360.js'
 import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from '../src/insight.js'
@@ -13,6 +13,22 @@ describe('Kamin ontology stack', () => {
     expect(ONTOLOGY_STACK.provenance.standard).toMatch(/PROV-O/)
     expect(ONTOLOGY_STACK.classification.standard).toMatch(/SKOS/)
     expect(ONTOLOGY_STACK.privacy.standard).toMatch(/DPV/)
+  })
+
+  it('pins canonical namespaces for external learning and credential vocabularies', () => {
+    expect(NAMESPACES.ceterms).toBe('https://purl.org/ctdl/terms/')
+    expect(NAMESPACES.ceasn).toBe('https://purl.org/ctdlasn/terms/')
+    expect(NAMESPACES.elm).toBe('http://data.europa.eu/snb/model/ontology/')
+    expect(NAMESPACES.vc).toBe('https://www.w3.org/2018/credentials#')
+    expect(KAMIN_CLASSES.Credential).toBe('ceterms:Credential')
+  })
+
+  it('registers graph validation and verifiable learning standards explicitly', () => {
+    expect(ONTOLOGY_STACK.learningModel.version).toBe('3.3')
+    expect(ONTOLOGY_STACK.openBadges.version).toBe('3.0')
+    expect(ONTOLOGY_STACK.verifiableCredentials.version).toMatch(/2\.0/)
+    expect(ONTOLOGY_STACK.graphValidation.standard).toMatch(/SHACL/)
+    expect(ONTOLOGY_STACK.privacy.standard).toMatch(/Community|CG/i)
   })
 
   it('keeps local extensions limited to qualified claims and matching concepts', () => {
