@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { demoCourses } from '../src/data.js'
 import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
-import { parseTranscriptText } from '../src/utils/transcript.js'
+import { parseTranscriptText, parseTranscriptTextDetailed } from '../src/utils/transcript.js'
 
 describe('Kamin deterministic engine', () => {
   it('infers only explicitly mapped evidence-backed skills', () => {
@@ -51,5 +51,47 @@ describe('Kamin deterministic engine', () => {
       {code:'ISL-101',name:'الأمن الفكري',grade:'A'},
     ]
     expect(inferSkills(rows)).toHaveLength(0)
+  })
+})
+
+
+describe('portable transcript parsing', () => {
+  it('normalizes Arabic-Indic digits and non-ASCII hyphens', () => {
+    const rows=parseTranscriptText('CPIT–٢٥١ تحليل وتصميم النظم ٣ أ+ ١٥.٠٠')
+    expect(rows).toHaveLength(1)
+    expect(rows[0]).toMatchObject({code:'CPIT-251',grade:'A+',hours:3})
+  })
+
+  it('supports compact codes and row numbers without polluting course names', () => {
+    const rows=parseTranscriptText('1 CS101 Introduction to Programming 3 A 12.00\n2 MATH202 Discrete Mathematics 4 B+ 14.00')
+    expect(rows).toHaveLength(2)
+    expect(rows[0]).toMatchObject({code:'CS-101',name:'Introduction to Programming',grade:'A',hours:3})
+    expect(rows[1]).toMatchObject({code:'MATH-202',name:'Discrete Mathematics',grade:'B+',hours:4})
+  })
+
+  it('stitches a wrapped course row when title and grade spill to the next line', () => {
+    const rows=parseTranscriptText('CPCS 204 Data Structures and\nAlgorithms 3 B+ 13.50')
+    expect(rows).toHaveLength(1)
+    expect(rows[0]).toMatchObject({code:'CPCS-204',name:'Data Structures and Algorithms',grade:'B+',hours:3})
+  })
+
+  it('splits accidentally merged rows containing more than one course code', () => {
+    const rows=parseTranscriptText('CPIT 251 Systems Analysis 3 A 15.00 CPIT 252 Software Engineering 3 B+ 13.50')
+    expect(rows).toHaveLength(2)
+    expect(rows.map(r=>r.code)).toEqual(['CPIT-251','CPIT-252'])
+  })
+
+  it('reports rejected course-like rows instead of silently replacing them with demo data', () => {
+    const report=parseTranscriptTextDetailed('CPIT 251 Systems Analysis UNKNOWN\nSTAT 201 Applied Statistics 3 B 12.00')
+    expect(report.courses).toHaveLength(1)
+    expect(report.rejected).toHaveLength(1)
+    expect(report.rejected[0].line).toContain('CPIT 251')
+    expect(report.coverage).toBeCloseTo(.5)
+  })
+
+  it('does not strip meaningful title numbers that are not credit-hour metadata', () => {
+    const rows=parseTranscriptText('CS 202 Programming 2 3 A 12.00')
+    expect(rows).toHaveLength(1)
+    expect(rows[0].name).toBe('Programming 2')
   })
 })
