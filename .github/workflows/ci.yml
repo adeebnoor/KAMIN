@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
+      - name: Dependency security audit
+        run: npm audit --audit-level=high --json
       - run: npx playwright install --with-deps chromium
       - run: npm run test
       - run: npm run build
