@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, copyFile, access } from 'node:fs/promises'
+import { cp, mkdir, readdir, copyFile, access, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 
@@ -7,8 +7,10 @@ const pub=path.join(root,'public')
 const ocr=path.join(pub,'ocr')
 const coreOut=path.join(ocr,'core')
 const langOut=path.join(ocr,'lang')
+const fontsOut=path.join(pub,'fonts')
 await mkdir(coreOut,{recursive:true})
 await mkdir(langOut,{recursive:true})
+await mkdir(fontsOut,{recursive:true})
 
 const copyIfExists=async(src,dst)=>{
   try{await access(src);await copyFile(src,dst);return true}catch{return false}
@@ -37,6 +39,13 @@ for(const lang of ['eng','ara']){
   await copyFile(src,path.join(langOut,`${lang}.traineddata.gz`))
 }
 
+const fontFilesDir=path.join(root,'node_modules','@fontsource-variable','noto-sans-arabic','files')
+const fontFiles=await readdir(fontFilesDir)
+const arabicVariableFont=fontFiles.find(name=>/arabic.*wght.*normal.*\.woff2$/i.test(name))
+if(!arabicVariableFont) throw new Error('Noto Sans Arabic variable font asset not found')
+await copyFile(path.join(fontFilesDir,arabicVariableFont),path.join(fontsOut,'noto-sans-arabic.woff2'))
+await writeFile(path.join(fontsOut,'noto-sans-arabic.css'),`@font-face{font-family:"Noto Sans Arabic Variable";font-style:normal;font-display:swap;font-weight:100 900;src:url("/fonts/noto-sans-arabic.woff2") format("woff2")}\n`)
+
 const logo=path.join(pub,'kamin-logo-v3.webp')
 for(const size of [192,512]){
   await sharp(logo).resize(size,size,{fit:'contain',background:'#ffffff'}).png({compressionLevel:9}).toFile(path.join(pub,`icon-${size}.png`))
@@ -55,4 +64,4 @@ await sharp({create:{width:1200,height:630,channels:3,background:'#f7f9fc'}})
   .jpeg({quality:88,mozjpeg:true})
   .toFile(path.join(pub,'og-kamin-1200x630.jpg'))
 
-console.log('Prepared Kamin icons, social image, and fully self-hosted OCR assets.')
+console.log('Prepared Kamin icons, self-hosted Arabic font, social image, and fully self-hosted OCR assets.')
