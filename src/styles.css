@@ -133,3 +133,35 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .approval-consent label{display:flex;align-items:flex-start;gap:10px;max-width:720px;line-height:1.6}.approval-consent label input{width:20px;height:20px;flex:0 0 auto;margin-top:2px}.error-banner{background:var(--danger-bg);border:1px solid #efcaca;color:var(--danger);padding:13px 15px;border-radius:12px;margin-bottom:12px}
 @media(max-width:900px){.value-grid{grid-template-columns:1fr}.bottom-nav{grid-template-columns:repeat(6,1fr)}}
 @media(max-width:600px){.value-signal{grid-template-columns:1fr}.value-signal>span{justify-self:start}.value-card{padding:18px}.value-result{padding:14px}}
+
+
+/* Hardened identity + validation states */
+.brand-mark{width:48px;height:48px;display:grid;place-items:center;border-radius:13px;background:var(--navy);color:var(--gold-2);font-size:1.65rem;font-weight:900;line-height:1;border:1px solid rgba(201,154,61,.38);flex:0 0 auto}
+.app-brand .brand-mark{width:42px;height:42px;border-radius:10px;background:#fff;color:var(--navy)}
+.footer-row .brand-mark{width:36px;height:36px;border-radius:10px;font-size:1.25rem}
+.validation-summary{display:grid;gap:10px;background:#f0f6fb;border:1px solid #cadceb;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.validation-summary>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.validation-summary strong{color:var(--navy)}.validation-summary span{color:#40576f;font-size:.84rem}
+.validation-badges{display:flex;gap:8px;flex-wrap:wrap}.validation-badges span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:.74rem}
+.validation-summary details{border-top:1px solid var(--line);padding-top:9px}.validation-summary summary{cursor:pointer;color:var(--navy);font-weight:800}.validation-summary code{display:block;direction:ltr;text-align:left;white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:7px 9px;border-radius:8px;margin-top:6px;font-size:.72rem;color:#41566e}
+.error-boundary-card{width:min(560px,calc(100% - 32px));background:#fff;border-radius:22px;padding:32px;box-shadow:0 30px 100px rgba(0,0,0,.3);text-align:center}.error-boundary-card>svg{width:42px;height:42px;color:var(--gold)}.error-boundary-card h2{color:var(--navy);margin:14px 0 8px}.error-boundary-card p{color:var(--muted)}
+.delete-confirm{margin-top:12px;background:var(--danger-bg);border:1px solid #efcaca;border-radius:12px;padding:12px}.delete-confirm p{margin:0 0 8px;font-size:.84rem}.delete-confirm>div{display:flex;gap:8px}
+
+/* System dark mode: opt-in through OS, while keeping evidence/status contrast readable. */
+@media(prefers-color-scheme:dark){
+  :root{--ink:#e7eef7;--muted:#adbdcd;--line:#31465e;--paper:#111b28;--soft:#162333;--navy-3:#1b3046;--shadow:0 22px 70px rgba(0,0,0,.34)}
+  html,body{background:#0d1622;color:var(--ink)}
+  .site-header{background:rgba(13,22,34,.94);border-color:#26384d}.brand strong,.main-nav button,.language-button,.footer-row a,.footer-row button{color:#eaf2fb}
+  .language-button,.menu-button,.icon-button,.main-nav,.logo-panel,.float-card,.info-card,.panel,.skill-card,.fit-card,.compare-table-wrap,.start-card,.faq-list details,.value-card,.validation-summary code,.validation-badges span,.error-boundary-card{background:#111b28;border-color:#31465e}
+  .hero,.value-section,.faq-section,footer{background:#0d1622}.final-cta{background:#101c2a}.hero:before{opacity:.45}
+  .hero-copy>p,.info-card p,.value-section .section-title p,.value-card ul,.value-signal small,.faq-list p,.app-title p,.error-boundary-card p{color:#adbdcd}
+  .value-signal,.manual-row,.metrics article,.audit-item,.consents label,.becomes,.session-banner{background:#162333;border-color:#31465e}
+  .value-result,.gap{background:#2b2518;border-color:#5a4924}.value-result p{color:#dbc99f}
+  .app-shell{background:#0d1622}.app-topbar{background:#111b28;border-color:#31465e}.app-content-wrap{background:#0d1622}
+  input,select{background:#0e1926;border-color:#415a74;color:#e7eef7}td input{background:transparent}td input:focus{background:#0e1926}
+  th{background:#172536;color:#b9c8d8}.compare-table tbody th{background:#172536;color:#e7eef7}
+  .bottom-nav,.bottom-nav button{background:#111b28;border-color:#31465e}.bottom-nav button.active{background:#1b3046;color:#fff}
+  .privacy-promise{background:#102a25;border-color:#24594b;color:#bfe9dd}.validation-summary{background:#122538;border-color:#34516b}
+  .button.secondary,.text-button,.compare-button{background:#162333;color:#e7eef7;border-color:#40566d}
+}
+@media(max-width:600px){.validation-summary>div:first-child{align-items:flex-start;flex-direction:column}.delete-confirm>div{flex-direction:column}}
