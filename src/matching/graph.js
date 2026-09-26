@@ -1,3 +1,4 @@
+import { skills as skillCatalog } from '../data.js'
 import { enrichTargetGraph } from '../knowledge/query.js'
 
 export const GRAPH_MATCHING_VERSION='kamin-semantic-match-v1'
@@ -36,7 +37,7 @@ export function buildTargetSemanticGraph(target){
 
   for(const skill of target.requiredSkills||[]){
     const sid=localSkillId(skill)
-    entities.push({'@id':sid,'@type':'Competency',notation:skill})
+    entities.push({'@id':sid,'@type':'Competency',notation:skill,label:skillCatalog[skill]?.labels||skill})
     edges.push({subject:tid,predicate:'kamin:requiresCapability',object:sid,objectKey:skill})
   }
   for(const skill of target.teachesSkills||[]){
