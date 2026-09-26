@@ -1,4 +1,4 @@
-const CACHE = 'kamin-public-v5'
+const CACHE = 'kamin-public-v6'
 const CORE = [
   '/favicon.svg',
   '/manifest.json',
@@ -41,6 +41,7 @@ self.addEventListener('fetch', event => {
 
   const immutable = url.pathname.startsWith('/assets/') ||
     url.pathname.startsWith('/ocr/') ||
+    url.pathname.startsWith('/fonts/') ||
     ['/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg'].includes(url.pathname)
 
   if (immutable) {
