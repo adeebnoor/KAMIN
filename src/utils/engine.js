@@ -57,28 +57,29 @@ export function judgeOpportunities(skills, goal = null, lang = 'ar') {
     const presentTaught=teaches.filter(id=>map.has(id))
     const goalMatch=goal ? opp.goals.includes(goal) : null
     let status='conditional'
+    let gapCode='bridgeable'
     let gapType=t('فجوة قابلة للسد','Bridgeable gap')
     let becomes=t('تسد الفجوة المطلوبة بدليل مناسب.','You bridge the required gap with suitable evidence.')
     const reasons=[]
     if (opp.formalGate) {
-      status='no'; gapType=t('ليس الآن','Not yet')
+      status='no'; gapCode='formal-gate'; gapType=t('ليس الآن','Not yet')
       becomes=opp.formalGate.alternative[lang]
       reasons.push(opp.formalGate.text[lang])
       reasons.push(t('الشرط الرسمي له مصدر وتاريخ مراجعة، ولا يُستبدل بمقرر أكاديمي.','The formal condition has a source and review date and is not replaced by academic coursework.'))
     } else if (goal && !goalMatch) {
-      status='no'; gapType=t('تعارض مع رغبتك','Goal mismatch')
+      status='no'; gapCode='goal-mismatch'; gapType=t('تعارض مع رغبتك','Goal mismatch')
       becomes=t('تغيّر هدفك أو تستخدم الدورة كمسار ثانوي واضح.','Your goal changes or you deliberately use the course as a secondary path.')
     } else if (required.some(id=>!map.has(id))) {
-      status='no'; gapType=t('فجوة قابلة للسد','Bridgeable gap')
+      status='no'; gapCode='prerequisite-gap'; gapType=t('فجوة قابلة للسد','Bridgeable gap')
       becomes=t('تضيف دليلًا على المتطلب السابق قبل البدء.','You add evidence for the prerequisite before starting.')
     } else if (teaches.length && presentTaught.length === teaches.length) {
-      status='no'; gapType=t('تكرار','Repetition')
+      status='no'; gapCode='repetition'; gapType=t('تكرار','Repetition')
       becomes=t('تختار مستوى أعلى بدل إعادة ما لديك عليه دليل بالفعل.','You choose a higher level instead of repeating content you already evidence.')
     } else if (!goal) {
-      status='conditional'; gapType=t('استكشاف بلا هدف محدد','Exploration without a chosen goal')
+      status='conditional'; gapCode='no-goal'; gapType=t('استكشاف بلا هدف محدد','Exploration without a chosen goal')
       becomes=t('تختار هدفًا أولًا حتى يصبح الحكم مرتبطًا بما تريد تحقيقه.','You choose a goal first so the judgment is tied to what you want to achieve.')
     } else {
-      status='yes'; gapType=t('لا توجد فجوة جوهرية ظاهرة','No material gap is visible')
+      status='yes'; gapCode='ready'; gapType=t('لا توجد فجوة جوهرية ظاهرة','No material gap is visible')
       becomes=t('تتأكد من شروط المزود وتختار المستوى المناسب.','You verify provider prerequisites and choose the right level.')
     }
     if (presentRequired.length) reasons.push(t(
@@ -88,6 +89,6 @@ export function judgeOpportunities(skills, goal = null, lang = 'ar') {
     if (!required.length && !teaches.length) reasons.push(t('هذه الفرصة لا تحتوي متطلبات معرفة مهيكلة بعد.','This opportunity has no structured knowledge requirements yet.'))
     const coverage=required.length?presentRequired.length/required.length:1
     const score=Math.round(Math.max(0,Math.min(100,coverage*70+(goalMatch===true?20:0)+(status==='yes'?10:0))))
-    return {...opp,status,gapType,becomes,reasons,score,isPreliminary:true,formalSource:opp.formalGate?.source||null}
+    return {...opp,status,gapCode,gapType,becomes,reasons,score,isPreliminary:true,formalSource:opp.formalGate?.source||null}
   }).sort((a,b)=>statusRank[a.status]-statusRank[b.status] || b.score-a.score)
 }
