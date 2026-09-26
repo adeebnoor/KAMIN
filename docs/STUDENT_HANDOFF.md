@@ -1,6 +1,6 @@
 # Kamin — Graduation Project Student Handoff
 
-Release candidate: 2026-09-26  
+Release baseline: **Kamin 1.0.0 — 2026-09-26**  
 Architecture owner: Prof. Adeeb Noor
 
 ## Product thesis
@@ -146,6 +146,6 @@ A feature is not complete until:
 
 ## Production
 
-Public pilot: https://kamin-12mf.onrender.com/
+Production handoff: https://kamin-12mf.onrender.com/
 
-The public pilot processes transcript/OCR data locally in the browser. Institutional deployment, centralized storage, or external sharing requires a separate compliance/hosting gate.
+Kamin 1.0 processes transcript/OCR data locally in the browser. Institutional centralized storage or external sharing remains behind a separate compliance/hosting gate.

@@ -15,7 +15,8 @@ import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
 
-const STORAGE_KEY = 'kamin-pilot-session-v2'
+const STORAGE_KEY = 'kamin-session-v3'
+const LEGACY_SESSION_KEY = 'kamin-pilot-session-v2'
 const LEGACY_STORAGE_KEY = 'kamin-pilot-v1'
 const blankState = {
   courses: [],
@@ -30,10 +31,13 @@ const getSaved = () => {
   try {
     let raw=sessionStorage.getItem(STORAGE_KEY)
     if(!raw){
-      const legacy=localStorage.getItem(LEGACY_STORAGE_KEY)
+      const legacySession=sessionStorage.getItem(LEGACY_SESSION_KEY)
+      const legacyLocal=localStorage.getItem(LEGACY_STORAGE_KEY)
+      const legacy=legacySession||legacyLocal
       if(legacy){
         raw=legacy
         sessionStorage.setItem(STORAGE_KEY,legacy)
+        sessionStorage.removeItem(LEGACY_SESSION_KEY)
         localStorage.removeItem(LEGACY_STORAGE_KEY)
       }
     }
@@ -475,7 +479,7 @@ function KaminApp({ lang, onClose }) {
     const a=document.createElement('a'); a.href=url; a.download='kamin-profile.json'; a.click(); URL.revokeObjectURL(url); log(lang==='ar'?'تصدير الملف':'Profile exported')
   }
   const deleteAll = () => {
-    sessionStorage.removeItem(STORAGE_KEY); localStorage.removeItem(LEGACY_STORAGE_KEY); setState(blankState); setDraft([]); setValidation(null); setCompareIds([]); setReviewConsent(false); setView('start')
+    sessionStorage.removeItem(STORAGE_KEY); sessionStorage.removeItem(LEGACY_SESSION_KEY); localStorage.removeItem(LEGACY_STORAGE_KEY); setState(blankState); setDraft([]); setValidation(null); setCompareIds([]); setReviewConsent(false); setView('start')
   }
 
   const nav = [

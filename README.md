@@ -6,7 +6,13 @@
 
 The release is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
-Kamin turns academic records into evidence-backed skills and explainable learning-fit judgments. This repository contains the public release built from BRD v3.1.
+Kamin 1.0 builds an evidence-rich Person 360 profile from academic evidence and structured user inputs, then produces explainable fit judgments for learning, jobs, and training. This repository contains the production handoff baseline built from BRD v3.1 and the Person 360 semantic architecture.
+
+## Kamin 1.0 baseline
+
+Operational modules include local transcript/OCR ingestion, review-before-inference, SASCED academic context, approved course-to-skill evidence, explainable course judgments, structured Person 360 preferences, governed job/training target profiles, mechanisms-of-fit matching, provenance-aware export, privacy/consent/audit controls, bilingual UI, PWA assets, and published ontology/JSON-LD/SHACL contracts.
+
+Research-dependent functions such as Saudi-normalized psychometric scores, learned fit weights, and institutional centralized storage remain behind explicit validation/compliance gates rather than being presented as finished scientific claims.
 
 ## Public release privacy model
 
@@ -14,7 +20,7 @@ Kamin turns academic records into evidence-backed skills and explainable learnin
 - OCR worker, WASM core, and Arabic/English language data are served from the Kamin origin; transcript content is not sent to an OCR API.
 - No transcript is centrally stored by this static public release.
 - Extracted courses are shown for user review before any inference.
-- Public-release profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` data are migrated out and removed.
+- Profile data use temporary `sessionStorage` by default and clear when the browser session closes; legacy plaintext `localStorage` and older session keys are migrated out and removed.
 - Advisor sharing and research-consent switches are UI/governance demonstrations only until Saudi-hosted infrastructure and institutional data agreements are approved.
 
 ## Evidence and skill mapping
@@ -37,7 +43,7 @@ The product is designed around Saudi PDPL principles, DGA digital-experience/acc
 
 ## Person 360 semantic architecture
 
-Kamin is evolving from a transcript-to-course recommender into an evidence-rich **Person 360 semantic graph**.
+Kamin 1.0 is built around an evidence-rich **Person 360 semantic graph**. Academic evidence, structured preferences, psychometric observations when validated, target profiles, matching explanations, and outcomes remain distinct typed layers with provenance.
 
 The architecture reuses external standards rather than inventing one monolithic ontology:
 
