@@ -172,3 +172,8 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .mapping-note{display:flex;gap:9px;align-items:flex-start;margin-top:13px;padding:12px 14px;border-radius:11px;background:#fff8e8;border:1px solid #ecd49b;color:#655126;font-size:.82rem;line-height:1.65}
 .mapping-note svg{flex:0 0 auto;color:var(--gold);margin-top:3px}
 @media(prefers-color-scheme:dark){.mapping-note{background:#2b2518;border-color:#5a4924;color:#dbc99f}}
+
+/* Categorical evidence strength: public pilot hides uncalibrated numeric percentages. */
+.meter.categorical i.high,.skill-row i.high{width:100%}
+.meter.categorical i.medium,.skill-row i.medium{width:66%}
+.meter.categorical i.low,.skill-row i.low{width:33%}
