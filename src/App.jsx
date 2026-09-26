@@ -448,7 +448,7 @@ function MatchExplorer({ lang, profile, matches }) {
   }
   const groups=['job','training']
   return <div className="match-explorer">
-    <div className="app-title"><small>{lang==='ar'?'Person 360 → Opportunity':'Person 360 → Opportunity'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'المحرك يطبق البوابات والأدلة والتفضيلات المنظمة، ثم يعرض آليات الدعم والفجوات. لا توجد نسبة ملاءمة غير معايرة.':'The engine applies gates, evidence, and structured preferences, then exposes supporting mechanisms and gaps. No uncalibrated fit percentage is shown.'}</p></div>
+    <div className="app-title"><small>{lang==='ar'?'Person 360 → Opportunity':'Person 360 → Opportunity'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'المحرك يقرأ Person 360 كرسم دلالي: يتتبع الدليل إلى القدرة ثم إلى متطلب الفرصة، ويعرض المسار والفجوة دون نسبة ملاءمة غير معايرة.':'The engine reads Person 360 as a semantic graph: it traces evidence to capability and then to opportunity requirements, exposing the path and the gap without an uncalibrated fit percentage.'}</p></div>
     {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من لوحة القدرات لتحويل النتائج من استكشاف عام إلى توصية موجهة.':'Choose a goal on the dashboard to move from broad exploration to goal-directed matching.'}</span></div>}
     {groups.map(type=>{
       const items=matches.filter(item=>item.type===type)
@@ -457,8 +457,9 @@ function MatchExplorer({ lang, profile, matches }) {
           <div className="decision-head"><div><small>{item.subtitle[lang]}</small><h3>{item.title[lang]}</h3></div><span className={`status ${item.judgment==='fits'?'yes':item.judgment==='conditional'?'conditional':'no'}`}>{labels[item.judgment][lang]}</span></div>
           <p className="match-outcome">{item.outcome[lang]}</p>
           <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
+          {item.semanticPaths?.some(path=>path.kind==='capability-match')&&<div className="semantic-path-block"><strong>{lang==='ar'?'مسار الدليل في الشبكة':'Evidence paths in the graph'}</strong>{item.semanticPaths.filter(path=>path.kind==='capability-match').map((path,i)=><div className="semantic-path" key={path.claimId||i}><span>{path.courseCode||'Evidence'}</span><b>→</b><span>{localized(path.capabilityLabel,lang)||path.capabilityKey}</span><b>→</b><span>{item.title[lang]}</span></div>)}</div>}
           {item.limitingMechanisms.length>0&&<div className="mechanism-block limits"><strong>{lang==='ar'?'فجوات أو حدود':'Gaps / limits'}</strong>{item.limitingMechanisms.map((m,i)=><p key={i}><span aria-hidden="true">△</span>{m}</p>)}</div>}
-          <footer className="match-meta"><span>{item.ruleVersion}</span><span>{lang==='ar'?'غير معاير رقميًا':'not numerically calibrated'}</span></footer>
+          <footer className="match-meta"><span>{item.ruleVersion}</span><span>{item.graphTrace?(item.graphTrace.evidencePathCount+'/'+item.graphTrace.requiredCapabilities+' '+(lang==='ar'?'مسارات دليل':'evidence paths')):(lang==='ar'?'غير معاير رقميًا':'not numerically calibrated')}</span></footer>
         </article>)}</div>
       </section>
     })}
@@ -638,7 +639,8 @@ function KaminApp({ lang, onClose }) {
   const recs = useMemo(()=>judgeOpportunities(skills,state.goal,lang),[skills,state.goal,lang])
   const educationClassification = useMemo(()=>state.approved?inferTranscriptSsces(state.courses):{primary:null},[state])
   const compared = recs.filter(r=>compareIds.includes(r.id))
-  const matchProfile = useMemo(()=>buildMatchingProfile({skills,goal:state.goal,insight:state.insight}),[skills,state.goal,state.insight])
+  const personGraph = useMemo(()=>projectStateToPerson360({state,skills,educationClassification}),[state,skills,educationClassification])
+  const matchProfile = useMemo(()=>buildMatchingProfile({graph:personGraph}),[personGraph])
   const matches = useMemo(()=>matchTargets(matchProfile,{lang}),[matchProfile,lang])
 
   useEffect(()=>{
