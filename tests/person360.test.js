@@ -95,6 +95,7 @@ describe('Person 360 projection', () => {
   it('projects academic evidence, SASCED context and declared preferences with provenance', () => {
     const state={
       courses:[{code:'CPIT-251',name:'Systems Analysis',grade:'A',source:'pdf'}],
+      goal:'management',
       insight:setDeclaredPreference(emptyInsightState(),'collaboration','small-team'),
     }
     const skills=[{
@@ -117,6 +118,7 @@ describe('Person 360 projection', () => {
     expect(graph.claims.some(claim=>claim.predicate==='kamin:studied')).toBe(true)
     expect(graph.claims.some(claim=>claim.predicate==='kamin:demonstrates')).toBe(true)
     expect(graph.claims.some(claim=>claim.predicate==='kamin:academicContext')).toBe(true)
+    expect(graph.claims.some(claim=>claim.predicate==='kamin:pursuesGoal')).toBe(true)
     expect(graph.claims.some(claim=>claim.predicate==='kamin:prefers:collaboration')).toBe(true)
     const preferenceClaim=graph.claims.find(claim=>claim.predicate==='kamin:prefers:collaboration')
     expect(preferenceClaim.evidenceStrength).toBe('self-reported')
