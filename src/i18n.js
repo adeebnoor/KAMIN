@@ -8,7 +8,7 @@ export const copy = {
       eyebrow: 'لطلاب السنة الأخيرة والخريجين الجدد',
       title: 'حوّل شهادتك ومشاريعك إلى ملف قدرات تملكه — واعرف ما يناسبك ولماذا.',
       text: 'نحوّل سجلك الأكاديمي ومشاريعك إلى مهارات مرتبطة بدليل، ثم نشرح لك الفرص الأقرب، الفجوات، والخطوة التالية — دون نسبة غامضة أو قرار آلي.',
-      cta: 'جرّب ببيانات وهمية',
+      cta: 'جرّب المثال التوضيحي',
       secondary: 'شاهد تقريرًا تجريبيًا',
       trust: 'في الإصدار العام، تتم معالجة الملف محليًا على جهازك ولا يُرفع إلى خادم كامن.',
       cards: [
@@ -36,7 +36,7 @@ export const copy = {
     how: {
       title: 'قيمة واضحة في أول 10 دقائق',
       steps: [
-        ['ابدأ بالديمو أو السجل', 'شاهد بيانات وهمية فورًا أو ارفع سجلًا؛ كل استخراج يظهر لك قبل الاعتماد.'],
+        ['ابدأ بالمثال التوضيحي أو السجل', 'جرّب المثال التوضيحي فورًا أو ارفع سجلًا؛ كل استخراج يظهر لك قبل الاعتماد.'],
         ['راجع ملف القدرات', 'كل مهارة لها مصدر وقوة دليل، ويمكنك تصحيح البيانات قبل أن تدخل في الحكم.'],
         ['افهم القرار التالي', 'ترى لماذا تناسبك الفرصة، ما الفجوة، وما الإجراء العملي الذي يقربك منها.']
       ]
@@ -51,7 +51,7 @@ export const copy = {
     app: {
       title: 'تجربة كامن',
       intro: 'ابدأ برفع/تصوير سجلك الأكاديمي، أو شاهد مثالًا وهميًا أولًا. المعالجة داخل المتصفح، ويمكنك بموافقتك الاحتفاظ بملفك محليًا على هذا الجهاز أو تصدير نسخة مشفّرة.',
-      demo: 'استخدم بيانات توضيحية',
+      demo: 'جرّب المثال التوضيحي',
       upload: 'ارفع كشف الدرجات',
       uploadHelp: 'PDF نصي أو ممسوح ضوئيًا، صورة، أو TXT. عند الحاجة يعمل OCR محليًا داخل جهازك وقد يستغرق وقتًا أطول.',
       review: 'راجع قبل الاعتماد',
@@ -114,7 +114,7 @@ export const copy = {
       eyebrow: 'For final-year students and recent graduates',
       title: 'Turn your degree and projects into a capability profile you own — and see what fits next, and why.',
       text: 'Kamin turns academic records and projects into source-linked skills, then explains the closest opportunities, gaps, and next step — without a black-box score or automated decision.',
-      cta: 'Try with synthetic data',
+      cta: 'Try synthetic demo',
       secondary: 'View a sample report',
       trust: 'In this public release, files are processed locally on your device and are not uploaded to a Kamin server.',
       cards: [
@@ -142,7 +142,7 @@ export const copy = {
     how: {
       title: 'Clear value in the first 10 minutes',
       steps: [
-        ['Start with demo or record', 'See synthetic data instantly or upload a transcript; every extraction is shown before approval.'],
+        ['Start with synthetic demo or record', 'Try the synthetic demo instantly or upload a transcript; every extraction is shown before approval.'],
         ['Review your capability profile', 'Every skill has a source and evidence strength, and you can correct data before it enters a judgment.'],
         ['Understand the next decision', 'See why an opportunity fits, what is missing, and the practical action that moves you closer.']
       ]
@@ -157,7 +157,7 @@ export const copy = {
     app: {
       title: 'Try Kamin',
       intro: 'Start by uploading or photographing your academic record, or view a synthetic example first. Processing stays in-browser; with your consent you can keep the profile locally on this device or export an encrypted backup.',
-      demo: 'Use demo data',
+      demo: 'Try synthetic demo',
       upload: 'Upload transcript',
       uploadHelp: 'Text or scanned PDF, image, or TXT. OCR runs locally on your device when needed and can take longer.',
       review: 'Review before approval',
