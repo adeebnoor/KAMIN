@@ -202,7 +202,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
 
   await page.getByRole('button', { name: /الخصوصية/ }).first().click()
-  const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
+  const insightConsent=page.getByRole('checkbox', { name: /Person 360/ })
   await expect(insightConsent).toBeChecked()
   await insightConsent.uncheck()
 
@@ -282,4 +282,15 @@ test('legacy pilot session migrates once into Kamin 1.0 session storage', async 
   }))
   expect(storage.current).toContain('"goal":"data"')
   expect(storage.legacy).toBeNull()
+})
+
+
+test('production UI contains no pilot wording and labels Person 360 consent explicitly', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /اكتشف لحظة كامن|ابدأ كامن/ }).first().click()
+  await expect(page.getByText('كامن 1.0')).toBeVisible()
+  const appText=await page.getByRole('dialog').innerText()
+  expect(appText).not.toMatch(/Illustrative pilot|public pilot|launch pilot/i)
+  await page.getByRole('button', { name: /الخصوصية/ }).first().click()
+  await expect(page.getByRole('checkbox', { name: /Person 360/ })).toBeVisible()
 })
