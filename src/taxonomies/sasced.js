@@ -150,3 +150,73 @@ export const courseSascedContexts = {
   'CPIT-499': ['061303','061304','061302','061301'],
   'STAT-201': [],
 }
+
+
+/*
+ * Institution-specific programme namespace crosswalk.
+ * This is academic context only; it does not create skills or alter fit judgments.
+ */
+export const institutionalProgrammeMappings = [
+  {
+    institution:'KAU-FCIT',
+    prefix:'CPIT',
+    sasced:'061303',
+    evidence:'KAU IT programme states CP + IT is the department code.',
+    sourceUrl:'https://fcitweb.kau.edu.sa/fcitwebsite/uploads/IT-ProgramCourses.pdf',
+  },
+  {
+    institution:'KAU-FCIT',
+    prefix:'CPCS',
+    sasced:'061301',
+    evidence:'KAU CS programme states CP + CS is the department code.',
+    sourceUrl:'https://fcitweb.kau.edu.sa/fcitwebsite/uploads/CS_Bachelor_Program_Program_Courses.pdf',
+  },
+  {
+    institution:'KAU-FCIT',
+    prefix:'CPIS',
+    sasced:'061304',
+    evidence:'KAU B.S. Information Systems curriculum uses the CPIS namespace.',
+    sourceUrl:'https://fcitweb.kau.edu.sa/fcitwebsite/uploads/IS_Program_Curriculum.PDF',
+  },
+]
+
+const coursePrefix=(code)=>String(code||'').trim().toUpperCase().split(/[-\s]/)[0]
+
+export function sascedForCourse(course,{institution='KAU-FCIT'}={}){
+  const prefix=coursePrefix(course?.code)
+  const mapping=institutionalProgrammeMappings.find(item=>item.institution===institution && item.prefix===prefix)
+  if(!mapping) return null
+  const specialty=getSascedSpecialty(mapping.sasced)
+  if(!specialty) return null
+  return {
+    code:specialty.code,
+    labels:{ar:specialty.ar,en:specialty.en},
+    broad:{code:specialty.broad.code,labels:{ar:specialty.broad.ar,en:specialty.broad.en}},
+    narrow:{code:specialty.narrow.code,labels:{ar:specialty.narrow.ar,en:specialty.narrow.en}},
+    detailed:specialty.detailed ? {code:specialty.detailed.code,labels:{ar:specialty.detailed.ar,en:specialty.detailed.en}} : null,
+    institution,
+    coursePrefix:prefix,
+    mappingEvidence:mapping.evidence,
+    mappingSourceUrl:mapping.sourceUrl,
+    status:'contextual-approved-pilot',
+  }
+}
+
+export function inferTranscriptSascedContext(courses,{institution='KAU-FCIT'}={}){
+  const contexts=(courses||[]).map(course=>sascedForCourse(course,{institution})).filter(Boolean)
+  const counts=new Map()
+  for(const context of contexts) counts.set(context.code,(counts.get(context.code)||0)+1)
+  const ranked=[...counts.entries()].sort((a,b)=>b[1]-a[1])
+  if(!ranked.length) return {primary:null,contexts:[],coverage:0,mappedCourses:0,totalCourses:(courses||[]).length}
+  const [code,count]=ranked[0]
+  const primary=contexts.find(context=>context.code===code)
+  return {
+    primary:{...primary,count},
+    contexts,
+    mappedCourses:contexts.length,
+    totalCourses:(courses||[]).length,
+    coverage:(courses||[]).length ? contexts.length/(courses||[]).length : 0,
+    isMixed:ranked.length>1,
+    alternatives:ranked.slice(1).map(([altCode,altCount])=>({...contexts.find(context=>context.code===altCode),count:altCount})),
+  }
+}
