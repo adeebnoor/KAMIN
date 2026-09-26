@@ -1,18 +1,18 @@
 # Kamin | كامن
 
-**شبكة ذكاء القدرات — Capability Intelligence Network**
+**طبقة الثقة للقدرات — Capability Trust Layer**
 
 🌐 **Live public release:** https://kamin-12mf.onrender.com
 
 The release is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
-Kamin 1.0 builds an evidence-rich Person 360 profile from academic evidence and structured user inputs, then produces explainable fit judgments for learning, jobs, and training. The product direction expands that same governed profile into a capability-intelligence network spanning careers, majors, people, and institutional guidance without allowing commercial relationships to alter fit judgments. This repository contains the production handoff baseline built from BRD v3.1 and the Person 360 semantic architecture.
+Kamin 1.0 focuses its public launch on final-year students and recent graduates. It turns reviewed academic evidence and structured user inputs into a user-owned Capability Profile 360°, then produces explainable learning, job, and training judgments with visible evidence, gaps, and next steps. The internal semantic architecture remains Person 360, while the public product deliberately narrows its beachhead and does not claim unmeasured accuracy, signed partner networks, or automated hiring decisions.
 
 ## Kamin 1.0 baseline
 
 Operational modules include local transcript/OCR ingestion, review-before-inference, SASCED academic context, approved course-to-skill evidence, explainable course judgments, structured Person 360 preferences, governed job/training target profiles, mechanisms-of-fit matching, provenance-aware export, privacy/consent/audit controls, bilingual UI, PWA assets, and published ontology/JSON-LD/SHACL contracts.
 
-Research-dependent functions such as Saudi-normalized psychometric scores, learned fit weights, and institutional centralized storage remain behind explicit validation/compliance gates rather than being presented as finished scientific claims.
+Research-dependent functions such as Saudi-normalized psychometric scores, learned fit weights, institution-verified credentials, employer access, aggregate cohort analytics, and institutional centralized storage remain behind explicit validation/compliance gates rather than being presented as finished scientific claims. Public validation targets are documented in `public/methodology.html`; they are targets, not measured results.
 
 ## Public release privacy model
 
@@ -59,4 +59,4 @@ The architecture reuses external standards rather than inventing one monolithic 
 
 Psychometric instruments are registered separately from the ontology. Current candidate instruments include O*NET Mini Interest Profiler (RIASEC) and the public-domain IPIP Big Five Arabic adaptation. They do not create academic skill evidence or override formal eligibility gates.
 
-See `docs/KAMIN_ONTOLOGY.md` for the frozen architecture and student-project guardrails.
+See `docs/KAMIN_ONTOLOGY.md` for the frozen architecture and student-project guardrails. Public-facing transparency surfaces are `public/sample-report.html`, `public/methodology.html`, `public/trust.html`, and `public/privacy.html`.
