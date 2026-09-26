@@ -179,7 +179,7 @@ export const opportunities = [
     duration: { ar: '7 أسابيع — مثال', en: '7 weeks — example' },
     cost: { ar: 'مثال توضيحي', en: 'Illustrative' },
     goals: ['cyber'],
-    requires: [],
+    requires: ['cyber'],
     teaches: ['cyber'],
     outcome: {
       ar: 'ستستطيع تفسير المخاطر الأساسية وتطبيق ضوابط حماية أولية على نظام ويب بسيط.',
