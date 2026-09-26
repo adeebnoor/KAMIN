@@ -7,7 +7,7 @@ describe('deployment performance configuration',()=>{
 
   it('declares the manifest media type in both HTML and Render headers',()=>{
     expect(html).toMatch(/rel="manifest"[^>]+type="application\/manifest\+json"/)
-    expect(blueprint).toContain('path: /manifest.webmanifest')
+    expect(blueprint).toContain('path: /manifest.json')
     expect(blueprint).toContain('application/manifest+json; charset=utf-8')
   })
 
