@@ -7,6 +7,7 @@ import {
   strongestCapabilityPath,
 } from './graph.js'
 import { deriveKnowledgeInsights } from '../knowledge/query.js'
+import { inferRelations } from './inference.js'
 
 const text=(ar,en,lang)=>lang==='ar'?ar:en
 const pref=(profile,key)=>profile?.preferences?.[key]||null
@@ -69,7 +70,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
   const met=[]
 
   for(const edge of requirementEdges){
-    const candidatePaths=index.capabilities.get(edge.objectKey)||[]
+    const candidatePaths=(index.capabilities.get(edge.objectKey)||[]).filter(path=>path.capabilityId===edge.object)
     const best=strongestCapabilityPath(candidatePaths)
     if(best){
       met.push(edge.objectKey)
@@ -203,6 +204,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
     limitingMechanisms:limits,
     missingSkills:missing,
     semanticPaths,
+    inferences:inferRelations(profile.graph['@id'],semanticPaths),
     knowledgeInsights,
     graphTrace:{
       personGraphId:profile.graph?.['@id']||null,
