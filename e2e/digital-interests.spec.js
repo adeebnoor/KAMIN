@@ -43,13 +43,13 @@ test('review and a separate purpose permission gate semantic inference without p
   expect(JSON.stringify(state)).not.toContain('SYNTHETIC-PRIVATE')
   expect(requests.some(request=>request.includes('SYNTHETIC-PRIVATE')||request.startsWith('POST'))).toBe(false)
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
-  await expect(page.locator('.inference-proof')).not.toContainText('R4')
+  await expect(page.locator('.decision-studio .inference-proof')).not.toContainText('R4')
   await page.getByRole('button',{name:'اهتماماتي وهدفي',exact:true}).first().click()
   await page.getByRole('button',{name:'استكشف هذا المصدر',exact:true}).click()
   await page.getByRole('checkbox',{name:/أسمح باستخدام اهتماماتي المؤكدة/}).check()
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
-  await expect(page.locator('.inference-proof')).toContainText('R4')
-  await expect(page.locator('.inference-limits')).toContainText('لا يوجد في هذا الملف دليل')
+  await expect(page.locator('.decision-studio .inference-proof')).toContainText('R4')
+  await expect(page.locator('.decision-studio .inference-limits')).toContainText('لا يوجد في هذا الملف دليل')
 })
 
 test('privacy withdrawal removes confirmed topics from persistent storage and the graph',async({page})=>{
@@ -72,7 +72,7 @@ test('privacy withdrawal removes confirmed topics from persistent storage and th
   await page.reload()
   await page.getByRole('button',{name:'ابدأ بناء ملفك',exact:true}).first().click()
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
-  await expect(page.locator('.inference-proof')).not.toContainText('R4')
+  await expect(page.locator('.decision-studio .inference-proof')).not.toContainText('R4')
 })
 
 test('English consent and review controls are accessible with no sensitive-source forms',async({page})=>{
