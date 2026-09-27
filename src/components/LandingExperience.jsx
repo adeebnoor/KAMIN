@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, UploadCloud, ShieldCheck, Fingerprint, Waypoints, Route, Check, LockKeyhole, GraduationCap, SearchCheck, Compass, Target, Users, BookOpen }  from 'lucide-react'
 import ProfileNetwork from './ProfileNetwork.jsx'
+import InferenceDemo from './InferenceExplorer.jsx'
 import { demoCourses } from '../data.js'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 const demoProfile = { approved:true, courses:demoCourses, goal:'data', consents:{insight:true}, insight:{declaredPreferences:{careerInterest:'investigative',workValue:'achievement',collaboration:'small-team',learningMode:'project-based'}} }
@@ -21,11 +22,13 @@ export default function LandingExperience({ lang, onTry, onProfile }) {
           <div className="v2-actions"><button className="button primary" onClick={onProfile}><Fingerprint size={21}/>{tr(lang,'ابدأ بناء ملفك','Build your profile')}<Arrow size={18}/></button><button className="button profile-secondary" onClick={onTry}><UploadCloud size={19}/>{tr(lang,'ابدأ برفع سجلك','Start with your transcript')}</button></div>
           <div className="v2-trust-inline"><ShieldCheck size={19}/><span>{tr(lang,'ابدأ باهتماماتك، وأضف سجلك عندما تكون مستعدًا. بياناتك تُعالج داخل متصفحك.','Start with your interests and add your transcript when ready. Your information is processed in your browser.')}</span></div>
           <div className="v2-entry-note"><span>{tr(lang, 'دون إنشاء حساب', 'No account needed')}</span><span>{tr(lang, 'راجع قبل الاعتماد', 'Review before approval')}</span><span>{tr(lang, 'ملفك تحت سيطرتك', 'You control your profile')}</span></div>
+          <a className="inference-hero-link" href="#semantic-inference"><Waypoints size={18}/>{tr(lang,'شاهد الاستدلال الدلالي يعمل','See semantic inference in action')}<Arrow size={16}/></a>
         </div>
         <div className="v2-hero-visual"><ProfileNetwork lang={lang} state={demoProfile} demo/></div>
       </div>
     </section>
     <section className="v2-value-strip"><div className="shell">{[[Compass, tr(lang, 'اهتمامات تعبّر عنك', 'Interests that reflect you')], [Target, tr(lang, 'هدف يوجّهك', 'A goal that guides you')], [Waypoints, tr(lang, 'علاقات تفهمها', 'Connections you understand')], [Route, tr(lang, 'خطوة تعرف سببها', 'A next step with a reason')]].map(([Icon, title], i) => <div key={title}><small>0{i+1}</small><Icon size={20}/><strong>{title}</strong></div>)}</div></section>
+    <InferenceDemo lang={lang}/>
     <section className="profile-dimensions-section shell" id="profile-dimensions"><div className="v2-section-heading"><span className="v2-kicker">{tr(lang,'ملفك يتكوّن منك','YOUR PROFILE STARTS WITH YOU')}</span><h2>{tr(lang,'أكثر من بُعد. صورة أقرب لك.','More dimensions. A clearer picture of you.')}</h2><p>{tr(lang,'ابدأ بما تعرفه عن نفسك. كل إضافة لها وظيفة واضحة، ويمكنك ترك ما لم تحدده بعد.','Start with what you know about yourself. Every detail has a purpose, and undecided is always an option.')}</p></div><div className="profile-dimension-cards">{[
       [Compass,'violet',tr(lang,'ما يثير فضولك','What sparks your curiosity'),tr(lang,'اهتماماتك','Your interests'),tr(lang,'تساعد في شرح ارتباط المسار بك.','Add context to pathway explanations.')],
       [Target,'coral',tr(lang,'إلى أين تريد الوصول','Where you want to go'),tr(lang,'أهدافك','Your goals'),tr(lang,'توجّه استكشاف الوظائف والتدريب.','Direct career and training exploration.')],

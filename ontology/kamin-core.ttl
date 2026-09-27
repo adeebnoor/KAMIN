@@ -11,7 +11,7 @@ kamin:ontology
   a owl:Ontology ;
   rdfs:label "Kamin Person 360 thin ontology"@en ;
   rdfs:label "أنطولوجيا كامن الرشيقة لنموذج الفرد 360"@ar ;
-  owl:versionInfo "0.1.0" .
+  owl:versionInfo "0.3.0" .
 
 kamin:Claim a owl:Class ; rdfs:subClassOf prov:Entity .
 kamin:Observation a owl:Class ; rdfs:subClassOf prov:Entity .
@@ -22,7 +22,7 @@ kamin:FitMechanism a owl:Class ; rdfs:subClassOf prov:Entity .
 kamin:Outcome a owl:Class ; rdfs:subClassOf prov:Entity .
 
 kamin:subject a owl:ObjectProperty ; rdfs:domain kamin:Claim .
-kamin:predicate a owl:DatatypeProperty ; rdfs:domain kamin:Claim .
+kamin:predicate a owl:ObjectProperty ; rdfs:domain kamin:Claim .
 kamin:object a owl:ObjectProperty ; rdfs:domain kamin:Claim .
 kamin:value a owl:DatatypeProperty ; rdfs:domain kamin:Claim .
 kamin:instrument a owl:DatatypeProperty ; rdfs:domain kamin:Observation .
@@ -31,6 +31,12 @@ kamin:consentPurpose a owl:ObjectProperty ; rdfs:domain prov:Entity .
 kamin:evidenceStrength a owl:DatatypeProperty ; rdfs:domain prov:Entity .
 kamin:fitTarget a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment .
 kamin:mechanism a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment ; rdfs:range kamin:FitMechanism .
+
+# Bounded application-rule conclusions. These properties do not assert readiness.
+kamin:Inference a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:hasCapabilityEvidenceFor a owl:ObjectProperty ; rdfs:label "has pilot capability evidence for a pathway requirement"@en .
+kamin:hasGoalContextFor a owl:ObjectProperty ; rdfs:label "has declared goal context for a pathway"@en .
+kamin:hasPreferenceContextFor a owl:ObjectProperty ; rdfs:label "has declared preference context for a pathway"@en .
 
 # External domain concepts remain in their source ontologies/vocabularies:
 # schema:Person, schema:Course, schema:Occupation

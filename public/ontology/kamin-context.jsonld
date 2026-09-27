@@ -1,16 +1,74 @@
 {
   "@context": {
     "@version": 1.1,
-    "kamin": "urn:kamin:",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
     "schema": "https://schema.org/",
-    "prov": "http://www.w3.org/ns/prov#",
     "skos": "http://www.w3.org/2004/02/skos/core#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "sh": "http://www.w3.org/ns/shacl#",
     "dpv": "https://w3id.org/dpv#",
+    "vc": "https://www.w3.org/2018/credentials#",
     "esco": "http://data.europa.eu/esco/",
     "elm": "http://data.europa.eu/snb/model/ontology/",
     "ceterms": "https://purl.org/ctdl/terms/",
+    "ctdl": "https://purl.org/ctdl/terms/",
     "ceasn": "https://purl.org/ctdlasn/terms/",
-    "vc": "https://www.w3.org/2018/credentials#",
+    "kamin": "urn:kamin:",
+    "@vocab": "urn:kamin:",
+    "entities": {
+      "@id": "kamin:entity",
+      "@container": "@set"
+    },
+    "claims": {
+      "@id": "kamin:hasClaim",
+      "@container": "@set"
+    },
+    "observations": {
+      "@id": "kamin:observation",
+      "@container": "@set"
+    },
+    "edges": {
+      "@id": "kamin:edge",
+      "@container": "@set"
+    },
+    "predicate": {
+      "@id": "kamin:predicate",
+      "@type": "@id"
+    },
+    "object": {
+      "@id": "kamin:object",
+      "@type": "@id"
+    },
+    "course": {
+      "@id": "kamin:courseContext",
+      "@type": "@id"
+    },
+    "label": {
+      "@id": "rdfs:label",
+      "@container": "@language"
+    },
+    "name": {
+      "@id": "schema:name",
+      "@container": "@language"
+    },
+    "title": {
+      "@id": "schema:name",
+      "@container": "@language"
+    },
+    "prefLabel": {
+      "@id": "skos:prefLabel",
+      "@container": "@language"
+    },
+    "metadata": {
+      "@id": "kamin:metadata",
+      "@type": "@json"
+    },
+    "scale": {
+      "@id": "kamin:scale",
+      "@type": "@json"
+    },
     "Person": "schema:Person",
     "Course": "schema:Course",
     "Occupation": "schema:Occupation",
@@ -19,6 +77,11 @@
     "Claim": "kamin:Claim",
     "Observation": "kamin:Observation",
     "Evidence": "prov:Entity",
+    "Goal": "kamin:Goal",
+    "ClassificationConcept": "skos:Concept",
+    "LearningOpportunity": "elm:LearningOpportunity",
+    "WorkActivity": "kamin:WorkActivity",
+    "OpportunityKnowledgeGraph": "kamin:OpportunityKnowledgeGraph",
     "source": {
       "@id": "prov:wasDerivedFrom",
       "@type": "@id"
@@ -29,14 +92,14 @@
     },
     "generatedAtTime": {
       "@id": "prov:generatedAtTime",
-      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      "@type": "xsd:dateTime"
+    },
+    "concept": {
+      "@id": "kamin:object",
+      "@type": "@id"
     },
     "subject": {
       "@id": "kamin:subject",
-      "@type": "@id"
-    },
-    "object": {
-      "@id": "kamin:object",
       "@type": "@id"
     },
     "consentPurpose": {
@@ -45,6 +108,10 @@
     },
     "studied": {
       "@id": "kamin:studied",
+      "@type": "@id"
+    },
+    "courseContext": {
+      "@id": "kamin:courseContext",
       "@type": "@id"
     },
     "demonstrates": {
@@ -75,13 +142,6 @@
       "@id": "kamin:classifiedAs",
       "@type": "@id"
     },
-    "courseContext": {
-      "@id": "kamin:courseContext",
-      "@type": "@id"
-    },
-    "LearningOpportunity": "elm:LearningOpportunity",
-    "WorkActivity": "kamin:WorkActivity",
-    "OpportunityKnowledgeGraph": "kamin:OpportunityKnowledgeGraph",
     "knowledgeAnchor": {
       "@id": "kamin:knowledgeAnchor",
       "@type": "@id"

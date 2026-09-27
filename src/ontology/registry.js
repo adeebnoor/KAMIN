@@ -1,4 +1,4 @@
-export const KAMIN_ONTOLOGY_VERSION = '0.2.0'
+export const KAMIN_ONTOLOGY_VERSION = '0.3.0'
 
 export const NAMESPACES = {
   rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -178,6 +178,21 @@ export const KAMIN_RELATIONS = {
 export const JSON_LD_CONTEXT = {
   '@version': 1.1,
   ...NAMESPACES,
+  // Preserve application extensions during standard JSON-LD expansion.
+  '@vocab': 'urn:kamin:',
+  entities: {'@id':'kamin:entity','@container':'@set'},
+  claims: {'@id':'kamin:hasClaim','@container':'@set'},
+  observations: {'@id':'kamin:observation','@container':'@set'},
+  edges: {'@id':'kamin:edge','@container':'@set'},
+  predicate: {'@id':'kamin:predicate','@type':'@id'},
+  object: {'@id':'kamin:object','@type':'@id'},
+  course: {'@id':'kamin:courseContext','@type':'@id'},
+  label: {'@id':'rdfs:label','@container':'@language'},
+  name: {'@id':'schema:name','@container':'@language'},
+  title: {'@id':'schema:name','@container':'@language'},
+  prefLabel: {'@id':'skos:prefLabel','@container':'@language'},
+  metadata: {'@id':'kamin:metadata','@type':'@json'},
+  scale: {'@id':'kamin:scale','@type':'@json'},
   Person: 'schema:Person',
   Course: 'schema:Course',
   Occupation: 'schema:Occupation',
@@ -186,6 +201,11 @@ export const JSON_LD_CONTEXT = {
   Claim: 'kamin:Claim',
   Observation: 'kamin:Observation',
   Evidence: 'prov:Entity',
+  Goal: 'kamin:Goal',
+  ClassificationConcept: 'skos:Concept',
+  LearningOpportunity: 'elm:LearningOpportunity',
+  WorkActivity: 'kamin:WorkActivity',
+  OpportunityKnowledgeGraph: 'kamin:OpportunityKnowledgeGraph',
   source: {'@id':'prov:wasDerivedFrom','@type':'@id'},
   generatedBy: {'@id':'prov:wasGeneratedBy','@type':'@id'},
   generatedAtTime: {'@id':'prov:generatedAtTime','@type':'xsd:dateTime'},

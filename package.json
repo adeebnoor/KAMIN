@@ -28,7 +28,8 @@
     "vitest": "^5.0.2",
     "@playwright/test": "^1.49.1",
     "@axe-core/playwright": "^4.10.1",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.4",
+    "jsonld": "9.0.0"
   },
   "engines": {
     "node": ">=20.9.0"
