@@ -4,6 +4,7 @@ import App from './App.jsx'
 import './styles.css'
 import './experience.css'
 import './digital-interests.css'
+import './knowledge-workspace.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

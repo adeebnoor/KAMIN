@@ -1,4 +1,6 @@
 import { test, expect } from '@playwright/test'
+
+async function openMoreTools(page){const more=page.getByRole('button',{name:'المزيد',exact:true});if(await more.isVisible())await more.click()}
 import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
@@ -10,6 +12,7 @@ test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
+  await openMoreTools(page)
   await page.getByRole('button', { name: /الدورات/ }).first().click()
   await expect(page.getByText(/لا نرتب الدورات فقط/)).toBeVisible()
   await expect(page.getByText(/PMP/).first()).toBeVisible()
@@ -100,6 +103,7 @@ test('app dialog supports Escape and mobile usage log navigation', async ({ page
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toBeHidden()
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
+  await openMoreTools(page)
   await expect(page.getByRole('button', { name: /سجل الاستخدام/ })).toBeVisible()
 })
 
@@ -139,6 +143,7 @@ test('Kamin does not present heuristic mastery or fit percentages as calibrated 
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.locator('.skill-row').first()).toContainText(/مرتفعة|متوسطة|محدودة|مبدئية/)
   await expect(page.locator('.metrics')).not.toContainText(/\d+%/)
+  await openMoreTools(page)
   await page.getByRole('button', { name: /الدورات/ }).first().click()
   await expect(page.locator('.fit-card').first()).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
   expect((await page.locator('.fit-card').allTextContents()).join('\n')).not.toMatch(/\d+%/)
@@ -184,6 +189,7 @@ test('Person 360 is optional, structured, and available before transcript approv
   await consent.check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
 
+  await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByLabel('نمط التعاون').selectOption('small-team')
   await page.getByLabel('إيقاع العمل').selectOption('mixed')
@@ -204,6 +210,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
+  await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
   await page.getByLabel('هدفي القادم',{exact:true}).selectOption('data')
 
@@ -240,6 +247,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByLabel('اهتمامي المهني الأقرب').selectOption('investigative')
+  await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('قيمة العمل الأهم بالنسبة لي').selectOption('achievement')
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByRole('button', { name: /فرصي/ }).first().click()
@@ -606,6 +614,7 @@ test('mapping coverage and governed adapter artefacts are public and consistent'
 test('Arabic audit timestamps use Arabic locale formatting', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await openMoreTools(page)
   await page.getByRole('button',{name:/سجل الاستخدام/}).first().click()
   const timestamp=page.locator('.audit-item small').first()
   if(await timestamp.count()) await expect(timestamp).toContainText(/[٠-٩]/)
@@ -688,6 +697,7 @@ test('skill cards surface governed evidence level beside evidence strength', asy
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
+  await openMoreTools(page)
   await page.getByRole('button',{name:/مهاراتي/}).first().click()
   const card=page.locator('.skill-card').first()
   await expect(card).toContainText('مستوى الإثبات')
