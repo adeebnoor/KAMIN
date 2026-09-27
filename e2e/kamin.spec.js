@@ -205,6 +205,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
+  await page.getByLabel('هدفي القادم',{exact:true}).selectOption('data')
 
   await page.getByRole('button', { name: /الخصوصية/ }).first().click()
   const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
@@ -214,6 +215,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
   expect(storage.consents.insight).toBe(false)
   expect(storage.insight.declaredPreferences).toEqual({})
+  expect(storage.goal).toBeNull()
 })
 
 

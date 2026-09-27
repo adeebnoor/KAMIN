@@ -22,7 +22,7 @@ export default function ProfileNetwork({ lang, state = {}, demo = false }) {
   ]
   const active = nodes.find(node => node.id === selected)
   return <div className="profile-network">
-    <div className="profile-network-head"><span><Sparkles size={17}/>{tr(lang,'كل بُعد يضيف علاقة','Every dimension adds a connection')}</span><small>{demo ? tr(lang,'مثال توضيحي · بيانات وهمية','Illustration · synthetic data') : tr(lang,'يتحدّث من اختياراتك','Updates from your choices')}</small></div>
+    <div className="profile-network-head"><span><Sparkles size={17}/>{tr(lang,'كل بُعد يضيف علاقة','Every dimension adds a connection')}</span><small>{demo ? tr(lang,'مثال تفاعلي · بيانات وهمية','Interactive demo · synthetic data') : tr(lang,'يتحدّث من اختياراتك','Updates from your choices')}</small></div>
     <div className="profile-orbit" dir="ltr" role="group" aria-label={tr(lang,'شبكة اهتماماتك وأهدافك وتفضيلاتك ودراستك','Network of interests, goals, preferences and studies')}>
       <svg viewBox="0 0 600 380" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="300" cy="190" rx="196" ry="142" className="profile-orbit-ring"/>{nodes.map(node => <path key={node.id} d={`M300 190 L${node.x * 6} ${node.y * 3.8}`} className={`${node.id === 'record' && count ? 'evidence-connection' : ''} ${selected === node.id ? 'active-connection' : ''}`}/>)}</svg>
       <div className="profile-person" dir={lang==='ar'?'rtl':'ltr'}><Fingerprint size={34}/><strong>{demo ? tr(lang,'سارة','Sara') : tr(lang,'أنت','You')}</strong><span>{tr(lang,'في قلب الشبكة','At the center')}</span><b>360°</b></div>

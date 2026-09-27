@@ -336,7 +336,7 @@ function WhatChanged({change,lang}){
     items.push(lang==='ar'?'أحكام الملاءمة التي تعتمد على هذه الأدلة أُعيد حسابها فورًا.':'Judgments that depended on that evidence were immediately recomputed.')
   }
   if(change.type==='withdraw-insight'){
-    items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها من طبقة Person 360.` : `${change.preferences} declared preference(s) were removed from Person 360.`)
+    items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها وأُلغي الهدف المختار من ملفك.` : `${change.preferences} declared preference(s) and the selected goal were removed from your profile.`)
     items.push(lang==='ar'?'الأدلة الأكاديمية بقيت كما هي؛ الذي تغير هو سياق التخصيص فقط.':'Academic evidence remains unchanged; only personalization context changed.')
   }
   return <div className="what-changed" role="region" aria-label={title[lang]} aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
@@ -363,7 +363,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
     if (key === 'insight' && state.consents.insight) {
       const preferenceCountBefore=Object.keys(state.insight?.declaredPreferences||{}).length
       onChangeSummary?.({type:'withdraw-insight',preferences:preferenceCountBefore,ts:Date.now()})
-      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,goal:null,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
       return
     }
     setState(s => ({...s,consents:{...s.consents,[key]:!s.consents[key]}}))
