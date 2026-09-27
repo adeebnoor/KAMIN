@@ -11,7 +11,7 @@ test('Arabic font asset and privacy page are available', async ({ page, request 
   await page.evaluate(() => document.fonts.ready)
   const loaded = await page.evaluate(() => document.fonts.check('16px "Noto Sans Arabic Variable"'))
   expect(loaded).toBe(true)
-  await expect(page.locator('h1')).toContainText('اهتماماتك. قدراتك.')
+  await expect(page.locator('h1')).toContainText('افهم قدراتك.')
 })
 
 test('Arabic language label remains readable in English mode', async ({ page }) => {
