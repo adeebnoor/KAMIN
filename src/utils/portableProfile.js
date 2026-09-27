@@ -1,3 +1,4 @@
+import { normalizeDigitalInterests } from '../digitalInterests.js'
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
@@ -25,9 +26,10 @@ const toBase64 = bytes => {
 
 const fromBase64 = value => {
   if (typeof value !== 'string' || !value) throw new Error('INVALID_BACKUP_ENCODING')
-  if (typeof Buffer !== 'undefined') return new Uint8Array(Buffer.from(value,'base64'))
-  const binary=atob(value)
-  return Uint8Array.from(binary,ch=>ch.charCodeAt(0))
+  if(!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)) throw new Error('INVALID_BACKUP_ENCODING')
+  const bytes=typeof Buffer !== 'undefined' ? new Uint8Array(Buffer.from(value,'base64')) : Uint8Array.from(atob(value),ch=>ch.charCodeAt(0))
+  if(toBase64(bytes)!==value) throw new Error('INVALID_BACKUP_ENCODING')
+  return bytes
 }
 
 const requirePassphrase = passphrase => {
@@ -71,7 +73,7 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
         advisor:false,
         research:false,
       },
-      insight:state.insight && typeof state.insight==='object' ? state.insight : {},
+      insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests)} : {},
       audit:safeArray(state.audit,100),
     },
     person360:person360 && typeof person360==='object' ? person360 : null,
@@ -96,7 +98,7 @@ export function normalizePortableState(payload){
       advisor:false,
       research:false,
     },
-    insight:source.insight && typeof source.insight==='object' ? source.insight : {},
+    insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests)} : {},
     audit:safeArray(source.audit,100).filter(entry=>entry && typeof entry==='object'),
   }
 }
@@ -139,9 +141,9 @@ export async function decryptPortableProfile(envelope,passphrase){
   if(!Number.isInteger(iterations) || iterations<100000 || iterations>2000000) throw new Error('INVALID_KDF_PARAMETERS')
   const salt=fromBase64(envelope.crypto?.salt)
   const iv=fromBase64(envelope.crypto?.iv)
-  const ciphertext=fromBase64(envelope.ciphertext)
   if(salt.length!==16 || iv.length!==12) throw new Error('INVALID_KDF_PARAMETERS')
   try{
+    const ciphertext=fromBase64(envelope.ciphertext)
     const api=cryptoApi()
     const key=await deriveKey(passphrase,salt,iterations)
     const plaintext=await api.subtle.decrypt(

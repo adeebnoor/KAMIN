@@ -1,4 +1,5 @@
 import { addClaim, addEntity, createClaim, emptyPerson360 } from '../person360.js'
+import { DIGITAL_METHOD, DIGITAL_NOTICE, DIGITAL_PURPOSE, digitalInterestClaims } from '../digitalInterests.js'
 
 const slug=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g,'-').replace(/^-|-$/g,'')
 const courseId=code=>`urn:kamin:course:${slug(code)}`
@@ -134,6 +135,15 @@ export function projectStateToPerson360({state,skills=[],educationClassification
 
   for(const observation of state?.insight?.personGraph?.observations||[]){
     graph={...graph,observations:[...graph.observations,observation]}
+  }
+
+  if(state?.consents?.insight){
+    for(const item of digitalInterestClaims(state.insight?.digitalInterests)){
+      graph=addEntity(graph,{'@id':item.topicIri,'@type':'skos:Concept',label:item.topic.label,notation:item.topicId})
+      graph=addEntity(graph,{'@id':item.consentIri,'@type':'kamin:Consent',consentPurpose:DIGITAL_PURPOSE,generatedAtTime:item.grantedAt,status:'active',metadata:{noticeVersion:DIGITAL_NOTICE,contextAllowed:item.contextAllowed}})
+      graph=addEntity(graph,{'@id':item.evidenceIri,'@type':'Evidence',label:{ar:'تأكيد الطالب لاقتراح من نص اختاره',en:'Student confirmation of a selected-text suggestion'},sourceType:item.sourceType,generatedAtTime:item.confirmedAt,metadata:{matchedTerms:item.matchedTerms,methodVersion:DIGITAL_METHOD,rawTextRetained:false,reviewStatus:'student-confirmed'}})
+      graph=addClaim(graph,createClaim({id:item.claimIri,predicate:'kamin:hasConfirmedInterest',object:item.topicIri,source:item.evidenceIri,sourceType:item.sourceType,generatedBy:`urn:kamin:activity:${DIGITAL_METHOD}`,generatedAtTime:item.confirmedAt,evidenceStrength:'student-confirmed-interest',consentPurpose:DIGITAL_PURPOSE,metadata:{consentId:item.consentIri,contextAllowed:item.contextAllowed,reviewStatus:'student-confirmed',methodVersion:DIGITAL_METHOD}}))
+    }
   }
 
   return graph
