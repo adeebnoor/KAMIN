@@ -5,6 +5,7 @@ import './styles.css'
 import './experience.css'
 import './digital-interests.css'
 import './knowledge-workspace.css'
+import './relationship-network.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

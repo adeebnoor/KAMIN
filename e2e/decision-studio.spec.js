@@ -9,10 +9,10 @@ async function openProfile(page) {
 }
 test('network connections explain a source and layout fits mobile',async({page})=>{
  await page.goto('/?lang=ar')
- await page.getByRole('button',{name:/دراستك 6 مقررات/}).click()
- await expect(page.locator('.profile-node-detail')).toContainText('لا تعني توثيقًا من الجامعة')
+ await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
+ await expect(page.locator('.relationship-node-info')).toContainText('لا تعني توثيقًا من الجامعة')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
- const rects=await page.locator('.profile-node, .profile-person').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}))
+ const rects=await page.locator('.relationship-map .relationship-node').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}))
  for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++)expect(rects[i].left<rects[j].right&&rects[i].right>rects[j].left&&rects[i].top<rects[j].bottom&&rects[i].bottom>rects[j].top).toBe(false)
 })
 test('guide and plan use selected target without creating new evidence',async({page})=>{
@@ -50,7 +50,7 @@ test('invalid grades and repeated courses cannot be approved',async({page})=>{
 })
 test('English network and guide retain grounded explanations',async({page})=>{
  await page.goto('/?lang=en')
- await page.getByRole('button',{name:/Your studies 6 reviewed courses/}).click()
- await expect(page.locator('.profile-node-detail')).toContainText('not institutional verification')
+ await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
+ await expect(page.locator('.relationship-node-info')).toContainText('not institutional verification')
  await expect(page.locator('html')).toHaveAttribute('dir','ltr')
 })
