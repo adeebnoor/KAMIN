@@ -123,8 +123,8 @@ function Header({ lang, setLang, onTry, onKnowledge }) {
         <BrandMark/><span><strong>{t.name}</strong><small>{t.tagline}</small></span>
       </button>
       <nav id="mobile-nav" className={open ? 'main-nav open' : 'main-nav'} aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main navigation'}>
-        <button onClick={() => go('proof')}>{lang === 'ar' ? 'شاهد الدليل' : 'See proof'}</button>
-        <button onClick={() => go('how')}>{t.nav.how}</button>
+        <a className="nav-link" href={`/services.html?lang=${lang}`}>{lang==='ar'?'الخدمات والميزات':'Services & features'}</a>
+        <a className="nav-link" href={`/guide.html?lang=${lang}`}>{lang==='ar'?'دليل الاستخدام':'User guide'}</a>
         <button onClick={()=>{onKnowledge();setOpen(false)}}>{lang==='ar'?'مستكشف المعرفة':'Knowledge explorer'}</button>
         <a className="nav-link" href={lang === 'ar' ? '/methodology.html?lang=ar' : '/methodology.html?lang=en'}>{lang === 'ar' ? 'المنهجية' : 'Methodology'}</a>
         <button className="nav-primary" onClick={() => { onTry(); setOpen(false) }}>{t.nav.app}<Arrow size={16}/></button>

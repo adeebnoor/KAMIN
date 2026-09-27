@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, UploadCloud, ShieldCheck, Fingerprint, Waypoints, Route, Check, LockKeyhole, GraduationCap, SearchCheck, Compass, Target, Users, BookOpen, MessageSquareText, Search, Network, Terminal }  from 'lucide-react'
-import ProfileNetwork from './ProfileNetwork.jsx'
+import RelationshipNetwork from './RelationshipNetwork.jsx'
 import InferenceDemo from './InferenceExplorer.jsx'
-import { demoCourses } from '../data.js'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
-const demoProfile = { approved:true, courses:demoCourses, goal:'data', consents:{insight:true}, insight:{declaredPreferences:{careerInterest:'investigative',workValue:'achievement',collaboration:'small-team',learningMode:'project-based'}} }
 export default function LandingExperience({ lang, onTry, onProfile, onKnowledge }) {
   const [knowledgeSearch,setKnowledgeSearch]=useState('')
   const [dimension,setDimension]=useState(0)
@@ -21,19 +19,19 @@ export default function LandingExperience({ lang, onTry, onProfile, onKnowledge 
     [Route, tr(lang, 'حوّل الفجوة إلى خطة', 'Turn a gap into a plan'), tr(lang, 'اختر مسارًا، وحدد ما يحتاج دليلًا، واحصل على خطوات عملية قابلة للمراجعة.', 'Choose a pathway, identify missing evidence and build a practical plan you can review.')],
   ]
   return <div className="landing-v2">
-    <section id="home" className="v2-hero">
+    <section id="home" className="v2-hero deep-network-hero">
       <div className="shell v2-hero-grid">
-        <div className="v2-hero-copy">
+        <div className="v2-hero-copy"><div className="network-hero-message">
           <span className="v2-eyebrow"><span/>{tr(lang, 'كامن · لطلاب الجامعة والخريجين', 'KAMIN · FOR STUDENTS & GRADUATES')}</span>
           <h1>{tr(lang, 'افهم قدراتك.', 'Understand your capabilities.')}<br/><em>{tr(lang, 'واكتشف خطوتك القادمة.', 'Discover your next step.')}</em></h1>
           <p>{tr(lang, 'ابدأ باهتماماتك وهدفك. أضف أدلتك عندما تكون مستعدًا، وشاهد ما يربطك بالمسارات الممكنة ولماذا.', 'Start with your interests and a goal. Add evidence when ready, then see which pathways connect to you and why.')}</p>
-          <div className="hero-dimension-tags">{[[Compass,tr(lang,'اهتمامات','Interests')],[Target,tr(lang,'أهداف','Goals')],[Users,tr(lang,'تفضيلات','Preferences')],[GraduationCap,tr(lang,'أدلة أكاديمية','Academic evidence')]].map(([Icon,label])=><span key={label}><Icon size={18}/>{label}</span>)}</div>
+          </div><div className="network-hero-actions"><div className="hero-dimension-tags">{[[Compass,tr(lang,'اهتمامات','Interests')],[Target,tr(lang,'أهداف','Goals')],[Users,tr(lang,'تفضيلات','Preferences')],[GraduationCap,tr(lang,'أدلة أكاديمية','Academic evidence')]].map(([Icon,label])=><span key={label}><Icon size={18}/>{label}</span>)}</div>
           <div className="v2-actions"><button className="button primary" onClick={onProfile}><Fingerprint size={21}/>{tr(lang,'ابدأ بناء ملفك','Build your profile')}<Arrow size={18}/></button><button className="button profile-secondary" onClick={onTry}><UploadCloud size={19}/>{tr(lang,'ابدأ برفع سجلك','Start with your transcript')}</button></div>
           <div className="v2-trust-inline"><ShieldCheck size={19}/><span>{tr(lang,'ابدأ باهتماماتك، وأضف سجلك عندما تكون مستعدًا. بياناتك تُعالج داخل متصفحك.','Start with your interests and add your transcript when ready. Your information is processed in your browser.')}</span></div>
           <div className="v2-entry-note"><span>{tr(lang, 'دون إنشاء حساب', 'No account needed')}</span><span>{tr(lang, 'راجع قبل الاعتماد', 'Review before approval')}</span><span>{tr(lang, 'ملفك تحت سيطرتك', 'You control your profile')}</span></div>
           <a className="inference-hero-link" href="#semantic-inference"><Waypoints size={18}/>{tr(lang,'شاهد الاستدلال الدلالي يعمل','See semantic inference in action')}<Arrow size={16}/></a>
         </div>
-        <div className="v2-hero-visual"><ProfileNetwork lang={lang} state={demoProfile} demo/></div>
+        </div><div className="v2-hero-visual"><RelationshipNetwork lang={lang} demo onKnowledge={()=>onKnowledge()}/></div>
       </div>
     </section>
     <section className="v2-value-strip"><div className="shell">{[[Compass, tr(lang, 'اهتمامات تعبّر عنك', 'Interests that reflect you')], [Target, tr(lang, 'هدف يوجّهك', 'A goal that guides you')], [Waypoints, tr(lang, 'علاقات تفهمها', 'Connections you understand')], [Route, tr(lang, 'خطوة تعرف سببها', 'A next step with a reason')]].map(([Icon, title], i) => <div key={title}><small>0{i+1}</small><Icon size={20}/><strong>{title}</strong></div>)}</div></section>
