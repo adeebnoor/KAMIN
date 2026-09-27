@@ -84,7 +84,7 @@ export function buildTargetSemanticGraph(target){
 
 export function indexPersonGraph(graph){
   const entities=new Map((graph?.entities||[]).map(entity=>[entity['@id'],entity]))
-  const claims=(graph?.claims||[]).filter(claim=>claim?.status!=='withdrawn' && claim?.status!=='inactive')
+  const claims=(graph?.claims||[]).filter(claim=>claim.subject===graph?.['@id'] && claim?.status!=='withdrawn' && claim?.status!=='inactive')
   const capabilities=new Map()
   const preferences=new Map()
   let goal=null
@@ -95,6 +95,8 @@ export function indexPersonGraph(graph){
       const key=skillKey(object||claim.object)
       const evidence=entities.get(claim.source)||null
       const course=evidence?.course ? entities.get(evidence.course)||null : null
+      // A dangling claim or another person's claim is not a supported path.
+      if(claim.subject!==graph?.['@id'] || !object || !evidence || !course || !claim.generatedBy || !claim.generatedAtTime) continue
       const path={
         kind:'capability-evidence',
         status:'supported',
