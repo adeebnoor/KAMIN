@@ -8,12 +8,12 @@ import {
 import { copy } from './i18n.js'
 import LandingExperience from './components/LandingExperience.jsx'
 import DecisionStudio from './components/DecisionStudio.jsx'
+import StudentInsight from './components/StudentInsight.jsx'
 import { canonicalCourseCode, reviewProfileQuality } from './utils/profileQuality.js'
 import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
-import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from './insight.js'
-import { PSYCHOMETRIC_INSTRUMENTS } from './psychometrics/registry.js'
+import { emptyInsightState } from './insight.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 import { clearLocalProfile, readLocalProfile, writeLocalProfile } from './utils/localProfileStore.js'
@@ -229,42 +229,6 @@ function FitCard({ item, lang, compared, toggle }) {
   </article>
 }
 
-function StudentInsight({ lang, state, setState, log }) {
-  const [agree,setAgree]=useState(false)
-  const insight=state.insight||emptyInsightState()
-  const grant=()=>{
-    if(!agree) return
-    setState(s=>({...s,consents:{...s.consents,insight:true},insight:{...emptyInsightState(),...(s.insight||{})},audit:[{label:lang==='ar'?'منح موافقة بصمة الطالب 360':'Student 360 consent granted',ts:Date.now()},...s.audit]}))
-    log(lang==='ar'?'بدء ملف التفضيلات':'Preference profile started')
-  }
-  const updatePreference=(schemeId,optionId)=>{
-    setState(s=>{const current=s.insight||emptyInsightState();if(!optionId){const prefs={...current.declaredPreferences};delete prefs[schemeId];return {...s,insight:{...current,declaredPreferences:prefs}}}return {...s,insight:setDeclaredPreference(current,schemeId,optionId)}})
-    log(lang==='ar'?'تحديث تفضيل منظم':'Structured preference updated')
-  }
-  if(!state.consents.insight){
-    return <div className="insight-intro">
-      <div className="app-title"><small>{lang==='ar'?'Person 360':'Person 360'}</small><h2>{lang==='ar'?'بصمتك قبل التوصية':'Your profile before recommendation'}</h2><p>{lang==='ar'?'نبني صورة منظمة ومتعددة الأبعاد عنك أولًا. لا يوجد تشخيص نفسي، ولا تأثير على قرارات الدورات أو الوظائف قبل التحقق العلمي من كل طبقة.':'We first build a structured, multi-dimensional picture of you. There is no psychological diagnosis and no impact on course or job decisions before each layer is scientifically validated.'}</p></div>
-      <div className="insight-privacy-grid">
-        <article><ShieldCheck/><strong>{lang==='ar'?'موافقة منفصلة':'Separate consent'}</strong><span>{lang==='ar'?'يمكنك بناء السجل الأكاديمي دون هذه الطبقة، أو سحب موافقتها وحدها لاحقًا.':'You can use the academic profile without this layer, or withdraw only this consent later.'}</span></article>
-        <article><SearchCheck/><strong>{lang==='ar'?'مدخلات منظمة':'Structured inputs'}</strong><span>{lang==='ar'?'لا يعتمد محرك القواعد على free text؛ نستخدم vocabularies ومقاييس معرّفة بإصداراتها.':'The rule engine does not rely on free text; inputs use versioned vocabularies and instruments.'}</span></article>
-        <article><Fingerprint/><strong>{lang==='ar'?'مصدر كل إشارة محفوظ':'Every signal has provenance'}</strong><span>{lang==='ar'?'الأداة والإصدار والوقت والموافقة والمصدر تبقى مرتبطة بالنتيجة.':'Instrument, version, timestamp, consent and source stay attached to each result.'}</span></article>
-      </div>
-      <label className="insight-consent"><input type="checkbox" checked={agree} onChange={e=>setAgree(e.target.checked)}/><span>{lang==='ar'?'أوافق على بناء ملف Person 360 وحفظ هذه المدخلات محليًا في المتصفح وفق اختياري لحفظ الملف على هذا الجهاز.':'I consent to building my Person 360 profile and storing these inputs locally in the browser according to my device-persistence choice.'}</span></label>
-      <button className="button primary" disabled={!agree} onClick={grant}>{lang==='ar'?'ابدأ بصمتي':'Start my profile'}</button>
-    </div>
-  }
-  return <div className="student-insight">
-    <div className="app-title"><small>Person 360</small><h2>{lang==='ar'?'بصمتك المنظمة':'Your structured profile'}</h2><p>{lang==='ar'?'هذه التفضيلات مصرح بها منك، وتدخل الآن فقط كإشارات تفضيل منخفضة المخاطر في المطابقة. المقاييس السيكومترية المعيارية تبقى مستقلة حتى تكتمل تهيئتها والتحقق منها.':'These preferences are self-declared and now act only as low-risk preference signals in matching. Standardized psychometric instruments remain separate until implementation and validation are complete.'}</p></div>
-    <div className="panel"><div className="panel-head"><div><small>{lang==='ar'?'تفضيلات مصرح بها':'Declared preferences'}</small><h3>{lang==='ar'?'اختر ما يشبهك اليوم':'Choose what reflects you today'}</h3></div></div>
-      <p className="preference-benefit">{lang==='ar'?'هذه إجابات اختيارية لفهم اتجاهك، وليست اختبارًا تنجح أو ترسب فيه. الاهتمام وقيم العمل والتعاون تساعد على شرح توافق السياق؛ التعلم والإيقاع والمسؤولية تُحفظ في ملفك ولا تغيّر المطابقة حاليًا.':'These optional answers describe your direction; they are not a pass/fail test. Interests, values and collaboration inform contextual explanations. Learning mode, pace and responsibility are saved but do not currently affect matching.'}</p>
-      <div className="insight-select-grid">{Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([schemeId,scheme])=><label key={schemeId}><span>{scheme.label[lang]}</span><select value={insight.declaredPreferences?.[schemeId]||''} onChange={e=>updatePreference(schemeId,e.target.value)}><option value="">{lang==='ar'?'لم أحدد بعد / لا أرغب بالإجابة':'Undecided / prefer not to answer'}</option>{scheme.options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div>
-    </div>
-    <div className="app-title compact"><small>{lang==='ar'?'مسار بحثي منفصل':'Separate research track'}</small><h2>{lang==='ar'?'أدوات مرشحة للمعايرة السعودية — لا تؤثر على الملاءمة':'Candidate instruments for Saudi validation — no Fit effect'}</h2></div>
-    <div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div>
-    <div className="insight-boundary"><ShieldCheck/><span>{lang==='ar'?'في هذه النسخة: التفضيلات المصرح بها تدخل فقط كإشارات تفضيل. درجات IPIP/RIASEC لا تدخل الحكم إطلاقًا قبل دراسة سعودية موثقة للثبات والبنية والملاءمة الثقافية.':'In this version, self-declared preferences act only as preference signals. IPIP/RIASEC instrument scores do not enter judgments at all before documented Saudi reliability, structure, and cultural validation.'}</span></div>
-  </div>
-}
-
 function KnowledgeMatchContext({ item, lang }) {
   const knowledge=item.knowledgeInsights
   if(!knowledge) return null
@@ -301,7 +265,7 @@ function MatchExplorer({ lang, profile, matches }) {
   const groups=['job','training']
   return <div className="match-explorer">
     <div className="app-title"><small>{lang==='ar'?'Person 360 → Opportunity':'Person 360 → Opportunity'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'المحرك يقرأ Person 360 كرسم دلالي: يتتبع الدليل إلى القدرة ثم إلى متطلب الفرصة، ويعرض المسار والفجوة دون نسبة ملاءمة غير معايرة.':'The engine reads Person 360 as a semantic graph: it traces evidence to capability and then to opportunity requirements, exposing the path and the gap without an uncalibrated fit percentage.'}</p></div>
-    {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من لوحة القدرات لتحويل النتائج من استكشاف عام إلى توصية موجهة.':'Choose a goal on the dashboard to move from broad exploration to goal-directed matching.'}</span></div>}
+    {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من صفحة اهتماماتي وهدفي لتوجيه استكشاف المسارات.':'Choose a goal in Interests & goal to direct pathway exploration.'}</span></div>}
     {groups.map(type=>{
       const items=matches.filter(item=>item.type===type)
       return <section className="match-group" key={type}><div className="panel-head"><div><small>{type==='job'?(lang==='ar'?'الوظائف والمسارات':'Jobs & careers'):(lang==='ar'?'التدريب والتطبيق':'Training & applied learning')}</small><h3>{lang==='ar'?'مطابقة على أكثر من بُعد':'Multi-dimensional matching'}</h3></div></div>
@@ -372,7 +336,7 @@ function WhatChanged({change,lang}){
     items.push(lang==='ar'?'أحكام الملاءمة التي تعتمد على هذه الأدلة أُعيد حسابها فورًا.':'Judgments that depended on that evidence were immediately recomputed.')
   }
   if(change.type==='withdraw-insight'){
-    items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها من طبقة Person 360.` : `${change.preferences} declared preference(s) were removed from Person 360.`)
+    items.push(lang==='ar'? `أزيلت ${change.preferences} تفضيلات مصرح بها وأُلغي الهدف المختار من ملفك.` : `${change.preferences} declared preference(s) and the selected goal were removed from your profile.`)
     items.push(lang==='ar'?'الأدلة الأكاديمية بقيت كما هي؛ الذي تغير هو سياق التخصيص فقط.':'Academic evidence remains unchanged; only personalization context changed.')
   }
   return <div className="what-changed" role="region" aria-label={title[lang]} aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
@@ -399,7 +363,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
     if (key === 'insight' && state.consents.insight) {
       const preferenceCountBefore=Object.keys(state.insight?.declaredPreferences||{}).length
       onChangeSummary?.({type:'withdraw-insight',preferences:preferenceCountBefore,ts:Date.now()})
-      setState(s => ({...s,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,goal:null,insight:emptyInsightState(),consents:{...s.consents,insight:false},audit:[{label:lang==='ar'?'سحب موافقة ملف القدرات 360° ومحو بياناتها':'Capability Profile 360° consent withdrawn and its data removed',ts:Date.now()},...s.audit]}))
       return
     }
     setState(s => ({...s,consents:{...s.consents,[key]:!s.consents[key]}}))
@@ -503,10 +467,10 @@ function Compare({ lang, items }) {
   </div>
 }
 
-function KaminApp({ lang, onClose }) {
+function KaminApp({ lang, onClose, entry = 'default' }) {
   const t = copy[lang]
   const [state,setState] = useState(getSaved)
-  const [view,setView] = useState(state.approved?'dashboard':'start')
+  const [view,setView] = useState(entry!=='default'?entry:state.approved?'dashboard':state.consents.insight?'insight':'start')
   const [draft,setDraft] = useState([])
   const [processing,setProcessing] = useState(false)
   const [progress,setProgress] = useState(0)
@@ -542,7 +506,7 @@ function KaminApp({ lang, onClose }) {
       const next=normalizeState(saved)
       setState(next)
       setDraft(next.courses||[])
-      setView(next.approved?'dashboard':'start')
+      setView(entry!=='default'?entry:next.approved?'dashboard':next.consents.insight?'insight':'start')
       setPersistenceDismissed(true)
       trackPilotEvent('profile_returned_to')
       setNotice(lang==='ar'?'أعدنا ملفك المحفوظ محليًا على هذا الجهاز.':'Your locally saved profile was restored on this device.')
@@ -671,7 +635,7 @@ function KaminApp({ lang, onClose }) {
     setCompareIds([])
     setReviewConsent(false)
     setFileError('')
-    setView(next.approved?'dashboard':'start')
+    setView(next.approved?'dashboard':next.consents.insight?'insight':'start')
     setNotice(lang==='ar'?'تمت استعادة ملفك محليًا. أُعيد حساب النتائج من الأدلة، ولم تُفعّل موافقات المشاركة الخارجية.':'Your profile was restored locally. Derived results were recomputed from evidence; external sharing consents remain off.')
   }
   const changePersistence = enabled => {
@@ -716,7 +680,7 @@ function KaminApp({ lang, onClose }) {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="app-brand"><BrandMark/><div><strong>{t.name}</strong><small>{t.tagline}</small></div></div>
-        <nav>{nav.map(([id,Icon,label])=>{const locked=!state.approved && !['insight','matches','privacy','audit'].includes(id);return <button key={id} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/><span className="nav-copy"><span>{label}</span>{locked&&<small>{lang==='ar'?'اعتمد سجلًا للفتح':'Approve a transcript to unlock'}</small>}</span></button>})}</nav>
+        <nav>{nav.map(([id,Icon,label])=>{const locked=!state.approved && !['studio','insight','matches','privacy','audit'].includes(id);return <button key={id} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} className={view===id?'active':''} onClick={()=>setView(id)}><Icon size={18}/><span className="nav-copy"><span>{label}</span>{locked&&<small>{lang==='ar'?'اعتمد سجلًا للفتح':'Approve a transcript to unlock'}</small>}</span></button>})}</nav>
         <div className="sidebar-trust"><ShieldCheck/><span>{lang==='ar'?'المعالجة محلية في النسخة العامة':'Local processing in public release'}</span></div>
       </aside>
       <div className="app-main">
@@ -725,8 +689,9 @@ function KaminApp({ lang, onClose }) {
         <div className="app-content-wrap" role="main">
           {view==='start' && <section className="app-content onboarding">
             <div className="app-title"><small>01</small><h2>{t.app.title}</h2><p>{t.app.intro}</p></div>
-            <div className="onboarding-benefit"><strong>{lang==='ar'?'ماذا ستحصل عليه مقابل معلوماتك؟':'What will your information give you?'}</strong><p>{lang==='ar'?'السجل يكشف روابط قدراتك. الهدف يوجّه استكشافك. نعرض النتيجة وحدودها قبل أن تطلب مشاركة أي شيء.':'Your record reveals capability links. Your goal directs exploration. Review the result and its limits before choosing to share anything.'}</p></div>
+            <div className="onboarding-benefit"><strong>{lang==='ar'?'ماذا ستحصل عليه مقابل معلوماتك؟':'What will your information give you?'}</strong><p>{lang==='ar'?'اهتماماتك وأهدافك وتفضيلاتك تكوّن صورتك الشخصية. السجل يضيف الأدلة الأكاديمية إلى هذه الشبكة.':'Your interests, goals and preferences form your personal context. The transcript adds academic evidence to this network.'}</p></div>
             <div className="onboarding-primary">
+              <button className="profile-onboarding-entry" onClick={()=>setView('insight')}><Fingerprint size={28}/><span><strong>{lang==='ar'?'ابدأ باهتماماتك وهدفك':'Start with your interests and goal'}</strong><small>{lang==='ar'?'لا تحتاج سجلًا لتبدأ شبكتك. أضف تفضيلاتك الآن، وأدلتك لاحقًا.':'No transcript needed to start your network. Add preferences now and evidence later.'}</small></span><ArrowLeft size={18}/></button>
               <a className="sample-first-link" href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد التقرير التوضيحي أولًا — بدون رفع أي ملف':'View the synthetic report first — no upload required'}</a>
               <button className="onboarding-upload" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><div><small>{lang==='ar'?'المسار الموصى به':'Recommended start'}</small><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></div></button>
               <div className="inline-trust"><ShieldCheck size={19}/><strong>{trustMicrocopy('transcript',lang)}</strong></div>
@@ -757,8 +722,8 @@ function KaminApp({ lang, onClose }) {
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
             {nextDecision?<div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{nextDecision.title[lang]}</h3></div><span className={`status ${nextDecision.status}`}>{t.app.fit[nextDecision.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{t.app.fit[nextDecision.status]}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{nextDecision.reasons.map((reason,i)=><p key={i}><Check size={15}/>{reason}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {nextDecision.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>:<div className="panel decision decision-locked"><LockKeyhole size={28}/><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{lang==='ar'?'أضف أو اعتمد مقررًا مرتبطًا بقدرة لفتح أول توصية':'Add or approve capability-linked coursework to unlock your first recommendation'}</h3><p>{lang==='ar'?'لا يعرض كامن حكم دورة عندما لا توجد أي مهارة مدعومة بالدليل. يمكنك مراجعة السجل أو إضافة مقرر يدويًا.':'Kamin does not render a course judgment when the profile has zero evidence-backed skills. Review your transcript or add a course manually.'}</p></div></div>}<PilotFeedback lang={lang}/>
           </section>}
-          {view==='studio' && <section className="app-content"><DecisionStudio lang={lang} matches={matches} state={state} onReview={()=>{setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('dashboard')}/></section>}
-          {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log}/></section>}
+          {view==='studio' && <section className="app-content"><DecisionStudio lang={lang} matches={matches} state={state} onReview={()=>{if(!state.approved){setView('start');return}setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('insight')}/></section>}
+          {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log} onGoal={chooseGoal} onExplore={()=>setView('studio')} onRecord={()=>setView('start')} onSave={()=>setView('privacy')}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer lang={lang} profile={matchProfile} matches={matches}/></section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
@@ -766,7 +731,7 @@ function KaminApp({ lang, onClose }) {
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary}/></></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/></section>}
         </div>
-        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=>{const locked=!state.approved&&!['insight','matches','privacy','audit'].includes(id);return <button key={id} className={view===id?'active':''} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>})}</nav>
+        <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.map(([id,Icon,label])=>{const locked=!state.approved&&!['studio','insight','matches','privacy','audit'].includes(id);return <button key={id} className={view===id?'active':''} disabled={locked} title={locked?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} onClick={()=>setView(id)}><Icon size={18}/><span>{label}</span></button>})}</nav>
       </div>
     </div>
   </div>
@@ -786,16 +751,17 @@ export default function App() {
   const [lang,setLang] = useState(()=>[new URLSearchParams(window.location.search).get('lang'),localStorage.getItem('kamin-lang')].find(value=>['ar','en'].includes(value))||'ar')
   const [appOpen,setAppOpen] = useState(false)
   const appTriggerRef=useRef(null)
-  const openApp=()=>{appTriggerRef.current=document.activeElement;setAppOpen(true)}
+  const [appEntry,setAppEntry]=useState('default')
+  const openApp=(entry='default')=>{appTriggerRef.current=document.activeElement;setAppEntry(typeof entry==='string'?entry:'default');setAppOpen(true)}
   const closeApp=()=>{setAppOpen(false);requestAnimationFrame(()=>appTriggerRef.current?.focus?.())}
   const t = copy[lang]
   useEffect(()=>{trackPilotEvent('landing')},[])
   useEffect(()=>{
     const ar = lang === 'ar'
-    const title = ar ? 'كامن | ملف قدرات موثّق وملاءمة مفسّرة' : 'Kamin | Evidence-backed capability profiles'
+    const title = ar ? 'كامن | اهتماماتك وقدراتك في شبكة واحدة' : 'Kamin | Your interests and capabilities, connected'
     const description = ar
-      ? 'كامن يحوّل السجل الأكاديمي والمشاريع إلى ملف قدرات تملكه، ثم يشرح أي فرص تناسبك، لماذا، وما الذي ينقصك.'
-      : 'Kamin turns academic records and projects into a capability profile you own, then explains what fits, why, and what is missing.'
+      ? 'كامن يربط اهتماماتك وأهدافك وتفضيلاتك وأدلتك الأكاديمية في ملف تملكه، ويساعدك على فهم مساراتك وخطوتك القادمة.'
+      : 'Kamin connects your interests, goals, preferences and academic evidence in a profile you control, helping you understand your pathways and next steps.'
     const origin = window.location.origin
     const publicOrigin = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       ? 'https://kamin-12mf.onrender.com'
@@ -836,9 +802,9 @@ export default function App() {
   return <>
     <div inert={appOpen} aria-hidden={appOpen?true:undefined}>
     <Header lang={lang} setLang={setLang} onTry={openApp}/>
-    <main id="main"><LandingExperience lang={lang} onTry={openApp}/></main>
+    <main id="main"><LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')}/></main>
     <footer><div className="shell footer-row"><div><BrandMark/><span>{t.footer}</span></div><div><a href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'}>{lang==='ar'?'تقرير تجريبي':'Sample report'}</a><a href={lang==='ar'?'/methodology.html?lang=ar':'/methodology.html?lang=en'}>{lang==='ar'?'المنهجية':'Methodology'}</a><a href={lang==='ar'?'/trust.html?lang=ar':'/trust.html?lang=en'}>{lang==='ar'?'مركز الثقة':'Trust center'}</a><a href={lang==='ar'?'/privacy.html?lang=ar':'/privacy.html?lang=en'}>{lang==='ar'?'الخصوصية':'Privacy'}</a><a href={lang==='ar'?'/faq.html?lang=ar':'/faq.html?lang=en'}>{lang==='ar'?'الأسئلة الشائعة':'FAQ'}</a><a href={lang==='ar'?'/stories.html?lang=ar':'/stories.html?lang=en'}>{lang==='ar'?'قصص المستخدمين':'User stories'}</a><a href={lang==='ar'?'/validation.html?lang=ar':'/validation.html?lang=en'}>{lang==='ar'?'التحقق':'Validation'}</a></div></div></footer>
     </div>
-    {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp}/></AppErrorBoundary>}
+    {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp} entry={appEntry}/></AppErrorBoundary>}
   </>
 }

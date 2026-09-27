@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1:visible')).toContainText('قدراتك مترابطة')
+  await expect(page.locator('h1:visible')).toContainText('اهتماماتك. قدراتك.')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
@@ -20,7 +20,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1:visible')).toContainText('Your skills connect')
+  await expect(page.locator('h1:visible')).toContainText('Your interests. Your skills.')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {
@@ -175,9 +175,9 @@ test('approved demo surfaces Saudi national classification context without turni
 test('Person 360 is optional, structured, and available before transcript approval', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: 'بصمتي' }).first().click()
-  await expect(page.getByText(/بصمتك قبل التوصية/)).toBeVisible()
-  await expect(page.getByText(/لا يوجد تشخيص نفسي/)).toBeVisible()
+  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
+  await expect(page.getByText(/اهتماماتك بداية الشبكة/)).toBeVisible()
+  await expect(page.getByText(/ليست اختبارًا أو تشخيصًا نفسيًا/)).toBeVisible()
 
   const consent=page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ })
   await expect(consent).not.toBeChecked()
@@ -187,6 +187,7 @@ test('Person 360 is optional, structured, and available before transcript approv
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
   await page.getByLabel('نمط التعاون').selectOption('small-team')
   await page.getByLabel('إيقاع العمل').selectOption('mixed')
+  await page.getByText('المقاييس النفسية والبحثية وحدود استخدامها',{exact:true}).click()
   await expect(page.getByText(/أدوات مرشحة للمعايرة السعودية/)).toBeVisible()
   await expect(page.getByText(/O\*NET Mini Interest Profiler/)).toBeVisible()
   await expect(page.getByText(/IPIP 50-item Big-Five/)).toBeVisible()
@@ -200,10 +201,11 @@ test('Person 360 is optional, structured, and available before transcript approv
 test('withdrawing Person 360 consent clears only the insight layer', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: 'بصمتي' }).first().click()
+  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
+  await page.getByLabel('هدفي القادم',{exact:true}).selectOption('data')
 
   await page.getByRole('button', { name: /الخصوصية/ }).first().click()
   const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
@@ -213,6 +215,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   const storage=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
   expect(storage.consents.insight).toBe(false)
   expect(storage.insight.declaredPreferences).toEqual({})
+  expect(storage.goal).toBeNull()
 })
 
 
@@ -233,7 +236,7 @@ test('canonical JSON-LD ontology context is published with verified namespaces',
 test('Person 360 drives explainable job and training matches without a magic score', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: /بصمتي/ }).first().click()
+  await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByLabel('اهتمامي المهني الأقرب').selectOption('investigative')
@@ -254,7 +257,7 @@ test('academic evidence can move a reference job from conditional to fits while 
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /الإدارة والمشاريع/ }).click()
-  await page.getByRole('button', { name: /بصمتي/ }).first().click()
+  await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByLabel('اهتمامي المهني الأقرب').selectOption('enterprising')
@@ -355,15 +358,16 @@ test('national positioning is complementary and makes no government integration 
 test('psychometric instruments are visibly research-only until Saudi validation', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
-  await page.getByRole('button', { name: 'بصمتي' }).first().click()
+  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
+  await page.getByText('المقاييس النفسية والبحثية وحدود استخدامها',{exact:true}).click()
   await expect(page.getByText(/لا تؤثر على الملاءمة/)).toBeVisible()
   await expect(page.getByText(/research-candidate-saudi-validation-required/).first()).toBeVisible()
 })
 
 
-test('first-run onboarding is OCR-first with inline trust and mobile camera capture', async ({ page }) => {
+test('transcript entry preserves local OCR, inline trust, camera capture and an interests alternative', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
 
