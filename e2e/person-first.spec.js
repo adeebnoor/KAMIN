@@ -10,6 +10,7 @@ test('interests build a visible network before any transcript and never become e
  await startProfile(page)
  await page.getByLabel('هدفي القادم',{exact:true}).selectOption('data')
  await page.getByLabel('اهتمامي المهني الأقرب',{exact:true}).selectOption('investigative')
+ await page.locator('.optional-preferences > summary').click()
  await page.getByLabel('طريقة التعلم المفضلة',{exact:true}).selectOption('project-based')
  const dialog=page.getByRole('dialog')
  await expect(dialog.locator('.profile-node').filter({hasText:'اهتماماتك'})).toContainText('تحليلي واستقصائي')
