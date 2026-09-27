@@ -568,6 +568,7 @@ test('zero-evidence approved profile does not receive a next-decision judgment',
 test('locked navigation explains how to unlock protected sections', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await openMoreTools(page)
   const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]:visible').first()
   await expect(dashboard).toBeVisible()
   await expect(dashboard).toBeDisabled()
