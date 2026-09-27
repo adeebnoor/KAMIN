@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1:visible')).toContainText('اهتماماتك. قدراتك.')
+  await expect(page.locator('h1:visible')).toContainText('افهم قدراتك.')
   await page.getByRole('button', { name: /جرّب المثال التوضيحي/ }).first().click()
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
@@ -23,7 +23,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Switch to English' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1:visible')).toContainText('Your interests. Your skills.')
+  await expect(page.locator('h1:visible')).toContainText('Understand your capabilities.')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {
@@ -568,6 +568,7 @@ test('zero-evidence approved profile does not receive a next-decision judgment',
 test('locked navigation explains how to unlock protected sections', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
+  await openMoreTools(page)
   const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]:visible').first()
   await expect(dashboard).toBeVisible()
   await expect(dashboard).toBeDisabled()
