@@ -9,6 +9,7 @@ import { demoCourses, skills as skillCatalog } from '../data.js'
 import { inferSkills } from '../utils/engine.js'
 import { DECLARED_PREFERENCE_SCHEMES } from '../insight.js'
 import { copy } from '../i18n.js'
+import { DIGITAL_TOPICS } from '../digitalInterests.js'
 
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 const localize = (value,lang) => typeof value === 'string' ? value : value?.[lang] || ''
@@ -22,6 +23,9 @@ const relationLabels = {
   'kamin:hasCapabilityEvidenceFor':['لديه دليل مرتبط بمتطلب في','has evidence for a requirement in'],
   'kamin:hasGoalContextFor':['يرتبط هدفه بـ','has a goal connection to'],
   'kamin:hasPreferenceContextFor':['يرتبط تفضيله بـ','has a preference connection to'],
+  'kamin:hasConfirmedInterest':['يؤكد اهتمامه بـ','confirms an interest in'],
+  'kamin:relatesToTopic':['يرتبط بموضوع','relates to topic'],
+  'kamin:hasInterestContextFor':['يرتبط اهتمامه بـ','has an interest connection to'],
 }
 export function InferenceProof({match, graph, lang, demo=false}) {
   const id=useId()
@@ -47,7 +51,7 @@ export function InferenceProof({match, graph, lang, demo=false}) {
     return relationLabels[predicate]?.[lang==='ar'?0:1] || predicate
   }
   const describe=t=>`${name(t.subject)} · ${relation(t.predicate)} · ${name(t.object)}`
-  const optionLabel=r=>`${r.ruleId} · ${r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}`
+  const optionLabel=r=>`${r.ruleId} · ${r.topicId?DIGITAL_TOPICS.find(topic=>topic.id===r.topicId)?.label[lang]:r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}`
   const download=()=>{
     try {
       const blob=new Blob([JSON.stringify(buildInferenceDataset(graph,match),null,2)],{type:'application/ld+json'})

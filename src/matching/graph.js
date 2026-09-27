@@ -1,5 +1,6 @@
 import { skills as skillCatalog } from '../data.js'
 import { enrichTargetGraph } from '../knowledge/query.js'
+import { DIGITAL_METHOD, DIGITAL_NOTICE, DIGITAL_PURPOSE, DIGITAL_TOPICS } from '../digitalInterests.js'
 
 export const GRAPH_MATCHING_VERSION='kamin-semantic-match-v1'
 
@@ -34,6 +35,11 @@ export function buildTargetSemanticGraph(target){
     targetType:target.type,
   }]
   const edges=[]
+  for(const topic of DIGITAL_TOPICS.filter(item=>item.targets.includes(target.id))){
+    const id=`urn:kamin:topic:${topic.id}`
+    entities.push({'@id':id,'@type':'skos:Concept',notation:topic.id,label:topic.label})
+    edges.push({subject:tid,predicate:'kamin:relatesToTopic',object:id,objectKey:topic.id})
+  }
 
   for(const skill of target.requiredSkills||[]){
     const sid=localSkillId(skill)
@@ -87,6 +93,7 @@ export function indexPersonGraph(graph){
   const claims=(graph?.claims||[]).filter(claim=>claim.subject===graph?.['@id'] && claim?.status!=='withdrawn' && claim?.status!=='inactive')
   const capabilities=new Map()
   const preferences=new Map()
+  const digitalInterests=[]
   let goal=null
 
   for(const claim of claims){
@@ -118,6 +125,12 @@ export function indexPersonGraph(graph){
       const current=capabilities.get(key)||[]
       current.push(path)
       capabilities.set(key,current)
+    }else if(claim.predicate==='kamin:hasConfirmedInterest'){
+      const consent=entities.get(claim.metadata?.consentId)
+      const evidence=entities.get(claim.source)
+      const topic=DIGITAL_TOPICS.find(item=>claim.object===`urn:kamin:topic:${item.id}`)
+      if(!topic || !object || claim.status!=='active' || claim.consentPurpose!==DIGITAL_PURPOSE || claim.metadata?.contextAllowed!==true || claim.metadata?.reviewStatus!=='student-confirmed' || claim.metadata?.methodVersion!==DIGITAL_METHOD || consent?.status!=='active' || consent?.consentPurpose!==DIGITAL_PURPOSE || consent?.metadata?.noticeVersion!==DIGITAL_NOTICE || consent?.metadata?.contextAllowed!==true || !evidence || evidence.metadata?.reviewStatus!=='student-confirmed' || !claim.generatedAtTime) continue
+      digitalInterests.push({topicId:topic.id,label:topic.label,objectId:claim.object,claimId:claim['@id'],evidenceId:claim.source})
     }else if(claim.predicate==='kamin:pursuesGoal'){
       goal={
         key:object?.notation||String(claim.object||'').split(':').pop()||null,
@@ -152,6 +165,7 @@ export function indexPersonGraph(graph){
     claims,
     capabilities,
     preferences,
+    digitalInterests,
     goal,
     academicContexts,
   }

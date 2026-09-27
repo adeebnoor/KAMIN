@@ -1,4 +1,5 @@
 import { emptyPerson360 } from './person360.js'
+import { emptyDigitalInterests } from './digitalInterests.js'
 
 export const INSIGHT_VERSION='kamin-insight-v2'
 
@@ -82,6 +83,7 @@ export function emptyInsightState(){
     version:INSIGHT_VERSION,
     personGraph:emptyPerson360(),
     declaredPreferences:{},
+    digitalInterests:emptyDigitalInterests(),
     assessments:{},
     completedInstruments:[],
     updatedAt:null,

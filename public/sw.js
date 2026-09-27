@@ -1,4 +1,4 @@
-const CACHE = 'kamin-public-v9'
+const CACHE = 'kamin-public-v10'
 const CORE = [
   '/favicon.svg',
   '/manifest.json',
