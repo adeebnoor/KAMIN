@@ -1,4 +1,8 @@
 export const TRUST_MICROCOPY = Object.freeze({
+  digitalInterests:{
+    ar:'بلا ربط حسابات أو إرسال نصوصك إلى خادم. لن تُحفظ المنشورات الأصلية. التخطي متاح، ولن تُضاف مهارة أو درجة ملاءمة بسبب الإفصاح.',
+    en:'No account connection or text sent to a server. Original posts are not saved. You can skip; disclosure does not add a skill or improve a fit judgment.',
+  },
   transcript:{
     ar:'كشف درجاتك لا يغادر جهازك — كل القراءة والتحليل يحدثان هنا في متصفحك.',
     en:'Your transcript never leaves your device — all reading and analysis happen here in your browser.',

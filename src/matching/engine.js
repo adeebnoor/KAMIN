@@ -191,6 +191,14 @@ function judgeGraphTarget(profile,target,lang='ar'){
   else if(goalMatch===false) judgment='exploratory'
   else if(requirementEdges.length===0 || met.length===requirementEdges.length) judgment='fits'
 
+  // Confirmed topics add explanations only: never capabilities, scores or eligibility.
+  for(const interest of index.digitalInterests || []){
+    const edge=targetGraph.edges.find(item=>item.predicate==='kamin:relatesToTopic' && item.object===interest.objectId)
+    if(!edge) continue
+    semanticPaths.push({kind:'digital-interest-alignment',status:'supported',targetId:target.id,targetNode:targetGraph['@id'],topicId:interest.topicId,personTopicId:interest.objectId,personClaimId:interest.claimId,evidenceId:interest.evidenceId,evidenceStrength:'student-confirmed-interest'})
+    support.push(text(`اهتمام «${interest.label.ar}» الذي أكدته من نصوصك يرتبط بهذا المسار؛ يفسر العلاقة ولا يثبت القدرة.`,`Your confirmed interest in “${interest.label.en}” connects to this pathway; it explains context, not capability.`,lang))
+  }
+
   const knowledgeInsights=deriveKnowledgeInsights(index,target.id,{
     lang,
     requiredCapabilityKeys:missing,

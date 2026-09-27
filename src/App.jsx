@@ -14,6 +14,7 @@ import { courseSkillMap, demoCourses } from './data.js'
 import { inferSkills, judgeOpportunities } from './utils/engine.js'
 import { inferTranscriptSsces, ssceForCourse, ssceReference } from './reference/ssce.js'
 import { emptyInsightState } from './insight.js'
+import { emptyDigitalInterests, normalizeDigitalInterests } from './digitalInterests.js'
 import { buildMatchingProfile, matchTargets } from './matching/engine.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 import { clearLocalProfile, readLocalProfile, writeLocalProfile } from './utils/localProfileStore.js'
@@ -40,7 +41,7 @@ const normalizeState = parsed => {
     ...parsed,
     localPersistence:!!parsed.localPersistence,
     consents:{...blankState.consents,...(parsed.consents||{})},
-    insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})}},
+    insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})},digitalInterests:normalizeDigitalInterests(parsed.insight?.digitalInterests)},
     audit:Array.isArray(parsed.audit)?parsed.audit.slice(0,100):[],
   }
 }
@@ -351,6 +352,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
   const [backupBusy,setBackupBusy] = useState(false)
   const backupFileRef = useRef(null)
   const preferenceCount=Object.keys(state.insight?.declaredPreferences||{}).length
+  const digital=normalizeDigitalInterests(state.insight?.digitalInterests)
 
   const toggle = (key) => {
     if (key === 'analyze' && state.approved) {
@@ -408,6 +410,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       <div className="panel-head"><div><small>{lang==='ar'?'ملكية البيانات':'Data ownership'}</small><h3>{lang==='ar'?'ما المخزن عنك الآن؟':'What is stored about you now?'}</h3></div><span className={state.localPersistence?'status yes':'status conditional'}>{state.localPersistence?(lang==='ar'?'محفوظ على هذا الجهاز':'Saved on this device'):(lang==='ar'?'جلسة مؤقتة':'Session only')}</span></div>
       <div className="ownership-grid">
         <div><strong>{state.courses?.length||0}</strong><span>{lang==='ar'?'سجلات مقررات':'course records'}</span></div>
+        <div><strong>{digital.confirmed.length}</strong><span>{lang==='ar'?'اهتمامات رقمية مؤكدة':'confirmed digital interests'}</span></div>
         <div><strong>{preferenceCount}</strong><span>{lang==='ar'?'تفضيلات مصرح بها':'declared preferences'}</span></div>
         <div><strong>{state.goal?1:0}</strong><span>{lang==='ar'?'هدف/مسار مختار':'selected target/goal'}</span></div>
       </div>
@@ -422,6 +425,8 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
           : (lang==='ar'?'عرض تجريبي فقط — لا توجد مشاركة فعلية مفعّلة في النسخة العامة':'Demonstration only — no operational sharing is enabled in the public release')
         return <label key={key}><span><strong>{t.consentItems[key]}</strong><small>{note}</small></span><input type="checkbox" checked={!!state.consents[key]} onChange={()=>toggle(key)}/></label>})}</div>
     </div>
+
+    <div className="panel digital-privacy-control"><h3>{lang==='ar'?'مصدر النشاط الرقمي':'Digital activity source'}</h3><p>{lang==='ar'?'الغرض: اقتراح اهتمامات تراجعها. لا تُحفظ النصوص الأصلية أو الحسابات. استخدام الاهتمامات لشرح المسارات يحتاج إذنًا مستقلًا داخل شاشة ملفك.':'Purpose: suggest interests for your review. Original text and accounts are not saved. Using interests for pathway explanations needs separate permission in your profile.'}</p><p>{lang==='ar'?`التحليل: ${digital.analysisConsent?'مفعّل':'غير مفعّل'} · شرح المسارات: ${digital.contextConsent?'مفعّل':'غير مفعّل'}`:`Analysis: ${digital.analysisConsent?'enabled':'off'} · Pathway explanations: ${digital.contextConsent?'enabled':'off'}`}</p>{digital.analysisConsent&&<button className="button secondary" onClick={()=>setState(previous=>({...previous,insight:{...previous.insight,digitalInterests:emptyDigitalInterests()}}))}><Trash2 size={17}/>{lang==='ar'?'اسحب الموافقة واحذف الاهتمامات الرقمية':'Withdraw consent and delete digital interests'}</button>}<p>{lang==='ar'?'جمع الصحة والمخالفات والتفاصيل المالية وتحليل الشخصية من الحسابات غير مفعّل. الحذف من المتصفح لا يمحو نسخًا احتياطية سبق تنزيلها.':'Health, violations, financial details and personality inference from accounts are not enabled. Browser deletion cannot erase backups you previously downloaded.'}</p></div>
 
     <div className="panel portable-backup">
       <div className="portable-head"><LockKeyhole size={30}/><div><small>{lang==='ar'?'استمرارية بلا حساب مركزي':'Continuity without a central account'}</small><h3>{lang==='ar'?'نسخة محلية مشفّرة':'Encrypted local backup'}</h3></div></div>
@@ -529,7 +534,7 @@ function KaminApp({ lang, onClose, entry = 'default' }) {
     const onKey=(event)=>{
       if(event.key==='Escape'){ event.preventDefault(); onClose(); return }
       if(event.key!=='Tab' || !dialog) return
-      const focusable=[...dialog.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>!el.hasAttribute('hidden'))
+      const focusable=[...dialog.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>!el.hasAttribute('hidden'))
       if(!focusable.length) return
       const first=focusable[0], last=focusable[focusable.length-1]
       if(event.shiftKey && document.activeElement===first){event.preventDefault();last.focus()}

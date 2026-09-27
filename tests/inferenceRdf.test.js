@@ -7,6 +7,7 @@ import { projectStateToPerson360 } from '../src/ontology/projector.js'
 import { JSON_LD_CONTEXT } from '../src/ontology/registry.js'
 import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
 import { buildInferenceDataset } from '../src/ontology/rdf.js'
+import { INFERENCE_VERSION } from '../src/matching/inference.js'
 
 function sample({courses=demoCourses,interest='investigative',goal='data'}={}) {
   const graph=projectStateToPerson360({state:{courses,goal,insight:{declaredPreferences:interest?{careerInterest:interest}:{}}},skills:inferSkills(courses)})
@@ -34,7 +35,7 @@ describe('Semantic inference and standards-based RDF export',()=>{
     const rdf=await toRdf(buildInferenceDataset(graph,match))
     expect(rdf).toContain('<urn:kamin:person:local> <urn:kamin:hasPreferenceContextFor> <urn:kamin:target:job-data-analyst> <urn:kamin:graph:inferred>')
     expect(rdf).toContain('<urn:kamin:person:local> <urn:kamin:hasCapabilityEvidenceFor> <urn:kamin:target:job-data-analyst> <urn:kamin:graph:inferred>')
-    expect(rdf).toContain('<urn:kamin:rule:kamin-relations-v1:R3>')
+    expect(rdf).toContain(`<urn:kamin:rule:${INFERENCE_VERSION}:R3>`)
     expect(rdf).toContain('<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <urn:kamin:prefers:careerInterest>')
     expect(JSON.stringify(graph)).toBe(before)
   })
