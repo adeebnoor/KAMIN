@@ -64,7 +64,14 @@ export default function KnowledgeWorkspace({lang,personalGraph,hasProfile,onStud
     if(term.type!=='uri')return term.value
     const concept=knowledgeConcepts.find(c=>c.id===term.value)
     const entity=getKnowledgeEntity(term.value)
-    return concept?.label[lang]||entity?.label?.[lang]||tr(lang,'مفهوم دون تسمية','Unlabelled concept')
+    const relation={
+      'urn:kamin:person:local':['صاحب الملف','Profile owner'],
+      'urn:kamin:hasCapabilityEvidenceFor':['لديه دليل على متطلب المسار','has evidence for a pathway requirement'],
+      'urn:kamin:hasGoalContextFor':['يرتبط هدفه بالمسار','has goal context for the pathway'],
+      'urn:kamin:hasPreferenceContextFor':['يرتبط تفضيله بالمسار','has preference context for the pathway'],
+      'urn:kamin:hasInterestContextFor':['يرتبط اهتمامه بالمسار','has interest context for the pathway'],
+    }[term.value]
+    return concept?.label[lang]||entity?.label?.[lang]||relation?.[lang==='ar'?0:1]||tr(lang,'مفهوم دون تسمية','Unlabelled concept')
   }
   const saveFile=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   const csv=async(copyOnly=false)=>{

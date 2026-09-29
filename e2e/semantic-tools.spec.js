@@ -70,6 +70,13 @@ test('encrypted snapshot is reviewed, opened locally, stripped from URL and neve
  const report=await new AxeBuilder({page}).analyze();expect(report.violations.filter(v=>['serious','critical'].includes(v.impact)),JSON.stringify(report.violations)).toEqual([])
  await page.goto('/en/#payload=invalid&key=invalid')
  await expect(page.getByRole('alert')).toContainText('Invalid link format')
+ expect(new URL(page.url()).hash).toBe('')
+ await expect(page.locator('.snapshot-preview')).toHaveCount(0)
+ await page.goto(link)
+ await expect(page.getByRole('button',{name:'Open snapshot locally',exact:true})).toBeEnabled()
+ await expect(page.locator('.snapshot-preview')).toHaveCount(0)
+ await page.getByRole('button',{name:'Open snapshot locally',exact:true}).click()
+ await expect(page.locator('.snapshot-preview')).toContainText('Data')
 })
 test('legacy locale links land on one language path and canonical links stay consistent',async({page})=>{
  await page.goto('/about.html?lang=en')
