@@ -1,63 +1,20 @@
-(() => {
-  const SUPPORTED=new Set(['ar','en'])
-  const params=new URLSearchParams(location.search)
-  const fromUrl=SUPPORTED.has(params.get('lang'))?params.get('lang'):null
-  let stored=null
-  try{stored=SUPPORTED.has(localStorage.getItem('kamin-lang'))?localStorage.getItem('kamin-lang'):null}catch{}
-  const browser=(navigator.languages||[navigator.language||'']).find(Boolean)||''
-  const inferred=browser.toLowerCase().startsWith('en')?'en':'ar'
-  const lang=fromUrl||stored||inferred||'ar'
-
-  document.documentElement.lang=lang
-  document.documentElement.dir=lang==='ar'?'rtl':'ltr'
-  try{localStorage.setItem('kamin-lang',lang)}catch{}
-
-  const apply=()=>{
-    const body=document.body
-    if(body){
-      const title=body.dataset[lang==='ar'?'titleAr':'titleEn']
-      const description=body.dataset[lang==='ar'?'descriptionAr':'descriptionEn']
-      if(title) document.title=title
-      if(description){
-        const meta=document.querySelector('meta[name="description"]')
-        if(meta) meta.setAttribute('content',description)
-      }
-    }
-
-    for(const node of document.querySelectorAll('[data-kamin-lang]')){
-      node.hidden=node.dataset.kaminLang!==lang
-    }
-
-    const withLang=(raw)=>{
-      try{
-        const url=new URL(raw,location.href)
-        if(url.origin!==location.origin) return raw
-        if(url.hash && !url.pathname.includes('.html') && url.pathname===location.pathname) return raw
-        if(url.pathname==='/' || url.pathname.endsWith('.html')){
-          url.searchParams.set('lang',lang)
-          return url.pathname+url.search+url.hash
-        }
-        return raw
-      }catch{return raw}
-    }
-    for(const link of document.querySelectorAll('a[href]')){
-      const href=link.getAttribute('href')
-      if(href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) link.setAttribute('href',withLang(href))
-    }
-
-    for(const button of document.querySelectorAll('[data-language-toggle]')){
-      button.textContent=lang==='ar'?'EN':'العربية'
-      button.setAttribute('lang',lang==='ar'?'en':'ar')
-      button.addEventListener('click',()=>{
-        const next=lang==='ar'?'en':'ar'
-        try{localStorage.setItem('kamin-lang',next)}catch{}
-        const url=new URL(location.href)
-        url.searchParams.set('lang',next)
-        location.href=url.toString()
-      })
-    }
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',apply,{once:true})
-  else apply()
-})()
+import {headerHtml,footerHtml,languageLabel} from './site-content.js'
+const pathLang=location.pathname.match(/^\/(ar|en)(?:\/|$)/)?.[1]
+const queryLang=new URLSearchParams(location.search).get('lang')
+let stored;try{stored=localStorage.getItem('kamin-lang')}catch{}
+const lang=pathLang||(['ar','en'].includes(queryLang)?queryLang:null)||(['ar','en'].includes(stored)?stored:'ar')
+const apply=()=>{
+ document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr'
+ try{localStorage.setItem('kamin-lang',lang)}catch{}
+ for(const node of document.querySelectorAll('[data-kamin-lang]')){const inactive=node.dataset.kaminLang!==lang;node.hidden=inactive;node.lang=node.dataset.kaminLang;node.inert=inactive;node.setAttribute('aria-hidden',String(inactive))}
+ const title=document.body.dataset[lang==='ar'?'titleAr':'titleEn'];if(title)document.title=title
+ const description=document.body.dataset[lang==='ar'?'descriptionAr':'descriptionEn'];if(description)document.querySelector('meta[name="description"]')?.setAttribute('content',description)
+ const page=location.pathname.split('/').pop()
+ const header=document.querySelector('.k-site-header');if(header)header.outerHTML=headerHtml(lang,page)
+ const footer=document.querySelector('.k-site-footer');if(footer)footer.outerHTML=footerHtml(lang)
+ const skip=document.querySelector('.k-skip');if(skip)skip.textContent=lang==='ar'?'تجاوز إلى المحتوى':'Skip to content'
+ const menu=document.querySelector('.k-menu');menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));document.querySelector('.k-nav').classList.toggle('is-open',open)})
+ for(const link of document.querySelectorAll('a[href]')){const raw=link.getAttribute('href');if(raw.startsWith('#'))continue;const url=new URL(raw,location.href);if(url.origin!==location.origin)continue;if(url.pathname==='/'||url.pathname.endsWith('.html')){url.searchParams.set('lang',lang);link.href=url.pathname+url.search+url.hash}}
+ for(const button of document.querySelectorAll('[data-language-toggle]')){button.setAttribute('aria-label',languageLabel(lang));button.addEventListener('click',()=>{const next=lang==='ar'?'en':'ar';const url=new URL(location.href);if(pathLang){url.pathname=url.pathname.replace(/^\/(ar|en)/,`/${next}`);url.searchParams.delete('lang')}else url.searchParams.set('lang',next);location.href=url.toString()})}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply()

@@ -21,7 +21,7 @@ test('Arabic core journey is usable and explainable', async ({ page }) => {
 
 test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Switch to English' }).click()
+  await page.getByRole('button', { name: 'التبديل إلى الإنجليزية' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
   await expect(page.locator('h1:visible')).toContainText('Understand your capabilities.')
 })
@@ -42,12 +42,12 @@ test('launch metadata and public technical assets are present', async ({ page, r
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('type', 'application/manifest+json')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /kamin/)
   await expect(page.locator('img[src*="kamin-logo-fixed"]')).toHaveCount(0)
-  await expect(page.locator('link[rel="alternate"][hreflang="ar-SA"]')).toHaveAttribute('href', /lang=ar/)
-  await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /lang=en/)
-  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', /lang=ar/)
+  await expect(page.locator('link[rel="alternate"][hreflang="ar-SA"]')).toHaveAttribute('href', /\/ar\/$/)
+  await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', /\/en\/$/)
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', /onrender\.com\/$/)
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="192x192"]')).toHaveAttribute('href', /icon-192\.png$/)
   await expect(page.locator('link[rel="icon"][type="image/png"][sizes="512x512"]')).toHaveAttribute('href', /icon-512\.png$/)
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-1200x630\.jpg$/)
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /og-kamin-ar\.jpg$/)
 
   for (const path of ['/favicon.ico','/favicon.svg','/manifest.json','/kamin-logo-v3.webp','/icon-192.png','/icon-512.png','/apple-touch-icon.png','/og-kamin-1200x630.jpg','/ocr/worker.min.js','/ocr/lang/eng.traineddata.gz','/ocr/lang/ara.traineddata.gz','/robots.txt','/sitemap.xml','/privacy.html','/sample-report.html','/methodology.html','/trust.html','/ontology/kamin-context.jsonld','/knowledge/ict-kg-v1.jsonld','/faq.html','/mapping.html','/mapping/course-skill-map-v1.json','/mapping/course-skill-map.schema.json','/static-i18n.js','/404.html','/advisor.html','/admin.html','/validation.html','/stories.html']) {
     const response = await request.get(path)
@@ -212,7 +212,7 @@ test('withdrawing Person 360 consent clears only the insight layer', async ({ pa
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
-  await page.getByLabel('هدفي القادم',{exact:true}).selectOption('data')
+  await page.locator('input[type="radio"][name="goal"][value="data"]').check()
 
   await page.getByRole('button', { name: /الخصوصية/ }).first().click()
   const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
@@ -246,7 +246,7 @@ test('Person 360 drives explainable job and training matches without a magic sco
   await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
-  await page.getByLabel('اهتمامي المهني الأقرب').selectOption('investigative')
+  await page.locator('input[type="radio"][name="careerInterest"][value="investigative"]').check()
   await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('قيمة العمل الأهم بالنسبة لي').selectOption('achievement')
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
@@ -268,7 +268,7 @@ test('academic evidence can move a reference job from conditional to fits while 
   await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
   await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
-  await page.getByLabel('اهتمامي المهني الأقرب').selectOption('enterprising')
+  await page.locator('input[type="radio"][name="careerInterest"][value="enterprising"]').check()
   await page.getByRole('button', { name: /فرصي/ }).first().click()
   const card=page.locator('.match-card').filter({hasText:'منسق مشاريع تقنية'})
   await expect(card).toContainText(/تناسبك/)
