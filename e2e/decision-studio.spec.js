@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 async function openProfile(page) {
  await page.goto('/?lang=ar')
+ await page.locator('.hero-other-start summary').click()
  await page.getByRole('button',{name:'ابدأ برفع سجلك'}).first().click()
  await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي'}).click()
  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()

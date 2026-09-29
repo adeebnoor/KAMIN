@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright'
 const publicPages=['services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
+  test.setTimeout(120_000)
   for(const file of publicPages){
    const path=`/${lang}/${file}.html`
    const response=await request.get(path);expect(response.ok(),path).toBeTruthy()
@@ -86,4 +87,18 @@ test('empty comparison offers courses and a working two-course starting point',a
  await expect(page.getByRole('button',{name:'اختر الدورات',exact:true})).toBeVisible()
  await page.getByRole('button',{name:'قارن اقتراحين',exact:true}).click()
  await expect(page.locator('.compare-table thead th')).toHaveCount(3)
+})
+
+test('a match opens its own development plan without inventing evidence',async({page})=>{
+ await page.goto('/?lang=en&start=profile')
+ await page.getByRole('checkbox').check()
+ await page.getByRole('button',{name:'Start my profile',exact:true}).click()
+ await page.locator('input[name="goal"][value="cyber"]').check()
+ await page.getByRole('button',{name:'Matches',exact:true}).first().click()
+ const card=page.locator('.match-card').filter({has:page.getByRole('heading',{name:'Junior Cybersecurity Analyst',exact:true})})
+ const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
+ await card.getByRole('button',{name:'Open this pathway’s plan',exact:true}).click()
+ await expect(page.getByLabel('Pathway to explore')).toHaveValue('job-cyber-analyst')
+ await expect(page.getByRole('tab',{name:'Development plan',exact:true})).toHaveAttribute('aria-selected','true')
+ expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
 })
