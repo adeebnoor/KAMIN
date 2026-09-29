@@ -11,6 +11,7 @@ export const footerItems = [
   ['about.html', 'عن كامن والفريق', 'About & team'],
   ['contact.html', 'التواصل والمساعدة', 'Contact & help'],
   ['privacy.html', 'الخصوصية', 'Privacy'],
+  ['pdpl.html', 'مطابقة PDPL', 'PDPL mapping'],
   ['faq.html', 'الأسئلة الشائعة', 'FAQ'],
   ['sample-report.html', 'تقرير تجريبي', 'Sample report'],
   ['validation.html', 'التحقق والتجربة الجامعية', 'Validation & pilot'],
@@ -19,7 +20,13 @@ export const footerItems = [
   ['business-model.html', 'للجامعات والشركاء', 'Universities & partners'],
   ['changelog.html', 'سجل التحديثات', 'Changelog'],
 ]
-export const pageHref = (file, lang) => file.startsWith('?') ? `/${file}&lang=${lang}` : `/${file}?lang=${lang}`
+export function pageHref(file,lang){
+ const url=new URL(file.startsWith('/')?file:`/${file}`,'https://kamin.invalid')
+ url.pathname=url.pathname.replace(/^\/(ar|en)(?=\/|$)/,'').replace(/\/index\.html$/,'/')
+ url.pathname=`/${lang}${url.pathname==='/'?'/':url.pathname}`
+ url.searchParams.delete('lang')
+ return url.pathname+url.search+url.hash
+}
 export const languageLabel = lang => text(lang, 'التبديل إلى الإنجليزية', 'Switch to Arabic')
 export function headerHtml(lang, page = '') {
   const t = (ar,en)=>text(lang,ar,en)

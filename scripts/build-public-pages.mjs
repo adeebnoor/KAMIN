@@ -1,9 +1,10 @@
 import {readFile,writeFile,readdir,mkdir} from 'node:fs/promises'
 import {parse,parseFragment,serialize} from 'parse5'
-import {headerHtml,footerHtml,text} from '../public/site-content.js'
+import {headerHtml,footerHtml,text,pageHref} from '../public/site-content.js'
 import {pages,additions,extraFaq} from './public-page-content.mjs'
 import {securityHeaders} from './security-headers.mjs'
-const origin='https://kamin-12mf.onrender.com'
+const origin=(process.env.SITE_ORIGIN||'https://kamin-12mf.onrender.com').replace(/\/$/,'')
+if(!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(origin))throw new Error('SITE_ORIGIN must be an HTTPS origin')
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;')
 const attrs=n=>Object.fromEntries((n.attrs||[]).map(a=>[a.name,a.value]))
 const set=(n,name,value)=>{n.attrs??=[];const a=n.attrs.find(a=>a.name===name);if(a)a.value=value;else n.attrs.push({name,value})}
@@ -36,6 +37,7 @@ for(const file of files){
    }
    prepend(body,`<a class="k-skip" href="#main">${text(lang,'تجاوز إلى المحتوى','Skip to content')}</a>${headerHtml(lang,file)}`);append(body,footerHtml(lang))
    for(const n of all(head,n=>n.tagName==='script'&&attrs(n).src==='/static-i18n.js'))set(n,'type','module')
+   append(head,'<link rel="stylesheet" href="/semantic-tools.css">')
   }else{
    const skip=all(body,n=>n.tagName==='a'&&attrs(n).class==='skip-link')[0];if(skip){skip.childNodes=[];append(skip,text(lang,'تجاوز إلى المحتوى','Skip to content'))}
   }
@@ -50,6 +52,11 @@ for(const file of files){
   append(head,`<title>${escape(title)}</title><meta name="description" content="${escape(description)}"><meta http-equiv="Content-Security-Policy" content="${escape(securityHeaders['Content-Security-Policy'].replace("; frame-ancestors 'none'",''))}"><link rel="stylesheet" href="/site-chrome.css"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="ar-SA" href="${origin}/ar/${home?'':file}"><link rel="alternate" hreflang="en" href="${origin}/en/${home?'':file}"><link rel="alternate" hreflang="x-default" href="${origin}/${home?'':file}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${lang==='ar'?'ar_SA':'en_US'}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:image" content="${origin}/og-kamin-${lang}.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${origin}/og-kamin-${lang}.jpg">`)
   const ld=home?{'@type':'SoftwareApplication',name:text(lang,'كامن','Kamin'),applicationCategory:'EducationalApplication',operatingSystem:'Web',offers:{'@type':'Offer',price:'0',priceCurrency:'SAR'},creator:{'@type':'Person',name:'Adeeb Noor',url:'https://adeebnoor.github.io/'}}:file==='faq.html'?{'@type':'FAQPage',mainEntity:extraFaq[lang].map(([q,a])=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}:{'@type':'WebPage',name:title}
   append(head,`<script id="${home?'kamin-ld':'page-ld'}" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org',...ld,url:canonical,inLanguage:lang,description}).replaceAll('<','\\u003c')}</script>`)
+  for(const link of all(body,n=>n.tagName==='a'&&attrs(n).href)){
+   const raw=attrs(link).href;if(raw.startsWith('#'))continue
+   const url=new URL(raw,`${origin}/${file}`)
+   if(url.origin===origin&&(url.pathname==='/'||/^\/(ar|en)\/$/.test(url.pathname)||url.pathname.endsWith('.html')))set(link,'href',pageHref(url.pathname+url.search+url.hash,lang))
+  }
   const destination=locale?`dist/${locale}/${file}`:`dist/${file}`;if(locale)await mkdir(`dist/${locale}`,{recursive:true});await writeFile(destination,serialize(doc))
  }
 }

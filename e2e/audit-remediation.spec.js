@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-const publicPages=['services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
+const publicPages=['pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
   test.setTimeout(120_000)

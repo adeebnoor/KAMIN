@@ -529,12 +529,12 @@ test('static routes honor URL, stored preference, and bilingual direction', asyn
 
 test('static internal links preserve the resolved language', async ({ page }) => {
   await page.goto('/trust.html?lang=en')
-  await expect(page.getByRole('link',{name:'Privacy policy'})).toHaveAttribute('href',/privacy\.html\?lang=en/)
-  await expect(page.getByRole('main').getByRole('link',{name:'Methodology',exact:true})).toHaveAttribute('href',/methodology\.html\?lang=en/)
+  await expect(page.getByRole('link',{name:'Privacy policy'})).toHaveAttribute('href',/\/en\/privacy\.html/)
+  await expect(page.getByRole('main').getByRole('link',{name:'Methodology',exact:true})).toHaveAttribute('href',/\/en\/methodology\.html/)
 
   await page.goto('/?lang=en')
-  await expect(page.getByRole('contentinfo').getByRole('link',{name:'Privacy'})).toHaveAttribute('href',/privacy\.html\?lang=en/)
-  await expect(page.getByRole('contentinfo').getByRole('link',{name:'FAQ'})).toHaveAttribute('href',/faq\.html\?lang=en/)
+  await expect(page.getByRole('contentinfo').getByRole('link',{name:'Privacy'})).toHaveAttribute('href',/\/en\/privacy\.html/)
+  await expect(page.getByRole('contentinfo').getByRole('link',{name:'FAQ'})).toHaveAttribute('href',/\/en\/faq\.html/)
 })
 
 test('closing the app fully tears down the overlay and the primary CTA immediately works again', async ({ page }) => {
@@ -610,7 +610,7 @@ test('mapping coverage and governed adapter artefacts are public and consistent'
   await page.getByRole('button',{name:/جرّب المثال التوضيحي/}).first().click()
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await expect(page.locator('.mapping-coverage')).toContainText('6/6')
-  await expect(page.getByRole('link',{name:'منهجية الربط'})).toHaveAttribute('href',/mapping\.html\?lang=ar/)
+  await expect(page.getByRole('link',{name:'منهجية الربط'})).toHaveAttribute('href',/\/ar\/mapping\.html/)
 })
 
 test('Arabic audit timestamps use Arabic locale formatting', async ({ page }) => {

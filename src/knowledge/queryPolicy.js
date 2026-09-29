@@ -2,11 +2,30 @@ import { Parser } from '@traqula/parser-sparql-1-1'
 import { Generator } from '@traqula/generator-sparql-1-1'
 
 export const QUERY_ROW_LIMIT=100
+const parser=new Parser({lexerConfig:{positionTracking:'full'}})
+export function syntaxError(error,query){
+  const message=String(error?.message||'')
+  const positioned=message.match(/on line (\d+)\n[^\n]*\n(-*)\^/)
+  let offset
+  if(!positioned){
+    const lexer=message.match(/offset:\s*(\d+)/i)
+    const prefix=message.match(/Unknown prefix: ([\w-]+)/)
+    if(lexer) offset=Number(lexer[1])
+    else if(prefix) offset=query.indexOf(`${prefix[1]}:`)
+    else if(message.includes("but found: ''")) offset=query.length
+  }
+  const before=Number.isInteger(offset)&&offset>=0?query.slice(0,offset):null
+  return Object.assign(new Error('QUERY_SYNTAX'),{
+    line:positioned?Number(positioned[1]):before!==null?before.split('\n').length:null,
+    column:positioned?positioned[2].length+1:before!==null?before.length-before.lastIndexOf('\n'):null,
+    reason:message.startsWith('Unknown prefix:')?'UNKNOWN_PREFIX':'SYNTAX',
+  })
+}
 export function prepareReadOnlyQuery(query){
   if(typeof query!=='string'||!query.trim()) throw new Error('QUERY_EMPTY')
   if(query.length>6000) throw new Error('QUERY_TOO_LONG')
   let ast
-  try{ast=new Parser().parse(query)}catch{throw new Error('QUERY_SYNTAX')}
+  try{ast=parser.parse(query)}catch(error){throw syntaxError(error,query)}
   if(ast.type!=='query'||!['select','ask'].includes(ast.subType)) throw new Error('QUERY_READ_ONLY')
   let count=0
   const walk=node=>{

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "node scripts/prepare-assets.mjs && vite build && node scripts/build-public-pages.mjs && node scripts/check-performance.mjs",
+    "build": "node scripts/prepare-assets.mjs && node scripts/prepare-semantic.mjs && vite build && node scripts/build-public-pages.mjs && node scripts/check-performance.mjs && node scripts/prepare-hosting.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fontsource-variable/noto-sans-arabic": "5.3.0",
+    "@huggingface/transformers": "4.3.0",
     "@tesseract.js-data/ara": "1.0.0",
     "@tesseract.js-data/eng": "1.0.0",
     "@traqula/generator-sparql-1-1": "1.4.0",
