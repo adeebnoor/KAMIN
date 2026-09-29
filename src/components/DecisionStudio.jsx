@@ -20,9 +20,9 @@ export function buildDevelopmentPlan(match, lang = 'ar') {
     { title: tr(lang, 'راجع الدليل مع مرشد', 'Review the evidence with an advisor'), action: tr(lang, 'اطلب تغذية راجعة على المخرج، ثم حدّث بياناتك المتاحة في كامن. تنفيذ الخطة لا يضيف مهارة تلقائيًا؛ اعتماد المشاريع غير متاح في النسخة الحالية.', 'Ask for feedback, then update the information supported by Kamin. Completing a plan does not automatically add a skill; project verification is not available in this release.') },
   ]
 }
-export default function DecisionStudio({ lang, matches, state, graph, onReview, onGoal }) {
-  const [active, setActive] = useState('network')
-  const [targetId, setTargetId] = useState('job-data-analyst')
+export default function DecisionStudio({ lang, matches, state, graph, onReview, onGoal, initialTarget }) {
+  const [active, setActive] = useState(initialTarget?'plan':'network')
+  const [targetId, setTargetId] = useState(initialTarget||'job-data-analyst')
   const [question, setQuestion] = useState('why')
   const [exportError, setExportError] = useState('')
   const match = matches.find(m => m.id === targetId) || matches[0]

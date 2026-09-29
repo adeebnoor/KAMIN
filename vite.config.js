@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { securityHeaders } from './scripts/security-headers.mjs'
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: '/',
+  preview: { headers: securityHeaders },
   build: {
     target: 'es2022',
     sourcemap: false,
