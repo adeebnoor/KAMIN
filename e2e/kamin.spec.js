@@ -530,7 +530,7 @@ test('static routes honor URL, stored preference, and bilingual direction', asyn
 test('static internal links preserve the resolved language', async ({ page }) => {
   await page.goto('/trust.html?lang=en')
   await expect(page.getByRole('link',{name:'Privacy policy'})).toHaveAttribute('href',/privacy\.html\?lang=en/)
-  await expect(page.getByRole('link',{name:'Methodology'})).toHaveAttribute('href',/methodology\.html\?lang=en/)
+  await expect(page.getByRole('main').getByRole('link',{name:'Methodology',exact:true})).toHaveAttribute('href',/methodology\.html\?lang=en/)
 
   await page.goto('/?lang=en')
   await expect(page.getByRole('contentinfo').getByRole('link',{name:'Privacy'})).toHaveAttribute('href',/privacy\.html\?lang=en/)
