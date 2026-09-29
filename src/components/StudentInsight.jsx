@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { Compass, Target, Users, Heart, BookOpen, LayoutList, Gauge, Flag, ShieldCheck, ArrowLeft, ArrowRight, UploadCloud, Waypoints, Check } from 'lucide-react'
 import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from '../insight.js'
 import { PSYCHOMETRIC_INSTRUMENTS } from '../psychometrics/registry.js'
@@ -6,6 +6,7 @@ import { copy } from '../i18n.js'
 import ProfileNetwork from './ProfileNetwork.jsx'
 import DigitalInterests from './DigitalInterests.jsx'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
+const SemanticRecall=lazy(()=>import('./SemanticRecall.jsx'))
 const fields = {
   careerInterest: { Icon:Compass, tone:'violet', help:{ar:'أي نوع من الأنشطة يجذبك الآن؟ يضيف سياقًا لتفسير المسارات.',en:'What activities attract you now? This adds context to pathway explanations.'} },
   workValue: { Icon:Heart, tone:'amber', help:{ar:'ما الذي يهمك في العمل؟ يساعد على شرح التوافق مع المسار.',en:'What matters at work? This helps explain contextual alignment.'} },
@@ -15,7 +16,7 @@ const fields = {
   pace: { Icon:Gauge, tone:'coral', help:{ar:'نحفظه ضمن صورتك عن نفسك؛ لا يؤثر في المطابقة حاليًا.',en:'Saved as part of your profile; it does not currently affect matching.'} },
   responsibility: { Icon:Flag, tone:'violet', help:{ar:'ما ترغب في تجربته مستقبلًا، وليس إثباتًا لخبرة قيادية.',en:'What you want to try, not evidence of leadership experience.'} },
 }
-export default function StudentInsight({ lang, state, setState, log, onGoal, onExplore, onRecord, onSave }) {
+export default function StudentInsight({ lang, state, setState, log, onGoal, onExplore, onRecord, onSave, matches, onInspect }) {
   const [agree,setAgree] = useState(false)
   const insight = state.insight || emptyInsightState()
   const Arrow = lang==='ar' ? ArrowLeft : ArrowRight
@@ -50,6 +51,7 @@ export default function StudentInsight({ lang, state, setState, log, onGoal, onE
       <ChoiceGroup lang={lang} id="careerInterest" title={DECLARED_PREFERENCE_SCHEMES.careerInterest.label[lang]} help={fields.careerInterest.help[lang]} options={DECLARED_PREFERENCE_SCHEMES.careerInterest.options.map(o=>({id:o.id,label:o.label[lang]}))} value={insight.declaredPreferences?.careerInterest||''} onChange={value=>updatePreference('careerInterest',value)} Icon={Compass}/>
       <details className="optional-preferences"><summary>{tr(lang,'أضف تفضيلات أخرى — اختياري','More preferences — optional')}</summary><div className="profile-fields">      {Object.entries(fields).filter(([id])=>id!=='careerInterest').map(([id,{Icon,tone,help}])=><label key={id} className={`profile-field tone-${tone}`}><span className="dimension-icon"><Icon size={22}/></span><strong>{DECLARED_PREFERENCE_SCHEMES[id].label[lang]}</strong><small id={`benefit-${id}`}>{help[lang]}</small><select aria-label={DECLARED_PREFERENCE_SCHEMES[id].label[lang]} aria-describedby={`benefit-${id}`} value={insight.declaredPreferences?.[id]||''} onChange={e=>updatePreference(id,e.target.value)}><option value="">{tr(lang,'لم أحدد بعد / لا أرغب بالإجابة','Undecided / prefer not to answer')}</option>{DECLARED_PREFERENCE_SCHEMES[id].options.map(option=><option key={option.id} value={option.id}>{option.label[lang]}</option>)}</select></label>)}</div></details>
     </div><aside className="profile-live-preview"><ProfileNetwork lang={lang} state={state}/><p><Check size={16}/>{tr(lang,'تُحدَّث الشبكة فور اختيارك. لا تتحول التفضيلات إلى مهارات مثبتة.','The network updates with your choices. Preferences never become proven skills.')}</p></aside></div>
+    <Suspense fallback={null}><SemanticRecall lang={lang} matches={matches} onInspect={onInspect}/></Suspense>
     <DigitalInterests lang={lang} state={state} setState={setState} onSkip={onExplore}/>
     <div className="profile-next-actions"><div><strong>{tr(lang,'شبكتك تبدأ بما أضفته','Your network starts with what you added')}</strong><p>{tr(lang,'استكشف الآن، أو أضف دليلًا أكاديميًا، أو احفظ ملفك لتكمله لاحقًا.','Explore now, add academic evidence or save your profile to continue later.')}</p></div><div><button className="button primary" onClick={onExplore}><Waypoints size={18}/>{tr(lang,'استكشف شبكتي','Explore my network')}</button><button className="button secondary" onClick={onRecord}><UploadCloud size={18}/>{tr(lang,'أضف سجلي الأكاديمي','Add my transcript')}</button><button className="text-button" onClick={onSave}>{tr(lang,'خيارات حفظ ملفي','Profile saving options')}</button></div></div>
     <details className="profile-research-details"><summary>{tr(lang,'المقاييس النفسية والبحثية وحدود استخدامها','Psychometric research and its limits')}</summary><div className="app-title compact"><h3>{tr(lang,'أدوات مرشحة للمعايرة السعودية — لا تؤثر على الملاءمة','Candidate instruments for Saudi validation — no Fit effect')}</h3></div><div className="instrument-grid">{Object.values(PSYCHOMETRIC_INSTRUMENTS).map(inst=><article className="panel instrument-card" key={inst.id}><div><small>{inst.sourceSystem}</small><h3>{inst.name[lang]}</h3></div><p>{inst.construct}</p><span className="instrument-status">{inst.status}</span><small>{inst.notes[lang]}</small></article>)}</div><div className="insight-boundary"><ShieldCheck/><span>{tr(lang,'درجات IPIP/RIASEC لا تدخل الحكم إطلاقًا قبل دراسة سعودية موثقة للثبات والبنية والملاءمة الثقافية.','IPIP/RIASEC instrument scores never enter judgments before documented Saudi reliability, structure and cultural validation.')}</span></div></details>

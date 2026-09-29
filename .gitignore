@@ -15,3 +15,7 @@ public/apple-touch-icon.png
 public/icon-192.png
 public/icon-512.png
 public/og-kamin-*.jpg
+.model-cache/
+public/models/
+public/ai-runtime/
+public/semantic-tools.css

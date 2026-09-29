@@ -5,6 +5,7 @@ import { ictKnowledgeGraph } from '../src/knowledge/ictKgV1.js'
 import { courseSkillMap } from '../src/data.js'
 
 const root=process.cwd()
+await copyFile(path.join(root,'src','semantic-tools.css'),path.join(root,'public','semantic-tools.css'))
 const pub=path.join(root,'public')
 const ocr=path.join(pub,'ocr')
 const coreOut=path.join(ocr,'core')

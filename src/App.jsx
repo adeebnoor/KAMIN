@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { copy } from './i18n.js'
 import {SiteHeader,SiteFooter} from './site/SiteChrome.jsx'
+import {pageHref} from '../public/site-content.js'
 import LandingExperience from './components/LandingExperience.jsx'
 import DecisionStudio from './components/DecisionStudio.jsx'
 import StudentInsight from './components/StudentInsight.jsx'
@@ -23,6 +24,8 @@ import { trustMicrocopy } from './content/trustCopy.js'
 import { PILOT_ANALYTICS_ENABLED, clearPilotLocalData, submitPilotFeedback, trackPilotEvent } from './utils/pilotAnalytics.js'
 
 const KnowledgeWorkspace = lazy(()=>import('./components/KnowledgeWorkspace.jsx'))
+const CapabilitySnapshot = lazy(()=>import('./components/CapabilitySnapshot.jsx'))
+const SnapshotReceiver = lazy(()=>import('./components/CapabilitySnapshot.jsx').then(m=>({default:m.SnapshotReceiver})))
 
 const STORAGE_KEY = 'kamin-session-v3'
 const LEGACY_SESSION_KEY = 'kamin-pilot-session-v2'
@@ -151,7 +154,7 @@ function CourseReview({ lang, rows, setRows, onApprove, consent, setConsent }) {
   return <div className="panel">
     <div className="panel-head"><div><small>{t.review}</small><h3>{lang === 'ar' ? `${rows.length} مقررات مستخرجة` : `${rows.length} extracted courses`}</h3></div><button className="text-button" onClick={() => setFormOpen(v => !v)}><Plus size={17}/>{t.addRow}</button></div>
     <div className={`quality-review ${quality.issues.length?'has-issues':''}`} role="status"><h4>{lang==='ar'?'معلومات صحيحة، مسار أنسب لك':'Accurate information, more relevant guidance'}</h4><p>{lang==='ar'?'طابق الرمز والدرجة مع سجلك الأصلي. لا ترفع الدرجة لتحسين النتيجة؛ نقطة البداية الصادقة تساعدك على اختيار تدريب يناسب استعدادك.':'Match codes and grades to your original record. Do not raise a grade to improve a result; an honest starting point helps you choose suitable training.'}</p>{quality.issues.length>0&&<ul>{quality.issues.map((issue,i)=><li key={i}>{lang==='ar'?`السطر ${issue.index+1}: `:`Row ${issue.index+1}: `}{issue.kind==='duplicate'?(lang==='ar'?'رمز مقرر مكرر؛ احتفظ بالمحاولة التي تريد اعتمادها.':'Duplicate course code; keep the attempt you intend to use.'):issue.kind==='grade'?(lang==='ar'?'صيغة درجة غير معروفة؛ استخدم A أو B+ أو درجة من 0 إلى 100.':'Unrecognized grade; use A, B+, or a score from 0 to 100.'):(lang==='ar'?'أكمل رمز المقرر واسمه ودرجته من المصدر.':'Complete the code, name and grade from the source.')}</li>)}</ul>}<p>{lang==='ar'?'هذا فحص اتساق فقط؛ مراجعتك لا تعني توثيقًا من الجامعة.':'This is a consistency check; your review is not university verification.'}</p></div>
-    <div className="mapping-coverage" role="status"><strong>{rows.filter(row=>isMappedCourse(row.code)).length}/{rows.length||0}</strong><span>{lang==='ar'?'مقررات لها ربط قدرات محكوم حاليًا':'courses currently have governed capability mappings'}</span><a href={lang==='ar'?'/mapping.html?lang=ar':'/mapping.html?lang=en'} target="_blank" rel="noreferrer">{lang==='ar'?'منهجية الربط':'Mapping methodology'}</a></div>
+    <div className="mapping-coverage" role="status"><strong>{rows.filter(row=>isMappedCourse(row.code)).length}/{rows.length||0}</strong><span>{lang==='ar'?'مقررات لها ربط قدرات محكوم حاليًا':'courses currently have governed capability mappings'}</span><a href={pageHref('mapping.html',lang)} target="_blank" rel="noreferrer">{lang==='ar'?'منهجية الربط':'Mapping methodology'}</a></div>
     {formOpen && <div className="manual-row"><input aria-label={t.courseCode} placeholder="CPIT-251" value={form.code} onChange={e=>setForm({...form,code:e.target.value})}/><input aria-label={t.courseName} placeholder={t.courseName} value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/><input aria-label={t.grade} placeholder="A / B+" value={form.grade} onChange={e=>setForm({...form,grade:e.target.value})}/><button onClick={add}>{t.save}</button></div>}
     <div className="table-scroll"><table><thead><tr><th>{t.courseCode}</th><th>{t.courseName}</th><th>{t.grade}</th><th>{lang==='ar'?'حالة الربط':'Mapping'}</th><th>{lang==='ar'?'سياق البرنامج الوطني':'National programme context'}</th><th><span className="sr-only">remove</span></th></tr></thead><tbody>
       {rows.map((r,i)=>{const national=ssceForCourse(r);return <tr key={i}><td><input value={r.code} aria-label={`${t.courseCode} ${i+1}`} onChange={e=>update(i,'code',e.target.value)}/></td><td><input value={localized(r.name,lang)} aria-label={`${t.courseName} ${i+1}`} onChange={e=>update(i,'name',e.target.value)}/></td><td><input value={r.grade} aria-label={`${t.grade} ${i+1}`} onChange={e=>update(i,'grade',e.target.value)}/></td><td><span className={isMappedCourse(r.code)?'mapping-badge mapped':'mapping-badge unmapped'}>{isMappedCourse(r.code)?(lang==='ar'?'ربط مهارة معتمد حاليًا':'Current governed skill mapping'):(lang==='ar'?'غير مربوط بمهارة بعد':'Not skill-mapped yet')}</span></td><td>{national?<span className="ssce-inline"><b>{national.code}</b><small>{national.labels[lang]}</small></span>:<span className="ssce-none">{lang==='ar'?'غير مستدل من رمز المقرر':'Not inferred from course namespace'}</span>}</td><td><button className="icon-danger" onClick={()=>setRows(rows.filter((_,idx)=>idx!==i))} aria-label={lang==='ar'?`حذف ${r.code}`:`Delete ${r.code}`}><Trash2 size={16}/></button></td></tr>})}
@@ -426,6 +429,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       {backupStatus&&<div className="portable-status" role="status" aria-live="polite">{backupStatus}</div>}
     </div>
 
+    <Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل خيارات المشاركة…':'Loading sharing options…'}</p>}><CapabilitySnapshot key={JSON.stringify([state.approved,state.courses,state.goal])} lang={lang} skills={state.approved?inferSkills(state.courses):[]} goal={state.consents.insight?state.goal:null}/></Suspense>
     <div className="panel privacy-actions"><ShieldCheck size={30}/><h3>{lang==='ar'?'ملفك تحت سيطرتك':'Your profile stays under your control'}</h3><p>{t.privacyNote}</p>{confirmDelete ? <div className="delete-confirm"><p>{t.deleteConfirm}</p><div><button className="button danger" onClick={onDelete}><Trash2 size={17}/>{lang==='ar'?'نعم، احذف':'Yes, delete'}</button><button className="button secondary" onClick={()=>setConfirmDelete(false)}>{t.cancel}</button></div></div> : <button className="button danger" onClick={()=>setConfirmDelete(true)}><Trash2 size={17}/>{t.delete}</button>}</div>
   </div>
 }
@@ -682,7 +686,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
       <div className="app-main">
         <header className="app-topbar"><div><small>{t.app.title}</small><strong>{state.approved?(lang==='ar'?'ملف راجعته أنت':'Student-reviewed profile'):(lang==='ar'?'إصدار عام':'Public release')}</strong></div><div><button ref={closeButtonRef} className="icon-button" onClick={onClose} aria-label={lang==='ar'?'إغلاق':'Close'}><X/></button></div></header>
         {notice&&<div className="toast" role="status" aria-live="polite"><Check size={18}/><span>{notice}</span></div>}
-        {storageError&&<div className="storage-recovery" role="alert"><strong>{lang==='ar'?(storageError==='delete'?'تعذر إكمال حذف النسخة المحلية':'تعذر الوصول إلى التخزين أو حفظ آخر التغييرات'):(storageError==='delete'?'Could not finish deleting the local copy':'Storage is unavailable or recent changes could not be saved')}</strong><p>{lang==='ar'?'أبقِ الصفحة مفتوحة. راجع إعدادات المتصفح، وصدّر نسخة مشفّرة قبل المغادرة.':'Keep this page open. Check browser settings and export an encrypted backup before leaving.'}</p><button className="text-button" onClick={()=>setView('privacy')}>{lang==='ar'?'افتح خيارات الحفظ والنسخ':'Open saving & backup options'}</button><a href={`/guide.html?lang=${lang}#recovery`} target="_blank" rel="noreferrer">{lang==='ar'?'خطوات حل المشكلة':'Recovery steps'}</a></div>}
+        {storageError&&<div className="storage-recovery" role="alert"><strong>{lang==='ar'?(storageError==='delete'?'تعذر إكمال حذف النسخة المحلية':'تعذر الوصول إلى التخزين أو حفظ آخر التغييرات'):(storageError==='delete'?'Could not finish deleting the local copy':'Storage is unavailable or recent changes could not be saved')}</strong><p>{lang==='ar'?'أبقِ الصفحة مفتوحة. راجع إعدادات المتصفح، وصدّر نسخة مشفّرة قبل المغادرة.':'Keep this page open. Check browser settings and export an encrypted backup before leaving.'}</p><button className="text-button" onClick={()=>setView('privacy')}>{lang==='ar'?'افتح خيارات الحفظ والنسخ':'Open saving & backup options'}</button><a href={pageHref('guide.html#recovery',lang)} target="_blank" rel="noreferrer">{lang==='ar'?'خطوات حل المشكلة':'Recovery steps'}</a></div>}
         {moreTools&&<nav className="mobile-more-tools" aria-label={lang==='ar'?'أدوات إضافية':'More tools'}>{nav.slice(4).map(([id,Icon,label])=><button key={id} disabled={isLocked(id)} title={isLocked(id)?(lang==='ar'?'اعتمد سجلًا أولًا لفتح هذا القسم':'Approve a transcript first to unlock this section'):undefined} onClick={()=>navigate(id)}><Icon size={18}/><span>{label}{isLocked(id)&&<small>{lang==='ar'?'اعتمد سجلًا للفتح':'Approve a transcript to unlock'}</small>}</span></button>)}</nav>}
         <div className="app-content-wrap" role="main">
           {!['knowledge','privacy','audit'].includes(view)&&<nav className="student-journey" aria-label={lang==='ar'?'رحلتي في كامن':'My Kamin journey'}>{[['insight',Fingerprint,lang==='ar'?'اهتماماتي':'My interests'],['start',UploadCloud,lang==='ar'?'أدلتي — اختياري':'Evidence — optional'],['studio',SearchCheck,lang==='ar'?'شبكتي وخطوتي':'Connections & next step']].map(([id,Icon,label],i)=><button key={id} aria-current={(view===id&&id!=='start')||(id==='start'&&view==='review')?'step':undefined} onClick={()=>navigate(id)}><span>{i+1}</span><Icon size={18}/>{label}</button>)}</nav>}
@@ -692,7 +696,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
             <div className="onboarding-benefit"><strong>{lang==='ar'?'ماذا ستحصل عليه مقابل معلوماتك؟':'What will your information give you?'}</strong><p>{lang==='ar'?'اهتماماتك وأهدافك وتفضيلاتك تكوّن صورتك الشخصية. السجل يضيف الأدلة الأكاديمية إلى هذه الشبكة.':'Your interests, goals and preferences form your personal context. The transcript adds academic evidence to this network.'}</p></div>
             <div className="onboarding-primary">
               <button className="profile-onboarding-entry" onClick={()=>setView('insight')}><Fingerprint size={28}/><span><strong>{lang==='ar'?'ابدأ باهتماماتك وهدفك':'Start with your interests and goal'}</strong><small>{lang==='ar'?'لا تحتاج سجلًا لتبدأ شبكتك. أضف تفضيلاتك الآن، وأدلتك لاحقًا.':'No transcript needed to start your network. Add preferences now and evidence later.'}</small></span>{lang==='ar'?<ArrowLeft size={18}/>:<ArrowRight size={18}/>}</button>
-              <a className="sample-first-link" href={lang==='ar'?'/sample-report.html?lang=ar':'/sample-report.html?lang=en'} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد التقرير التوضيحي أولًا — بدون رفع أي ملف':'View the synthetic report first — no upload required'}</a>
+              <a className="sample-first-link" href={pageHref('sample-report.html',lang)} onClick={()=>trackPilotEvent('sample_report_viewed')}><Sparkles size={17}/>{lang==='ar'?'شاهد التقرير التوضيحي أولًا — بدون رفع أي ملف':'View the synthetic report first — no upload required'}</a>
               <button className="onboarding-upload" onClick={()=>fileRef.current?.click()}><div className="start-icon"><UploadCloud/></div><div><small>{lang==='ar'?'أضف دليلًا — اختياري':'Add evidence — optional'}</small><h3>{t.app.upload}</h3><p>{t.app.uploadHelp}</p></div></button>
               <div className="inline-trust"><ShieldCheck size={19}/><strong>{trustMicrocopy('transcript',lang)}</strong></div>
               <div className="onboarding-secondary">
@@ -723,7 +727,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
             {nextDecision?<div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{nextDecision.title[lang]}</h3></div><span className={`status ${nextDecision.status}`}>{t.app.fit[nextDecision.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{t.app.fit[nextDecision.status]}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{nextDecision.reasons.map((reason,i)=><p key={i}><Check size={15}/>{reason}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {nextDecision.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button></div>:<div className="panel decision decision-locked"><LockKeyhole size={28}/><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{lang==='ar'?'أضف أو اعتمد مقررًا مرتبطًا بقدرة لفتح أول توصية':'Add or approve capability-linked coursework to unlock your first recommendation'}</h3><p>{lang==='ar'?'لا يعرض كامن حكم دورة عندما لا توجد أي مهارة مدعومة بالدليل. يمكنك مراجعة السجل أو إضافة مقرر يدويًا.':'Kamin does not render a course judgment when the profile has zero evidence-backed skills. Review your transcript or add a course manually.'}</p></div></div>}<PilotFeedback lang={lang}/>
           </section>}
           {view==='studio' && <section className="app-content"><DecisionStudio initialTarget={selectedMatch} lang={lang} matches={matches} state={state} graph={personGraph} onReview={()=>{if(!state.approved){setView('start');return}setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('insight')}/></section>}
-          {view==='insight' && <section className="app-content"><StudentInsight lang={lang} state={state} setState={setState} log={log} onGoal={chooseGoal} onExplore={()=>setView('studio')} onRecord={()=>setView('start')} onSave={()=>setView('privacy')}/></section>}
+          {view==='insight' && <section className="app-content"><StudentInsight matches={matches} onInspect={id=>{setSelectedMatch(id);setView('studio')}} lang={lang} state={state} setState={setState} log={log} onGoal={chooseGoal} onExplore={()=>setView('studio')} onRecord={()=>setView('start')} onSave={()=>setView('privacy')}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer lang={lang} profile={matchProfile} matches={matches} onPlan={id=>{setSelectedMatch(id);setView('studio')}}/></section>}
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
@@ -747,13 +751,14 @@ class AppErrorBoundary extends Component {
   }
 }
 
-export default function App() {
+export default function App({incomingSnapshot=null}) {
+  const [sharedPacket,setSharedPacket]=useState(incomingSnapshot)
   const [lang,setLang] = useState(()=>{let stored;try{stored=localStorage.getItem('kamin-lang')}catch{};return [location.pathname.match(/^\/(ar|en)(?:\/|$)/)?.[1],new URLSearchParams(location.search).get('lang'),stored].find(value=>['ar','en'].includes(value))||'ar'})
   const [appOpen,setAppOpen] = useState(false)
   const appTriggerRef=useRef(null)
   const [appEntry,setAppEntry]=useState('default')
   const [knowledgeSearch,setKnowledgeSearch]=useState('')
-  const openApp=(entry='default')=>{appTriggerRef.current=document.activeElement;setAppEntry(typeof entry==='string'?entry:'default');setAppOpen(true)}
+  const openApp=(entry='default')=>{setSharedPacket(null);appTriggerRef.current=document.activeElement;setAppEntry(typeof entry==='string'?entry:'default');setAppOpen(true)}
   const openKnowledge=(search='')=>{setKnowledgeSearch(typeof search==='string'?search:'');openApp('knowledge')}
   const closeApp=()=>{setAppOpen(false);requestAnimationFrame(()=>appTriggerRef.current?.focus?.())}
   const t = copy[lang]
@@ -798,14 +803,13 @@ export default function App() {
     })
     try{localStorage.setItem('kamin-lang',lang)}catch{}
     const url=new URL(window.location.href)
-    if(/^\/(ar|en)(?:\/|$)/.test(url.pathname)){url.pathname=url.pathname.replace(/^\/(ar|en)/,`/${lang}`);url.searchParams.delete('lang')}else url.searchParams.set('lang',lang)
-    history.replaceState(null,'',url)
+    history.replaceState(null,'',pageHref(url.pathname+url.search+url.hash,lang))
   },[lang])
   useEffect(()=>{ document.body.style.overflow=appOpen?'hidden':''; return()=>{document.body.style.overflow=''} },[appOpen])
   return <>
     <div inert={appOpen} aria-hidden={appOpen?true:undefined}>
     <SiteHeader lang={lang} setLang={setLang} onTry={()=>openApp('insight')} onKnowledge={openKnowledge}/>
-    <main id="main"><LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onKnowledge={openKnowledge}/></main>
+    <main id="main">{sharedPacket?<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل قارئ اللقطة…':'Loading snapshot reader…'}</p>}><SnapshotReceiver lang={lang} packet={sharedPacket} onClose={()=>setSharedPacket(null)}/></Suspense>:<LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onKnowledge={openKnowledge}/>}</main>
     <SiteFooter lang={lang}/>
     </div>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp} entry={appEntry} knowledgeSearch={knowledgeSearch}/></AppErrorBoundary>}

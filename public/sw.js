@@ -1,4 +1,4 @@
-const CACHE = 'kamin-public-v13'
+const CACHE = 'kamin-public-v14'
 const CORE = [
   '/favicon.svg',
   '/manifest.json',
@@ -39,6 +39,9 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return
   const url = new URL(event.request.url)
   if (url.origin !== location.origin) return
+  // The opt-in model worker owns model caching and deletion. Do not silently
+  // duplicate it in the general application cache.
+  if(url.pathname.startsWith('/models/')||url.pathname.startsWith('/ai-runtime/'))return
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
