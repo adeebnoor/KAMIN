@@ -1,0 +1,33 @@
+import {useState} from 'react'
+import {Share2,LockKeyhole,Copy,Trash2} from 'lucide-react'
+import {copy} from '../i18n.js'
+import {buildCapabilitySnapshot,encryptSnapshot,snapshotFragment,decryptSnapshot,snapshotSkills as catalog} from '../utils/capabilitySnapshot.js'
+const tr=(lang,ar,en)=>lang==='ar'?ar:en
+function SnapshotContent({lang,snapshot}){return <div className="snapshot-preview"><h4>{tr(lang,'محتوى اللقطة','Snapshot contents')}</h4><ul>{snapshot.capabilities.map(id=><li key={id}>{catalog[id].labels[lang]}</li>)}{snapshot.goal&&<li>{tr(lang,'الهدف: ','Goal: ')}{copy[lang].app.goals[snapshot.goal]}</li>}</ul><p>{tr(lang,'اختيارات يشاركها صاحب الرابط، وليست شهادة موثّقة أو إثباتًا للجاهزية.','Choices shared by the link creator, not a verified credential or proof of readiness.')}</p></div>}
+export default function CapabilitySnapshot({lang,skills,goal}){
+ const [selected,setSelected]=useState([]),[includeGoal,setIncludeGoal]=useState(false),[agree,setAgree]=useState(false)
+ const [link,setLink]=useState(''),[status,setStatus]=useState(''),[busy,setBusy]=useState(false)
+ const reset=()=>{setLink('');setStatus('');setAgree(false)}
+ const hasContent=selected.length>0||(includeGoal&&goal)
+ const preview=hasContent?buildCapabilitySnapshot({skillIds:selected,goal:includeGoal?goal:null}):null
+ const create=async()=>{
+  if(!agree||!preview)return
+  setBusy(true);setStatus('')
+  try{const packet=await encryptSnapshot(preview);setLink(`${location.origin}/${lang}/${snapshotFragment(packet)}`)}
+  catch{setStatus(tr(lang,'تعذر إنشاء اللقطة. جرّب متصفحًا حديثًا عبر HTTPS.','Could not create the snapshot. Use a current browser over HTTPS.'))}
+  finally{setBusy(false)}
+ }
+ return <section className="panel snapshot-share"><div className="portable-head"><Share2 size={28}/><div><small>{tr(lang,'مشاركة باختيارك','SHARE BY CHOICE')}</small><h3>{tr(lang,'شارك لقطة قدرات محدودة','Share a limited capability snapshot')}</h3></div></div><p>{tr(lang,'اختر ما تريد إظهاره للمرشد. لا نضمّن اسمًا أو رقمًا جامعيًا أو مقررات أو درجات أو سجل استخدام.','Choose what to show an advisor. Names, student IDs, courses, grades and activity logs are excluded.')}</p>
+ <fieldset disabled={busy}><legend>{tr(lang,'القدرات التي ستظهر','Capabilities to include')}</legend>{skills.length?skills.map(skill=><label className="snapshot-option" key={skill.id}><input type="checkbox" checked={selected.includes(skill.id)} onChange={e=>{reset();setSelected(previous=>e.target.checked?[...previous,skill.id]:previous.filter(id=>id!==skill.id))}}/>{skill.labels[lang]}</label>):<p>{tr(lang,'أضف أدلة معتمدة لإظهار قدرات هنا. يمكنك مشاركة هدفك وحده إن اخترته.','Add approved evidence to list capabilities here. You can share only your goal if you selected one.')}</p>}{goal&&<label className="snapshot-option"><input type="checkbox" checked={includeGoal} onChange={e=>{reset();setIncludeGoal(e.target.checked)}}/>{tr(lang,'تضمين هدفي: ','Include my goal: ')}{copy[lang].app.goals[goal]}</label>}</fieldset>
+ {preview&&<SnapshotContent lang={lang} snapshot={preview}/>}
+ <p>{tr(lang,'التشفير محلي بـ AES-GCM. يحتوي جزء الرابط بعد # على اللقطة ومفتاحها، ولا يُرسل ضمن طلب الصفحة. لكن تطبيق المراسلة أو سجل المتصفح أو الإضافات قد يطّلع على الرابط الكامل. كل من يملكه يستطيع فتحه وإعادة إرساله؛ لا يمكن سحبه بعد الإرسال.','AES-GCM encryption runs locally. The fragment after # contains the snapshot and key and is not sent in the page request. Messaging apps, browser history or extensions may see the full link. Anyone holding it can open or forward it; it cannot be revoked after sending.')}</p>
+ <label className="snapshot-option"><input type="checkbox" checked={agree} onChange={e=>{setAgree(e.target.checked);setLink('')}}/>{tr(lang,'راجعت محتوى اللقطة وأفهم أن الرابط يمنح حامله إمكانية قراءتها.','I reviewed the snapshot and understand that the link grants its holder access.')}</label>
+ <button className="button primary" disabled={!agree||!hasContent||busy} onClick={create}><LockKeyhole size={17}/>{busy?tr(lang,'جارٍ التشفير…','Encrypting…'):tr(lang,'إنشاء رابط مشفّر','Create encrypted link')}</button>
+ {link&&<div className="snapshot-output"><label>{tr(lang,'الرابط الكامل — عامله كمعلومة خاصة','Full link — treat it as private')}<textarea dir="ltr" readOnly value={link}/></label><button className="button secondary" onClick={async()=>{try{await navigator.clipboard.writeText(link);setStatus(tr(lang,'نُسخ الرابط. أرسله فقط لمن تختاره.','Link copied. Send it only to your chosen recipient.'))}catch{setStatus(tr(lang,'تعذر النسخ. حدد الرابط وانسخه يدويًا.','Could not copy. Select and copy the link manually.'))}}}><Copy size={17}/>{tr(lang,'نسخ الرابط','Copy link')}</button><button className="text-button" onClick={reset}><Trash2 size={17}/>{tr(lang,'إزالة الرابط من هذه الشاشة','Remove link from this screen')}</button></div>}
+ {status&&<p role="status">{status}</p>}</section>
+}
+export function SnapshotReceiver({lang,packet,onClose}){
+ const [snapshot,setSnapshot]=useState(null),[error,setError]=useState(''),[busy,setBusy]=useState(false)
+ const open=async()=>{setBusy(true);try{setSnapshot(await decryptSnapshot(packet))}catch{setError(tr(lang,'تعذر فتح اللقطة: الرابط ناقص أو عُدّل، أو الإصدار غير مدعوم. اطلب رابطًا جديدًا.','Could not open the snapshot: the link is incomplete, modified or unsupported. Ask for a new link.'))}finally{setBusy(false)}}
+ return <section className="shell snapshot-receiver"><LockKeyhole size={34}/><h1>{tr(lang,'لقطة قدرات مشتركة','Shared capability snapshot')}</h1><p>{tr(lang,'هذه لقطة أرسلها شخص باختياره. تُفتح محليًا ولا تضاف إلى ملفك أو تخزين كامن. أزلنا الحمولة والمفتاح من شريط العنوان لهذه الصفحة.','Someone chose to send this snapshot. It opens locally and is not added to your profile or Kamin storage. The payload and key have been removed from this page’s address bar.')}</p>{snapshot?<><SnapshotContent lang={lang} snapshot={snapshot}/><small>{tr(lang,'تاريخ الإنشاء المصرّح به: ','Sender-provided creation time: ')}{snapshot.createdAt}</small></>:<button className="button primary" disabled={busy||packet.invalid} onClick={open}>{busy?tr(lang,'جارٍ الفتح…','Opening…'):tr(lang,'فتح اللقطة محليًا','Open snapshot locally')}</button>}{(error||packet.invalid)&&<p role="alert">{error||tr(lang,'صيغة الرابط غير صالحة. اطلب رابطًا جديدًا.','Invalid link format. Ask for a new link.')}</p>}<p>{tr(lang,'ليست شهادة أو إثبات هوية. التشفير لا يثبت صحة ما اختاره المرسل.','This is not a credential or identity check. Encryption does not verify the sender’s claims.')}</p><button className="button secondary" onClick={onClose}>{tr(lang,'إغلاق اللقطة والعودة إلى كامن','Close snapshot and return to Kamin')}</button></section>
+}

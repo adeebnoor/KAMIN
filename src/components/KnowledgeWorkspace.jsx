@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Search, Network, Terminal, Play, X, Download, ShieldCheck, ArrowLeft, ArrowRight, BookOpen, Compass, Route } from 'lucide-react'
+import { Search, Network, Terminal, Play, X, Download, Copy, ShieldCheck, ArrowLeft, ArrowRight, BookOpen, Compass, Route } from 'lucide-react'
 import { KNOWLEDGE_VERSION, knowledgeConcepts, referenceEdges, knowledgeLabel, searchKnowledge, buildWorkspaceDataset, QUERY_TEMPLATES } from '../knowledge/workspace.js'
+import { resultsToCsv } from '../knowledge/exports.js'
+import { getKnowledgeEntity } from '../knowledge/query.js'
 import { startLocalQuery } from '../knowledge/runQuery.js'
 const tr=(lang,ar,en)=>lang==='ar'?ar:en
 const relationLabel=(id,lang)=>({
@@ -30,7 +32,9 @@ export default function KnowledgeWorkspace({lang,personalGraph,hasProfile,onStud
   const [template,setTemplate]=useState('requirements')
   const [query,setQuery]=useState(QUERY_TEMPLATES[0].query)
   const [result,setResult]=useState(null)
-  const [error,setError]=useState('')
+  const [error,setError]=useState(null)
+  const [exportStatus,setExportStatus]=useState('')
+  const resultRef=useRef(null)
   const [busy,setBusy]=useState(false)
   const running=useRef(null)
   const runId=useRef(0)
@@ -38,7 +42,7 @@ export default function KnowledgeWorkspace({lang,personalGraph,hasProfile,onStud
   const concepts=useMemo(()=>searchKnowledge(search,kind),[search,kind])
   const concept=concepts.find(c=>c.id===selected)||concepts[0]
   const edges=referenceEdges.filter(e=>e.subject===concept?.id||e.object===concept?.id)
-  const invalidate=()=>{runId.current++;running.current?.cancel();running.current=null;setBusy(false);setResult(null);setError('')}
+  const invalidate=()=>{runId.current++;running.current?.cancel();running.current=null;setBusy(false);setResult(null);setError(null);setExportStatus('')}
   useEffect(()=>()=>{runId.current++;running.current?.cancel()},[])
   useEffect(()=>{invalidate();setAllowPersonal(false);setScope('reference')},[personalGraph])
   const run=async()=>{
@@ -50,11 +54,36 @@ export default function KnowledgeWorkspace({lang,personalGraph,hasProfile,onStud
       running.current=startLocalQuery(dataset,query)
       const answer=await running.current.promise
       if(id===runId.current) setResult({...answer,scope})
-    }catch(e){if(id===runId.current) setError(e.message)}
+    }catch(e){if(id===runId.current) setError({code:e.message,line:e.line,column:e.column,reason:e.reason})}
     finally{if(id===runId.current){setBusy(false);running.current=null}}
   }
   const chooseConcept=id=>{setSearch('');setKind('all');setSelected(id);setTab('browse')}
   const changeScope=value=>{invalidate();setScope(value);if(value!=='personal')setAllowPersonal(false)}
+  useEffect(()=>{if(error)resultRef.current?.scrollIntoView({block:'nearest',behavior:'smooth'})},[error])
+  const bindingLabel=term=>{
+    if(term.type!=='uri')return term.value
+    const concept=knowledgeConcepts.find(c=>c.id===term.value)
+    const entity=getKnowledgeEntity(term.value)
+    const relation={
+      'urn:kamin:person:local':['صاحب الملف','Profile owner'],
+      'urn:kamin:hasCapabilityEvidenceFor':['لديه دليل على متطلب المسار','has evidence for a pathway requirement'],
+      'urn:kamin:hasGoalContextFor':['يرتبط هدفه بالمسار','has goal context for the pathway'],
+      'urn:kamin:hasPreferenceContextFor':['يرتبط تفضيله بالمسار','has preference context for the pathway'],
+      'urn:kamin:hasInterestContextFor':['يرتبط اهتمامه بالمسار','has interest context for the pathway'],
+    }[term.value]
+    return concept?.label[lang]||entity?.label?.[lang]||relation?.[lang==='ar'?0:1]||tr(lang,'مفهوم دون تسمية','Unlabelled concept')
+  }
+  const saveFile=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  const csv=async(copyOnly=false)=>{
+    try{const data=resultsToCsv(result);if(copyOnly){await navigator.clipboard.writeText(data);setExportStatus(tr(lang,'نُسخت النتائج بصيغة CSV.','Results copied as CSV.'))}else saveFile('\ufeff'+data,'kamin-query-results.csv','text/csv;charset=utf-8')}
+    catch{setExportStatus(tr(lang,'تعذر النسخ. استخدم تنزيل CSV.','Could not copy. Use Download CSV.'))}
+  }
+  const exportRdf=async format=>{
+    const previous=result;invalidate();setResult(previous);const id=runId.current;setBusy(true)
+    try{const dataset=buildWorkspaceDataset(scope,{personalGraph,allowPersonal});running.current=startLocalQuery(dataset,'',{action:'export',format});const answer=await running.current.promise;if(id===runId.current){saveFile(answer.text,`kamin-${scope}.${format==='turtle'?'ttl':'trig'}`,format==='turtle'?'text/turtle':'application/trig');setExportStatus(tr(lang,'أُنشئ ملف الرسم البياني للنطاق المحدد.','The graph file for the selected scope was created.'))}}
+    catch(e){if(id===runId.current)setError({code:e.message,line:e.line,column:e.column})}
+    finally{if(id===runId.current){setBusy(false);running.current=null}}
+  }
   const download=()=>{
     const data=JSON.stringify({scope:result.scope,query,result,knowledgeVersion:KNOWLEDGE_VERSION},null,2)
     const url=URL.createObjectURL(new Blob([data],{type:'application/json'}))
@@ -76,9 +105,15 @@ export default function KnowledgeWorkspace({lang,personalGraph,hasProfile,onStud
       {scope==='personal'&&<label className="query-consent"><input type="checkbox" checked={allowPersonal} onChange={e=>{invalidate();setAllowPersonal(e.target.checked)}}/><span>{tr(lang,'أسمح بقراءة ملفي محليًا في هذه المساحة حتى أغادرها. لن يُرسل إلى خادم، ويمكنني إيقاف الإذن الآن.','Allow this workspace to read my profile locally until I leave. It is not sent to a server, and I can turn this permission off now.')}</span></label>}
       {scope==='demo'&&<p className="knowledge-badge">{tr(lang,'بيانات وهمية بالكامل؛ لا تدخل في ملفك.','Entirely synthetic data; nothing is added to your profile.')}</p>}
       <label className="query-editor-label" htmlFor="sparql-query">{tr(lang,'استعلام SPARQL — قابل للتعديل','SPARQL query — editable')}</label><textarea id="sparql-query" dir="ltr" spellCheck={false} maxLength={6000} value={query} onChange={e=>{invalidate();setQuery(e.target.value)}}/>
-      <div className="query-actions"><button className="button primary" disabled={busy||(scope==='personal'&&!allowPersonal)} onClick={run}><Play size={17}/>{busy?tr(lang,'جارٍ التنفيذ محليًا…','Running locally…'):tr(lang,'شغّل الاستعلام','Run query')}</button>{busy&&<button className="button secondary" onClick={()=>{invalidate();setError('QUERY_CANCELLED')}}><X size={17}/>{tr(lang,'إلغاء','Cancel')}</button>}<small>{tr(lang,'SELECT / ASK · حتى 100 صف · حد التنفيذ 12 ثانية','SELECT / ASK · up to 100 rows · 12-second time limit')}</small></div>
-      {error&&<p className="query-error" role="alert">{(errors[error]||errors.QUERY_FAILED)[lang==='ar'?0:1]}</p>}
-      <div className="query-results" aria-live="polite">{result&&<><h3>{tr(lang,'نتيجة الاستعلام','Query result')}</h3><p>{tr(lang,'النطاق: ','Scope: ')}{result.scope==='reference'?tr(lang,'معرفة مرجعية','reference knowledge'):result.scope==='demo'?tr(lang,'مثال وهمي','synthetic example'):tr(lang,'ملفك المحلي','your local profile')}</p>{result.kind==='ask'?<p className="query-answer">{result.value?tr(lang,'نعم — يوجد تطابق مع السؤال.','Yes — the pattern has a match.'):tr(lang,'لا — لا يوجد تطابق في البيانات المحددة.','No — there is no match in this dataset.')}</p>:result.rows.length?<><p>{result.rows.length} {tr(lang,'صفًا','rows')}{result.truncated?tr(lang,' · عُرض أول 100 صف فقط؛ ضيّق السؤال لرؤية المزيد.',' · Showing the first 100 rows; narrow your query to see more.') : ''}</p><div className="query-table" tabIndex={0} role="region" aria-label={tr(lang,'جدول نتائج الاستعلام','Query results table')}><table><thead><tr>{result.columns.map(c=><th key={c} dir="ltr">?{c}</th>)}</tr></thead><tbody>{result.rows.map((row,i)=><tr key={i}>{result.columns.map(c=><td key={c}>{row[c]?<><span>{knowledgeLabel(row[c].value,lang)}</span><code dir="ltr">{row[c].value}</code></>:<span>—</span>}</td>)}</tr>)}</tbody></table></div></>:<p>{tr(lang,'لا توجد نتائج لهذا السؤال ضمن النطاق المحدد. أسئلة الملف تحتاج المثال الوهمي أو إذنك لملفك. غياب الدليل لا يعني غياب القدرة.','No results in this scope. Profile questions need the synthetic example or permission for your profile. Missing evidence does not mean missing ability.')}</p>}<button className="text-button" onClick={download}><Download size={16}/>{tr(lang,'تنزيل النتائج JSON','Download results as JSON')}</button>{result.scope==='personal'&&<small className="query-export-note">{tr(lang,'التنزيل يحتوي بيانات من ملفك بصيغة غير مشفّرة؛ احتفظ به في مكان آمن.','This download contains unencrypted profile results; keep it somewhere safe.')}</small>}</>}</div>
+      <div className="query-actions"><button className="button primary" disabled={busy||(scope==='personal'&&!allowPersonal)} onClick={run}><Play size={17}/>{busy?tr(lang,'جارٍ التنفيذ محليًا…','Running locally…'):tr(lang,'شغّل الاستعلام','Run query')}</button>{busy&&<button className="button secondary" onClick={()=>{invalidate();setError({code:'QUERY_CANCELLED'})}}><X size={17}/>{tr(lang,'إلغاء','Cancel')}</button>}<small>{tr(lang,'SELECT / ASK · حتى 100 صف · حد التنفيذ 12 ثانية','SELECT / ASK · up to 100 rows · 12-second time limit')}</small></div>
+      <div className="query-results" ref={resultRef} aria-live="polite" aria-busy={busy}>
+        {error&&<div className="query-error" role="alert"><h3>{tr(lang,'تعذر تنفيذ الاستعلام','Query could not run')}</h3><p>{(errors[error.code]||errors.QUERY_FAILED)[lang==='ar'?0:1]}</p>{error.line&&<p className="query-location">{tr(lang,`السطر ${error.line}، العمود ${error.column}`,`Line ${error.line}, column ${error.column}`)}</p>}{error.reason==='UNKNOWN_PREFIX'&&<p>{tr(lang,'أضف تعريف PREFIX للاختصار المستخدم.','Add a PREFIX declaration for the prefix you used.')}</p>}<p>{tr(lang,'لم تتغير بياناتك. صحح الاستعلام ثم أعد تشغيله.','Your data are unchanged. Correct the query and run it again.')}</p></div>}
+        {result&&<><h3>{tr(lang,'نتيجة الاستعلام','Query result')}</h3><p>{tr(lang,'النطاق: ','Scope: ')}{result.scope==='reference'?tr(lang,'معرفة مرجعية','reference knowledge'):result.scope==='demo'?tr(lang,'مثال وهمي','synthetic example'):tr(lang,'ملفك المحلي','your local profile')}</p>{result.kind==='ask'?<p className="query-answer">{result.value?tr(lang,'نعم — يوجد تطابق مع السؤال.','Yes — the pattern has a match.'):tr(lang,'لا — لا يوجد تطابق في البيانات المحددة.','No — there is no match in this dataset.')}</p>:result.rows.length?<><p>{result.rows.length} {tr(lang,'صفًا','rows')}{result.truncated?tr(lang,' · عُرض أول 100 صف فقط؛ ضيّق السؤال لرؤية المزيد.',' · Showing the first 100 rows; narrow your query to see more.') : ''}</p><div className="query-table" tabIndex={0} role="region" aria-label={tr(lang,'جدول نتائج الاستعلام','Query results table')}><table><thead><tr>{result.columns.map(c=><th key={c} dir="ltr">?{c}</th>)}</tr></thead><tbody>{result.rows.map((row,i)=><tr key={i}>{result.columns.map(c=><td key={c}>{row[c]?<span title={row[c].value}>{bindingLabel(row[c])}</span>:<span>—</span>}</td>)}</tr>)}</tbody></table></div></>:<p>{tr(lang,'لا توجد نتائج لهذا السؤال ضمن النطاق المحدد. أسئلة الملف تحتاج المثال الوهمي أو إذنك لملفك. غياب الدليل لا يعني غياب القدرة.','No results in this scope. Profile questions need the synthetic example or permission for your profile. Missing evidence does not mean missing ability.')}</p>}
+        <div className="query-actions"><button className="text-button" onClick={download}><Download size={16}/>{tr(lang,'تنزيل النتائج JSON','Download results as JSON')}</button><button className="text-button" onClick={()=>csv()}><Download size={16}/>{tr(lang,'تنزيل CSV','Download CSV')}</button><button className="text-button" onClick={()=>csv(true)}><Copy size={16}/>{tr(lang,'نسخ بصيغة CSV','Copy as CSV')}</button></div><small>{tr(lang,'CSV يصدّر قيم النتائج الخام ويحمي الخلايا من صيغ الجداول. JSON يحتفظ بأنواع القيم ولغاتها.','CSV exports raw result values with spreadsheet-formula protection. JSON retains value types and languages.')}</small></>}
+      </div>
+      <details className="query-rdf-export"><summary>{tr(lang,'تصدير الرسم البياني للبحث','Export the graph for research')}</summary><p>{tr(lang,'يُصدّر نطاق البيانات المحدد كاملًا، وليس صفوف الاستعلام فقط. Turtle يدمج الرسوم في رسم واحد؛ TriG يحفظ فصل المدخلات والمراجع والاستنتاجات وأدلتها.','Exports the full selected dataset, not just query rows. Turtle merges graphs into one graph; TriG preserves separate inputs, references, inferences and provenance.')}</p><div className="query-actions">{['turtle','trig'].map(format=><button key={format} className="button secondary" disabled={busy||(scope==='personal'&&!allowPersonal)} onClick={()=>exportRdf(format)}><Download size={16}/>{format==='turtle'?'Turtle (.ttl)':'TriG (.trig)'}</button>)}</div></details>
+      {scope==='personal'&&<p className="query-export-note">{tr(lang,'التصدير والنسخ يحتويان بيانات من ملفك بصيغة غير مشفّرة. راجع النطاق واحتفظ بالملف في مكان آمن.','Exports and clipboard copies contain unencrypted profile data. Review the scope and keep the file safe.')}</p>}
+      {exportStatus&&<p role="status">{exportStatus}</p>}
       <details className="query-help"><summary>{tr(lang,'كيف أقرأ النتائج؟','How do I read the results?')}</summary><p>{tr(lang,'reference = المعرفة المرجعية؛ profile-input = المعلومات التي لها مصدر؛ inferred = العلاقات المستنتجة؛ explanations = القواعد والأدلة. الاستعلام يقرأ الشبكة ولا يغيّر بياناتك أو أحكام الملاءمة.','reference = catalog knowledge; profile-input = sourced information; inferred = derived links; explanations = rules and evidence. Queries read the graph without changing your data or fit judgments.')}</p></details>
     </section>
   </div>
