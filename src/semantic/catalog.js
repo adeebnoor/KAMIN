@@ -13,5 +13,6 @@ export function rankSemanticCandidates(vector,index,{limit=3,minScore=.25}={}){
   const score=denominator?dot/denominator:0
   scores.set(item.id,Math.max(scores.get(item.id)??-1,score))
  }
- return [...scores].map(([id,score])=>({id,score})).filter(r=>r.score>=minScore).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,limit)
+ const best=Math.max(...scores.values())
+ return [...scores].map(([id,score])=>({id,score})).filter(r=>r.score>=minScore&&r.score>=best-.12).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,limit)
 }

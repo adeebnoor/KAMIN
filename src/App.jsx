@@ -21,6 +21,7 @@ import { buildMatchingProfile, matchTargets } from './matching/engine.js'
 import { projectStateToPerson360 } from './ontology/projector.js'
 import { clearLocalProfile, readLocalProfile, writeLocalProfile } from './utils/localProfileStore.js'
 import { trustMicrocopy } from './content/trustCopy.js'
+import {parseSnapshotFragment} from './utils/capabilitySnapshot.js'
 import { PILOT_ANALYTICS_ENABLED, clearPilotLocalData, submitPilotFeedback, trackPilotEvent } from './utils/pilotAnalytics.js'
 
 const KnowledgeWorkspace = lazy(()=>import('./components/KnowledgeWorkspace.jsx'))
@@ -753,6 +754,7 @@ class AppErrorBoundary extends Component {
 
 export default function App({incomingSnapshot=null}) {
   const [sharedPacket,setSharedPacket]=useState(incomingSnapshot)
+  const [snapshotVersion,setSnapshotVersion]=useState(0)
   const [lang,setLang] = useState(()=>{let stored;try{stored=localStorage.getItem('kamin-lang')}catch{};return [location.pathname.match(/^\/(ar|en)(?:\/|$)/)?.[1],new URLSearchParams(location.search).get('lang'),stored].find(value=>['ar','en'].includes(value))||'ar'})
   const [appOpen,setAppOpen] = useState(false)
   const appTriggerRef=useRef(null)
@@ -762,7 +764,20 @@ export default function App({incomingSnapshot=null}) {
   const openKnowledge=(search='')=>{setKnowledgeSearch(typeof search==='string'?search:'');openApp('knowledge')}
   const closeApp=()=>{setAppOpen(false);requestAnimationFrame(()=>appTriggerRef.current?.focus?.())}
   const t = copy[lang]
-  useEffect(()=>{trackPilotEvent('landing');const params=new URLSearchParams(location.search);if(params.get('view')==='knowledge')openKnowledge();else if(params.get('start')==='profile')openApp('insight')},[])
+  useEffect(()=>{if(incomingSnapshot)return;trackPilotEvent('landing');const params=new URLSearchParams(location.search);if(params.get('view')==='knowledge')openKnowledge();else if(params.get('start')==='profile')openApp('insight')},[])
+  useEffect(()=>{
+    // A second shared link can arrive through same-document navigation.
+    // Consume it immediately and remount the receiver so an old decrypted
+    // snapshot or pending decryption cannot appear under the new link.
+    const receive=()=>{
+      const packet=parseSnapshotFragment(location.hash)
+      if(!packet)return
+      history.replaceState(null,'',location.pathname+location.search)
+      setAppOpen(false);setSharedPacket(packet);setSnapshotVersion(version=>version+1)
+    }
+    window.addEventListener('hashchange',receive)
+    return()=>window.removeEventListener('hashchange',receive)
+  },[])
   useEffect(()=>{
     const ar = lang === 'ar'
     const title = ar ? 'كامن | اهتماماتك وقدراتك في شبكة واحدة' : 'Kamin | Your interests and capabilities, connected'
@@ -809,7 +824,7 @@ export default function App({incomingSnapshot=null}) {
   return <>
     <div inert={appOpen} aria-hidden={appOpen?true:undefined}>
     <SiteHeader lang={lang} setLang={setLang} onTry={()=>openApp('insight')} onKnowledge={openKnowledge}/>
-    <main id="main">{sharedPacket?<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل قارئ اللقطة…':'Loading snapshot reader…'}</p>}><SnapshotReceiver lang={lang} packet={sharedPacket} onClose={()=>setSharedPacket(null)}/></Suspense>:<LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onKnowledge={openKnowledge}/>}</main>
+    <main id="main">{sharedPacket?<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل قارئ اللقطة…':'Loading snapshot reader…'}</p>}><SnapshotReceiver key={snapshotVersion} lang={lang} packet={sharedPacket} onClose={()=>setSharedPacket(null)}/></Suspense>:<LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onKnowledge={openKnowledge}/>}</main>
     <SiteFooter lang={lang}/>
     </div>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp} entry={appEntry} knowledgeSearch={knowledgeSearch}/></AppErrorBoundary>}

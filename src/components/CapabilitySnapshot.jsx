@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {Share2,LockKeyhole,Copy,Trash2} from 'lucide-react'
-import {skills as catalog} from '../data.js'
 import {copy} from '../i18n.js'
-import {buildCapabilitySnapshot,encryptSnapshot,snapshotFragment,decryptSnapshot} from '../utils/capabilitySnapshot.js'
+import {buildCapabilitySnapshot,encryptSnapshot,snapshotFragment,decryptSnapshot,snapshotSkills as catalog} from '../utils/capabilitySnapshot.js'
 const tr=(lang,ar,en)=>lang==='ar'?ar:en
 function SnapshotContent({lang,snapshot}){return <div className="snapshot-preview"><h4>{tr(lang,'محتوى اللقطة','Snapshot contents')}</h4><ul>{snapshot.capabilities.map(id=><li key={id}>{catalog[id].labels[lang]}</li>)}{snapshot.goal&&<li>{tr(lang,'الهدف: ','Goal: ')}{copy[lang].app.goals[snapshot.goal]}</li>}</ul><p>{tr(lang,'اختيارات يشاركها صاحب الرابط، وليست شهادة موثّقة أو إثباتًا للجاهزية.','Choices shared by the link creator, not a verified credential or proof of readiness.')}</p></div>}
 export default function CapabilitySnapshot({lang,skills,goal}){

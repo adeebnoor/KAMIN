@@ -42,6 +42,7 @@ describe('minimal encrypted sharing',()=>{
   expect(()=>validateSnapshot({...value,person360:{}})).toThrow()
   expect(()=>buildCapabilitySnapshot({skillIds:['not-in-catalog']})).toThrow()
   expect(()=>buildCapabilitySnapshot({skillIds:[]})).toThrow()
+  expect(buildCapabilitySnapshot({skillIds:['ai-work']}).capabilities).toEqual(['ai-work'])
  })
  it('round-trips locally and puts key/payload in the fragment only',async()=>{
   const value=snapshot(),packet=await encryptSnapshot(value),hash=snapshotFragment(packet)

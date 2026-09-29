@@ -2,6 +2,7 @@ import {skills} from '../data.js'
 import {copy} from '../i18n.js'
 const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true})
 const FORMAT='kamin-capability-snapshot'
+export const snapshotSkills=Object.fromEntries(Object.values(skills).map(skill=>[skill.id,skill]))
 const AAD=encoder.encode(`${FORMAT}|1`)
 export const SNAPSHOT_LIMIT=12000
 const fail=()=>{throw new Error('INVALID_SNAPSHOT')}
@@ -13,7 +14,7 @@ const decode=value=>{
 export function validateSnapshot(value){
  if(!value||value.format!==FORMAT||value.version!==1||Object.keys(value).some(k=>!['format','version','createdAt','capabilities','goal'].includes(k)))return fail()
  if(typeof value.createdAt!=='string'||!/^\d{4}-\d{2}-\d{2}T/.test(value.createdAt)||!Number.isFinite(Date.parse(value.createdAt)))return fail()
- if(!Array.isArray(value.capabilities)||value.capabilities.length>20||new Set(value.capabilities).size!==value.capabilities.length||value.capabilities.some(id=>typeof id!=='string'||!Object.hasOwn(skills,id)))return fail()
+ if(!Array.isArray(value.capabilities)||value.capabilities.length>20||new Set(value.capabilities).size!==value.capabilities.length||value.capabilities.some(id=>typeof id!=='string'||!Object.hasOwn(snapshotSkills,id)))return fail()
  if(value.goal!==null&&(typeof value.goal!=='string'||!Object.hasOwn(copy.en.app.goals,value.goal)))return fail()
  if(!value.capabilities.length&&!value.goal)return fail()
  return value
