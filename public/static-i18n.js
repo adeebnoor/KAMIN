@@ -9,6 +9,7 @@ const apply=()=>{
  for(const node of document.querySelectorAll('[data-kamin-lang]')){const inactive=node.dataset.kaminLang!==lang;node.hidden=inactive;node.lang=node.dataset.kaminLang;node.inert=inactive;node.setAttribute('aria-hidden',String(inactive))}
  const title=document.body.dataset[lang==='ar'?'titleAr':'titleEn'];if(title)document.title=title
  const description=document.body.dataset[lang==='ar'?'descriptionAr':'descriptionEn'];if(description)document.querySelector('meta[name="description"]')?.setAttribute('content',description)
+ if(location.hash){const candidates=[...document.querySelectorAll('[id]')].filter(n=>n.id===location.hash.slice(1));const visible=candidates.find(n=>n.getClientRects().length);visible?.scrollIntoView()}
  const page=location.pathname.split('/').pop()
  const header=document.querySelector('.k-site-header');if(header)header.outerHTML=headerHtml(lang,page)
  const footer=document.querySelector('.k-site-footer');if(footer)footer.outerHTML=footerHtml(lang)
