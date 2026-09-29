@@ -80,3 +80,10 @@ await sharp({create:{width:1200,height:630,channels:3,background:'#f7f9fc'}})
   .toFile(path.join(pub,'og-kamin-1200x630.jpg'))
 
 console.log('Prepared Kamin icons, self-hosted Arabic font, ICT knowledge graph, governed mapping catalogue, social image, and fully self-hosted OCR assets.')
+
+for (const lang of ['ar','en']) {
+ const ar=lang==='ar'
+ const words=ar?['كامن','قدراتك أوضح. خطوتك أقرب.','اهتمامات · أهداف · أدلة · مسارات']:['Kamin','Clarity for your next step.','Interests · goals · evidence · pathways']
+ const svg=Buffer.from(`<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="630" fill="#f4f8f1"/><rect x="70" y="82" width="8" height="466" rx="4" fill="#ba8b46"/><g fill="#16483e" font-family="DejaVu Sans,Arial,sans-serif" text-anchor="${ar?'end':'start'}"><text x="${ar?1110:120}" y="230" font-size="92" font-weight="700">${words[0]}</text><text x="${ar?1110:120}" y="340" font-size="49">${words[1]}</text><text x="${ar?1110:120}" y="425" font-size="31" fill="#527064">${words[2]}</text></g><text x="120" y="550" font-family="Arial,sans-serif" font-size="23" fill="#527064">KAMIN · RESEARCH RELEASE</text></svg>`)
+ await sharp(svg).jpeg({quality:88,mozjpeg:true}).toFile(path.join(pub,`og-kamin-${lang}.jpg`))
+}

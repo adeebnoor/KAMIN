@@ -16,7 +16,7 @@ test('Arabic font asset and privacy page are available', async ({ page, request 
 
 test('Arabic language label remains readable in English mode', async ({ page }) => {
   await page.goto('/?lang=en')
-  const label = page.locator('.language-button span[lang="ar"]')
+  const label = page.locator('.k-language span[lang="ar"]')
   await expect(label).toHaveText('العربية')
   const family = await label.evaluate(el => getComputedStyle(el).fontFamily)
   expect(family).toMatch(/Noto Sans Arabic Variable/)

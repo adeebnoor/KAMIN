@@ -26,6 +26,7 @@ test('home navigation opens bilingual guide and service pages with accurate stat
  await page.getByRole('link',{name:'دليل الاستخدام',exact:true}).click()
  await expect(page.locator('h1:visible')).toHaveText('دليل الاستخدام')
  await expect(page.getByRole('main')).toContainText('احفظ ملفك وعد إليه')
+ const publicMenu=page.locator('.k-menu');if(await publicMenu.isVisible())await publicMenu.click()
  await page.getByRole('link',{name:'الخدمات والميزات',exact:true}).click()
  await expect(page.locator('h1:visible')).toHaveText('الخدمات والميزات')
  const ai=page.locator('article:visible').filter({hasText:'الذكاء الاصطناعي المتقدم'})
