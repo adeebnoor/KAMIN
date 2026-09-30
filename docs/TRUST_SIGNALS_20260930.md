@@ -20,3 +20,11 @@ with every claim). This release implements the first three and prepares the four
 - Issuer verification (signed assertions, revocation) turns "document" into "institution-verified" (roadmap, month 5–6 of the validation plan).
 - Revocable sharing links need server-side key management.
 - Local AI explanation (GraphRAG over the student's own graph) and labour-market context are candidates for the next round; neither was started here.
+
+## Approving visual baselines without downloading artifacts
+
+Push a branch named `propose-baselines/<page>+<page>` (or `propose-baselines/all`). The
+`Propose visual baselines` workflow renders the pages on the gate's runner image and commits
+only the named baselines to that branch. A human reviews the image diff and merges to main;
+CI never merges its own proposal. Local Windows renders are never used as baselines because
+text metrics differ from the Linux gate by a few pixels per line.

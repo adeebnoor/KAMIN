@@ -1,0 +1,42 @@
+name: Propose visual baselines
+# Renders the public pages on the same runner image as the quality gate and commits the
+# candidate screenshots for the named pages to the proposing branch. Nothing reaches main
+# until a human reviews the image diff and merges. This replaces downloading artifacts by hand.
+#
+# Usage: push a branch named propose-baselines/<page>+<page>... (or propose-baselines/all),
+# e.g. propose-baselines/guide+privacy. Page names are the HTML file names without .html.
+on:
+  push:
+    branches: ['propose-baselines/**']
+permissions:
+  contents: write
+concurrency:
+  group: propose-baselines-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  propose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Render candidates on the gate's runner image
+        run: npm run visual || true
+      - name: Pages named by the branch
+        id: pages
+        run: echo "list=$(echo '${{ github.ref_name }}' | sed 's#^propose-baselines/##; s#+#,#g')" >> "$GITHUB_OUTPUT"
+      - name: Copy only the named pages into the versioned baselines
+        run: node scripts/approve-visual-candidates.mjs visual-candidates --approve "${{ steps.pages.outputs.list }}"
+      - name: Commit the proposal to this branch for human review
+        run: |
+          git config user.name "kamin-visual-proposal[bot]"
+          git config user.email "visual-proposal@users.noreply.github.com"
+          git add e2e/visual-baselines
+          if git diff --cached --quiet; then echo "No baseline changes for ${{ steps.pages.outputs.list }}"; exit 0; fi
+          git commit -m "Propose visual baselines for ${{ steps.pages.outputs.list }}" -m "Rendered by CI on the quality gate's runner image. Review the image diff, then merge to main; CI never merges this itself."
+          git push origin HEAD:${{ github.ref_name }}
