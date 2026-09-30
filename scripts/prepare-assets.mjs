@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, copyFile, access, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readdir, copyFile, access, writeFile, rm } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 import { ictKnowledgeGraph } from '../src/knowledge/ictKgV1.js'
@@ -51,7 +51,12 @@ const fontFiles=await readdir(fontFilesDir)
 const arabicVariableFont=fontFiles.find(name=>/arabic.*wght.*normal.*\.woff2$/i.test(name))
 if(!arabicVariableFont) throw new Error('Noto Sans Arabic variable font asset not found')
 await copyFile(path.join(fontFilesDir,arabicVariableFont),path.join(fontsOut,'noto-sans-arabic.woff2'))
-await writeFile(path.join(fontsOut,'noto-sans-arabic.css'),`@font-face{font-family:"Noto Sans Arabic Variable";font-style:normal;font-display:swap;font-weight:100 900;src:url("/fonts/noto-sans-arabic.woff2") format("woff2")}\n`)
+await copyFile(path.join(fontFilesDir,'..','LICENSE'),path.join(fontsOut,'noto-sans-arabic-LICENSE.txt'))
+// Declarations live only in brand.css, shared with the React build.
+await rm(path.join(fontsOut,'noto-sans-arabic.css'),{force:true})
+const interDir=path.join(root,'node_modules','@fontsource-variable','inter')
+await copyFile(path.join(interDir,'files','inter-latin-wght-normal.woff2'),path.join(fontsOut,'inter-latin.woff2'))
+await copyFile(path.join(interDir,'LICENSE'),path.join(fontsOut,'inter-LICENSE.txt'))
 
 await writeFile(path.join(knowledgeOut,'ict-kg-v1.jsonld'),JSON.stringify(ictKnowledgeGraph,null,2)+'\n')
 await writeFile(path.join(mappingOut,'course-skill-map-v1.json'),JSON.stringify({
@@ -80,11 +85,11 @@ await sharp({create:{width:1200,height:630,channels:3,background:'#f7f9fc'}})
   .jpeg({quality:88,mozjpeg:true})
   .toFile(path.join(pub,'og-kamin-1200x630.jpg'))
 
-console.log('Prepared Kamin icons, self-hosted Arabic font, ICT knowledge graph, governed mapping catalogue, social image, and fully self-hosted OCR assets.')
+console.log('Prepared Kamin icons, self-hosted Arabic and Inter fonts, ICT knowledge graph, governed mapping catalogue, social image, and fully self-hosted OCR assets.')
 
 for (const lang of ['ar','en']) {
  const ar=lang==='ar'
  const words=ar?['كامن','قدراتك أوضح. خطوتك أقرب.','اهتمامات · أهداف · أدلة · مسارات']:['Kamin','Clarity for your next step.','Interests · goals · evidence · pathways']
- const svg=Buffer.from(`<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="630" fill="#f4f8f1"/><rect x="70" y="82" width="8" height="466" rx="4" fill="#ba8b46"/><g fill="#16483e" font-family="DejaVu Sans,Arial,sans-serif" text-anchor="${ar?'end':'start'}"><text x="${ar?1110:120}" y="230" font-size="92" font-weight="700">${words[0]}</text><text x="${ar?1110:120}" y="340" font-size="49">${words[1]}</text><text x="${ar?1110:120}" y="425" font-size="31" fill="#527064">${words[2]}</text></g><text x="120" y="550" font-family="Arial,sans-serif" font-size="23" fill="#527064">KAMIN · RESEARCH RELEASE</text></svg>`)
+ const svg=Buffer.from(`<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="630" fill="#f6f8fb"/><rect x="70" y="82" width="8" height="466" rx="4" fill="#c99a3d"/><g fill="#0b2f5b" font-family="DejaVu Sans,Arial,sans-serif" text-anchor="${ar?'end':'start'}"><text x="${ar?1110:120}" y="230" font-size="92" font-weight="700">${words[0]}</text><text x="${ar?1110:120}" y="340" font-size="49">${words[1]}</text><text x="${ar?1110:120}" y="425" font-size="31" fill="#526478">${words[2]}</text></g><text x="120" y="550" font-family="Arial,sans-serif" font-size="23" fill="#526478">KAMIN · RESEARCH RELEASE</text></svg>`)
  await sharp(svg).jpeg({quality:88,mozjpeg:true}).toFile(path.join(pub,`og-kamin-${lang}.jpg`))
 }

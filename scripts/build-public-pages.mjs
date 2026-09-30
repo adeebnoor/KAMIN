@@ -20,16 +20,22 @@ const activeIn=(n,lang)=>{for(let p=n;p;p=p.parentNode){const l=attrs(p)['data-k
 const plain=html=>getText(parseFragment(html)).trim().replace(/\s+/g,' ')
 for(const [file,locales]of Object.entries(pages)){
  const sections=Object.entries(locales).map(([lang,[title,lead,body]])=>`<section data-kamin-lang="${lang}" ${lang==='en'?'hidden':''}><h1>${title}</h1><p class="k-doc-lead">${lead}</p>${body}</section>`).join('')
- await writeFile(`dist/${file}`,`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${locales.ar[0]} | كامن</title><link rel="stylesheet" href="/fonts/noto-sans-arabic.css"><script type="module" src="/static-i18n.js"></script></head><body class="k-document" data-title-ar="${escape(locales.ar[0])} | كامن" data-title-en="${escape(locales.en[0])} | Kamin" data-description-ar="${escape(locales.ar[1])}" data-description-en="${escape(locales.en[1])}"><main class="k-doc-main">${sections}</main></body></html>`)
+ await writeFile(`dist/${file}`,`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${locales.ar[0]} | كامن</title><script type="module" src="/static-i18n.js"></script></head><body class="k-document" data-title-ar="${escape(locales.ar[0])} | كامن" data-title-en="${escape(locales.en[0])} | Kamin" data-description-ar="${escape(locales.ar[1])}" data-description-en="${escape(locales.en[1])}"><main class="k-doc-main">${sections}</main></body></html>`)
 }
 const files=(await readdir('dist')).filter(f=>f.endsWith('.html'))
 for(const file of files){
  const source=await readFile(`dist/${file}`,'utf8')
  for(const locale of [null,'ar','en']){
-  const lang=locale||'ar',doc=parse(source),html=all(doc,n=>n.tagName==='html')[0],head=all(doc,n=>n.tagName==='head')[0],body=all(doc,n=>n.tagName==='body')[0],home=file==='index.html'
+  const lang=locale||'ar',doc=parse(source,{scriptingEnabled:false}),html=all(doc,n=>n.tagName==='html')[0],head=all(doc,n=>n.tagName==='head')[0],body=all(doc,n=>n.tagName==='body')[0],home=file==='index.html'
   set(html,'lang',lang);set(html,'dir',lang==='ar'?'rtl':'ltr')
   set(html,'data-document-urls',documentUrls)
+  for(const n of all(head,n=>n.tagName==='link'&&attrs(n).as==='font'))remove(n)
+  append(head,`<link rel="preload" href="/fonts/${lang==='en'?'inter-latin':'noto-sans-arabic'}.woff2" as="font" type="font/woff2" crossorigin>`)
   if(!home){
+   set(body,'class',[...new Set(`${attrs(body).class||''} k-document`.trim().split(/\s+/))].join(' '))
+   set(body,'data-page',file.replace(/\.html$/,''))
+   for(const n of all(head,n=>n.tagName==='link'&&['/fonts/noto-sans-arabic.css','/brand.css','/site-layout.css','/document-pages.css'].includes(attrs(n).href)))remove(n)
+   prepend(head,'<link rel="stylesheet" href="/brand.css"><link rel="stylesheet" href="/site-layout.css"><link rel="stylesheet" href="/document-pages.css">')
    for(const n of all(body,n=>['header','footer'].includes(n.tagName)||attrs(n)['data-language-toggle']!==undefined||['topline','skip'].includes(attrs(n).class)))remove(n)
    let main=all(body,n=>n.tagName==='main')[0];set(main,'id','main');set(main,'tabindex','-1')
    for(const l of ['ar','en']){

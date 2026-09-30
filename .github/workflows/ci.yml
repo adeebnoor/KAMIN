@@ -8,17 +8,44 @@ permissions:
   contents: read
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Dependency security audit
         run: npm audit --audit-level=high --json
       - run: npx playwright install --with-deps chromium
       - run: npm run test
       - run: npm run build
+        id: build
       - run: npm run e2e
+      - name: Public page visual regression gate
+        if: always() && steps.build.outcome == 'success'
+        run: npm run visual
+      - name: Desktop visual review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-desktop
+          path: visual-candidates/desktop-chromium
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Mobile visual review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-mobile
+          path: visual-candidates/mobile-chromium
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-failures
+          path: test-results
+          retention-days: 7

@@ -1,0 +1,12 @@
+/* Shared brand source; imported by React and linked by public documents. */
+@font-face{font-family:"Noto Sans Arabic Variable";font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/noto-sans-arabic.woff2") format("woff2")}
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/inter-latin.woff2") format("woff2")}
+:root{
+ --navy:#0b2f5b;--navy-2:#153f70;--navy-3:#edf3f9;--gold:#c99a3d;--gold-2:#ead398;
+ --ink:#10243f;--muted:#526478;--line:#dce5ee;--paper:#fff;--soft:#f6f8fb;--success:#146c55;
+ /* Feedback colours, separate from the eleven brand colours. */
+ --success-bg:#e8f6f0;--warn:#815900;--warn-bg:#fff4d6;--danger:#9a3030;--danger-bg:#fff0f0;
+ --accent:var(--navy);--accent-soft:var(--navy-3);--text-secondary:var(--muted);
+ --font-ar:"Noto Sans Arabic Variable",Inter,Tahoma,Arial,sans-serif;--font-en:Inter,Arial,sans-serif;
+ --radius:20px;--radius-small:12px;--shadow:0 22px 70px rgb(11 47 91 / 13%);
+}

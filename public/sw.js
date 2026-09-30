@@ -1,4 +1,4 @@
-const CACHE = 'kamin-public-v15'
+const CACHE = 'kamin-public-v16'
 const CORE = [
   '/favicon.svg',
   '/manifest.json',
@@ -18,6 +18,9 @@ const CORE = [
   '/static-i18n.js',
   '/site-content.js',
   '/site-chrome.css',
+  '/brand.css',
+  '/site-layout.css',
+  '/document-pages.css',
   '/knowledge/ict-kg-v1.jsonld'
 ]
 

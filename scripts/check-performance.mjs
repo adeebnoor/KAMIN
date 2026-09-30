@@ -5,6 +5,8 @@ const initial=[...new Set([...html.matchAll(/(?:src|href)="(\/assets\/[^\"]+\.(?
 let compressed=0
 for(const file of initial) compressed+=gzipSync(await readFile(`dist${file}`)).length
 const font=(await stat('dist/fonts/noto-sans-arabic.woff2')).size
+const inter=(await stat('dist/fonts/inter-latin.woff2')).size
+if(inter>60*1024)throw new Error(`Inter subset exceeds 60 KiB: ${inter}`)
 if(compressed>220*1024)throw new Error(`Initial assets exceed 220 KiB gzip: ${compressed}`)
 if(font>180*1024)throw new Error(`Arabic subset font exceeds 180 KiB: ${font}`)
 if(initial.some(f=>/tesseract|pdf|sparql|oxigraph/i.test(f)))throw new Error('Heavy optional tools must remain lazy-loaded')

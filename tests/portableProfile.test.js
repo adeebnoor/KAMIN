@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import legacyBackup from './fixtures/portable-v1-310k.json'
 import {
   KAMIN_ENCRYPTED_FORMAT,
   KAMIN_PORTABLE_FORMAT,
@@ -18,6 +19,11 @@ const state={
 }
 
 describe('encrypted local portability',()=>{
+  it('opens the prior release 310k backup without weakening new backups',async()=>{
+    const restored=await decryptPortableProfile(legacyBackup,'legacy test passphrase only')
+    expect(restored.state.courses[0].code).toBe('CPIT-260')
+    await expect(encryptPortableProfile(buildPortableProfile({state}),'correct horse battery staple',{iterations:310000})).rejects.toThrow('KDF_ITERATIONS_TOO_LOW')
+  })
   it('round-trips an encrypted profile while resetting external sharing consents', async()=>{
     const payload=buildPortableProfile({state,person360:{'@type':'Person360',claims:[]}})
     expect(payload.format).toBe(KAMIN_PORTABLE_FORMAT)
@@ -26,6 +32,7 @@ describe('encrypted local portability',()=>{
 
     const envelope=await encryptPortableProfile(payload,'correct horse battery staple')
     expect(envelope.format).toBe(KAMIN_ENCRYPTED_FORMAT)
+    expect(envelope.crypto.iterations).toBe(600000)
     expect(envelope.ciphertext).not.toContain('CPIT-251')
 
     const decrypted=await decryptPortableProfile(envelope,'correct horse battery staple')

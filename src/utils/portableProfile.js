@@ -5,7 +5,7 @@ const decoder = new TextDecoder()
 export const KAMIN_PORTABLE_FORMAT = 'kamin-portable-profile'
 export const KAMIN_ENCRYPTED_FORMAT = 'kamin-encrypted-profile'
 export const KAMIN_PORTABLE_VERSION = 1
-export const KAMIN_KDF_ITERATIONS = 310000
+export const KAMIN_KDF_ITERATIONS = 600000
 export const KAMIN_MIN_PASSPHRASE_LENGTH = 12
 
 const aad = encoder.encode(`${KAMIN_ENCRYPTED_FORMAT}|${KAMIN_PORTABLE_VERSION}`)
@@ -106,7 +106,7 @@ export function normalizePortableState(payload){
 export async function encryptPortableProfile(payload,passphrase,{iterations=KAMIN_KDF_ITERATIONS}={}){
   requirePassphrase(passphrase)
   if(!payload || payload.format!==KAMIN_PORTABLE_FORMAT) throw new Error('INVALID_PORTABLE_PROFILE')
-  if(!Number.isInteger(iterations) || iterations<100000) throw new Error('KDF_ITERATIONS_TOO_LOW')
+  if(!Number.isInteger(iterations) || iterations<KAMIN_KDF_ITERATIONS) throw new Error('KDF_ITERATIONS_TOO_LOW')
   const api=cryptoApi()
   const salt=api.getRandomValues(new Uint8Array(16))
   const iv=api.getRandomValues(new Uint8Array(12))
