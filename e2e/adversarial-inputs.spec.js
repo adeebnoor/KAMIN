@@ -1,0 +1,103 @@
+import {test,expect} from '@playwright/test'
+
+// Red-team inputs for the two places a student can feed the app arbitrary text:
+// transcript upload and the SPARQL lab. Each case states the behaviour a reviewer
+// should be able to rely on; a failure here is a defect, not a flaky test.
+
+async function openWorkspace(page){
+ await page.goto('/ar/')
+ await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
+ await expect(page.locator('#kamin-transcript-file')).toBeAttached()
+}
+const upload=(page,name,text)=>page.locator('#kamin-transcript-file').setInputFiles({name,mimeType:'text/plain',buffer:Buffer.from(text,'utf8')})
+const rowValues=page=>page.locator('.app-overlay table input').evaluateAll(inputs=>inputs.map(i=>i.value))
+
+test.describe('transcript upload under hostile input',()=>{
+ test('markup inside a course title is shown as text, never executed',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>{errors.push('dialog:'+d.message());d.dismiss()})
+  await openWorkspace(page)
+  await upload(page,'injection.txt','CPIT-260 <img src=x onerror=window.__pwned=1> Databases B\nCPIT-250 <script>window.__pwned=2</script> Software Engineering A')
+  await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
+  expect(await page.evaluate(()=>window.__pwned)).toBeUndefined()
+  await expect(page.locator('.app-overlay img[src="x"]')).toHaveCount(0)
+  await expect(page.locator('.app-overlay script')).toHaveCount(0)
+  const values=await rowValues(page)
+  expect(values.some(v=>v.includes('<img'))).toBe(true)
+  expect(errors).toEqual([])
+ })
+
+ test('duplicate course rows block approval until the student resolves them',async({page})=>{
+  await openWorkspace(page)
+  await upload(page,'duplicates.txt','CPIT-260 Database Systems B\nCPIT-260 Database Systems A\nCPIT-250 Software Engineering B+')
+  await expect(page.getByText(/3 مقررات مستخرجة/)).toBeVisible()
+  await expect(page.locator('.quality-review.has-issues')).toBeVisible()
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await expect(page.getByRole('button',{name:/أعتمد السجل/}).last()).toBeDisabled()
+ })
+
+ test('an out-of-range numeric grade is not silently accepted as a course',async({page})=>{
+  await openWorkspace(page)
+  await upload(page,'bad-grade.txt','CPIT-260 Database Systems 45')
+  await expect(page.getByRole('alert')).toContainText(/لم نتعرف على مقررات/)
+  expect(await rowValues(page)).toEqual([])
+ })
+
+ test('Arabic grades and Arabic-Indic digits normalise to canonical values',async({page})=>{
+  await openWorkspace(page)
+  await upload(page,'arabic.txt','CPIT-٢٦٠ قواعد البيانات أ\nSTAT-٢٠١ الإحصاء ب+')
+  await expect(page.getByText(/2 مقررات مستخرجة/)).toBeVisible()
+  const values=await rowValues(page)
+  expect(values).toEqual(expect.arrayContaining(['CPIT-260','A','STAT-201','B+']))
+ })
+
+ test('a very large text transcript is reviewed without freezing the page',async({page})=>{
+  test.setTimeout(120_000)
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await openWorkspace(page)
+  const lines=[];for(let i=0;i<1500;i++)lines.push(`CPIT-${1000+i} Course number ${i} B`)
+  const started=Date.now()
+  await upload(page,'large.txt',lines.join('\n'))
+  await expect(page.getByText(/1500 مقررات مستخرجة/)).toBeVisible({timeout:60_000})
+  const elapsed=Date.now()-started
+  test.info().annotations.push({type:'timing',description:`1500 rows reviewed in ${elapsed} ms`})
+  expect(elapsed,'review of 1500 rows must appear within 30 s').toBeLessThan(30_000)
+  // The page must still respond to input after rendering the large table.
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await expect(page.getByRole('checkbox',{name:/أوافق صراحةً/})).toBeChecked()
+  expect(errors).toEqual([])
+ })
+})
+
+async function openLab(page){
+ await page.goto('/ar/')
+ await page.locator('.pilot-advanced > summary').click()
+ await page.getByLabel('ابحث في المعرفة المرجعية',{exact:true}).fill('قواعد البيانات')
+ await page.getByRole('button',{name:'استكشف',exact:true}).click()
+ await expect(page.locator('.knowledge-detail h3')).toHaveText('قواعد البيانات')
+ await page.getByRole('tab',{name:'مختبر SPARQL',exact:true}).click()
+}
+const runQuery=async(page,query)=>{await page.locator('#sparql-query').fill(query);await page.getByRole('button',{name:'شغّل الاستعلام',exact:true}).click()}
+
+test.describe('SPARQL lab under hostile queries',()=>{
+ test('a syntax error is reported with its position instead of a blank result',async({page})=>{
+  await openLab(page)
+  await runQuery(page,'SELECT * WHERE { ?s ?p')
+  const error=page.locator('.query-error')
+  await expect(error).toContainText('صيغة الاستعلام غير صحيحة')
+  await expect(error.locator('.query-location')).toContainText(/\d/)
+ })
+
+ test('oversized, remote-dataset and unbounded queries are bounded by policy',async({page})=>{
+  await openLab(page)
+  // The editor itself caps input at the policy limit, so an oversized paste is truncated rather than sent.
+  await expect(page.locator('#sparql-query')).toHaveAttribute('maxlength','6000')
+  await page.locator('#sparql-query').fill('SELECT * WHERE { ?s ?p ?o } #'+'x'.repeat(6100))
+  expect(await page.locator('#sparql-query').inputValue()).toHaveLength(6000)
+  await runQuery(page,'SELECT * FROM <urn:kamin:graph:reference> WHERE { ?s ?p ?o }')
+  await expect(page.locator('.query-error')).toContainText('SERVICE وFROM غير متاحين')
+  await runQuery(page,'SELECT * WHERE { ?s ?p ?o } LIMIT 100000')
+  await expect(page.getByRole('heading',{name:'نتيجة الاستعلام',exact:true})).toBeVisible({timeout:20000})
+  await expect(page.locator('.query-results')).toContainText('عُرض أول 100 صف')
+  await expect(page.locator('.query-table tbody tr')).toHaveCount(100)
+ })
+})
