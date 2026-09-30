@@ -336,3 +336,9 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .evidence-origin{font-style:normal;color:var(--warn);font-weight:800}
 .provenance-warning{display:block;color:var(--warn);font-style:normal;font-weight:800;margin-top:4px}
 .skill-row>span .provenance-badge{margin-inline-start:6px;vertical-align:middle}
+.document-signals{margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:grid;gap:8px}
+.document-signals strong{font-size:.86rem;color:var(--navy)}
+.document-signals ul{margin:0;padding-inline-start:18px;display:grid;gap:5px;font-size:.84rem;line-height:1.7}
+.document-signals li.ok{color:var(--success)}.document-signals li.warn{color:var(--warn)}.document-signals li.neutral{color:var(--muted)}
+.document-signals a{color:var(--navy);font-weight:900}
+.document-signals small{color:var(--muted);line-height:1.6}

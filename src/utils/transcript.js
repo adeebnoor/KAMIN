@@ -1,4 +1,5 @@
 import { findSsceSpecializationCandidates, findSsceLevelCandidates } from '../reference/ssce.js'
+import { analyzePdfBytes, metadataSignals, scanQrFromPdf, scanQrFromImageFile } from './documentIntegrity.js'
 
 const ARABIC_DIGITS='٠١٢٣٤٥٦٧٨٩'
 const PERSIAN_DIGITS='۰۱۲۳۴۵۶۷۸۹'
@@ -244,6 +245,7 @@ function finalize(text,source,mode,extra={}){
       mode,
       ssceCandidates:findSsceSpecializationCandidates(text).slice(0,5),
       ssceLevelCandidates:findSsceLevelCandidates(text).slice(0,3),
+      document:extra.document||null,
     },
     mode,
   }
@@ -258,8 +260,12 @@ export async function extractTranscript(file, onProgress = () => {}) {
     const [pdfjs,workerModule]=await Promise.all([import('pdfjs-dist'),import('pdfjs-dist/build/pdf.worker.min.mjs?url')])
     pdfjs.GlobalWorkerOptions.workerSrc=workerModule.default
     const buffer=await file.arrayBuffer()
+    // Structural signals come from a copy of the raw bytes: pdf.js transfers the buffer to its worker.
+    const structure=analyzePdfBytes(new Uint8Array(buffer.slice(0)))
     let doc
     try{doc=await pdfjs.getDocument({data:buffer}).promise}catch{throw new Error('PDF_OPEN_FAILED')}
+    const metadata=await doc.getMetadata().catch(()=>({info:{}}))
+    const document={kind:'pdf',...structure,...metadataSignals(metadata?.info||{}),qr:await scanQrFromPdf(doc,2)}
     let text=''
     for(let i=1;i<=doc.numPages;i+=1){
       onProgress(Math.round((i/doc.numPages)*45))
@@ -268,7 +274,7 @@ export async function extractTranscript(file, onProgress = () => {}) {
       text += reconstructPdfLines(content.items)+'\n'
     }
 
-    const first=finalize(text,'pdf','pdf-text-local',{pages:doc.numPages,usedOcr:false})
+    const first=finalize(text,'pdf','pdf-text-local',{pages:doc.numPages,usedOcr:false,document})
     const sparse=text.replace(/\s/g,'').length<80
     const lowCoverage=first.validation.rejected.length>first.validation.recognized
 
@@ -279,16 +285,17 @@ export async function extractTranscript(file, onProgress = () => {}) {
     onProgress(50)
     const ocrText=await ocrPdf(doc,p=>onProgress(50+Math.round(p/2)))
     onProgress(100)
-    const ocr=finalize(ocrText,'ocr','pdf-ocr-local',{pages:doc.numPages,usedOcr:true})
+    const ocr=finalize(ocrText,'ocr','pdf-ocr-local',{pages:doc.numPages,usedOcr:true,document})
 
     // Keep whichever local extraction produced more recognized rows; never inject demo data.
     return ocr.courses.length>first.courses.length ? ocr : first
   }
 
   if (type.startsWith('image/') || /\.(?:png|jpe?g|webp)$/i.test(name)) {
+    const qr=await scanQrFromImageFile(file)
     const text=await ocrImage(file,onProgress)
     onProgress(100)
-    return finalize(text,'ocr','image-ocr-local',{usedOcr:true})
+    return finalize(text,'ocr','image-ocr-local',{usedOcr:true,document:{kind:'image',qr}})
   }
 
   if (type.startsWith('text/') || name.endsWith('.txt')) {

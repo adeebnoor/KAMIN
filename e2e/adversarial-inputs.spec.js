@@ -130,3 +130,21 @@ test.describe('field-level provenance',()=>{
   await expect(page.locator('.skill-card[data-provenance="document"]')).toHaveCount(1)
  })
 })
+
+test.describe('document integrity signals',()=>{
+ test('a QR verification link inside an uploaded image is surfaced without sending anything',async({page})=>{
+  test.setTimeout(150_000)
+  const {default:QRCode}=await import('qrcode')
+  const png=await QRCode.toBuffer('https://verify.example-university.edu.sa/t/ABC123',{width:360,margin:2})
+  const outbound=[];page.on('request',r=>{const url=r.url();if(!url.startsWith('http://127.0.0.1')&&!url.startsWith('blob:')&&!url.startsWith('data:'))outbound.push(url)})
+  await openWorkspace(page)
+  await page.locator('#kamin-transcript-file').setInputFiles({name:'qr-only.png',mimeType:'image/png',buffer:png})
+  const signals=page.getByTestId('document-signals')
+  await expect(signals).toBeVisible({timeout:120_000})
+  await expect(signals).toContainText('verify.example-university.edu.sa')
+  const link=signals.getByRole('link',{name:/تحقق من المصدر/})
+  await expect(link).toHaveAttribute('href','https://verify.example-university.edu.sa/t/ABC123')
+  await expect(link).toHaveAttribute('rel',/noopener/)
+  expect(outbound).toEqual([])
+ })
+})
