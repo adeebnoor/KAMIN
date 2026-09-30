@@ -1,4 +1,7 @@
-import { TARGET_CATALOG_VERSION } from '../matching/targets.js'
+import { TARGET_CATALOG_VERSION, targetProfiles } from '../matching/targets.js'
+import { opportunities } from '../data.js'
+import { emptyInsightState } from '../insight.js'
+import { normalizeDigitalInterests } from '../digitalInterests.js'
 import { inferSkills } from '../utils/engine.js'
 
 export const REVIEW_VERSION = 'kamin-human-review-v1'
@@ -28,6 +31,11 @@ export function describeRecommendation(item, kind, state) {
 }
 
 export function recommendationSeed(item, kind, state) {
+  // Session restoration fills missing optional fields. Hash their canonical
+  // shape so a reload alone cannot invalidate an otherwise identical decision.
+  const insight = { ...emptyInsightState(), ...(state.insight || {}),
+    responses: { ...(state.insight?.responses || {}) },
+    digitalInterests: normalizeDigitalInterests(state.insight?.digitalInterests) }
   return stable({
     version: REVIEW_VERSION,
     recommendation: describeRecommendation(item, kind, state),
@@ -40,7 +48,7 @@ export function recommendationSeed(item, kind, state) {
     // No timestamps, audit events, review decisions or UI language in this input.
     inputs: { courses: state.courses || [], approved: !!state.approved, goal: state.goal || null,
       analyze: !!state.consents?.analyze, insightConsent: !!state.consents?.insight,
-      insight: state.insight || {} },
+      insight },
   })
 }
 
@@ -118,10 +126,15 @@ export function recommendationReviewStatus(record, fingerprint) {
 // Deliberate allowlist: no reviewer, free text, grades, evidence, times or profile fingerprint.
 export function buildRedTeamCandidate(record) {
   if (record.action !== 'contested') throw new Error('CONTEST_REQUIRED')
+  // Imported records are untrusted: even metadata could contain personal text.
+  const catalog = record.kind === 'pathway' ? targetProfiles : record.kind === 'course' ? opportunities : []
+  if (!catalog.some(target => target.id === record.targetId) || !REVIEW_REASONS.includes(record.reason)) throw new Error('UNRECOGNIZED_REVIEW_TARGET')
+  const ruleVersion = ['kamin-graph-fit-v1', 'kamin-fit-v1', 'kamin-course-fit-v1'].includes(record.ruleVersion)
+    ? record.ruleVersion : 'unrecognized-version'
   return {
     format: 'kamin-red-team-candidate', version: 1, status: 'unverified-candidate',
-    target: { kind: record.kind, id: record.targetId }, ruleVersion: record.ruleVersion,
-    catalogVersion: record.catalogVersion, reason: record.reason,
+    target: { kind: record.kind, id: record.targetId }, ruleVersion,
+    catalogVersion: record.catalogVersion === TARGET_CATALOG_VERSION ? TARGET_CATALOG_VERSION : 'unrecognized-version', reason: record.reason,
     reproduction: 'Create a synthetic reproduction; no personal evidence is included.',
     acceptance: ['Independent reviewer confirms the defect against cited evidence.',
       'Add a failing regression test using synthetic inputs before fixing the defect.',

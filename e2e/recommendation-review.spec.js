@@ -58,7 +58,16 @@ for (const lang of ['ar', 'en']) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     const screenshotDir = `review-candidates/${testInfo.project.name}/${lang}`
     await mkdir(screenshotDir, { recursive: true })
-    await card(page).screenshot({ path: `${screenshotDir}/review-form.png` })
+    // Capture the real scrollable workspace, not an element screenshot clipped
+    // by the fixed-height dialog. Each part stays visible at the actual viewport.
+    for (const [part, target] of [
+      ['requirements', card(page).getByRole('heading', { level: 4 })],
+      ['decision', card(page).getByLabel(text(lang, 'قراري الآن', 'My decision now'))],
+      ['save', card(page).getByRole('button', { name: text(lang, 'احفظ المراجعة محليًا', 'Save review locally') })],
+    ]) {
+      await target.scrollIntoViewIfNeeded()
+      await page.screenshot({ path: `${screenshotDir}/${part}.png`, scale: 'css', animations: 'disabled' })
+    }
     await click(page, text(lang, 'سجل الاستخدام', 'Usage log'))
     await expect(page.locator('.review-history')).toContainText(markup)
     expect(await page.evaluate(() => window.__reviewPwned)).toBeUndefined()
@@ -87,6 +96,10 @@ for (const lang of ['ar', 'en']) {
     await page.getByRole('button', { name: text(lang, /افتح مساحة العمل/, /Open workspace/) }).first().click()
     await click(page, text(lang, 'فرصي', 'Matches'))
     await expect(review.locator('.review-status')).toHaveText(text(lang, 'أقبلها كخطوة استكشافية', 'Accept as an exploratory step'))
+    await click(page, text(lang, 'لوحة قدراتي', 'Capability dashboard'))
+    await page.locator('.goal-options').getByRole('button', { name: text(lang, 'الإدارة والمشاريع', 'Management & projects'), exact: true }).click()
+    await click(page, text(lang, 'فرصي', 'Matches'))
+    await expect(review.locator('.review-status')).toHaveText(text(lang, 'تغيّرت المدخلات أو التوصية؛ أعد المراجعة', 'Inputs or recommendation changed; review again'))
     await review.getByRole('button', { name: text(lang, 'اسحب قراري', 'Withdraw my decision') }).click()
     expect((await reviews(page)).map(r => r.action)).toEqual(['withdrawn', 'accepted'])
     expect((await saved(page)).courses).toEqual(before.courses)

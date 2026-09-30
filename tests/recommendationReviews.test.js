@@ -50,6 +50,15 @@ describe('human review trust boundary', () => {
       expect(snapshot).not.toHaveProperty('recommendationReviews')
     }
   })
+  it('keeps acceptance current when a session reload normalizes omitted optional insight fields',async()=>{
+    const s=state(),r=await record(s,'accepted')
+    expect(s.insight).not.toHaveProperty('responses')
+    const restored={...JSON.parse(JSON.stringify(s)),insight:{...s.insight,responses:{}}}
+    const fingerprint=await fingerprintRecommendation(recommendationSeed(getMatch(restored),'pathway',restored))
+    expect(recommendationReviewStatus(r,fingerprint)).toBe('accepted')
+    restored.insight.declaredPreferences={workStructure:'structured'}
+    expect(await fingerprintRecommendation(recommendationSeed(getMatch(restored),'pathway',restored))).not.toBe(fingerprint)
+  })
   it('preserves decisions and their previous event when withdrawing without changing the engine',async()=>{
     const s=state(),r=await record(s,'accepted'),withdrawn=withdrawRecommendationReview(r)
     const history=appendRecommendationReview([r],withdrawn)
@@ -89,6 +98,14 @@ describe('human review trust boundary', () => {
     expect(normalizeRecommendationReviews([{...r,timing:{elapsedMs:1234}}])[0].timing).toBeNull()
     expect(normalizeRecommendationReviews([{...r,timing:{elapsedMs:Infinity,consented:true}}])[0].timing).toBeNull()
     expect(normalizeRecommendationReviews([{...r,timing:{elapsedMs:1234,consented:true,interrupted:true}}])[0].timing.interrupted).toBe(true)
+  })
+  it('does not export personal text hidden in imported rule/catalog metadata or unknown targets',async()=>{
+    const r=await record()
+    const candidate=buildRedTeamCandidate({...r,imported:true,ruleVersion:'PRIVATE reviewer name',catalogVersion:'PRIVATE student identifier'})
+    expect(candidate.ruleVersion).toBe('unrecognized-version')
+    expect(candidate.catalogVersion).toBe('unrecognized-version')
+    expect(JSON.stringify(candidate)).not.toContain('PRIVATE')
+    for(const change of [{targetId:'private-name'},{reason:'PRIVATE note'},{kind:'PRIVATE kind'}])expect(()=>buildRedTeamCandidate({...r,...change})).toThrow('UNRECOGNIZED_REVIEW_TARGET')
   })
   it('does not silently evict history when the local limit is reached',async()=>{
     const r=await record(),history=Array.from({length:MAX_REVIEWS},(_,i)=>({...r,id:`review-${i}`}))

@@ -21,7 +21,7 @@ Records follow the existing session or opt-in IndexedDB choice. SHA-256 binds a 
 ## Confirmed defect to regression check
 
 1. The student contests a specific judgment. This is unverified feedback, never a confirmed defect by itself.
-2. Optional candidate export contains only target ID/kind, catalog/rule version and a controlled reason. It excludes names, notes, grades, input data, timestamps, judgment and context hashes. Export is a download, not submission.
+2. Optional candidate export contains only a known target ID/kind, recognized catalog/rule version and a controlled reason. Unknown imported version strings are replaced by `unrecognized-version`; unknown target IDs/reasons cannot be exported. This also prevents personal text embedded in forged metadata from leaking into candidates. It excludes names, notes, grades, input data, timestamps, judgment and context hashes. Export is a download, not submission.
 3. A human reviewer checks the referenced source and constructs a minimal **synthetic** reproduction. Do not commit a student's transcript, alias, note or backup. Obtain a separate approved channel/consent if personal evidence is ever needed.
 4. For a confirmed defect, add a fixture in `tests/fixtures/recommendation-red-team.json` or a focused test asserting the intended boundary. For browser-only failures, add a reproducible browser case. Record the expected behavior and source; demonstrate failure before the fix and success after it.
 5. Review the fix and the source independently. A green test alone does not establish that the source interpretation is correct. Disagreements remain unresolved; do not change inference rules to satisfy an untriaged complaint.

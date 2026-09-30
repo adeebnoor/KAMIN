@@ -1,4 +1,5 @@
 .recommendation-review{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--line,#dce3ec);color:var(--navy,#0b2f5b);min-width:0}
+.match-card:has(.review-form),.fit-card:has(.review-form){grid-column:1/-1}
 .review-heading{display:flex;align-items:center;gap:.5rem}.review-heading strong{font-size:1rem}
 .review-status{font-size:.88rem;font-weight:650;margin:.5rem 0;color:#344761}
 .review-actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}.review-actions .text-button{white-space:normal;text-align:start;min-height:44px}
