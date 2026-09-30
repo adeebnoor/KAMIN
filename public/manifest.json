@@ -3,7 +3,7 @@
   "short_name": "Kamin",
   "description": "Evidence-backed capability profiles for graduates, with explainable fit, visible gaps, and actionable next steps.",
   "id": "/",
-  "start_url": "/?lang=ar",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",

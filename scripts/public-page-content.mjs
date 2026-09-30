@@ -69,10 +69,7 @@ const semanticRelease={
  ar:card('أدوات البحث والمشاركة الجديدة · 30 سبتمبر 2026',p('في مختبر SPARQL: رسالة خطأ مع موضعه عند توفره، تسميات مفهومة، تنزيل النتائج JSON وCSV ونسخ CSV. صدّر نطاق الرسم بصيغة Turtle للدمج في رسم واحد أو TriG للحفاظ على أسماء الرسوم ومصادر الاستنتاجات.')+p('في اهتماماتك: استدعاء دلالي متعدد اللغات يعمل محليًا بعد تنزيل اختياري للنموذج. الاقتراح لا يضيف مهارة أو يغيّر الأدلة. افحص كل مسار عبر الشبكة والقواعد.')+p('في الخصوصية: اختر قدرات أو هدفًا، عاين اللقطة، ثم أنشئ رابطًا مشفّرًا. الرابط يتضمن المفتاح؛ من يملكه يستطيع فتحه ونسخه، ولا يمكن سحبه بعد الإرسال. هذه مشاركة يدوية وليست ربطًا مؤسسيًا أو شهادة موثّقة.')+link('pdpl.html','مطابقة PDPL والفجوات المتبقية')),
  en:card('Research and sharing tools · 30 September 2026',p('SPARQL lab: error locations when available, readable labels, JSON/CSV downloads and Copy as CSV. Export the dataset as a Turtle union graph, or TriG to preserve named graphs and inference provenance.')+p('Your interests: opt-in multilingual semantic recall runs locally after a model download. A suggestion adds no skill and changes no evidence. Inspect each pathway through the graph and rules.')+p('Privacy: select capabilities or a goal, preview the snapshot, then create an encrypted link. The link includes the key; its holder can open and copy it, and it cannot be revoked after sending. This is manual sharing, not institutional integration or a verified credential.')+link('pdpl.html','PDPL mapping and remaining gaps'))
 }
-for(const file of ['guide.html','services.html','interoperability.html','trust.html','privacy.html']){
- additions[file]??={ar:'',en:''}
- for(const lang of ['ar','en'])additions[file][lang]=(additions[file][lang]||'')+semanticRelease[lang]
-}
+// Dated release notes live only on the changelog; content pages describe current behaviour.
 for(const lang of ['ar','en'])pages['changelog.html'][lang][2]=semanticRelease[lang]+pages['changelog.html'][lang][2]
 additions['methodology.html']={
  ar:card('الاستدعاء الدلالي المحلي وحدوده',p('نستخدم paraphrase-multilingual-MiniLM-L12-v2 بإصدار مثبت وملف ONNX مكمّم q8، وتطبيع متوسط المتجهات، وفهرس ثنائي اللغة من الكتالوج المرجعي نفسه. نأخذ أفضل ثلاثة مرشحين فوق عتبة تشابه تشغيلية وضمن هامش من أقرب نتيجة؛ العتبة ليست نسبة جاهزية أو دقة معايرة. تبقى العبارة في ذاكرة الشاشة ولا تدخل ملف Person 360.')+p('الكتالوج تجريبي ومحدود؛ يجب تقييم الاسترجاع بالعربية والإنجليزية مع خبراء ومستخدمين قبل الادعاء بفعالية مهنية. الاستدعاء لا يولد حقيقة في الرسم ولا يبدّل نتائج القواعد.')+p('<a href="https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/tree/2c4055b12046f11709e9df2c122e59ffbdc2f900">بطاقة النموذج والإصدار المثبت</a>')),
@@ -85,3 +82,14 @@ for(const lang of ["ar","en"]){
 }
 
 additions["validation.html"]={ar:validationRoadmap("ar"),en:validationRoadmap("en")}
+
+// 30 September 2026 · pre-pilot audit round 2: every finding below is guarded by a browser check in e2e/.
+for(const lang of ['ar','en']){
+ const ar=lang==='ar'
+ pages['changelog.html'][lang][2]=card(ar?'30 سبتمبر 2026 · إغلاق ثغرات ما قبل التجربة':'30 September 2026 · Pre-pilot audit fixes',
+  `<ul><li>${ar?'سمة واحدة مدقّقة (فاتحة) في كل الصفحات ومساحة العمل؛ أُزيلت السمة الداكنة غير المكتملة التي كانت تُخفي العناوين عند تفعيل الوضع الداكن في نظام التشغيل. تحرس ذلك بوابة تباين آلية وفق WCAG 2.1 AA في الوضعين.':'One audited (light) theme across public pages and the student workspace; the incomplete dark theme that hid headings under an operating-system dark preference was removed. An automated WCAG 2.1 AA contrast gate now runs in both schemes.'}</li>`+
+  `<li>${ar?'ملاحظات الإصدار المؤرخة تظهر في سجل التحديثات فقط، وليس داخل سياسة الخصوصية ومركز الثقة والدليل والخدمات.':'Dated release notes appear only on the changelog, not inside the privacy policy, trust center, guide or services pages.'}</li>`+
+  `<li>${ar?'نُشر عنوان الإبلاغ الأمني وفق RFC 9116 في ‎/.well-known/security.txt‎، ويفتح التطبيق المثبّت بلغة الطالب الأخيرة بدل فرض العربية.':'A security contact is published per RFC 9116 at /.well-known/security.txt, and the installed app opens in the language the student last used instead of forcing Arabic.'}</li>`+
+  `<li>${ar?'إصلاح تباين تسمية «الدليل» الذهبية في المهارات وإزالة تحميل مسبق لشعار لا تعرضه الصفحة الرئيسية.':'Fixed the gold “Evidence” label contrast in skills and removed a preload for a logo the landing page never renders.'}</li></ul>`)
+  +pages['changelog.html'][lang][2]
+}

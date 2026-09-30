@@ -45,7 +45,7 @@ See `docs/OCCUPATION_TAXONOMY_BOUNDARY.md` and the pull-request IP gate.
 
 ## Quality gates
 
-`npm run check` runs deterministic engine tests, a production build, browser journeys on desktop/mobile Chromium, and an axe accessibility scan for serious/critical issues.
+`npm run check` runs deterministic engine tests, a production build, browser journeys on desktop/mobile Chromium, an axe accessibility scan for serious/critical issues, and a WCAG AA text-contrast sweep of the landing and student workspace under both operating-system colour schemes (`e2e/color-scheme.spec.js`).
 
 The production build also generates PWA icons, a horizontal social card, and self-hosted OCR runtime assets.
 
