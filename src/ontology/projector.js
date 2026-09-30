@@ -1,6 +1,8 @@
 import { addClaim, addEntity, createClaim, emptyPerson360 } from '../person360.js'
 import { DIGITAL_METHOD, DIGITAL_NOTICE, DIGITAL_PURPOSE, digitalInterestClaims } from '../digitalInterests.js'
 import { rowProvenance, provenanceStrength } from '../utils/provenance.js'
+import { taskById } from '../tasks/catalog.js'
+const taskSkillIds=id=>taskById(id)?.skillIds||[]
 
 const slug=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g,'-').replace(/^-|-$/g,'')
 const courseId=code=>`urn:kamin:course:${slug(code)}`
@@ -99,6 +101,37 @@ export function projectStateToPerson360({state,skills=[],educationClassification
         evidenceStrength:'declared-applied',
         consentPurpose:'urn:kamin:purpose:academic-profile',
         metadata:{affectsFit:false,reviewRequired:true},
+      }))
+    }
+  }
+
+  // Task outputs: completion, evaluation and verification stay separate claims.
+  for(const record of state?.tasks||[]){
+    if(!record.outputs?.length) continue
+    const tid=`urn:kamin:evidence:task:${slug(record.taskId)}`
+    graph=addEntity(graph,{
+      '@id':tid,
+      '@type':'Evidence',
+      evidenceType:'task-output-declaration',
+      task:record.taskId,
+      status:record.status,
+      outputs:record.outputs.map(o=>({url:o.url||null,note:o.note,at:o.at})),
+      selfAssessment:record.selfAssessment||{},
+      localReviews:(record.reviews||[]).map(r=>({reviewerLabel:r.reviewerLabel,role:r.role,scope:r.scope,decision:r.decision,at:r.at,level:'declared'})),
+      provenanceLevel:'declared-applied',
+      issuerVerification:'none',
+    })
+    for(const id of taskSkillIds(record.taskId)){
+      graph=addClaim(graph,createClaim({
+        id:`urn:kamin:claim:task-output:${slug(record.taskId)}:${slug(id)}`,
+        predicate:'kamin:declaresEvidenceFor',
+        object:skillId(id),
+        source:tid,
+        sourceType:'task-output-declaration',
+        generatedBy:'urn:kamin:activity:task-loop',
+        evidenceStrength:'declared-applied',
+        consentPurpose:'urn:kamin:purpose:academic-profile',
+        metadata:{affectsFit:false,reviewRequired:true,taskStatus:record.status},
       }))
     }
   }

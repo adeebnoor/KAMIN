@@ -365,3 +365,29 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .skill-projects{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
 .skill-projects small{display:block;color:var(--warn);font-weight:900;margin-bottom:4px}
 .skill-projects p{margin:4px 0;font-size:.82rem;display:flex;gap:6px;align-items:center;color:var(--ink)}
+
+/* Today strip and the task → evidence → review loop */
+.today-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 16px}
+.today-strip>div{background:var(--paper);border:1px solid var(--line);border-inline-start:4px solid var(--navy);border-radius:14px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.today-strip small{color:var(--muted);font-weight:800;font-size:.76rem}.today-strip strong{color:var(--navy);font-size:1rem;line-height:1.5}.today-strip span{color:var(--muted);font-size:.82rem}
+.today-strip .text-button{justify-self:start;padding:4px 0}
+@media(max-width:900px){.today-strip{grid-template-columns:1fr}}
+.task-loop h3{display:inline-flex;align-items:center;gap:8px}.task-loop>p{color:var(--muted);font-size:.9rem}
+.task-list{display:grid;gap:10px}
+.task-card{border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden}
+.task-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:transparent;border:0;text-align:start;cursor:pointer}
+.task-head>div{display:grid;gap:2px}.task-head strong{color:var(--navy)}.task-head small{color:var(--muted)}
+.task-status{border-radius:999px;padding:4px 9px;font-size:.72rem;font-weight:900;white-space:nowrap;background:var(--soft);color:var(--muted)}
+.task-status.in-progress{background:#eef5f0;color:#284f3d}.task-status.output-attached{background:var(--navy-3);color:var(--navy)}.task-status.needs-improvement{background:var(--warn-bg);color:var(--warn)}.task-status.reviewed{background:var(--success-bg);color:var(--success)}
+.task-body{padding:4px 14px 16px;display:grid;gap:12px;border-top:1px solid var(--line)}
+.task-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.task-columns h4{margin:8px 0 4px;color:var(--navy)}.task-columns ol,.task-columns ul{margin:0;padding-inline-start:18px;line-height:1.7;font-size:.9rem}
+.task-synthetic{color:var(--warn);font-weight:800;font-size:.84rem}
+@media(max-width:700px){.task-columns{grid-template-columns:1fr}}
+.task-proof{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;color:var(--muted);background:var(--soft);border-radius:10px;padding:8px 10px}.task-proof b{color:var(--navy)}
+.task-form{display:grid;gap:6px;border:1px dashed var(--line);border-radius:12px;padding:10px 12px}.task-form h4{margin:0;display:inline-flex;gap:6px;align-items:center;color:var(--navy)}.task-form label{font-size:.84rem;font-weight:800;color:var(--navy)}.task-form input,.task-form select,.task-form textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit}.task-form p{margin:0;font-size:.82rem;color:var(--muted)}
+.task-outputs,.task-reviews{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.86rem}.task-outputs li{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.task-outputs a{color:var(--navy);font-weight:800;word-break:break-all}.task-outputs time{color:var(--muted)}
+.task-reviews li{border-inline-start:3px solid var(--line);padding-inline-start:10px}.task-reviews p{margin:4px 0 0;color:var(--muted)}
+.task-rubric{border:1px solid var(--line);border-radius:12px;padding:8px 12px}.task-rubric legend{font-weight:900;color:var(--navy);font-size:.86rem;padding:0 6px}
+.rubric-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:.86rem}.rubric-row:first-of-type{border-top:0}.rubric-row label{display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+@media(max-width:700px){.rubric-row{grid-template-columns:1fr}}
+.task-governance{display:block;margin-top:10px;color:var(--muted);line-height:1.6}

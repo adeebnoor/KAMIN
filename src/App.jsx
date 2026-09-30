@@ -13,6 +13,8 @@ import RecommendationReview, {RecommendationReviewHistory} from './components/Re
 import ProjectEvidencePanel from './components/ProjectEvidence.jsx'
 import { normalizeProjectEvidence, projectsForSkill } from './utils/projectEvidence.js'
 import { buildClrExport, clrExportFilename } from './utils/clrExport.js'
+import TaskLoop, { TodayStrip } from './components/TaskLoop.jsx'
+import { normalizeTaskProgress } from './tasks/progress.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
 import StudentInsight from './components/StudentInsight.jsx'
 import { canonicalCourseCode, reviewProfileQuality } from './utils/profileQuality.js'
@@ -45,6 +47,7 @@ const blankState = {
   audit: [],
   recommendationReviews: [],
   projects: [],
+  tasks: [],
   localPersistence: false,
 }
 
@@ -59,6 +62,7 @@ const normalizeState = parsed => {
     audit:Array.isArray(parsed.audit)?parsed.audit.slice(0,100):[],
     recommendationReviews:normalizeRecommendationReviews(parsed.recommendationReviews),
     projects:normalizeProjectEvidence(parsed.projects),
+    tasks:normalizeTaskProgress(parsed.tasks),
   }
 }
 
@@ -66,6 +70,7 @@ const hasMeaningfulProfileState = state => !!(
   state?.approved ||
   state?.courses?.length ||
   state?.projects?.length ||
+  state?.tasks?.length ||
   state?.goal ||
   state?.localPersistence ||
   state?.consents?.insight ||
@@ -392,7 +397,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       const coursesRemoved=state.courses?.length||0
       const skillsRemoved=inferSkills(state.courses||[]).length
       onChangeSummary?.({type:'withdraw-analyze',courses:coursesRemoved,skills:skillsRemoved,ts:Date.now()})
-      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],projects:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],projects:[],tasks:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
     if (key === 'insight' && state.consents.insight) {
@@ -444,6 +449,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       <div className="ownership-grid">
         <div><strong>{state.courses?.length||0}</strong><span>{lang==='ar'?'سجلات مقررات':'course records'}</span></div>
         <div><strong>{state.projects?.length||0}</strong><span>{lang==='ar'?'أدلة تطبيقية مصرّح بها':'self-declared applied evidence'}</span></div>
+        <div><strong>{state.tasks?.length||0}</strong><span>{lang==='ar'?'سجلات تقدم في المهام':'task progress records'}</span></div>
         <div><strong>{digital.confirmed.length}</strong><span>{lang==='ar'?'اهتمامات رقمية مؤكدة':'confirmed digital interests'}</span></div>
         <div><strong>{preferenceCount}</strong><span>{lang==='ar'?'تفضيلات مصرح بها':'declared preferences'}</span></div>
         <div><strong>{state.goal?1:0}</strong><span>{lang==='ar'?'هدف/مسار مختار':'selected target/goal'}</span></div>
@@ -656,6 +662,8 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
       log(lang==='ar'?'تصدير محمول غير موقّع بصيغة CLR 2.0':'Unsigned CLR 2.0-shaped portable export created')
     } catch (error) { console.error(error) }
   }
+  const updateTasks = next => setState(previous=>({...previous,tasks:normalizeTaskProgress(next)}))
+  const [focusTaskId,setFocusTaskId] = useState(null)
   const saveProject = record => setState(previous=>({...previous,projects:normalizeProjectEvidence([record,...(previous.projects||[])]),audit:[{label:lang==='ar'?`تسجيل دليل تطبيقي مصرّح: ${record.title}`:`Self-declared applied evidence recorded: ${record.title}`,ts:Date.now()},...previous.audit].slice(0,100)}))
   const removeProject = id => setState(previous=>({...previous,projects:(previous.projects||[]).filter(p=>p.id!==id),audit:[{label:lang==='ar'?'حذف دليل تطبيقي مصرّح':'Self-declared applied evidence removed',ts:Date.now()},...previous.audit].slice(0,100)}))
   const saveRecommendationReview = record => setState(previous=>({...previous,recommendationReviews:appendRecommendationReview(previous.recommendationReviews,record)}))
@@ -779,6 +787,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
           {state.approved && view==='dashboard' && <section className="app-content">
             <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل مؤشر هنا مبدئي وقابل للرجوع إلى دليل في سجلك المعتمد.':'Every indicator here is preliminary and traceable to evidence in your approved record.'}</p></div>
             <WhatChanged change={changeSummary?.type==='approve'?changeSummary:null} lang={lang}/>
+            <TodayStrip lang={lang} state={state} matches={matches} onGoal={()=>setView('insight')} onOpenTask={id=>{setFocusTaskId(id);document.getElementById('task-loop-anchor')?.scrollIntoView({behavior:'smooth',block:'start'})}}/>
             <div className="session-banner"><ShieldCheck size={17}/><span>{state.localPersistence
               ? (lang==='ar'?'ملفك محفوظ محليًا على هذا الجهاز بموافقتك. لا توجد نسخة مركزية لدى كامن.':'Your profile is persistently saved on this device with your consent. Kamin keeps no central copy.')
               : (lang==='ar'?'ملفك مؤقت في جلسة المتصفح الحالية فقط. فعّل الحفظ المحلي أدناه إذا أردت العودة إليه لاحقًا.':'Your profile is session-only right now. Enable local device saving below if you want to return later.')}</span></div>
@@ -786,6 +795,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
             <div className="dashboard-studio-prompt"><div><h3>{lang==='ar'?'شاهد الروابط التي صنعت هذه النتيجة':'See the connections behind your result'}</h3><p>{lang==='ar'?'شبكة قدرات تفاعلية، إجابات مستندة إلى ملفك، وخطة للخطوة التالية.':'An interactive capability network, grounded answers, and a plan for your next step.'}</p></div><button className="button primary" onClick={()=>setView('studio')}>{lang==='ar'?'افتح شبكتي ومساعدي':'Open my network & guide'}</button></div>
             <button className="text-button record-review-button" onClick={()=>{setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}}>{lang==='ar'?'راجع وصحح بيانات سجلي':'Review and correct my record'}</button>
             <div className="metrics"><article><span>{lang==='ar'?'مهارات مدعومة بالدليل':'Evidence-backed skills'}</span><strong>{skills.length}</strong><small>{lang==='ar'?'من السجل المعتمد':'from approved record'}</small></article><article><span>{lang==='ar'?'أعلى قوة دليل':'Highest evidence strength'}</span><strong>{skills[0]?evidenceStrengthText(skills[0].confidenceLabel,lang):'—'}</strong><small>{skills[0]?.labels[lang]||'—'}</small></article><article><span>{lang==='ar'?'الحكم الأعلى حاليًا':'Current top judgment'}</span><strong>{nextDecision?t.app.fit[nextDecision.status]:'—'}</strong><small>{nextDecision?.title[lang]||(lang==='ar'?'أضف دليلًا معتمدًا أولًا':'Add approved evidence first')}</small></article></div>
+            <div id="task-loop-anchor"/><TaskLoop key={focusTaskId||'tasks'} lang={lang} state={state} matches={matches} onUpdate={updateTasks} focusTaskId={focusTaskId}/>
             <EducationClassificationCard lang={lang} classification={educationClassification}/>
             <div className="dashboard-grid"><div className="panel"><div className="panel-head"><div><small>{t.app.skills}</small><h3>{lang==='ar'?'الأدلة قبل الادعاء':'Evidence before claims'}</h3></div><button className="text-button" onClick={()=>setView('skills')}>{lang==='ar'?'كل المهارات':'All skills'}</button></div>{skills.slice(0,4).map(s=>{const level=skillProvenance(s).level;return <div className="skill-row" key={s.id}><span>{s.labels[lang]}{level!=='document'&&level!=='synthetic'&&<span className={`provenance-badge ${level}`}>{provenanceLabel(level,lang)}</span>}</span><div><i className={s.confidenceLabel||'low'}/></div><b>{evidenceStrengthText(s.confidenceLabel,lang)}</b></div>})}</div>
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
