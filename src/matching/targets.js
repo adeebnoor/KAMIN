@@ -1,4 +1,5 @@
-export const TARGET_CATALOG_VERSION='kamin-targets-v1'
+import {catalogExtension} from './catalogExtension.js'
+export const TARGET_CATALOG_VERSION='kamin-targets-v2-20260930'
 
 const rawTargetProfiles=[
   {
@@ -125,7 +126,9 @@ const rawTargetProfiles=[
   },
 ]
 
-export const targetProfiles=rawTargetProfiles.map(target=>({
+export const targetProfiles=[...rawTargetProfiles,...catalogExtension].map(target=>({
+  source:{title:'Kamin pilot catalog',url:'/methodology.html',checked:'2026-09-30',scope:'pilot-design'},
+  mappingStatus:'pilot-authoring-not-institution-verified',
   ...target,
   occupationCodes:target.type==='job'
     ? {onet:null,esco:null,ssco:null,...(target.occupationCodes||{})}

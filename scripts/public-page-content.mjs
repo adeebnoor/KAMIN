@@ -1,9 +1,13 @@
+import {universityPage} from './university-page.mjs'
+import {validationRoadmap} from './validation-roadmap.mjs'
+import {catalogPage} from './catalog-page.mjs'
 import {pdplPage} from './pdpl-page.mjs'
 import {capstonePage} from './capstone-page.mjs'
 const card=(title,body)=>`<section class="k-doc-card"><h2>${title}</h2>${body}</section>`
 const p=s=>`<p>${s}</p>`
 const link=(file,label)=>`<a href="/${file}">${label}</a>`
 export const pages = {
+ 'catalog.html':{ar:catalogPage('ar'),en:catalogPage('en')},
  'capstone.html':{ar:capstonePage('ar'),en:capstonePage('en')},
  'pdpl.html':{ar:pdplPage('ar'),en:pdplPage('en')},
  'about.html': {
@@ -26,16 +30,7 @@ export const pages = {
    card('Privacy questions and corrections',p('Correct or delete profile information in Kamin → Privacy & control. The project team has no central copy of your local profile to recover. The supervisor’s channel can receive product and privacy questions; no guaranteed response time is published.')+link('privacy.html','How your information is processed'))+
    card('Quick recovery',link('guide.html#recovery','Recover from reading and saving problems')+' · '+link('faq.html','Frequently asked questions'))]
  },
- 'business-model.html':{
-  ar:['للجامعات والشركاء','مسار مقترح للاستدامة يبدأ بقيمة واضحة للطالب وتجربة ميدانية قابلة للقياس.',
-   card('المتاح اليوم',p('يمكن للطالب استخدام النسخة العامة دون حساب أو دفع. لا توجد باقات مؤسسية مدفوعة أو عقود شراكة معلنة على هذه الصفحة.'))+
-   card('النموذج المقترح',p('تراخيص مستقبلية للجامعات ومراكز الإرشاد لتوفير أدوات المرشد، إدارة المعرفة والتقييم والتكامل. الأسعار ونطاق الخدمة تُحددان بعد التحقق من الفائدة. لا يعتمد المقترح على بيع ملفات الطلاب أو استهدافهم إعلانيًا.'))+
-   card('ما الذي نختبره أولًا؟',p('تجربة مخططة في ثلاث كليات: هل يستطيع الطالب بناء ملف صحيح وفهم سبب التوصية؟ وهل تساعد الأدلة المرشد؟ تشمل الخطة مقارنة مرجعية، قابلية الاستخدام، تحليل الأخطاء، وعدالة النتائج بين التخصصات. لا تُعرض نتائج قبل تنفيذ الدراسة.')+link('validation.html','خطة التحقق')+' · '+link('interoperability.html','التكامل والجاهزية')+' · '+link('contact.html','ناقش تجربة جامعية'))],
-  en:['Universities & partners','A proposed sustainability model built around student value and measurable field evaluation.',
-   card('Available today',p('Students can use the public release without an account or payment. No paid institutional packages or signed partnerships are announced here.'))+
-   card('Proposed model',p('Future licensing to universities and career centers could support advisor tools, knowledge governance, evaluation and integration. Pricing and service scope follow validation. The proposal does not rely on selling student profiles or advertising-based targeting.'))+
-   card('What we will evaluate first',p('A planned three-college pilot asks whether students can build accurate profiles and understand recommendations, and whether evidence helps advisors. The plan includes reference comparisons, usability, error analysis and evaluation across disciplines. Results are published only after the study takes place.')+link('validation.html','Validation plan')+' · '+link('interoperability.html','Integration readiness')+' · '+link('contact.html','Discuss a university pilot'))]
- },
+ 'business-model.html':{ar:universityPage('ar'),en:universityPage('en')},
  'changelog.html':{
   ar:['سجل تحديثات كامن','تغييرات مؤرخة تساعدك على معرفة ما تغيّر في تجربتك.',card('29 سبتمبر 2026 · تحسين سهولة الاستخدام',`<ul><li>تنقل موحّد ودليل وخدمات متاحة من كل صفحة.</li><li>اختيارات مرئية للاهتمامات والأهداف وجولة في شبكة العلاقات.</li><li>توصيات تبدأ بسبب الارتباط وخطوة عملية، ومقارنة لا تنتهي بصفحة فارغة.</li><li>رسائل صريحة عند تعذّر الحفظ وروابط للحلول.</li><li>صفحات عربية وإنجليزية قابلة للمشاركة، ومعلومات أوضح عن الفريق والمساعدة.</li></ul>`)+card('27 سبتمبر 2026 · شبكة العلاقات',p('إضافة العلاقات متعددة الخطوات بين الأشخاص والاهتمامات والأدلة والقدرات والعمل والتعلم، مع تمييز البيانات الوهمية والمصادر وحدود الاستنتاج.'))+card('الخصوصية في هذا التحديث',p('لا يفعّل هذا التحديث تحليلات الاستخدام أو جمع ملفات الطلاب مركزيًا. تبقى موافقة كل غرض مستقلة. راجع السياسة وسجلها قبل إضافة معلوماتك.')+link('privacy.html','سياسة الخصوصية'))],
   en:['Kamin changelog','Dated changes so you can understand what changed in your experience.',card('29 September 2026 · Usability improvements',`<ul><li>Consistent navigation, guide and services on every page.</li><li>Visible interest and goal choices, plus a relationship-network tour.</li><li>Recommendations lead with context and an actionable next step; comparison has a useful starting point.</li><li>Explicit saving failures and recovery guidance.</li><li>Shareable Arabic and English pages and clearer team and help information.</li></ul>`)+card('27 September 2026 · Relationship network',p('Multi-step connections between people, interests, evidence, capabilities, work and learning, with synthetic data, sources and inference limits distinguished.'))+card('Privacy in this update',p('This update does not enable usage analytics or central collection of student profiles. Each purpose keeps separate consent. Review the policy and its history before adding information.')+link('privacy.html','Privacy policy'))]
@@ -88,3 +83,5 @@ for(const lang of ["ar","en"]){
  additions["validation.html"][lang]+=card(lang==="ar"?"خطة فريق التطوير":"Capstone delivery plan",link("capstone.html",lang==="ar"?"الأدوار، أول أسبوعين، ونهاية الفصل":"Roles, first two weeks and the semester release gate"))
  pages["changelog.html"][lang][2]=card(lang==="ar"?"30 سبتمبر 2026 · جاهزية الفريق والنشر":"30 September 2026 · Team and hosting readiness",p(lang==="ar"?"تحديث وصف الخدمات العاملة، نشر خطة فريق التخرج والتقييم، وتجهيز روابط الصفحات وبيانات الفهرسة للنقل إلى Cloudflare Pages. الاستضافة الحالية باقية على Render؛ هذه التهيئة لا تعني اكتمال النقل.":"Updated live service descriptions, published the capstone and evaluation plan, and prepared document routes and search metadata for Cloudflare Pages. Hosting remains on Render; preparation is not a completed migration."))+pages["changelog.html"][lang][2]
 }
+
+additions["validation.html"]={ar:validationRoadmap("ar"),en:validationRoadmap("en")}

@@ -8,6 +8,10 @@ export const demoCourses = [
 ]
 
 export const skills = {
+  testing: {id:'testing',labels:{ar:'تصميم وتنفيذ اختبارات البرمجيات',en:'Software test design and execution'}},
+  dbOperations: {id:'db-operations',labels:{ar:'تشغيل قواعد البيانات واستعادتها',en:'Database operations and recovery'}},
+  webDevelopment: {id:'web-development',labels:{ar:'تطوير واجهات الويب',en:'Web interface development'}},
+  systemsAnalysis: {id:'systems-analysis',labels:{ar:'تحليل النظم وسير العمل',en:'Systems and workflow analysis'}},
   requirements: { id: 'requirements', labels: { ar: 'تحليل المتطلبات', en: 'Requirements analysis' } },
   software: { id: 'software', labels: { ar: 'هندسة البرمجيات', en: 'Software engineering' } },
   database: { id: 'database', labels: { ar: 'قواعد البيانات', en: 'Databases' } },

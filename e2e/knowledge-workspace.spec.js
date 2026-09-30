@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 async function openLab(page){
   await page.goto('/?lang=ar')
+  await page.locator('.pilot-advanced > summary').click()
   await page.getByLabel('ابحث في المعرفة المرجعية',{exact:true}).fill('قواعد البيانات')
   await page.getByRole('button',{name:'استكشف',exact:true}).click()
   await expect(page.locator('.knowledge-detail h3')).toHaveText('قواعد البيانات')
@@ -69,6 +70,7 @@ test('personal queries require fresh local permission and clearing it removes th
 })
 test('knowledge tools remain accessible and fit mobile and English layouts',async({page})=>{
   await page.goto('/?lang=en')
+  await page.locator('.pilot-advanced > summary').click()
   await page.getByLabel('Search reference knowledge',{exact:true}).fill('data')
   await page.getByRole('button',{name:'Explore',exact:true}).click()
   await expect(page.locator('.knowledge-detail')).toBeVisible()

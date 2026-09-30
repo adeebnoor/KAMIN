@@ -10,6 +10,7 @@ async function openProfile(page) {
 }
 test('network connections explain a source and layout fits mobile',async({page})=>{
  await page.goto('/?lang=ar')
+ await page.locator('.pilot-advanced > summary').click()
  await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
  await expect(page.locator('.relationship-node-info')).toContainText('لا تعني توثيقًا من الجامعة')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
@@ -53,6 +54,7 @@ test('invalid grades and repeated courses cannot be approved',async({page})=>{
 })
 test('English network and guide retain grounded explanations',async({page})=>{
  await page.goto('/?lang=en')
+ await page.locator('.pilot-advanced > summary').click()
  await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
  await expect(page.locator('.relationship-node-info')).toContainText('not institutional verification')
  await expect(page.locator('html')).toHaveAttribute('dir','ltr')

@@ -256,6 +256,7 @@ function MatchExplorer({ lang, profile, matches, onPlan }) {
           <div className="match-context"><strong>{lang==='ar'?'لماذا تستكشف هذا المسار؟':'Why explore this pathway?'}</strong><p>{item.semanticPaths?.some(p=>p.kind==='goal-alignment'&&p.status==='supported')?(lang==='ar'?'يرتبط بالهدف الذي اخترته.':'It connects to the goal you chose.'):item.semanticPaths?.some(p=>p.kind==='preference-alignment'&&p.status==='supported')?(lang==='ar'?'يتصل بأحد اهتماماتك أو تفضيلاتك المصرّح بها.':'It connects to one of your declared interests or preferences.'):(lang==='ar'?'مسار من الكتالوج يمكنك استكشافه ومقارنته بما تفضّله.':'A catalog pathway you can explore and compare with your preferences.')}</p></div>
           <div className="match-next"><strong>{lang==='ar'?'خطوتك التالية':'Your next step'}</strong><p>{item.knowledgeInsights?.bridges?.[0]?.label || (lang==='ar'?'راجع متطلبات المسار واختر تجربة تطبيقية واحدة.':'Review the pathway requirements and choose one applied exercise.')}</p>{item.limitingMechanisms[0]&&<small>{item.limitingMechanisms[0]}</small>}<button className="text-button" onClick={()=>onPlan(item.id)}>{lang==='ar'?'افتح خطة هذا المسار':'Open this pathway’s plan'}</button></div>
           <details className="match-evidence-details"><summary>{lang==='ar'?'الأدلة والفجوات والتفسير الكامل':'Evidence, gaps and full explanation'}</summary>
+          {item.source&&<p><a href={item.source.url.startsWith('/')?pageHref(item.source.url,lang):item.source.url}>{lang==='ar'?'مرجع المسار':'Pathway reference'}: {item.source.title}</a> · {item.source.checked}<br/>{lang==='ar'?'متطلبات كامن تجريبية؛ ليست تحققًا مؤسسيًا أو معيار أهلية كاملًا.':'Kamin requirements are provisional; not institutional verification or a complete eligibility standard.'}</p>}
           <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
           {item.semanticPaths?.some(path=>path.kind==='capability-match')&&<div className="semantic-path-block"><strong>{lang==='ar'?'مسار الدليل في الشبكة':'Evidence paths in the graph'}</strong>{item.semanticPaths.filter(path=>path.kind==='capability-match').map((path,i)=><div className="semantic-path" key={path.claimId||i}><span>{path.courseCode||'Evidence'}</span><b>→</b><span>{localized(path.capabilityLabel,lang)||path.capabilityKey}</span><b>→</b><span>{item.title[lang]}</span></div>)}</div>}
           <KnowledgeMatchContext item={item} lang={lang}/>
@@ -460,8 +461,8 @@ function Compare({ lang, items, onChoose, onSuggest }) {
 function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
   const t = copy[lang]
   const [state,setState] = useState(getSaved)
-  const [view,setView] = useState(entry!=='default'?entry:state.approved?'dashboard':state.consents.insight?'insight':'start')
-  const [draft,setDraft] = useState([])
+  const [view,setView] = useState(entry==='sample'?'review':entry!=='default'?entry:state.approved?'dashboard':state.consents.insight?'insight':'start')
+  const [draft,setDraft] = useState(entry==='sample'?demoCourses:[])
   const [moreTools,setMoreTools] = useState(false)
   const [processing,setProcessing] = useState(false)
   const [progress,setProgress] = useState(0)
@@ -471,7 +472,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
   const [selectedMatch,setSelectedMatch] = useState(null)
   const [reviewConsent,setReviewConsent] = useState(false)
   const [fileError,setFileError] = useState('')
-  const [validation,setValidation] = useState(null)
+  const [validation,setValidation] = useState(entry==='sample'?{recognized:demoCourses.length,rejected:[],usedOcr:false,mode:'demo'}:null)
   const [persistenceDismissed,setPersistenceDismissed] = useState(false)
   const [changeSummary,setChangeSummary] = useState(null)
   const fileRef = useRef(null)
@@ -498,8 +499,8 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
       if(cancelled || !saved?.localPersistence) return
       const next=normalizeState(saved)
       setState(next)
-      setDraft(next.courses||[])
-      setView(entry!=='default'?entry:next.approved?'dashboard':next.consents.insight?'insight':'start')
+      if(entry!=='sample')setDraft(next.courses||[])
+      setView(entry==='sample'?'review':entry!=='default'?entry:next.approved?'dashboard':next.consents.insight?'insight':'start')
       setPersistenceDismissed(true)
       trackPilotEvent('profile_returned_to')
       setNotice(lang==='ar'?'أعدنا ملفك المحفوظ محليًا على هذا الجهاز.':'Your locally saved profile was restored on this device.')
@@ -711,7 +712,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
             <label className="sr-only" htmlFor="kamin-transcript-camera">{lang==='ar'?'صوّر كشف الدرجات بالكاميرا':'Photograph transcript with camera'}</label><input id="kamin-transcript-camera" className="sr-only" ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={e=>upload(e.target.files?.[0])}/>
             {processing&&<div className="processing" role="status" aria-live="polite"><div className="processing-row"><div className="spinner"/><strong>{t.app.processing}</strong><b>{progress}%</b></div><div className="progress" aria-label={lang==='ar'?'تقدم قراءة الملف':'File reading progress'}><i style={{width:`${progress}%`}}/></div><small>{trustMicrocopy('transcript',lang)}</small></div>}
           </section>}
-          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div>{fileError&&<div className="error-banner" role="alert">{fileError}</div>}<ValidationSummary lang={lang} validation={validation}/><WhatChanged change={changeSummary?.type==='upload'?changeSummary:null} lang={lang}/><CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve} consent={reviewConsent} setConsent={setReviewConsent}/></section>}
+          {view==='review' && <section className="app-content"><div className="app-title"><small>02</small><h2>{t.app.review}</h2><p>{lang==='ar'?'التقنية تستخرج؛ أنت تعتمد. صحح أي سطر قبل أن يصبح دليلًا.':'Technology extracts; you approve. Correct any line before it becomes evidence.'}</p></div>{fileError&&<div className="error-banner" role="alert">{fileError}</div>}{validation?.mode==='demo'&&<p className="pilot-sample-note" role="status">{lang==='ar'?'هذه بيانات وهمية. لن تستبدل سجلك الحالي إلا عند اعتمادها. يمكنك الإغلاق للاحتفاظ بملفك.':'These are synthetic data. They replace your current record only if you approve them. Close to keep your profile.'}</p>}<ValidationSummary lang={lang} validation={validation}/><WhatChanged change={changeSummary?.type==='upload'?changeSummary:null} lang={lang}/><CourseReview lang={lang} rows={draft} setRows={setDraft} onApprove={approve} consent={reviewConsent} setConsent={setReviewConsent}/></section>}
           {state.approved && view==='dashboard' && <section className="app-content">
             <div className="app-title"><small>{t.app.dashboard}</small><h2>{lang==='ar'?'هذه قدراتك كما نراها الآن':'This is how your capabilities look now'}</h2><p>{lang==='ar'?'كل مؤشر هنا مبدئي وقابل للرجوع إلى دليل في سجلك المعتمد.':'Every indicator here is preliminary and traceable to evidence in your approved record.'}</p></div>
             <WhatChanged change={changeSummary?.type==='approve'?changeSummary:null} lang={lang}/>
@@ -764,7 +765,7 @@ export default function App({incomingSnapshot=null}) {
   const openKnowledge=(search='')=>{setKnowledgeSearch(typeof search==='string'?search:'');openApp('knowledge')}
   const closeApp=()=>{setAppOpen(false);requestAnimationFrame(()=>appTriggerRef.current?.focus?.())}
   const t = copy[lang]
-  useEffect(()=>{if(incomingSnapshot)return;trackPilotEvent('landing');const params=new URLSearchParams(location.search);if(params.get('view')==='knowledge')openKnowledge();else if(params.get('start')==='profile')openApp('insight')},[])
+  useEffect(()=>{if(incomingSnapshot)return;trackPilotEvent('landing');const params=new URLSearchParams(location.search);if(params.get('view')==='knowledge')openKnowledge();else if(params.get('start')==='sample')openApp('sample');else if(params.get('start')==='profile')openApp('insight')},[])
   useEffect(()=>{
     // A second shared link can arrive through same-document navigation.
     // Consume it immediately and remount the receiver so an old decrypted
@@ -824,7 +825,7 @@ export default function App({incomingSnapshot=null}) {
   return <>
     <div inert={appOpen} aria-hidden={appOpen?true:undefined}>
     <SiteHeader lang={lang} setLang={setLang} onTry={()=>openApp('insight')} onKnowledge={openKnowledge}/>
-    <main id="main">{sharedPacket?<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل قارئ اللقطة…':'Loading snapshot reader…'}</p>}><SnapshotReceiver key={snapshotVersion} lang={lang} packet={sharedPacket} onClose={()=>setSharedPacket(null)}/></Suspense>:<LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onKnowledge={openKnowledge}/>}</main>
+    <main id="main">{sharedPacket?<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل قارئ اللقطة…':'Loading snapshot reader…'}</p>}><SnapshotReceiver key={snapshotVersion} lang={lang} packet={sharedPacket} onClose={()=>setSharedPacket(null)}/></Suspense>:<LandingExperience lang={lang} onTry={()=>openApp()} onProfile={()=>openApp('insight')} onSample={()=>openApp('sample')} onKnowledge={openKnowledge}/>}</main>
     <SiteFooter lang={lang}/>
     </div>
     {appOpen&&<AppErrorBoundary lang={lang} onClose={closeApp}><KaminApp lang={lang} onClose={closeApp} entry={appEntry} knowledgeSearch={knowledgeSearch}/></AppErrorBoundary>}
