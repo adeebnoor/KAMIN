@@ -2,6 +2,7 @@ import { normalizeRecommendationReviews } from '../review/recommendations.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
 import { normalizeProjectEvidence } from './projectEvidence.js'
 import { normalizeTaskProgress } from '../tasks/progress.js'
+import { normalizeCredentialRecords } from '../credentials/records.js'
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
@@ -82,6 +83,7 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
       recommendationReviews:normalizeRecommendationReviews(state.recommendationReviews),
       projects:normalizeProjectEvidence(state.projects),
       tasks:normalizeTaskProgress(state.tasks),
+      credentials:normalizeCredentialRecords(state.credentials),
     },
     person360:person360 && typeof person360==='object' ? person360 : null,
   }
@@ -110,6 +112,7 @@ export function normalizePortableState(payload){
     recommendationReviews:normalizeRecommendationReviews(source.recommendationReviews,{imported:true}),
     projects:normalizeProjectEvidence(source.projects),
     tasks:normalizeTaskProgress(source.tasks),
+    credentials:normalizeCredentialRecords(source.credentials),
   }
 }
 

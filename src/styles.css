@@ -408,3 +408,10 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .suggest-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.suggest-list li{display:grid;gap:3px}
 .suggest-list q{font-size:.84rem;color:var(--ink);quotes:"«" "»"}.suggest-list small,.suggest-note,.suggest-abstain{color:var(--muted);font-size:.8rem;line-height:1.6}
 .suggest-abstain{margin:0;color:var(--warn);font-weight:700}
+.credential-import h3{display:inline-flex;align-items:center;gap:8px}.credential-import>p{color:var(--muted);font-size:.88rem}
+.credential-import label.button{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.credential-result{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px;background:var(--soft)}
+.credential-result.verified{border-color:var(--success);background:var(--success-bg)}.credential-result.unresolved{border-color:var(--warn);background:var(--warn-bg)}
+.credential-result strong{color:var(--navy)}.credential-result ul{margin:0;padding-inline-start:18px;font-size:.84rem;line-height:1.7;color:var(--muted)}.credential-result small{color:var(--muted)}
+.credential-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}.credential-list li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:.86rem}.credential-list small{color:var(--muted)}
+.verified-badge{display:block;color:var(--success);font-style:normal;font-weight:900;margin-top:4px}

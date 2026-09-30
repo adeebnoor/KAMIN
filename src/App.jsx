@@ -16,6 +16,8 @@ import { buildClrExport, clrExportFilename } from './utils/clrExport.js'
 import TaskLoop, { TodayStrip } from './components/TaskLoop.jsx'
 import PathwayCompare from './components/PathwayCompare.jsx'
 import { relationGovernance, governanceLine } from './catalog/governance.js'
+import { normalizeCredentialRecords, verifiedSkillIds } from './credentials/records.js'
+const CredentialImport = lazy(()=>import('./components/CredentialImport.jsx'))
 import { opportunityStatus } from './market/localOpportunities.js'
 import { normalizeTaskProgress } from './tasks/progress.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
@@ -51,6 +53,7 @@ const blankState = {
   recommendationReviews: [],
   projects: [],
   tasks: [],
+  credentials: [],
   localPersistence: false,
 }
 
@@ -66,6 +69,7 @@ const normalizeState = parsed => {
     recommendationReviews:normalizeRecommendationReviews(parsed.recommendationReviews),
     projects:normalizeProjectEvidence(parsed.projects),
     tasks:normalizeTaskProgress(parsed.tasks),
+    credentials:normalizeCredentialRecords(parsed.credentials),
   }
 }
 
@@ -74,6 +78,7 @@ const hasMeaningfulProfileState = state => !!(
   state?.courses?.length ||
   state?.projects?.length ||
   state?.tasks?.length ||
+  state?.credentials?.length ||
   state?.goal ||
   state?.localPersistence ||
   state?.consents?.insight ||
@@ -237,14 +242,14 @@ function EducationClassificationCard({lang,classification}) {
   </div>
 }
 
-function SkillCard({ skill, lang, projects=[] }) {
+function SkillCard({ skill, lang, projects=[], verified=false }) {
   const t = copy[lang].app
   const strength=evidenceStrengthText(skill.confidenceLabel,lang)
   const applied=skill.evidence?.some(e=>e.evidenceType==='applied')
   const provenance=skillProvenance(skill)
   return <article className="skill-card" data-provenance={provenance.level}>
     <div className="skill-top"><div><small>{lang==='ar'?'قوة الدليل — مبدئية':'Evidence strength — preliminary'}</small><h3>{skill.labels[lang]}</h3></div><strong>{strength}</strong></div>
-    <div className="evidence-level-row"><span>{lang==='ar'?'مستوى الإثبات':'Evidence level'}</span><b>{lang==='ar'?'ربط محكوم':'Governed mapping'} · {provenanceLabel(provenance.level,lang)}</b>{applied&&<em>{lang==='ar'?'يتضمن دليلًا تطبيقيًا':'includes applied evidence'}</em>}{provenance.gradeRaised&&<em className="provenance-warning">{lang==='ar'?'تتضمن درجة رُفعت يدويًا بعد الاستخراج':'includes a grade raised by hand after extraction'}</em>}</div>
+    <div className="evidence-level-row"><span>{lang==='ar'?'مستوى الإثبات':'Evidence level'}</span><b>{lang==='ar'?'ربط محكوم':'Governed mapping'} · {provenanceLabel(provenance.level,lang)}</b>{applied&&<em>{lang==='ar'?'يتضمن دليلًا تطبيقيًا':'includes applied evidence'}</em>}{provenance.gradeRaised&&<em className="provenance-warning">{lang==='ar'?'تتضمن درجة رُفعت يدويًا بعد الاستخراج':'includes a grade raised by hand after extraction'}</em>}{verified&&<em className="verified-badge" data-testid="verified-badge">{lang==='ar'?'موثّق من جهة إصدار معتمدة':'verified by a trusted issuer'}</em>}</div>
     <div className="meter categorical" aria-label={`${lang==='ar'?'قوة الدليل':'Evidence strength'}: ${strength}`}><i className={skill.confidenceLabel||'low'}/></div>
     <div className="evidence"><small>{t.evidence}</small>{skill.evidence.map((e,i)=>{const p=rowProvenance(e);return <p key={i}><BookOpen size={15}/><span>{e.code} · {localized(e.name,lang)}{p.level!=='document'&&p.level!=='synthetic'&&<i className="evidence-origin"> — {provenanceLabel(p.level,lang)}</i>}</span><b>{e.grade}</b></p>})}</div>
     {projects.length>0&&<div className="skill-projects"><small>{lang==='ar'?'أدلة تطبيقية مصرّح بها — بانتظار مراجعة، لا تغيّر قوة الدليل':'Self-declared applied evidence — awaiting review, does not change evidence strength'}</small>{projects.map(p=><p key={p.id}><FolderGit2 size={14}/><span>{p.title}</span></p>)}</div>}
@@ -385,7 +390,7 @@ function WhatChanged({change,lang}){
   return <div className="what-changed" role="region" aria-label={title[lang]} aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
 }
 
-function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary, onClearReviews, onExportClr }) {
+function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary, onClearReviews, onExportClr, onSaveCredential, onRemoveCredential }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
   const [confirmClearReviews,setConfirmClearReviews] = useState(false)
@@ -402,7 +407,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       const coursesRemoved=state.courses?.length||0
       const skillsRemoved=inferSkills(state.courses||[]).length
       onChangeSummary?.({type:'withdraw-analyze',courses:coursesRemoved,skills:skillsRemoved,ts:Date.now()})
-      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],projects:[],tasks:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],projects:[],tasks:[],credentials:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
     if (key === 'insight' && state.consents.insight) {
@@ -455,6 +460,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
         <div><strong>{state.courses?.length||0}</strong><span>{lang==='ar'?'سجلات مقررات':'course records'}</span></div>
         <div><strong>{state.projects?.length||0}</strong><span>{lang==='ar'?'أدلة تطبيقية مصرّح بها':'self-declared applied evidence'}</span></div>
         <div><strong>{state.tasks?.length||0}</strong><span>{lang==='ar'?'سجلات تقدم في المهام':'task progress records'}</span></div>
+        <div><strong>{state.credentials?.length||0}</strong><span>{lang==='ar'?'نتائج تحقق من اعتمادات':'credential verification results'}</span></div>
         <div><strong>{digital.confirmed.length}</strong><span>{lang==='ar'?'اهتمامات رقمية مؤكدة':'confirmed digital interests'}</span></div>
         <div><strong>{preferenceCount}</strong><span>{lang==='ar'?'تفضيلات مصرح بها':'declared preferences'}</span></div>
         <div><strong>{state.goal?1:0}</strong><span>{lang==='ar'?'هدف/مسار مختار':'selected target/goal'}</span></div>
@@ -484,6 +490,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       <div className="portable-actions">
         <button className="button primary" disabled={backupBusy || (!state.approved && !state.consents.insight && !state.recommendationReviews.length)} onClick={exportBackup}><Download size={17}/>{lang==='ar'?'تنزيل نسخة مشفّرة':'Download encrypted backup'}</button>
         {onExportClr&&<button className="button secondary" disabled={!state.approved && !state.projects?.length} onClick={onExportClr} data-testid="export-clr"><Download size={17}/>{lang==='ar'?'تصدير محمول غير موقّع (بنية CLR 2.0)':'Unsigned portable export (CLR 2.0 shape)'}</button>}
+        {onSaveCredential&&<Suspense fallback={<p role="status">{lang==='ar'?'جارٍ تحميل أداة التحقق…':'Loading the verifier…'}</p>}><CredentialImport lang={lang} records={state.credentials||[]} onSave={onSaveCredential} onRemove={onRemoveCredential}/></Suspense>}
         <button className="button secondary" disabled={backupBusy} onClick={()=>backupFileRef.current?.click()}><UploadCloud size={17}/>{lang==='ar'?'استعادة نسخة':'Restore backup'}</button>
         <input ref={backupFileRef} className="sr-only" type="file" accept=".kamin,application/json" onChange={e=>importBackup(e.target.files?.[0])}/>
       </div>
@@ -667,6 +674,8 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
       log(lang==='ar'?'تصدير محمول غير موقّع بصيغة CLR 2.0':'Unsigned CLR 2.0-shaped portable export created')
     } catch (error) { console.error(error) }
   }
+  const saveCredential = record => setState(previous=>({...previous,credentials:normalizeCredentialRecords([record,...(previous.credentials||[])]),audit:[{label:lang==='ar'?`استيراد اعتماد: ${record.outcome==='verified'?'موثّق':record.outcome==='unresolved'?'غير محسوم':'غير موثّق'}`:`Credential imported: ${record.outcome}`,ts:Date.now()},...previous.audit].slice(0,100)}))
+  const removeCredential = id => setState(previous=>({...previous,credentials:(previous.credentials||[]).filter(c=>c.id!==id)}))
   const updateTasks = next => setState(previous=>({...previous,tasks:normalizeTaskProgress(next)}))
   const [focusTaskId,setFocusTaskId] = useState(null)
   const saveProject = record => setState(previous=>({...previous,projects:normalizeProjectEvidence([record,...(previous.projects||[])]),audit:[{label:lang==='ar'?`تسجيل دليل تطبيقي مصرّح: ${record.title}`:`Self-declared applied evidence recorded: ${record.title}`,ts:Date.now()},...previous.audit].slice(0,100)}))
@@ -809,10 +818,10 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
           {view==='studio' && <section className="app-content"><DecisionStudio onSaveReview={saveRecommendationReview} projects={state.projects||[]} onSaveProject={saveProject} onRemoveProject={removeProject} initialTarget={selectedMatch} lang={lang} matches={matches} state={state} graph={personGraph} onReview={()=>{if(!state.approved){setView('start');return}setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('insight')}/></section>}
           {view==='insight' && <section className="app-content"><StudentInsight matches={matches} onInspect={id=>{setSelectedMatch(id);setView('studio')}} lang={lang} state={state} setState={setState} log={log} onGoal={chooseGoal} onExplore={()=>setView('studio')} onRecord={()=>setView('start')} onSave={()=>setView('privacy')}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer state={state} onSaveReview={saveRecommendationReview} lang={lang} profile={matchProfile} matches={matches} onPlan={id=>{setSelectedMatch(id);setView('studio')}}/></section>}
-          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang} projects={projectsForSkill(state.projects,s.id)}/>)}</div><ProjectEvidencePanel lang={lang} projects={state.projects||[]} onSave={saveProject} onRemove={removeProject}/></section>}
+          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang} projects={projectsForSkill(state.projects,s.id)} verified={verifiedSkillIds(state.credentials).has(s.id)}/>)}</div><ProjectEvidencePanel lang={lang} projects={state.projects||[]} onSave={saveProject} onRemove={removeProject}/></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard state={state} onSaveReview={saveRecommendationReview} key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared} onChoose={()=>setView('courses')} onSuggest={()=>setCompareIds(recs.slice(0,2).map(item=>item.id))}/></section>}
-          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary} onClearReviews={clearRecommendationReviews} onExportClr={exportClr}/></></section>}
+          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary} onClearReviews={clearRecommendationReviews} onExportClr={exportClr} onSaveCredential={saveCredential} onRemoveCredential={removeCredential}/></></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/><RecommendationReviewHistory records={state.recommendationReviews} lang={lang}/></section>}
         </div>
         <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.slice(0,4).map(([id,Icon,label])=><button key={id} className={view===id?'active':''} onClick={()=>navigate(id)}><Icon size={18}/><span>{label}</span></button>)}<button aria-expanded={moreTools} onClick={()=>setMoreTools(v=>!v)}><Menu size={18}/><span>{lang==='ar'?'المزيد':'More'}</span></button></nav>

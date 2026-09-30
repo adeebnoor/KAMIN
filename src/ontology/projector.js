@@ -136,6 +136,29 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     }
   }
 
+  // Imported credential outcomes: only a trusted-issuer verification is institution-verified.
+  for(const record of state?.credentials||[]){
+    const cid=`urn:kamin:evidence:credential:${slug(record.id)}`
+    graph=addEntity(graph,{
+      '@id':cid,'@type':'Evidence',evidenceType:'imported-credential-verification',
+      credentialId:record.credentialId||null,issuer:record.issuerId||null,issuerTrusted:!!record.issuerTrusted,
+      outcome:record.outcome,reasons:record.reasons||[],provenanceLevel:record.evidenceLevel,importedAt:record.importedAt,
+    })
+    for(const achievement of record.achievements||[]){
+      const match=achievement.id.match(/^urn:kamin:skill:([a-z0-9-]+)$/)
+      if(!match) continue
+      graph=addClaim(graph,createClaim({
+        id:`urn:kamin:claim:credential:${slug(record.id)}:${slug(match[1])}`,
+        predicate:record.outcome==='verified'?'kamin:verifiedBy':'kamin:declaresEvidenceFor',
+        object:skillId(match[1]),source:cid,sourceType:'imported-credential',
+        generatedBy:'urn:kamin:activity:credential-verification',
+        evidenceStrength:record.evidenceLevel,
+        consentPurpose:'urn:kamin:purpose:academic-profile',
+        metadata:{outcome:record.outcome,issuerTrusted:!!record.issuerTrusted},
+      }))
+    }
+  }
+
   const primary=educationClassification?.primary
   if(primary){
     const sascedId=`urn:kamin:sasced:${primary.code}`
