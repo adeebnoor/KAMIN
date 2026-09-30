@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 test('multi-hop people and project connections are explicit synthetic examples',async({page})=>{
  await page.goto('/?lang=ar')
+ await page.locator('.pilot-advanced > summary').click()
  await page.getByRole('button',{name:'مع من يمكنني التعاون؟',exact:true}).click()
  await expect(page.locator('.relationship-trail')).toContainText('عمر')
  await expect(page.locator('.relationship-trail')).toContainText('مشروع لوحة بيانات')
@@ -12,6 +13,7 @@ test('multi-hop people and project connections are explicit synthetic examples',
 })
 test('academic withdrawal and pathway changes update connected nodes without invented evidence',async({page})=>{
  await page.goto('/?lang=ar')
+ await page.locator('.pilot-advanced > summary').click()
  await page.getByLabel('تضمين دليل أكاديمي وهمي',{exact:true}).uncheck()
  await expect(page.locator('.relationship-map .relationship-evidence')).toContainText('غير متاح')
  await expect(page.locator('.relation-evidence')).toHaveCount(0)
@@ -43,6 +45,7 @@ test('home navigation opens bilingual guide and service pages with accurate stat
 })
 test('English network remains keyboard accessible without mobile page overflow',async({page})=>{
  await page.goto('/?lang=en')
+ await page.locator('.pilot-advanced > summary').click()
  await page.getByRole('button',{name:'Who could I collaborate with?',exact:true}).click()
  await expect(page.locator('.relationship-trail')).toContainText('Omar')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)

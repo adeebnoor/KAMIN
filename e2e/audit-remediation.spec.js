@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-const publicPages=['capstone','pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
+const publicPages=['catalog','capstone','pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
   test.setTimeout(120_000)
@@ -39,10 +39,11 @@ for(const lang of ['ar','en']){
  })
  test(`network tour leaves personal state untouched: ${lang}`,async({page})=>{
   await page.goto(`/${lang}/`)
+  await page.locator('.pilot-advanced > summary').click()
   await page.locator('.network-tour button').click()
   for(let i=1;i<=4;i++){
    await expect(page.locator('.network-tour strong')).toContainText(`${i}/4`)
-   await page.getByRole('button',{name:i===4?(lang==='ar'?'إنهاء الجولة':'Finish tour'):(lang==='ar'?'التالي':'Next'),exact:true}).click()
+   await page.locator('.network-tour').getByRole('button',{name:i===4?(lang==='ar'?'إنهاء الجولة':'Finish tour'):(lang==='ar'?'التالي':'Next'),exact:true}).click()
   }
   expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBeNull()
  })
@@ -78,7 +79,7 @@ test('static content exposes security headers and English metadata without runni
 })
 test('empty comparison offers courses and a working two-course starting point',async({page})=>{
  await page.goto('/?lang=ar')
- await page.getByRole('button',{name:'جرّب المثال التوضيحي',exact:true}).first().click()
+ await page.getByRole('button',{name:'افتح مساحة العمل',exact:true}).first().click()
  await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي',exact:true}).click()
  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
  await page.getByRole('button',{name:/أعتمد السجل/}).click()

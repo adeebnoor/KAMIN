@@ -3,7 +3,7 @@ export const text = (lang, ar, en) => lang === 'ar' ? ar : en
 export const navItems = [
   ['services.html', 'الخدمات والميزات', 'Services & features'],
   ['guide.html', 'دليل الاستخدام', 'User guide'],
-  ['?view=knowledge', 'مستكشف المعرفة', 'Knowledge explorer'],
+  ['business-model.html', 'للجامعات', 'For universities'],
   ['methodology.html', 'المنهجية', 'Methodology'],
   ['trust.html', 'مركز الثقة', 'Trust center'],
 ]
@@ -13,6 +13,8 @@ export const footerItems = [
   ['privacy.html', 'الخصوصية', 'Privacy'],
   ['pdpl.html', 'مطابقة PDPL', 'PDPL mapping'],
   ['faq.html', 'الأسئلة الشائعة', 'FAQ'],
+  ['catalog.html', 'الكتالوج والمصادر', 'Catalog & sources'],
+  ['?view=knowledge', 'مستكشف المعرفة', 'Knowledge explorer'],
   ['sample-report.html', 'تقرير تجريبي', 'Sample report'],
   ['validation.html', 'التحقق والتجربة الجامعية', 'Validation & pilot'],
   ['capstone.html', 'خطة فريق التطوير', 'Capstone team plan'],

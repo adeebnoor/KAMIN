@@ -6,7 +6,7 @@ import jsonld from 'jsonld'
 for(const lang of ['ar','en'])test(`semantic example changes with inputs and exports actual RDF (${lang})`,async({page})=>{
   const ar=lang==='ar'
   await page.goto(`/?lang=${lang}`)
-  await page.getByRole('link',{name:ar?'اكتشف كيف يصل كامن إلى اقتراحه':'See how Kamin reaches a suggestion'}).click()
+  await page.locator('.pilot-advanced > summary').click()
   const proof=page.locator('.inference-demo .inference-proof')
   await expect(proof.locator('.inference-result')).toContainText(ar?'يرتبط تفضيله':'preference connection')
   await page.getByLabel(ar?'تضمين الأدلة الأكاديمية الوهمية':'Include synthetic academic evidence').uncheck()
