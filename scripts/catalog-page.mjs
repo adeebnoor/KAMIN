@@ -2,6 +2,7 @@ import {targetProfiles,TARGET_CATALOG_VERSION} from '../src/matching/targets.js'
 import {skills} from '../src/data.js'
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;')
 const labels=new Map(Object.values(skills).map(s=>[s.id,s.labels]))
+for(const [id,ar,en] of [['sql','استعلامات SQL','SQL'],['python','التحليل باستخدام Python','Python'],['data-visualization','عرض البيانات بصريًا','Data visualization'],['power-bi','لوحات Power BI','Power BI']])labels.set(id,{ar,en})
 export function catalogPage(lang){
  const t=(ar,en)=>lang==='ar'?ar:en
  const list=(ids=[])=>ids.map(id=>esc(labels.get(id)?.[lang]||id)).join(' · ')||t('لا توجد متطلبات أولية في المثال','No prerequisites in this example')

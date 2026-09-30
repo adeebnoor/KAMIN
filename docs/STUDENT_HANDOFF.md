@@ -155,3 +155,7 @@ Kamin 1.0 processes transcript/OCR data locally in the browser. Institutional ce
 Start with `CAPSTONE_ROADMAP_20260927.md`, `KICKOFF_TASKS.csv`, `PILOT_PROTOCOL_DRAFT.md` and `CLOUDFLARE_PAGES_HANDOFF.md`. Current local recall, encrypted snapshots and graph exports are documented in `SEMANTIC_TOOLS_20260929.md`; they are the baseline, not student deliverables. The first-semester gate is a usable release plus an approved three-college pilot, followed by the rest of the ten-month improvement and evaluation period.
 
 Use `npm ci`, `npm test`, `npm run build`, and `npm run preview` to reproduce the complete website. Node 22 is the supported build baseline. The optional model downloads at build time and on first opted-in browser use; do not confuse its download size with initial page weight. Run `npx playwright install chromium` and `npm run e2e` for the browser gate.
+
+## HR review update — 30 September 2026
+
+The baseline now includes the three-step starter tour, direct synthetic review, 9 career pathways and 10 practice pathways with visible source boundaries. See `HR_REVIEW_RESPONSE_20260930.md` and the updated Arabic team message in `STUDENT_MESSAGE_AR_20260930.md`. These are inherited features, not new student contributions. Preserve the semester delivery gate and use the later months for institutional verification research and follow-up, as detailed in the proposed validation roadmap.

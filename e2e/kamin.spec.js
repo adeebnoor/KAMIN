@@ -75,7 +75,9 @@ test('proof-first landing exposes fictional evidence and transparent boundaries'
   await expect(page.locator('#proof')).toContainText('ملف واحد. علاقات تكشف أكثر.')
   await expect(page.locator('#proof')).toContainText('المسارات أمثلة مرجعية')
   await page.locator('#home').scrollIntoViewIfNeeded()
-  await expect(page.locator('#home')).toContainText('مثال تفاعلي · بيانات وهمية')
+  await expect(page.locator('#home .quick-tour')).toContainText('مثال توضيحي · دون بيانات شخصية')
+  await expect(page.locator('#home .quick-tour')).toContainText('طالبة افتراضية')
+  await page.locator('.pilot-advanced > summary').click()
   await expect(page.locator('#person360')).toContainText('صلاحية التوصيات هنا تحتاج تحققًا مستقلًا')
 
   for (const path of ['/sample-report.html','/methodology.html','/trust.html','/interoperability.html']) {

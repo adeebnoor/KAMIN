@@ -16,13 +16,15 @@ Institution-issued credentials and issuer integrations, independent skill assess
 
 ## Verification
 
-Local unit suite: 105 passed. Production build: passed; generated routes and performance budgets passed. Local Playwright browser download failed in this environment. Test discovery parsed 180 desktop/mobile scenarios, but these scenarios have NOT run. Public GitHub upload was rejected by automatic approval review because this turn supplied a report without explicit authorization to publish code. No pull request was created and the live site was not updated. After explicit authorization, push the review branch and run the repository quality workflow before any release. A build or test-discovery pass is not a browser-test pass.
+Local unit suite: 105 passed. Production build: passed; 44 bilingual pages, generated routes and performance budgets passed. The owner explicitly authorized upload and publication. Pull request #32 runs the repository quality gate before merge.
+
+The first hosted browser run executed all 180 scenarios: 170 passed and 10 failed. The failures came from older tests expecting the original hero wording or attempting to use the now-collapsed knowledge area before opening it. Updated those tests to follow the visible advanced-section control and assert the new fictional-sample label, retaining their original search, SPARQL, privacy and evidence assertions. The final hosted quality result is recorded in the pull-request checks; this document does not treat a build or test-discovery pass as a browser-test pass.
 
 ## ملخص المراجعة بالعربية
 
-التعديلات مكتملة محليًا ولم تُنشر على الموقع. يشمل العمل تبسيط الصفحة الرئيسية وجولة من ثلاث خطوات، فتح المثال مباشرة للمراجعة دون موافقة تلقائية، ومسارات للطالب والمستشار والجامعة. أصبح الكتالوج 9 مسارات مهنية و10 مسارات تدريب وتطبيق، مع أربعة مراجع O*NET جديدة وحدود واضحة للربط التجريبي. تمت إضافة نموذج إيرادات مقترح وخارطة تحقق مؤسسي وخطة تقييم مقترحة لتسعة أشهر.
+يشمل العمل تبسيط الصفحة الرئيسية وجولة من ثلاث خطوات، فتح المثال مباشرة للمراجعة دون موافقة تلقائية، ومسارات للطالب والمستشار والجامعة. أصبح الكتالوج 9 مسارات مهنية و10 مسارات تدريب وتطبيق، مع أربعة مراجع O*NET جديدة وحدود واضحة للربط التجريبي. تمت إضافة نموذج إيرادات مقترح وخارطة تحقق مؤسسي وخطة تقييم مقترحة لتسعة أشهر، مع الحفاظ على تسليم نسخة قابلة للاستخدام بنهاية الفصل.
 
-نجح 105 اختبارات منطقية وبناء 44 صفحة عربية وإنجليزية. لم تُشغّل اختبارات المتصفح الـ180؛ تعذّر تنزيل متصفح الاختبار محليًا، وتوقف الرفع العام بسبب رفض المراجعة الآلية. المطلوب للاستكمال: إذن صريح برفع التعديلات إلى فرع مراجعة في مستودع adeebnoor/KAMIN العام وتشغيل فحوصه. النشر على الموقع يبقى بعد نجاح الفحوص.
+نجح 105 اختبارات منطقية وبناء 44 صفحة عربية وإنجليزية. أذن صاحب المستودع بإكمال الرفع والنشر. نُفذت 180 حالة متصفح في التشغيل الأول: نجحت 170 حالة، واحتاجت 10 حالات إلى تحديث خطوات الدخول للأدوات المتقدمة أو النص المتوقع بعد تبسيط الصفحة. تحفظ فحوص طلب الدمج رقم 32 النتيجة النهائية، ولا يتم الدمج قبل نجاحها.
 
 التحقق المؤسسي الفعلي، وتقييم المشروعات، والدراسة الميدانية السعودية، واتفاق الجامعات أمور لم تُنجز بهذا التعديل. كما لا يثبت التقرير تفوقًا مقاسًا على المنافسين أو امتثالًا قانونيًا معتمدًا.
 
