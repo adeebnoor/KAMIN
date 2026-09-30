@@ -1,7 +1,8 @@
 import { useId, useState } from 'react'
-import { FolderGit2, Trash2, ExternalLink } from 'lucide-react'
+import { FolderGit2, Trash2, ExternalLink, Sparkles } from 'lucide-react'
 import { skills as catalog } from '../data.js'
 import { PROJECT_KINDS, MAX_PROJECTS, createProjectEvidence } from '../utils/projectEvidence.js'
+import { suggestCapabilities } from '../ai/projectSuggest.js'
 
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 const kinds = {
@@ -31,6 +32,7 @@ export default function ProjectEvidencePanel({ lang, projects = [], onSave, onRe
   const [open, setOpen] = useState(compact ? false : projects.length === 0)
   const [draft, setDraft] = useState(() => blank(suggestedSkillIds))
   const [message, setMessage] = useState('')
+  const [suggestion, setSuggestion] = useState(null)
   const limit = projects.length >= MAX_PROJECTS
   const toggleSkill = skillId => setDraft(d => ({ ...d, skillIds: d.skillIds.includes(skillId) ? d.skillIds.filter(s => s !== skillId) : [...d.skillIds, skillId].slice(0, 5) }))
   const canSave = draft.title.trim().length >= 3 && draft.skillIds.length > 0 && !limit
@@ -56,6 +58,13 @@ export default function ProjectEvidencePanel({ lang, projects = [], onSave, onRe
       <label htmlFor={`${id}-kind`}>{tr(lang, 'النوع', 'Kind')}</label><select id={`${id}-kind`} value={draft.kind} onChange={e => setDraft(d => ({ ...d, kind: e.target.value }))}>{PROJECT_KINDS.map(kind => <option key={kind} value={kind}>{kinds[kind][lang === 'ar' ? 0 : 1]}</option>)}</select>
       <label htmlFor={`${id}-url`}>{tr(lang, 'رابط https — اختياري (مستودع، ملف عام، شهادة)', 'https link — optional (repository, public file, certificate)')}</label><input id={`${id}-url`} dir="ltr" inputMode="url" maxLength={300} value={draft.url} onChange={e => setDraft(d => ({ ...d, url: e.target.value }))} placeholder="https://"/>
       <label htmlFor={`${id}-description`}>{tr(lang, 'ما الذي أنجزته بنفسك؟ — بلا معلومات حساسة', 'What did you do yourself? — no sensitive information')}</label><textarea id={`${id}-description`} rows={3} maxLength={400} value={draft.description} onChange={e => setDraft(d => ({ ...d, description: e.target.value }))}/>
+      <div className="suggest-block" data-testid="capability-suggestions">
+        <button type="button" className="text-button" disabled={draft.description.trim().length < 10} onClick={() => setSuggestion(suggestCapabilities(draft.description))}><Sparkles size={15}/>{tr(lang, 'اقترح القدرات من الوصف — محليًا', 'Suggest capabilities from the description — locally')}</button>
+        {suggestion && (suggestion.abstained
+          ? <p className="suggest-abstain">{tr(lang, 'غير محسوم: لا جملة في الوصف تدعم اقتراحًا. اختر القدرات بنفسك أو أضف تفاصيل عمّا نفذته.', 'Unresolved: no sentence in the description supports a suggestion. Choose capabilities yourself or add detail about what you did.')}</p>
+          : <ul className="suggest-list">{suggestion.suggestions.map(s => <li key={s.skillId}><label className="choice-chip"><input type="checkbox" checked={draft.skillIds.includes(s.skillId)} onChange={() => toggleSkill(s.skillId)}/><span>{skillList.find(k => k.id === s.skillId)?.labels[lang] || s.skillId}</span></label><q>{s.snippet}</q><small>{tr(lang, 'الكلمات الدالة: ', 'Cues: ')}{s.matches.join(tr(lang, '، ', ', '))} · {s.confidence === 'multiple-cues' ? tr(lang, 'أكثر من إشارة', 'multiple cues') : tr(lang, 'إشارة واحدة', 'single cue')}</small></li>)}</ul>)}
+        {suggestion && <small className="suggest-note">{tr(lang, 'الاقتراح لا يضيف قدرة ولا يغيّر مستوى إثبات؛ ما تحدده أنت هو ما يُحفظ. الطريقة: مطابقة قاموس محلي مع اقتباس الجملة الداعمة، دون نموذج خارجي.', 'A suggestion adds no capability and changes no evidence level; only what you tick is saved. Method: local lexicon matching that quotes the supporting sentence, with no external model.')}</small>}
+      </div>
       <fieldset><legend>{tr(lang, 'القدرات التي يخدمها هذا الدليل', 'Capabilities this evidence addresses')}</legend>
         <div className="project-skill-options">{skillList.map(skill => <label key={skill.id} className={`choice-chip ${suggestedSkillIds.includes(skill.id) ? 'suggested' : ''}`}><input type="checkbox" checked={draft.skillIds.includes(skill.id)} onChange={() => toggleSkill(skill.id)}/><span>{skill.labels[lang]}{suggestedSkillIds.includes(skill.id) && <small> · {tr(lang, 'فجوة حالية', 'current gap')}</small>}</span></label>)}</div>
       </fieldset>

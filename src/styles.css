@@ -403,3 +403,8 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .compare-empty{color:var(--muted)}
 .match-governance{display:block;margin-top:4px;color:var(--muted);font-size:.78rem;line-height:1.6}
 .opportunity-status{margin:0 0 16px;padding:10px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--line);color:var(--muted);font-size:.86rem;line-height:1.7}
+.suggest-block{display:grid;gap:6px;border:1px dashed var(--line);border-radius:12px;padding:8px 12px}
+.suggest-block .text-button{justify-self:start;display:inline-flex;gap:6px;align-items:center}
+.suggest-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.suggest-list li{display:grid;gap:3px}
+.suggest-list q{font-size:.84rem;color:var(--ink);quotes:"«" "»"}.suggest-list small,.suggest-note,.suggest-abstain{color:var(--muted);font-size:.8rem;line-height:1.6}
+.suggest-abstain{margin:0;color:var(--warn);font-weight:700}
