@@ -8,9 +8,19 @@ const pages=(await readdir('dist/ar')).filter(file=>file.endsWith('.html')).sort
 for(const lang of ['ar','en'])for(const file of pages){
   test(`public design ${lang}/${file}`,async({page},info)=>{
     await page.goto(`/${lang}/${file==='index.html'?'':file}`)
-    await page.evaluate(()=>document.fonts.ready)
+    await page.evaluate(async()=>{
+      // Both fonts occur in the shared language switch, including on EN pages.
+      await Promise.all([document.fonts.load('400 16px Inter'),document.fonts.load('400 16px "Noto Sans Arabic Variable"')])
+      await document.fonts.ready
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))
+    })
     const title=page.locator('h1:visible')
     await expect(title).toHaveCount(1)
+    if(file==='index.html'){
+      const hero=page.locator('.k-hero-art img')
+      await expect(hero).toBeVisible()
+      await hero.evaluate(img=>img.decode())
+    }
     const typography=await title.evaluate(el=>{
       const style=getComputedStyle(el)
       return {family:style.fontFamily,size:style.fontSize,weight:style.fontWeight,synthesis:style.fontSynthesis,color:style.color,faces:[...document.fonts].map(f=>({family:f.family.replace(/["']/g,''),weight:f.weight,status:f.status}))}
@@ -18,7 +28,7 @@ for(const lang of ['ar','en'])for(const file of pages){
     expect(typography.family).toContain(lang==='ar'?'Noto Sans Arabic Variable':'Inter')
     expect(typography.weight).toBe('800')
     expect(typography.synthesis).toBe('none')
-    expect(typography.color).toBe('rgb(11, 47, 91)')
+    expect(typography.color).toBe(file==='index.html'?'rgb(255, 255, 255)':'rgb(11, 47, 91)')
     expect(typography.faces).toEqual(expect.arrayContaining([expect.objectContaining({family:lang==='ar'?'Noto Sans Arabic Variable':'Inter',weight:'100 900',status:'loaded'})]))
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
     if(['guide.html','services.html','404.html','interoperability.html'].includes(file)){
@@ -28,7 +38,12 @@ for(const lang of ['ar','en'])for(const file of pages){
     // Candidates are review artifacts. Missing baselines FAIL; CI never blesses them.
     const destination=path.join('visual-candidates',info.project.name,lang,file.replace('.html','.png'))
     await mkdir(path.dirname(destination),{recursive:true})
-    await page.screenshot({path:destination,fullPage:true,scale:'css',animations:'disabled',caret:'hide'})
-    await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css'})
+    // The matcher settles consecutive full-page captures. Save the candidate
+    // afterwards so the proposal is the same settled layout the gate evaluates.
+    try{
+      await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css',timeout:15000})
+    }finally{
+      await page.screenshot({path:destination,fullPage:true,scale:'css',animations:'disabled',caret:'hide'})
+    }
   })
 }

@@ -20,3 +20,28 @@ html[lang=en] .k-site-header,html[lang=en] .k-site-footer{font-family:var(--font
 .k-status{font-size:13px;background:var(--navy-3);color:var(--navy);padding:5px 10px;border-radius:6px}.en{border-top:0!important;padding-top:0!important;margin-top:0!important}
 @media(max-width:1120px){.k-header-inner{gap:12px;min-height:72px;flex-wrap:wrap}.k-menu{display:inline-flex;margin-inline-start:auto}.k-nav{display:none;order:4;width:100%;margin:0;white-space:normal;flex-wrap:wrap;padding:0 0 16px}.k-nav.is-open{display:flex}.k-nav a,.k-nav button{flex:1 1 40%;border-radius:8px;background:var(--soft);padding:9px}.k-doc-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Shared 2026 identity across the app and every public document. */
+.k-site-header{background:#082d3a;border-bottom:1px solid #ffffff26;padding-inline:24px}
+.k-header-inner{min-height:88px;gap:22px}
+.k-brand{color:#fff!important;gap:12px}.k-brand>span{width:44px;height:46px;background:#fff;color:#0b2f5b;border-radius:6px}
+.k-brand strong{font-size:25px}.k-brand small{font-size:11px;color:#d3e2e7;line-height:1.8;margin-top:3px}
+.k-nav{gap:20px}.k-nav a,.k-nav button,.k-language,.k-menu{color:#eaf3f6;font-size:14px;font-weight:600}
+.k-nav a:hover,.k-nav button:hover{color:#a3e2d6}.k-nav .k-try{background:#a3e2d6;color:#082d3a;border-radius:5px;padding:11px 18px}
+.k-nav .k-try:hover{background:#c2eee5;color:#082d3a}.k-language{border:1px solid #52717b;border-radius:5px;padding:6px 12px}
+.k-site-header :focus-visible{outline-color:#a3e2d6}
+.k-site-footer{background:#062431;padding:60px 24px 38px;border:0;color:#f0f5f8}
+.k-site-footer strong{font-size:1.5rem}.k-site-footer p{font-size:.9rem;color:#bdcfd8;margin:12px 0 28px}
+.k-site-footer nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 30px;padding-top:26px;border-top:1px solid #496470}
+.k-site-footer a{color:#dce9ef;font-size:.9rem;text-decoration:none;line-height:1.7;min-height:32px}.k-site-footer a:hover{color:#a3e2d6;text-decoration:underline}
+.k-document{background:#f4f7f8;font-size:16px}.k-document main{padding-block:65px 85px}
+.k-document h1{font-size:clamp(2.2rem,4vw,3.5rem);line-height:1.35;letter-spacing:-.035em;max-width:1000px}
+html[lang=ar] .k-document h1{letter-spacing:0;line-height:1.7}
+.k-document .k-doc-lead,.k-document .help-hero p{font-size:1.1rem;line-height:1.9;max-width:780px}
+.k-document .card,.k-document .k-doc-card,.k-document details{border-radius:8px;border-color:#d3e1e4;box-shadow:0 6px 24px #16364204}
+.k-document .card,.k-document .k-doc-card{padding:30px}.k-document h2{font-size:1.65rem;line-height:1.5}.k-document h3{font-size:1.2rem}
+.k-document .hero{background:transparent;border-bottom:1px solid #d1e0e3;padding-bottom:30px;margin-bottom:32px}
+.k-document .hero:before{display:none}.k-document .btn{background:#08756e;border-radius:5px}
+.k-document table{font-size:.95rem}.k-document .k-governance{font-size:.9rem}
+@media(max-width:1120px){.k-header-inner{min-height:76px;gap:12px}.k-nav{gap:8px}.k-nav a,.k-nav button{background:#123d4a;color:#eaf3f6}.k-nav .k-try{background:#a3e2d6;color:#082d3a}.k-brand strong{font-size:22px}}
+@media(max-width:600px){.k-site-header{padding-inline:16px}.k-header-inner{gap:10px}.k-brand{gap:9px}.k-brand small{display:none}.k-brand>span{width:38px;height:40px}.k-site-footer{padding:40px 20px}.k-site-footer nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 20px}.k-document main{padding-block:35px 50px}.k-document .card,.k-document .k-doc-card{padding:20px}.k-document h1{font-size:2.2rem}.k-document h2{font-size:1.5rem}}
