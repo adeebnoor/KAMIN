@@ -21,8 +21,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test
       - run: npm run build
+        id: build
       - run: npm run e2e
       - name: Public page visual regression gate
+        if: always() && steps.build.outcome == 'success'
         run: npm run visual
       - name: Desktop visual review artifacts
         if: always()

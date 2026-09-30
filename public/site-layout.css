@@ -7,7 +7,7 @@ html[lang=en] body{font-family:var(--font-en)}:lang(ar){font-family:var(--font-a
 button,input,select,textarea{font:inherit}button,a{touch-action:manipulation}
 a{color:var(--navy);text-underline-offset:4px}:focus-visible{outline:3px solid var(--navy-2);outline-offset:4px}
 h1{font-size:var(--title-size);font-weight:800;line-height:1.5;letter-spacing:0;color:var(--navy);margin:0 0 18px;overflow-wrap:anywhere}
-h2,h3{color:var(--navy);line-height:1.6}p{line-height:1.85}
+h2,h3{line-height:1.6}.k-document h2,.k-document h3{color:var(--navy)}p{line-height:1.85}
 .k-document{background:var(--soft)}
 .k-document main,.noscript-main{width:min(var(--width-standard),calc(100% - 40px));margin-inline:auto;padding-block:42px 70px}
 .k-document[data-page=privacy] main,.k-document[data-page=faq] main,.k-document[data-page="404"] main,.noscript-main{max-width:var(--width-text)}

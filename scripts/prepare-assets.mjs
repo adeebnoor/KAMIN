@@ -51,6 +51,7 @@ const fontFiles=await readdir(fontFilesDir)
 const arabicVariableFont=fontFiles.find(name=>/arabic.*wght.*normal.*\.woff2$/i.test(name))
 if(!arabicVariableFont) throw new Error('Noto Sans Arabic variable font asset not found')
 await copyFile(path.join(fontFilesDir,arabicVariableFont),path.join(fontsOut,'noto-sans-arabic.woff2'))
+await copyFile(path.join(fontFilesDir,'..','LICENSE'),path.join(fontsOut,'noto-sans-arabic-LICENSE.txt'))
 // Declarations live only in brand.css, shared with the React build.
 await rm(path.join(fontsOut,'noto-sans-arabic.css'),{force:true})
 const interDir=path.join(root,'node_modules','@fontsource-variable','inter')
