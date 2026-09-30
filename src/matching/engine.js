@@ -1,4 +1,5 @@
 import { targetProfiles } from './targets.js'
+import { skills as skillCatalog } from '../data.js'
 import {
   GRAPH_MATCHING_VERSION,
   buildTargetSemanticGraph,
@@ -239,6 +240,7 @@ function judgeLegacyTarget(profile,target,lang='ar'){
   const hardGates=[]
   const required=target.requiredSkills||[]
   const missing=required.filter(id=>!hasSkill(profile,id))
+  const missingLabels=missing.map(id=>skillCatalog[id]?.labels?.[lang]||id)
   const met=required.filter(id=>hasSkill(profile,id))
 
   if(required.length){
@@ -246,8 +248,8 @@ function judgeLegacyTarget(profile,target,lang='ar'){
       `لديك دليل حالي على ${met.length} من ${required.length} مهارات أساسية مطلوبة.`,
       `You currently have evidence for ${met.length} of ${required.length} core required skills.`,lang))
     if(missing.length) limits.push(text(
-      `تحتاج إلى بناء دليل على: ${missing.join('، ')}.`,
-      `You still need evidence for: ${missing.join(', ')}.`,lang))
+      `تحتاج إلى بناء دليل على: ${missingLabels.join('، ')}.`,
+      `You still need evidence for: ${missingLabels.join(', ')}.`,lang))
   } else {
     support.push(text('لا توجد مهارة أكاديمية إلزامية في الملف المرجعي لهذا المسار.','This reference pathway has no mandatory academic-skill prerequisite.',lang))
   }
