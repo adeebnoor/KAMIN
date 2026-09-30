@@ -2,14 +2,16 @@ import {useState} from 'react'
 import {Share2,LockKeyhole,Copy,Trash2} from 'lucide-react'
 import {copy} from '../i18n.js'
 import {buildCapabilitySnapshot,encryptSnapshot,snapshotFragment,decryptSnapshot,snapshotSkills as catalog} from '../utils/capabilitySnapshot.js'
+import {skillProvenance,provenanceLabel} from '../utils/provenance.js'
 const tr=(lang,ar,en)=>lang==='ar'?ar:en
-function SnapshotContent({lang,snapshot}){return <div className="snapshot-preview"><h4>{tr(lang,'محتوى اللقطة','Snapshot contents')}</h4><ul>{snapshot.capabilities.map(id=><li key={id}>{catalog[id].labels[lang]}</li>)}{snapshot.goal&&<li>{tr(lang,'الهدف: ','Goal: ')}{copy[lang].app.goals[snapshot.goal]}</li>}</ul><p>{tr(lang,'اختيارات يشاركها صاحب الرابط، وليست شهادة موثّقة أو إثباتًا للجاهزية.','Choices shared by the link creator, not a verified credential or proof of readiness.')}</p></div>}
+function SnapshotContent({lang,snapshot}){return <div className="snapshot-preview"><h4>{tr(lang,'محتوى اللقطة','Snapshot contents')}</h4><ul>{snapshot.capabilities.map(id=><li key={id}>{catalog[id].labels[lang]}{snapshot.levels?.[id]&&<span className={`provenance-badge ${snapshot.levels[id]}`}>{provenanceLabel(snapshot.levels[id],lang)}</span>}</li>)}{snapshot.goal&&<li>{tr(lang,'الهدف: ','Goal: ')}{copy[lang].app.goals[snapshot.goal]}</li>}</ul><p>{tr(lang,'اختيارات يشاركها صاحب الرابط، وليست شهادة موثّقة أو إثباتًا للجاهزية.','Choices shared by the link creator, not a verified credential or proof of readiness.')}</p></div>}
 export default function CapabilitySnapshot({lang,skills,goal}){
  const [selected,setSelected]=useState([]),[includeGoal,setIncludeGoal]=useState(false),[agree,setAgree]=useState(false)
  const [link,setLink]=useState(''),[status,setStatus]=useState(''),[busy,setBusy]=useState(false)
  const reset=()=>{setLink('');setStatus('');setAgree(false)}
  const hasContent=selected.length>0||(includeGoal&&goal)
- const preview=hasContent?buildCapabilitySnapshot({skillIds:selected,goal:includeGoal?goal:null}):null
+ const levels=Object.fromEntries(skills.filter(skill=>selected.includes(skill.id)).map(skill=>[skill.id,skillProvenance(skill).level]))
+ const preview=hasContent?buildCapabilitySnapshot({skillIds:selected,goal:includeGoal?goal:null,levels}):null
  const create=async()=>{
   if(!agree||!preview)return
   setBusy(true);setStatus('')

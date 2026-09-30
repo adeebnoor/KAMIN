@@ -1,5 +1,6 @@
 import { addClaim, addEntity, createClaim, emptyPerson360 } from '../person360.js'
 import { DIGITAL_METHOD, DIGITAL_NOTICE, DIGITAL_PURPOSE, digitalInterestClaims } from '../digitalInterests.js'
+import { rowProvenance, provenanceStrength } from '../utils/provenance.js'
 
 const slug=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g,'-').replace(/^-|-$/g,'')
 const courseId=code=>`urn:kamin:course:${slug(code)}`
@@ -15,6 +16,7 @@ export function projectStateToPerson360({state,skills=[],educationClassification
   for(const course of state?.courses||[]){
     const cid=courseId(course.code)
     const eid=evidenceId('course',course.code)
+    const provenance=rowProvenance(course)
     graph=addEntity(graph,{
       '@id':cid,
       '@type':'Course',
@@ -30,6 +32,9 @@ export function projectStateToPerson360({state,skills=[],educationClassification
       course:cid,
       grade:course.grade,
       sourceDocument:course.source||'approved-session-record',
+      provenanceLevel:provenance.level,
+      editedFields:provenance.edits,
+      gradeRaisedByStudent:provenance.gradeRaised,
     })
     graph=addClaim(graph,createClaim({
       id:`urn:kamin:claim:studied:${slug(course.code)}`,
@@ -38,7 +43,7 @@ export function projectStateToPerson360({state,skills=[],educationClassification
       source:eid,
       sourceType:course.source||'transcript',
       generatedBy:'urn:kamin:activity:transcript-approval',
-      evidenceStrength:course.source==='manual'?'declared':'document-derived',
+      evidenceStrength:provenanceStrength(provenance.level),
       consentPurpose:'urn:kamin:purpose:academic-profile',
     }))
   }

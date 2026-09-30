@@ -1,5 +1,6 @@
 import { courseSkillMap } from '../data.js'
 import { normalizeGrade } from './engine.js'
+import { provenanceSignals } from './provenance.js'
 
 export const canonicalCourseCode = code => String(code || '').trim().toUpperCase().replace(/\s+/g, '-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/, '$1-$2')
 export const validGrade = value => /^(A[+-]?|B[+-]?|C[+-]?|D[+-]?|F|W|WF|I|IP|NP|DN|P|PASS)$/.test(normalizeGrade(value)) || (/^\d+(\.\d+)?$/.test(normalizeGrade(value)) && Number(normalizeGrade(value)) >= 0 && Number(normalizeGrade(value)) <= 100)
@@ -16,5 +17,5 @@ export function reviewProfileQuality(rows = []) {
     if (code && seen.has(code)) issues.push({ index, code, kind: 'duplicate' })
     seen.add(code)
   }
-  return { issues, canApprove: rows.length > 0 && issues.length === 0, mapped: rows.filter(r => courseSkillMap[canonicalCourseCode(r.code)]).length, total: rows.length }
+  return { issues, signals: provenanceSignals(rows), canApprove: rows.length > 0 && issues.length === 0, mapped: rows.filter(r => courseSkillMap[canonicalCourseCode(r.code)]).length, total: rows.length }
 }

@@ -1,5 +1,6 @@
 import {skills} from '../data.js'
 import {copy} from '../i18n.js'
+import {PROVENANCE_LEVELS} from './provenance.js'
 const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true})
 const FORMAT='kamin-capability-snapshot'
 export const snapshotSkills=Object.fromEntries(Object.values(skills).map(skill=>[skill.id,skill]))
@@ -12,15 +13,27 @@ const decode=value=>{
  try{const bytes=Uint8Array.from(atob(value.replaceAll('-','+').replaceAll('_','/')+'='.repeat((4-value.length%4)%4)),c=>c.charCodeAt(0));if(encode(bytes)!==value)return fail();return bytes}catch{return fail()}
 }
 export function validateSnapshot(value){
- if(!value||value.format!==FORMAT||value.version!==1||Object.keys(value).some(k=>!['format','version','createdAt','capabilities','goal'].includes(k)))return fail()
+ if(!value||value.format!==FORMAT||value.version!==1||Object.keys(value).some(k=>!['format','version','createdAt','capabilities','goal','levels'].includes(k)))return fail()
+ // Optional evidence levels travel with the claims they describe: the holder sees whether a
+ // capability rests on document-extracted rows or on the student's own edits and declarations.
+ if(value.levels!==undefined){
+  if(!value.levels||typeof value.levels!=='object'||Array.isArray(value.levels))return fail()
+  for(const [id,level] of Object.entries(value.levels))if(!value.capabilities?.includes?.(id)||!PROVENANCE_LEVELS.includes(level))return fail()
+ }
  if(typeof value.createdAt!=='string'||!/^\d{4}-\d{2}-\d{2}T/.test(value.createdAt)||!Number.isFinite(Date.parse(value.createdAt)))return fail()
  if(!Array.isArray(value.capabilities)||value.capabilities.length>20||new Set(value.capabilities).size!==value.capabilities.length||value.capabilities.some(id=>typeof id!=='string'||!Object.hasOwn(snapshotSkills,id)))return fail()
  if(value.goal!==null&&(typeof value.goal!=='string'||!Object.hasOwn(copy.en.app.goals,value.goal)))return fail()
  if(!value.capabilities.length&&!value.goal)return fail()
  return value
 }
-export function buildCapabilitySnapshot({skillIds=[],goal=null},now=new Date()){
- return validateSnapshot({format:FORMAT,version:1,createdAt:now.toISOString(),capabilities:[...new Set(skillIds)],goal})
+export function buildCapabilitySnapshot({skillIds=[],goal=null,levels=null},now=new Date()){
+ const capabilities=[...new Set(skillIds)]
+ const snapshot={format:FORMAT,version:1,createdAt:now.toISOString(),capabilities,goal}
+ if(levels&&typeof levels==='object'){
+  const kept=Object.fromEntries(Object.entries(levels).filter(([id])=>capabilities.includes(id)))
+  if(Object.keys(kept).length)snapshot.levels=kept
+ }
+ return validateSnapshot(snapshot)
 }
 export async function encryptSnapshot(snapshot){
  validateSnapshot(snapshot)
