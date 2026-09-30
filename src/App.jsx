@@ -12,6 +12,7 @@ import DecisionStudio from './components/DecisionStudio.jsx'
 import RecommendationReview, {RecommendationReviewHistory} from './components/RecommendationReview.jsx'
 import ProjectEvidencePanel from './components/ProjectEvidence.jsx'
 import { normalizeProjectEvidence, projectsForSkill } from './utils/projectEvidence.js'
+import { buildClrExport, clrExportFilename } from './utils/clrExport.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
 import StudentInsight from './components/StudentInsight.jsx'
 import { canonicalCourseCode, reviewProfileQuality } from './utils/profileQuality.js'
@@ -374,7 +375,7 @@ function WhatChanged({change,lang}){
   return <div className="what-changed" role="region" aria-label={title[lang]} aria-live="polite"><div><Sparkles size={18}/><strong>{title[lang]}</strong></div>{items.map((item,i)=><p key={i}><Check size={15}/>{item}</p>)}</div>
 }
 
-function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary, onClearReviews }) {
+function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onPersistenceChange, onChangeSummary, onClearReviews, onExportClr }) {
   const t = copy[lang].app
   const [confirmDelete,setConfirmDelete] = useState(false)
   const [confirmClearReviews,setConfirmClearReviews] = useState(false)
@@ -471,6 +472,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       <label className="portable-field"><span>{lang==='ar'?'تأكيد العبارة — مطلوب للتصدير فقط':'Confirm — export only'}</span><input type="password" autoComplete="new-password" value={backupConfirm} onChange={e=>setBackupConfirm(e.target.value)} placeholder={lang==='ar'?'أعد كتابة العبارة':'Repeat passphrase'}/></label>
       <div className="portable-actions">
         <button className="button primary" disabled={backupBusy || (!state.approved && !state.consents.insight && !state.recommendationReviews.length)} onClick={exportBackup}><Download size={17}/>{lang==='ar'?'تنزيل نسخة مشفّرة':'Download encrypted backup'}</button>
+        {onExportClr&&<button className="button secondary" disabled={!state.approved && !state.projects?.length} onClick={onExportClr} data-testid="export-clr"><Download size={17}/>{lang==='ar'?'تصدير محمول غير موقّع (بنية CLR 2.0)':'Unsigned portable export (CLR 2.0 shape)'}</button>}
         <button className="button secondary" disabled={backupBusy} onClick={()=>backupFileRef.current?.click()}><UploadCloud size={17}/>{lang==='ar'?'استعادة نسخة':'Restore backup'}</button>
         <input ref={backupFileRef} className="sr-only" type="file" accept=".kamin,application/json" onChange={e=>importBackup(e.target.files?.[0])}/>
       </div>
@@ -646,6 +648,14 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
     setNotice(lang==='ar' ? 'تم اعتماد السجل. اختر “الاحتفاظ بملفي على هذا الجهاز” إذا أردت العودة إليه بعد إغلاق المتصفح.' : 'Transcript approved. Choose “Keep my profile on this device” if you want it available after closing the browser.')
   }
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
+  const exportClr = () => {
+    try {
+      const document=buildClrExport({state,skills,lang})
+      const url=URL.createObjectURL(new Blob([JSON.stringify(document,null,2)],{type:'application/ld+json'}))
+      const a=window.document.createElement('a');a.href=url;a.download=clrExportFilename();a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
+      log(lang==='ar'?'تصدير محمول غير موقّع بصيغة CLR 2.0':'Unsigned CLR 2.0-shaped portable export created')
+    } catch (error) { console.error(error) }
+  }
   const saveProject = record => setState(previous=>({...previous,projects:normalizeProjectEvidence([record,...(previous.projects||[])]),audit:[{label:lang==='ar'?`تسجيل دليل تطبيقي مصرّح: ${record.title}`:`Self-declared applied evidence recorded: ${record.title}`,ts:Date.now()},...previous.audit].slice(0,100)}))
   const removeProject = id => setState(previous=>({...previous,projects:(previous.projects||[]).filter(p=>p.id!==id),audit:[{label:lang==='ar'?'حذف دليل تطبيقي مصرّح':'Self-declared applied evidence removed',ts:Date.now()},...previous.audit].slice(0,100)}))
   const saveRecommendationReview = record => setState(previous=>({...previous,recommendationReviews:appendRecommendationReview(previous.recommendationReviews,record)}))
@@ -787,7 +797,7 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
           {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang} projects={projectsForSkill(state.projects,s.id)}/>)}</div><ProjectEvidencePanel lang={lang} projects={state.projects||[]} onSave={saveProject} onRemove={removeProject}/></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard state={state} onSaveReview={saveRecommendationReview} key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared} onChoose={()=>setView('courses')} onSuggest={()=>setCompareIds(recs.slice(0,2).map(item=>item.id))}/></section>}
-          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary} onClearReviews={clearRecommendationReviews}/></></section>}
+          {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary} onClearReviews={clearRecommendationReviews} onExportClr={exportClr}/></></section>}
           {view==='audit' && <section className="app-content"><div className="app-title"><small>{t.app.audit}</small><h2>{lang==='ar'?'كشف حساب بياناتك':'Your data statement'}</h2><p>{lang==='ar'?'كل تغيير في ملف النسخة العامة يظهر هنا.':'Every change to your public-release profile appears here.'}</p></div><Audit lang={lang} entries={state.audit}/><RecommendationReviewHistory records={state.recommendationReviews} lang={lang}/></section>}
         </div>
         <nav className="bottom-nav" aria-label={lang==='ar'?'تنقل التطبيق على الجوال':'Mobile app navigation'}>{nav.slice(0,4).map(([id,Icon,label])=><button key={id} className={view===id?'active':''} onClick={()=>navigate(id)}><Icon size={18}/><span>{label}</span></button>)}<button aria-expanded={moreTools} onClick={()=>setMoreTools(v=>!v)}><Menu size={18}/><span>{lang==='ar'?'المزيد':'More'}</span></button></nav>

@@ -185,3 +185,24 @@ test.describe('from gap to evidence',()=>{
   expect(session.projects[0].level).toBe('declared-applied')
  })
 })
+
+test.describe('portable export',()=>{
+ test('the CLR-shaped export is unsigned, self-asserted and carries provenance levels',async({page})=>{
+  await page.goto('/ar/')
+  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
+  await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
+  await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
+  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  const download=page.waitForEvent('download')
+  await page.getByTestId('export-clr').click()
+  const file=await download
+  expect(file.suggestedFilename()).toMatch(/^kamin-clr-export-\d{4}-\d{2}-\d{2}\.jsonld$/)
+  const body=JSON.parse((await import('node:fs')).readFileSync(await file.path(),'utf8'))
+  expect(body.type).toEqual(['VerifiableCredential','ClrCredential'])
+  expect(body.proof).toBeUndefined()
+  expect(body['kamin:verificationStatus']).toBe('self-asserted')
+  expect(body.credentialSubject.verifiableCredential.length).toBeGreaterThan(0)
+  expect(body.credentialSubject.verifiableCredential.every(a=>a['kamin:provenanceLevel']==='synthetic')).toBe(true)
+ })
+})
