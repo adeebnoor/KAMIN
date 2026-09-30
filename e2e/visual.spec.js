@@ -33,7 +33,12 @@ for(const lang of ['ar','en'])for(const file of pages){
     // Candidates are review artifacts. Missing baselines FAIL; CI never blesses them.
     const destination=path.join('visual-candidates',info.project.name,lang,file.replace('.html','.png'))
     await mkdir(path.dirname(destination),{recursive:true})
-    await page.screenshot({path:destination,fullPage:true,scale:'css',animations:'disabled',caret:'hide'})
-    await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css'})
+    // The matcher settles consecutive full-page captures. Save the candidate
+    // afterwards so the proposal is the same settled layout the gate evaluates.
+    try{
+      await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css'})
+    }finally{
+      await page.screenshot({path:destination,fullPage:true,scale:'css',animations:'disabled',caret:'hide'})
+    }
   })
 }
