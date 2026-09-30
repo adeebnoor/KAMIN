@@ -11,6 +11,11 @@ for(const lang of ['ar','en'])for(const file of pages){
     await page.evaluate(()=>document.fonts.ready)
     const title=page.locator('h1:visible')
     await expect(title).toHaveCount(1)
+    if(file==='index.html'){
+      const hero=page.locator('.k-hero-art img')
+      await expect(hero).toBeVisible()
+      await hero.evaluate(img=>img.decode())
+    }
     const typography=await title.evaluate(el=>{
       const style=getComputedStyle(el)
       return {family:style.fontFamily,size:style.fontSize,weight:style.fontWeight,synthesis:style.fontSynthesis,color:style.color,faces:[...document.fonts].map(f=>({family:f.family.replace(/["']/g,''),weight:f.weight,status:f.status}))}
