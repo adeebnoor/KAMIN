@@ -18,7 +18,7 @@ for(const lang of ['ar','en'])for(const file of pages){
     expect(typography.family).toContain(lang==='ar'?'Noto Sans Arabic Variable':'Inter')
     expect(typography.weight).toBe('800')
     expect(typography.synthesis).toBe('none')
-    expect(typography.color).toBe('rgb(11, 47, 91)')
+    expect(typography.color).toBe(file==='index.html'?'rgb(255, 255, 255)':'rgb(11, 47, 91)')
     expect(typography.faces).toEqual(expect.arrayContaining([expect.objectContaining({family:lang==='ar'?'Noto Sans Arabic Variable':'Inter',weight:'100 900',status:'loaded'})]))
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
     if(['guide.html','services.html','404.html','interoperability.html'].includes(file)){

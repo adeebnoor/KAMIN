@@ -57,3 +57,11 @@ jobs:
           path: review-candidates
           if-no-files-found: ignore
           retention-days: 14
+      - name: Redesign review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: redesign-review
+          path: design-review
+          if-no-files-found: ignore
+          retention-days: 14
