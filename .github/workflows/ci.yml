@@ -49,3 +49,11 @@ jobs:
           name: browser-failures
           path: test-results
           retention-days: 7
+      - name: Recommendation review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recommendation-review
+          path: review-candidates
+          if-no-files-found: ignore
+          retention-days: 14

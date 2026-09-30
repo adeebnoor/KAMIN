@@ -1,3 +1,4 @@
+import { normalizeRecommendationReviews } from '../review/recommendations.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
@@ -62,6 +63,7 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
     restorePolicy:{
       derivedJudgments:'recompute-on-import',
       externalSharingConsents:'reset-on-import',
+      humanReviews:'historical-only-reconfirm-after-import',
     },
     state:{
       courses:safeArray(state.courses,1000),
@@ -75,6 +77,7 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
       },
       insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests)} : {},
       audit:safeArray(state.audit,100),
+      recommendationReviews:normalizeRecommendationReviews(state.recommendationReviews),
     },
     person360:person360 && typeof person360==='object' ? person360 : null,
   }
@@ -100,6 +103,7 @@ export function normalizePortableState(payload){
     },
     insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests)} : {},
     audit:safeArray(source.audit,100).filter(entry=>entry && typeof entry==='object'),
+    recommendationReviews:normalizeRecommendationReviews(source.recommendationReviews,{imported:true}),
   }
 }
 

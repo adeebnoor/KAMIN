@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Download, Route, SearchCheck, Waypoints, ShieldCheck, ArrowLeft, ArrowRight } from 'lucide-react'
 import KnowledgeNetwork from './KnowledgeNetwork.jsx'
+import RecommendationReview from './RecommendationReview.jsx'
 import ProfileNetwork from './ProfileNetwork.jsx'
 import RelationshipNetwork from './RelationshipNetwork.jsx'
 import { InferenceProof } from './InferenceExplorer.jsx'
@@ -20,7 +21,7 @@ export function buildDevelopmentPlan(match, lang = 'ar') {
     { title: tr(lang, 'راجع الدليل مع مرشد', 'Review the evidence with an advisor'), action: tr(lang, 'اطلب تغذية راجعة على المخرج، ثم حدّث بياناتك المتاحة في كامن. تنفيذ الخطة لا يضيف مهارة تلقائيًا؛ اعتماد المشاريع غير متاح في النسخة الحالية.', 'Ask for feedback, then update the information supported by Kamin. Completing a plan does not automatically add a skill; project verification is not available in this release.') },
   ]
 }
-export default function DecisionStudio({ lang, matches, state, graph, onReview, onGoal, initialTarget }) {
+export default function DecisionStudio({ lang, matches, state, graph, onReview, onGoal, initialTarget, onSaveReview }) {
   const [active, setActive] = useState(initialTarget?'plan':'network')
   const [targetId, setTargetId] = useState(initialTarget||'job-data-analyst')
   const [question, setQuestion] = useState('why')
@@ -57,6 +58,7 @@ export default function DecisionStudio({ lang, matches, state, graph, onReview, 
       {active === 'guide' && <div className="panel studio-guide"><label>{tr(lang, 'اختر سؤالك', 'Choose your question')}<select value={question} onChange={e => setQuestion(e.target.value)}>{questions.map(([id, q]) => <option key={id} value={id}>{q}</option>)}</select></label><div className="guide-answer" aria-live="polite"><h3>{questions.find(([id]) => id === question)[1]}</h3>{answers.filter(Boolean).map((answer, i) => <p key={i}>{answer}</p>)}</div><div className="studio-grounding"><ShieldCheck size={18}/>{tr(lang, 'الإجابة مستندة إلى ملفك وقواعد المطابقة الحالية. يمكنك مراجعة مصدرها في شبكة القدرات.', 'The answer uses your profile and current matching rules. Inspect its source in the capability network.')}</div><button className="text-button" onClick={onReview}>{tr(lang, 'راجع معلومات سجلي', 'Review my record')}<Arrow size={16}/></button></div>}
       {active === 'plan' && <div className="panel studio-plan"><div className="panel-head"><div><small>{tr(lang, 'خطة عمل مقترحة', 'SUGGESTED ACTION PLAN')}</small><h3>{match?.title[lang]}</h3></div><button className="text-button" onClick={downloadPlan}><Download size={17}/>{tr(lang, 'تنزيل الخطة', 'Download plan')}</button></div><p>{tr(lang, 'الأولوية لنقص دليل المتطلبات، ثم فرص التطوير. إشارات السوق الأجنبية سياق إضافي، ولا تمثل طلب السوق السعودي.', 'Required evidence gaps come first, followed by development opportunities. Foreign market signals are additional context, not Saudi demand.')}</p><ol>{plan.map(p => <li key={p.title}><h4>{p.title}</h4><p>{p.action}</p></li>)}</ol><div className="studio-grounding"><ShieldCheck size={18}/>{tr(lang, 'الخطة لا تغيّر المهارات أو نتائج المطابقة، ولا تَعِد بقبول أو توظيف.', 'The plan does not change skills or matching results, and does not promise acceptance or employment.')}</div>{exportError && <p role="alert">{exportError}</p>}</div>}
     </div>
+    {match && <RecommendationReview key={match.id} item={match} lang={lang} state={state} onSave={onSaveReview}/>}
   </div>
 }
 function TargetNote({ lang }) { return <p>{tr(lang, 'لم تحدد هدفًا بعد؛ النتائج للاستكشاف العام.', 'No goal selected yet; these results are general exploration.')}</p> }

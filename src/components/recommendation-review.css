@@ -1,0 +1,16 @@
+.recommendation-review{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--line,#dce3ec);color:var(--navy,#0b2f5b);min-width:0}
+.match-card:has(.review-form),.fit-card:has(.review-form){grid-column:1/-1}
+.review-heading{display:flex;align-items:center;gap:.5rem}.review-heading strong{font-size:1rem}
+.review-status{font-size:.88rem;font-weight:650;margin:.5rem 0;color:#344761}
+.review-actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}.review-actions .text-button{white-space:normal;text-align:start;min-height:44px}
+.review-form{display:grid;gap:.6rem;background:#f5f7fb;border:1px solid #dce3ec;border-radius:16px;padding:1rem;margin-top:.75rem;min-width:0}
+.review-form h4,.review-history h4{margin:.3rem 0;font-size:1rem;color:var(--navy,#0b2f5b)}
+.review-form p,.review-candidate p,.review-history p{font-size:.9rem;line-height:1.85;margin:.35rem 0;color:#344761}
+.review-form>label{font-size:.9rem;font-weight:650}.review-form input:not([type=checkbox]),.review-form select,.review-form textarea{box-sizing:border-box;max-width:100%;min-width:0;width:100%;border:1px solid #8c9bad;border-radius:9px;padding:.7rem;background:#fff;color:#142f50;font:inherit;font-size:.9rem}
+.review-form textarea{resize:vertical}.review-form fieldset{min-width:0;margin:0;padding:.75rem;border:1px solid #c4cedb;border-radius:10px}
+.review-form legend{font-size:.9rem;font-weight:700;padding:0 .4rem}.review-check{display:flex;gap:.55rem;align-items:flex-start;font-size:.86rem;font-weight:400;margin:.45rem 0;line-height:1.8;color:#243e5d}.review-check input{flex:0 0 18px;width:18px;height:18px;margin-top:.3rem;accent-color:var(--navy,#0b2f5b)}
+.review-requirements{display:flex;gap:.4rem;flex-wrap:wrap}.review-requirements span{padding:.4rem .55rem;border-radius:8px;background:#e8eef6;color:#193b61;font-size:.82rem}
+.review-form .review-note{font-size:.82rem;color:#43556c}.review-candidate{border-inline-start:3px solid #876015;padding-inline-start:.75rem;margin-top:.75rem}
+.review-history{margin-top:1rem}.review-history ol{padding-inline-start:1.3rem}.review-history li{padding:.7rem 0;border-bottom:1px solid #dce3ec;overflow-wrap:anywhere}.review-history small{color:#43556c}
+.review-privacy-actions{margin-top:1rem}.review-privacy-actions p{line-height:1.8}
+@media(max-width:600px){.review-form{padding:.8rem}.review-actions .button{width:100%}.review-requirements{display:grid}.review-form select{white-space:normal}}

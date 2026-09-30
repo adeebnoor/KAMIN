@@ -1,3 +1,4 @@
+import {governanceSection,reviewMetricsSection,reviewHelpSection,reviewPrivacySection} from './review-governance.mjs'
 import {universityPage} from './university-page.mjs'
 import {validationRoadmap} from './validation-roadmap.mjs'
 import {catalogPage} from './catalog-page.mjs'
@@ -92,4 +93,15 @@ for(const lang of ['ar','en']){
   `<li>${ar?'نُشر عنوان الإبلاغ الأمني وفق RFC 9116 في ‎/.well-known/security.txt‎، ويفتح التطبيق المثبّت بلغة الطالب الأخيرة بدل فرض العربية.':'A security contact is published per RFC 9116 at /.well-known/security.txt, and the installed app opens in the language the student last used instead of forcing Arabic.'}</li>`+
   `<li>${ar?'إصلاح تباين تسمية «الدليل» الذهبية في المهارات وإزالة تحميل مسبق لشعار لا تعرضه الصفحة الرئيسية.':'Fixed the gold “Evidence” label contrast in skills and removed a preload for a logo the landing page never renders.'}</li></ul>`)
   +pages['changelog.html'][lang][2]
+}
+
+// Product review governance: local human decisions stay outside capability evidence.
+for(const lang of ['ar','en']){
+ additions['methodology.html'][lang]+=governanceSection(lang)
+ additions['validation.html'][lang]+=reviewMetricsSection(lang)
+ additions['guide.html'][lang]+=reviewHelpSection(lang)
+ additions['privacy.html'][lang]+=reviewPrivacySection(lang)
+ additions['services.html']??={ar:'',en:''}
+ additions['services.html'][lang]+=card(lang==='ar'?'مراجعة بشرية لكل توصية':'Human review for each recommendation',p(lang==='ar'?'راجع متطلبات التوصية ومصادرها، ثم اقبلها استكشافيًا أو ارفضها أو اعترض أو اتركها غير محسومة. القرار محلي وقابل للسحب، ولا يرقّي مستوى إثبات المهارة. يتاح تصدير مرشح فحص من الاعتراض دون بيانات الملف؛ لا توجد معالجة مؤسسية للاعتراضات بعد.':'Review requirements and sources, then accept exploratorily, reject, contest or leave unresolved. Decisions are local and withdrawable, with no skill-evidence upgrade. Export a test candidate from a contest without profile data; institutional contest handling is not active.')+link('guide.html#recommendation-review',lang==='ar'?'خطوات المراجعة والاعتراض':'Review and contest steps'))
+ pages['changelog.html'][lang][2]=card(lang==='ar'?'30 سبتمبر 2026 · مراجعة التوصيات والاعتراض المحلي':'30 September 2026 · Recommendation review and local contests',p(lang==='ar'?'أضيفت معايير قبول لكل توصية، وقرارات محلية باسم أو اسم مستعار، وسحب القرار وتاريخه، ومراجعة جديدة عند تغير السياق أو استعادة النسخة. تضم النسخة المشفرة المراجعات، ويصدّر الاعتراض مرشح فحص دون بيانات الملف. أضيفت مقاييس زمن القرار والأخطاء التي عبرت التحقق كأهداف للدراسة، لا نتائج.':'Added per-recommendation acceptance checks, local decisions under a name or alias, withdrawal and history, and fresh review after context changes or restoration. Encrypted backups include reviews; contests export test candidates without profile data. Decision time and escaped-error measures are study targets, not results.')+link('methodology.html#recommendation-governance',lang==='ar'?'الحوكمة وحدودها':'Governance and its limits'))+pages['changelog.html'][lang][2]
 }
