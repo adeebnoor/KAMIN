@@ -3,8 +3,10 @@ import {parse,parseFragment,serialize} from 'parse5'
 import {headerHtml,footerHtml,text,pageHref} from '../public/site-content.js'
 import {pages,additions,extraFaq} from './public-page-content.mjs'
 import {securityHeaders} from './security-headers.mjs'
-const origin=(process.env.SITE_ORIGIN||'https://kamin-12mf.onrender.com').replace(/\/$/,'')
-if(!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(origin))throw new Error('SITE_ORIGIN must be an HTTPS origin')
+import {hostingConfig} from './hosting-config.mjs'
+const {origin,documentUrls}=hostingConfig()
+const publicPath=(file,lang)=>pageHref(file,lang,documentUrls)
+const documentFile=file=>file==='index.html'?'':documentUrls==='clean'?file.replace(/\.html$/,''):file
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;')
 const attrs=n=>Object.fromEntries((n.attrs||[]).map(a=>[a.name,a.value]))
 const set=(n,name,value)=>{n.attrs??=[];const a=n.attrs.find(a=>a.name===name);if(a)a.value=value;else n.attrs.push({name,value})}
@@ -26,6 +28,7 @@ for(const file of files){
  for(const locale of [null,'ar','en']){
   const lang=locale||'ar',doc=parse(source),html=all(doc,n=>n.tagName==='html')[0],head=all(doc,n=>n.tagName==='head')[0],body=all(doc,n=>n.tagName==='body')[0],home=file==='index.html'
   set(html,'lang',lang);set(html,'dir',lang==='ar'?'rtl':'ltr')
+  set(html,'data-document-urls',documentUrls)
   if(!home){
    for(const n of all(body,n=>['header','footer'].includes(n.tagName)||attrs(n)['data-language-toggle']!==undefined||['topline','skip'].includes(attrs(n).class)))remove(n)
    let main=all(body,n=>n.tagName==='main')[0];set(main,'id','main');set(main,'tabindex','-1')
@@ -47,19 +50,20 @@ for(const file of files){
   }
   const ba=attrs(body),title=home?text(lang,'كامن | اهتماماتك وقدراتك في شبكة واحدة','Kamin | Your interests and capabilities, connected'):ba[`data-title-${lang}`]||pages[file]?.[lang][0]||text(lang,'كامن','Kamin')
   const description=home?text(lang,'ابدأ باهتماماتك وهدفك، وافهم الروابط بين أدلتك وقدراتك ومساراتك. ملفك تحت سيطرتك.','Start with your interests and a goal. Understand the connections between evidence, capabilities and pathways in a profile you control.'):ba[`data-description-${lang}`]||plain(all(body,n=>n.tagName==='p'&&activeIn(n,lang)).slice(0,1).map(serialize).join('')).slice(0,170)||title
-  const canonical=`${origin}/${lang}/${home?'':file}`
+  const canonical=origin+publicPath(home?'':file,lang)
   for(const n of all(head,n=>n.tagName==='title'||(n.tagName==='meta'&&['description','twitter:card','twitter:title','twitter:description','twitter:image'].includes(attrs(n).name))||(n.tagName==='meta'&&(attrs(n).property?.startsWith('og:')||attrs(n)['http-equiv']==='Content-Security-Policy'))||(n.tagName==='link'&&['canonical','alternate'].includes(attrs(n).rel))||(n.tagName==='script'&&attrs(n).type==='application/ld+json')))remove(n)
-  append(head,`<title>${escape(title)}</title><meta name="description" content="${escape(description)}"><meta http-equiv="Content-Security-Policy" content="${escape(securityHeaders['Content-Security-Policy'].replace("; frame-ancestors 'none'",''))}"><link rel="stylesheet" href="/site-chrome.css"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="ar-SA" href="${origin}/ar/${home?'':file}"><link rel="alternate" hreflang="en" href="${origin}/en/${home?'':file}"><link rel="alternate" hreflang="x-default" href="${origin}/${home?'':file}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${lang==='ar'?'ar_SA':'en_US'}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:image" content="${origin}/og-kamin-${lang}.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${origin}/og-kamin-${lang}.jpg">`)
+  append(head,`<title>${escape(title)}</title><meta name="description" content="${escape(description)}"><meta http-equiv="Content-Security-Policy" content="${escape(securityHeaders['Content-Security-Policy'].replace("; frame-ancestors 'none'",''))}"><link rel="stylesheet" href="/site-chrome.css"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="ar-SA" href="${origin}/ar/${documentFile(file)}"><link rel="alternate" hreflang="en" href="${origin}/en/${documentFile(file)}"><link rel="alternate" hreflang="x-default" href="${origin}/${documentFile(file)}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${lang==='ar'?'ar_SA':'en_US'}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:image" content="${origin}/og-kamin-${lang}.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${origin}/og-kamin-${lang}.jpg">`)
   const ld=home?{'@type':'SoftwareApplication',name:text(lang,'كامن','Kamin'),applicationCategory:'EducationalApplication',operatingSystem:'Web',offers:{'@type':'Offer',price:'0',priceCurrency:'SAR'},creator:{'@type':'Person',name:'Adeeb Noor',url:'https://adeebnoor.github.io/'}}:file==='faq.html'?{'@type':'FAQPage',mainEntity:extraFaq[lang].map(([q,a])=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}:{'@type':'WebPage',name:title}
   append(head,`<script id="${home?'kamin-ld':'page-ld'}" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org',...ld,url:canonical,inLanguage:lang,description}).replaceAll('<','\\u003c')}</script>`)
   for(const link of all(body,n=>n.tagName==='a'&&attrs(n).href)){
    const raw=attrs(link).href;if(raw.startsWith('#'))continue
    const url=new URL(raw,`${origin}/${file}`)
-   if(url.origin===origin&&(url.pathname==='/'||/^\/(ar|en)\/$/.test(url.pathname)||url.pathname.endsWith('.html')))set(link,'href',pageHref(url.pathname+url.search+url.hash,lang))
+   if(url.origin===origin&&(url.pathname==='/'||/^\/(ar|en)\/$/.test(url.pathname)||url.pathname.endsWith('.html')))set(link,'href',publicPath(url.pathname+url.search+url.hash,lang))
   }
   const destination=locale?`dist/${locale}/${file}`:`dist/${file}`;if(locale)await mkdir(`dist/${locale}`,{recursive:true});await writeFile(destination,serialize(doc))
  }
 }
-const urls=['ar','en'].flatMap(l=>files.filter(f=>!['404.html','admin.html','advisor.html'].includes(f)).map(f=>`${origin}/${l}/${f==='index.html'?'':f}`))
+const urls=['ar','en'].flatMap(l=>files.filter(f=>!['404.html','admin.html','advisor.html'].includes(f)).map(f=>origin+publicPath(f,l)))
 await writeFile('dist/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url=>`<url><loc>${url}</loc></url>`).join('')}</urlset>`)
+await writeFile('dist/robots.txt',`User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`)
 console.log(`Built shared navigation and ${files.length*2} localized public pages.`)

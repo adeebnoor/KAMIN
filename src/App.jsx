@@ -814,7 +814,7 @@ export default function App({incomingSnapshot=null}) {
       description,
       inLanguage: ar ? 'ar-SA' : 'en',
       offers:{'@type':'Offer',price:'0',priceCurrency:'SAR'},
-      privacyPolicy: publicOrigin + '/privacy.html'
+      privacyPolicy: publicOrigin + pageHref('privacy.html',lang)
     })
     try{localStorage.setItem('kamin-lang',lang)}catch{}
     const url=new URL(window.location.href)
