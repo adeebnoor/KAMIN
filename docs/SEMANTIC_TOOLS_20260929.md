@@ -24,7 +24,7 @@ The existing production Render service was verified as a **static site**, served
 
 `npm run build` generates `dist/_headers` and enforces Cloudflare Pages' 25 MiB per-file and 20,000-file limits. Model shards are at most 16 MiB. These are compatibility preparations, not evidence of a Cloudflare deployment.
 
-To complete Pages migration once dashboard access is available: connect this repository, select `main`, use Node 22 and `npm run build`, publish `dist`, and set `SITE_ORIGIN` to the chosen canonical HTTPS origin. Verify Pages' `.html`/extensionless URL redirects and align canonical/hreflang/sitemap with the final served URLs before switching the public domain. Verify security response headers, Arabic/English paths, legacy links, model shard/WASM delivery and the snapshot flow on the Pages preview. Retain Render until the domain switch and smoke tests pass. No domain change or paid resource was created.
+To complete Pages migration once dashboard access is available: connect this repository, select `main`, use Node 22 and `npm run build`, publish `dist`, and set `SITE_ORIGIN` to the chosen canonical HTTPS origin. The 30 September continuation adds automatic extensionless routing for CF_PAGES=1 and generated canonical/hreflang/sitemap/robots using the required SITE_ORIGIN. Verify the final served URLs on the Pages preview before switching the public domain; see CLOUDFLARE_PAGES_HANDOFF.md. Verify security response headers, Arabic/English paths, legacy links, model shard/WASM delivery and the snapshot flow on the Pages preview. Retain Render until the domain switch and smoke tests pass. No domain change or paid resource was created.
 
 ## Verification gate
 

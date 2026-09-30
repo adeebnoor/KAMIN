@@ -15,15 +15,17 @@ export const footerItems = [
   ['faq.html', 'الأسئلة الشائعة', 'FAQ'],
   ['sample-report.html', 'تقرير تجريبي', 'Sample report'],
   ['validation.html', 'التحقق والتجربة الجامعية', 'Validation & pilot'],
+  ['capstone.html', 'خطة فريق التطوير', 'Capstone team plan'],
   ['stories.html', 'أدلة التطوير', 'Development evidence'],
   ['interoperability.html', 'التكامل', 'Interoperability'],
   ['business-model.html', 'للجامعات والشركاء', 'Universities & partners'],
   ['changelog.html', 'سجل التحديثات', 'Changelog'],
 ]
-export function pageHref(file,lang){
+export function pageHref(file,lang,style=typeof document==='undefined'?'html':document.documentElement.dataset.documentUrls||'html'){
  const url=new URL(file.startsWith('/')?file:`/${file}`,'https://kamin.invalid')
  url.pathname=url.pathname.replace(/^\/(ar|en)(?=\/|$)/,'').replace(/\/index\.html$/,'/')
  url.pathname=`/${lang}${url.pathname==='/'?'/':url.pathname}`
+ if(style==='clean')url.pathname=url.pathname.replace(/\.html$/,'')
  url.searchParams.delete('lang')
  return url.pathname+url.search+url.hash
 }
