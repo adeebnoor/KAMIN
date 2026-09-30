@@ -8,7 +8,12 @@ const pages=(await readdir('dist/ar')).filter(file=>file.endsWith('.html')).sort
 for(const lang of ['ar','en'])for(const file of pages){
   test(`public design ${lang}/${file}`,async({page},info)=>{
     await page.goto(`/${lang}/${file==='index.html'?'':file}`)
-    await page.evaluate(()=>document.fonts.ready)
+    await page.evaluate(async()=>{
+      // Both fonts occur in the shared language switch, including on EN pages.
+      await Promise.all([document.fonts.load('400 16px Inter'),document.fonts.load('400 16px "Noto Sans Arabic Variable"')])
+      await document.fonts.ready
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))
+    })
     const title=page.locator('h1:visible')
     await expect(title).toHaveCount(1)
     if(file==='index.html'){
@@ -36,7 +41,7 @@ for(const lang of ['ar','en'])for(const file of pages){
     // The matcher settles consecutive full-page captures. Save the candidate
     // afterwards so the proposal is the same settled layout the gate evaluates.
     try{
-      await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css'})
+      await expect(page).toHaveScreenshot([lang,file.replace('.html','.png')],{fullPage:true,scale:'css',timeout:15000})
     }finally{
       await page.screenshot({path:destination,fullPage:true,scale:'css',animations:'disabled',caret:'hide'})
     }
