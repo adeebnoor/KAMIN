@@ -15,6 +15,8 @@ import { normalizeProjectEvidence, projectsForSkill } from './utils/projectEvide
 import { buildClrExport, clrExportFilename } from './utils/clrExport.js'
 import TaskLoop, { TodayStrip } from './components/TaskLoop.jsx'
 import PathwayCompare from './components/PathwayCompare.jsx'
+import { relationGovernance, governanceLine } from './catalog/governance.js'
+import { opportunityStatus } from './market/localOpportunities.js'
 import { normalizeTaskProgress } from './tasks/progress.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
 import StudentInsight from './components/StudentInsight.jsx'
@@ -300,6 +302,7 @@ function MatchExplorer({ lang, profile, matches, onPlan, state, onSaveReview }) 
     <div className="app-title"><small>{lang==='ar'?'من ملفك إلى مسارك':'FROM YOUR PROFILE TO A PATHWAY'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'افهم سبب ارتباط المسار باهتماماتك وأهدافك، وما تدعمه أدلتك، ثم اختر خطوة تساعدك على التقدم.':'See how a pathway connects to your interests and goals, what your evidence supports, and a practical step forward.'}</p></div>
     {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من صفحة اهتماماتي وهدفي لتوجيه استكشاف المسارات.':'Choose a goal in Interests & goal to direct pathway exploration.'}</span></div>}
     <PathwayCompare lang={lang} matches={matches} profile={profile}/>
+    <p className="opportunity-status" data-testid="opportunity-status">{opportunityStatus().note[lang]}</p>
     {groups.map(type=>{
       const items=matches.filter(item=>item.type===type)
       return <section className="match-group" key={type}><div className="panel-head"><div><small>{type==='job'?(lang==='ar'?'الوظائف والمسارات':'Jobs & careers'):(lang==='ar'?'التدريب والتطبيق':'Training & applied learning')}</small><h3>{lang==='ar'?'مطابقة على أكثر من بُعد':'Multi-dimensional matching'}</h3></div></div>
@@ -309,7 +312,7 @@ function MatchExplorer({ lang, profile, matches, onPlan, state, onSaveReview }) 
           <div className="match-context"><strong>{lang==='ar'?'لماذا تستكشف هذا المسار؟':'Why explore this pathway?'}</strong><p>{item.semanticPaths?.some(p=>p.kind==='goal-alignment'&&p.status==='supported')?(lang==='ar'?'يرتبط بالهدف الذي اخترته.':'It connects to the goal you chose.'):item.semanticPaths?.some(p=>p.kind==='preference-alignment'&&p.status==='supported')?(lang==='ar'?'يتصل بأحد اهتماماتك أو تفضيلاتك المصرّح بها.':'It connects to one of your declared interests or preferences.'):(lang==='ar'?'مسار من الكتالوج يمكنك استكشافه ومقارنته بما تفضّله.':'A catalog pathway you can explore and compare with your preferences.')}</p></div>
           <div className="match-next"><strong>{lang==='ar'?'خطوتك التالية':'Your next step'}</strong><p>{item.knowledgeInsights?.bridges?.[0]?.label || (lang==='ar'?'راجع متطلبات المسار واختر تجربة تطبيقية واحدة.':'Review the pathway requirements and choose one applied exercise.')}</p>{item.limitingMechanisms[0]&&<small>{item.limitingMechanisms[0]}</small>}<button className="text-button" onClick={()=>onPlan(item.id)}>{lang==='ar'?'افتح خطة هذا المسار':'Open this pathway’s plan'}</button></div>
           <details className="match-evidence-details"><summary>{lang==='ar'?'الأدلة والفجوات والتفسير الكامل':'Evidence, gaps and full explanation'}</summary>
-          {item.source&&<p><a href={item.source.url.startsWith('/')?pageHref(item.source.url,lang):item.source.url}>{lang==='ar'?'مرجع المسار':'Pathway reference'}: {item.source.title}</a> · {item.source.checked}<br/>{lang==='ar'?'متطلبات كامن تجريبية؛ ليست تحققًا مؤسسيًا أو معيار أهلية كاملًا.':'Kamin requirements are provisional; not institutional verification or a complete eligibility standard.'}</p>}
+          {item.source&&<p><a href={item.source.url.startsWith('/')?pageHref(item.source.url,lang):item.source.url}>{lang==='ar'?'مرجع المسار':'Pathway reference'}: {item.source.title}</a> · {item.source.checked}<br/>{lang==='ar'?'متطلبات كامن تجريبية؛ ليست تحققًا مؤسسيًا أو معيار أهلية كاملًا.':'Kamin requirements are provisional; not institutional verification or a complete eligibility standard.'}<br/><span className="match-governance">{governanceLine(relationGovernance(item),lang)}</span></p>}
           <div className="mechanism-block"><strong>{lang==='ar'?'يدعم القرار':'Supporting mechanisms'}</strong>{item.supportingMechanisms.map((m,i)=><p key={i}><Check size={15}/>{m}</p>)}</div>
           {item.semanticPaths?.some(path=>path.kind==='capability-match')&&<div className="semantic-path-block"><strong>{lang==='ar'?'مسار الدليل في الشبكة':'Evidence paths in the graph'}</strong>{item.semanticPaths.filter(path=>path.kind==='capability-match').map((path,i)=><div className="semantic-path" key={path.claimId||i}><span>{path.courseCode||'Evidence'}</span><b>→</b><span>{localized(path.capabilityLabel,lang)||path.capabilityKey}</span><b>→</b><span>{item.title[lang]}</span></div>)}</div>}
           <KnowledgeMatchContext item={item} lang={lang}/>

@@ -16,3 +16,4 @@
 @media(max-width:800px){.k-document[data-page=admin] .grid,.k-document .flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.k-document .grid,.k-document .grid3,.k-document[data-page=advisor] .grid,.k-document[data-page=interoperability] .grid,.k-document .architecture div,.k-document[data-page=validation] .decision{grid-template-columns:1fr}.k-document .card,.k-document .empty,.k-document details{padding:20px}}
 @media(max-width:460px){.k-document[data-page=admin] .grid,.k-document .flow{grid-template-columns:1fr}}
+.k-governance{color:#526478;font-size:.82rem;line-height:1.7}

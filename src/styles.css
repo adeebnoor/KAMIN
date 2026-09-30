@@ -401,3 +401,5 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .pathway-compare .compare-table td.compare-gap{color:var(--warn);font-weight:800}
 .pathway-compare>small{display:block;margin-top:8px;color:var(--muted);line-height:1.6}
 .compare-empty{color:var(--muted)}
+.match-governance{display:block;margin-top:4px;color:var(--muted);font-size:.78rem;line-height:1.6}
+.opportunity-status{margin:0 0 16px;padding:10px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--line);color:var(--muted);font-size:.86rem;line-height:1.7}
