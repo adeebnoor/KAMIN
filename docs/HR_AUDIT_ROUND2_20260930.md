@@ -24,3 +24,16 @@ Security headers (CSP, HSTS preload, frame-ancestors none, permissions policy), 
 ## Decision principle applied
 
 Result-defined work with acceptance criteria, isolated reversible changes (each fix is one commit-sized unit), human-verifiable evidence (this matrix), and every red-team finding converted into a permanent check.
+
+## Visual baseline review — 30 September 2026
+
+Reviewed the desktop and mobile artifacts from [quality run 182](https://github.com/adeebnoor/KAMIN/actions/runs/36683366313), built from `9281ae89f473cb065b43b4ecef7525262297b0ce`. That run passed 106 unit tests, 202 functional browser tests, the production build and dependency audit. Its only failures were the 24 expected screenshot comparisons.
+
+Approved only `privacy`, `trust`, `guide`, `services`, `interoperability` and `changelog` in Arabic and English, for desktop and mobile Chromium. Inspected the changed regions with surrounding content: the five content pages lose the dated release card; the changelog gains the audit entry. Footer flow, text wrapping and spacing remain intact. All other 64 screenshots are pixel-identical to their existing references. The original PNG bytes are preserved; thresholds and test coverage are unchanged.
+
+Artifact integrity was checked against GitHub's SHA-256 digests:
+
+- Desktop (`11082686477`): `84bf1ae7456fbe64200a3cfc6f8ef79aa78acd7c4fef9481cbc3fc111135252a`
+- Mobile (`11082821336`): `1bd04b29f0da6fbea6bc733edc3614652ed8c5b84f91c82602824f9627d20a9d`
+
+The approval commit must pass the complete quality gate again before publication.
