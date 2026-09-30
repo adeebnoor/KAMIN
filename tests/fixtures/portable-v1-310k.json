@@ -1,0 +1,14 @@
+{
+  "format": "kamin-encrypted-profile",
+  "version": 1,
+  "createdAt": "2026-09-30T06:01:16.349Z",
+  "crypto": {
+    "cipher": "AES-GCM-256",
+    "kdf": "PBKDF2-HMAC-SHA-256",
+    "iterations": 310000,
+    "salt": "1wErTl+ggJM8PFYLPw4bUw==",
+    "iv": "aRjOLMsEFgTjCbq5",
+    "aad": "a2FtaW4tZW5jcnlwdGVkLXByb2ZpbGV8MQ=="
+  },
+  "ciphertext": "QkIwUD2wxMQ88ri+uvoU9Cvmsn8sqLPJTHqraTK5woh/3BnTFFOs3uWakFRaRq1dBuOwupeKWSAJbBVIyNK0PxDDbcke3BtAYEsviYTh+30LBF/qmU31dAcUKxZaU8vDfTdU4Zsg3pD+i1ozyJ7HJ5tWIN6A61Ivra3Uv03hjNrKV+Cd/KEuS6v8xDaofv0ArorHz8kEe/hQan3SJt/JXvnaTfYxZohV5vRLCw2SNyad1gz4ttN8wixZnoV3H/642tNicsRH8PkeXWqS2L69LOFaddE5MLbgvibk79e0dFxwlb01M0wY+OPusVyV9EKddVWWpZe3tjnZPkjY0zkjaYx7101H6fHEXOkf6Dc1UoJXpVS+4Se1LskocP1+j4E6+4UxG2KfcCX7tJRsdvs//JKeEEjjLiCvkdvHKFKldTgRmU8j6vgkaxuirDqk924aScoRTOgle6jQbLmVMrjSIaFVbe/jNRopCHHlghXG0PBDzmXR5zqREUZUEGFcmkcR6vUDVANJBxje0vGFWv9NMjcEQ5FDxa24taxZZnuijCPHl1ZsCisUJJWbW8E7jwcd9SA1optMGE146A5MQgpI4XdK81j22Qg7ChLr/so7"
+}

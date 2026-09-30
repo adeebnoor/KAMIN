@@ -1,0 +1,18 @@
+/* Three content widths. Small controls and diagrams keep their own dimensions. */
+:root{--width-text:720px;--width-standard:1040px;--width-wide:1260px;--title-size:clamp(2rem,4vw,3.25rem)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--font-ar);font-synthesis:none;line-height:1.85;-webkit-font-smoothing:antialiased}
+html[lang=en] body{font-family:var(--font-en)}:lang(ar){font-family:var(--font-ar)}
+button,input,select,textarea{font:inherit}button,a{touch-action:manipulation}
+a{color:var(--navy);text-underline-offset:4px}:focus-visible{outline:3px solid var(--navy-2);outline-offset:4px}
+h1{font-size:var(--title-size);font-weight:800;line-height:1.5;letter-spacing:0;color:var(--navy);margin:0 0 18px;overflow-wrap:anywhere}
+h2,h3{color:var(--navy);line-height:1.6}p{line-height:1.85}
+.k-document{background:var(--soft)}
+.k-document main,.noscript-main{width:min(var(--width-standard),calc(100% - 40px));margin-inline:auto;padding-block:42px 70px}
+.k-document[data-page=privacy] main,.k-document[data-page=faq] main,.k-document[data-page="404"] main,.noscript-main{max-width:var(--width-text)}
+.k-document[data-page=admin] main{width:min(var(--width-wide),calc(100% - 40px))}
+.k-document main>section>p,.k-doc-lead,.help-hero p,.k-document .hero p{max-width:var(--width-text)}
+.k-document img{max-width:100%;height:auto}.k-document main,.k-document article,.k-document section{min-width:0}code{overflow-wrap:anywhere}
+@media(max-width:600px){.k-document main,.k-document[data-page=admin] main,.noscript-main{width:calc(100% - 32px);padding-block:28px 44px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

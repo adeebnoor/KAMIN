@@ -50,6 +50,8 @@ test('encrypted snapshot is reviewed, opened locally, stripped from URL and neve
  await page.locator('input[name="goal"][value="data"]').check()
  await page.getByRole('button',{name:'Profile saving options',exact:true}).click()
  const section=page.locator('.snapshot-share')
+ expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')).approved)).toBe(false)
+ await expect(section.locator('#snapshot-requirements')).toContainText('To share without a transcript')
  await expect(section.getByRole('button',{name:'Create encrypted link',exact:true})).toBeDisabled()
  await section.getByRole('checkbox',{name:/Include my goal/}).check()
  await expect(section.locator('.snapshot-preview')).toContainText('Data')

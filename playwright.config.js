@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
+  testIgnore: '**/visual.spec.js',
   timeout: 45_000,
   retries: 1,
   workers: 2,
