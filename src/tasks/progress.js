@@ -102,3 +102,5 @@ export function recommendTask({ missingSkills = [], records = [] }) {
 }
 
 export const taskWorkHours = skillIds => [...new Set(skillIds.flatMap(id => taskCatalog.filter(task => task.skillIds.includes(id)).map(task => task.id)))].reduce((sum, id) => sum + taskById(id).hours, 0)
+
+export const tasksForSkillCount = skillIds => new Set(skillIds.flatMap(id => taskCatalog.filter(task => task.skillIds.includes(id)).map(task => task.id))).size

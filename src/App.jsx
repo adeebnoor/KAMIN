@@ -14,6 +14,7 @@ import ProjectEvidencePanel from './components/ProjectEvidence.jsx'
 import { normalizeProjectEvidence, projectsForSkill } from './utils/projectEvidence.js'
 import { buildClrExport, clrExportFilename } from './utils/clrExport.js'
 import TaskLoop, { TodayStrip } from './components/TaskLoop.jsx'
+import PathwayCompare from './components/PathwayCompare.jsx'
 import { normalizeTaskProgress } from './tasks/progress.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
 import StudentInsight from './components/StudentInsight.jsx'
@@ -298,6 +299,7 @@ function MatchExplorer({ lang, profile, matches, onPlan, state, onSaveReview }) 
   return <div className="match-explorer">
     <div className="app-title"><small>{lang==='ar'?'من ملفك إلى مسارك':'FROM YOUR PROFILE TO A PATHWAY'}</small><h2>{lang==='ar'?'فرصك المفسّرة':'Your explained matches'}</h2><p>{lang==='ar'?'افهم سبب ارتباط المسار باهتماماتك وأهدافك، وما تدعمه أدلتك، ثم اختر خطوة تساعدك على التقدم.':'See how a pathway connects to your interests and goals, what your evidence supports, and a practical step forward.'}</p></div>
     {!profile.goal&&<div className="mapping-note"><Target size={17}/><span>{lang==='ar'?'اختر هدفًا من صفحة اهتماماتي وهدفي لتوجيه استكشاف المسارات.':'Choose a goal in Interests & goal to direct pathway exploration.'}</span></div>}
+    <PathwayCompare lang={lang} matches={matches} profile={profile}/>
     {groups.map(type=>{
       const items=matches.filter(item=>item.type===type)
       return <section className="match-group" key={type}><div className="panel-head"><div><small>{type==='job'?(lang==='ar'?'الوظائف والمسارات':'Jobs & careers'):(lang==='ar'?'التدريب والتطبيق':'Training & applied learning')}</small><h3>{lang==='ar'?'مطابقة على أكثر من بُعد':'Multi-dimensional matching'}</h3></div></div>
