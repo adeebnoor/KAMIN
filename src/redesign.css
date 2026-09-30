@@ -3,6 +3,7 @@
 .landing-v3 .k-overline{display:block;font-size:.8rem;font-weight:750;letter-spacing:.1em;color:#08736e;line-height:1.8}
 [dir=rtl] .landing-v3 .k-overline{letter-spacing:0}
 .landing-v3 h2{font-size:clamp(1.9rem,3.1vw,3rem);line-height:1.3;font-weight:800;letter-spacing:-.025em;color:var(--navy)}
+.landing-v3 .v2-research-section h2{color:#fff}
 [dir=rtl] .landing-v3 h2{letter-spacing:0;line-height:1.65}
 .landing-v3 .button{border-radius:5px;padding:14px 24px;font-size:1rem;min-height:54px}
 .landing-v3 .button.primary{background:#087f78;color:white}
@@ -78,6 +79,11 @@
 /* Contain the grid's intrinsic table width. Scrolling belongs to the table. */
 .app-main,.app-content-wrap,.app-content,.match-explorer,.match-explorer>*,.pathway-compare,.pathway-compare .table-scroll{min-width:0;max-width:100%}
 .match-explorer{grid-template-columns:minmax(0,1fr)}
+.match-explorer .opportunity-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin-top:0;min-width:0}
+.match-card,.match-card>*{min-width:0}
+.match-card .decision-head{flex-wrap:wrap;gap:8px}
+.match-card .decision-head>div{min-width:0;flex:1 1 180px}
+.match-card h3{overflow-wrap:anywhere}
 .pathway-compare .table-scroll{width:100%;overflow:auto;overscroll-behavior-inline:contain}
 .pathway-compare .compare-table{min-width:620px;table-layout:fixed}
 .pathway-compare .compare-table th,.pathway-compare .compare-table td{min-width:0;overflow-wrap:anywhere}

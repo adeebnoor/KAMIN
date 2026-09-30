@@ -24,11 +24,12 @@ for(const lang of ['ar','en']){
     const overflow=await panel.evaluate(el=>{
       const content=el.closest('.app-content-wrap')
       const viewport=content.getBoundingClientRect(),bounds=el.getBoundingClientRect()
-      return {panelWithin:bounds.left>=viewport.left-1&&bounds.right<=viewport.right+1,extra:content.scrollWidth-content.clientWidth}
+      const outside=[...content.querySelectorAll('.match-group,.match-card,.app-title,.pathway-compare')].filter(node=>{const r=node.getBoundingClientRect();return r.left<viewport.left-1||r.right>viewport.right+1}).map(node=>node.className)
+      return {panelWithin:bounds.left>=viewport.left-1&&bounds.right<=viewport.right+1,extra:content.scrollWidth-content.clientWidth,outside}
     })
-    expect(overflow.panelWithin).toBe(true)
-    expect(overflow.extra).toBeLessThanOrEqual(1)
-    await expect(panel).toContainText(t('تشغيل قواعد البيانات واستعادتها','Database operations and recovery'))
     await page.screenshot({path:`design-review/${info.project.name}/${lang}-comparison.png`,fullPage:true})
+    expect(overflow.panelWithin).toBe(true)
+    expect(overflow.extra,JSON.stringify(overflow)).toBeLessThanOrEqual(1)
+    await expect(panel).toContainText(t('تشغيل قواعد البيانات واستعادتها','Database operations and recovery'))
   })
 }

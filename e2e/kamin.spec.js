@@ -74,9 +74,10 @@ test('proof-first landing exposes fictional evidence and transparent boundaries'
   await page.goto('/')
   await expect(page.locator('#proof')).toContainText('ملف واحد. علاقات تكشف أكثر.')
   await expect(page.locator('#proof')).toContainText('المسارات أمثلة مرجعية')
-  await page.locator('#home').scrollIntoViewIfNeeded()
-  await expect(page.locator('#home .quick-tour')).toContainText('مثال توضيحي · دون بيانات شخصية')
-  await expect(page.locator('#home .quick-tour')).toContainText('طالبة افتراضية')
+  await page.locator('.quick-tour').scrollIntoViewIfNeeded()
+  await expect(page.locator('.quick-tour')).toBeVisible()
+  await expect(page.locator('.quick-tour')).toContainText('مثال توضيحي · دون بيانات شخصية')
+  await expect(page.locator('.quick-tour')).toContainText('طالبة افتراضية')
   await page.locator('.pilot-advanced > summary').click()
   await expect(page.locator('#person360')).toContainText('صلاحية التوصيات هنا تحتاج تحققًا مستقلًا')
 
