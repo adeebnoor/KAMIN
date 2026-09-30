@@ -342,3 +342,26 @@ input,select{border:1px solid #cad6e1;background:#fff;border-radius:9px;padding:
 .document-signals li.ok{color:var(--success)}.document-signals li.warn{color:var(--warn)}.document-signals li.neutral{color:var(--muted)}
 .document-signals a{color:var(--navy);font-weight:900}
 .document-signals small{color:var(--muted);line-height:1.6}
+
+/* From gap to evidence: self-declared applied evidence */
+.project-evidence h3{display:inline-flex;align-items:center;gap:8px}
+.project-evidence>p{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.project-evidence-form{display:grid;gap:8px;margin:10px 0 14px}
+.project-evidence-form label{font-size:.85rem;font-weight:800;color:var(--navy)}
+.project-evidence-form input,.project-evidence-form select,.project-evidence-form textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+.project-evidence-form fieldset{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.project-evidence-form legend{font-size:.85rem;font-weight:800;color:var(--navy);padding:0 6px}
+.project-skill-options{display:flex;flex-wrap:wrap;gap:8px}
+.project-skill-options .choice-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:.82rem;background:#fcfefb}
+.project-skill-options .choice-chip.suggested{border-color:var(--warn);background:var(--warn-bg)}
+.project-skill-options .choice-chip small{color:var(--warn);font-weight:800}
+.project-evidence-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.project-evidence-list li{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--paper);display:grid;gap:5px}
+.project-evidence-list li>div:first-child{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.project-evidence-list small{color:var(--muted)}
+.project-evidence-list p{margin:0;font-size:.88rem;line-height:1.7}
+.project-evidence-actions{display:flex;gap:12px;align-items:center}
+.project-evidence-actions a{display:inline-flex;align-items:center;gap:4px;color:var(--navy);font-weight:800;font-size:.84rem}
+.skill-projects{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.skill-projects small{display:block;color:var(--warn);font-weight:900;margin-bottom:4px}
+.skill-projects p{margin:4px 0;font-size:.82rem;display:flex;gap:6px;align-items:center;color:var(--ink)}

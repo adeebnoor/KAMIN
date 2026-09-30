@@ -3,14 +3,15 @@ import {
   ArrowLeft, ArrowRight, BadgeCheck, BookOpen, Check, ChevronDown, ClipboardCheck,
   Download, FileCheck2, Fingerprint, GraduationCap, Languages, LayoutDashboard,
   LockKeyhole, Menu, Plus, SearchCheck, ShieldCheck, Sparkles, Target, Trash2,
-  UploadCloud, X,
-} from 'lucide-react'
+  UploadCloud, X, FolderGit2 } from 'lucide-react'
 import { copy } from './i18n.js'
 import {SiteHeader,SiteFooter} from './site/SiteChrome.jsx'
 import {pageHref} from '../public/site-content.js'
 import LandingExperience from './components/LandingExperience.jsx'
 import DecisionStudio from './components/DecisionStudio.jsx'
 import RecommendationReview, {RecommendationReviewHistory} from './components/RecommendationReview.jsx'
+import ProjectEvidencePanel from './components/ProjectEvidence.jsx'
+import { normalizeProjectEvidence, projectsForSkill } from './utils/projectEvidence.js'
 import {normalizeRecommendationReviews, appendRecommendationReview} from './review/recommendations.js'
 import StudentInsight from './components/StudentInsight.jsx'
 import { canonicalCourseCode, reviewProfileQuality } from './utils/profileQuality.js'
@@ -42,6 +43,7 @@ const blankState = {
   insight: emptyInsightState(),
   audit: [],
   recommendationReviews: [],
+  projects: [],
   localPersistence: false,
 }
 
@@ -55,12 +57,14 @@ const normalizeState = parsed => {
     insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})},digitalInterests:normalizeDigitalInterests(parsed.insight?.digitalInterests)},
     audit:Array.isArray(parsed.audit)?parsed.audit.slice(0,100):[],
     recommendationReviews:normalizeRecommendationReviews(parsed.recommendationReviews),
+    projects:normalizeProjectEvidence(parsed.projects),
   }
 }
 
 const hasMeaningfulProfileState = state => !!(
   state?.approved ||
   state?.courses?.length ||
+  state?.projects?.length ||
   state?.goal ||
   state?.localPersistence ||
   state?.consents?.insight ||
@@ -224,7 +228,7 @@ function EducationClassificationCard({lang,classification}) {
   </div>
 }
 
-function SkillCard({ skill, lang }) {
+function SkillCard({ skill, lang, projects=[] }) {
   const t = copy[lang].app
   const strength=evidenceStrengthText(skill.confidenceLabel,lang)
   const applied=skill.evidence?.some(e=>e.evidenceType==='applied')
@@ -234,6 +238,7 @@ function SkillCard({ skill, lang }) {
     <div className="evidence-level-row"><span>{lang==='ar'?'مستوى الإثبات':'Evidence level'}</span><b>{lang==='ar'?'ربط محكوم':'Governed mapping'} · {provenanceLabel(provenance.level,lang)}</b>{applied&&<em>{lang==='ar'?'يتضمن دليلًا تطبيقيًا':'includes applied evidence'}</em>}{provenance.gradeRaised&&<em className="provenance-warning">{lang==='ar'?'تتضمن درجة رُفعت يدويًا بعد الاستخراج':'includes a grade raised by hand after extraction'}</em>}</div>
     <div className="meter categorical" aria-label={`${lang==='ar'?'قوة الدليل':'Evidence strength'}: ${strength}`}><i className={skill.confidenceLabel||'low'}/></div>
     <div className="evidence"><small>{t.evidence}</small>{skill.evidence.map((e,i)=>{const p=rowProvenance(e);return <p key={i}><BookOpen size={15}/><span>{e.code} · {localized(e.name,lang)}{p.level!=='document'&&p.level!=='synthetic'&&<i className="evidence-origin"> — {provenanceLabel(p.level,lang)}</i>}</span><b>{e.grade}</b></p>})}</div>
+    {projects.length>0&&<div className="skill-projects"><small>{lang==='ar'?'أدلة تطبيقية مصرّح بها — بانتظار مراجعة، لا تغيّر قوة الدليل':'Self-declared applied evidence — awaiting review, does not change evidence strength'}</small>{projects.map(p=><p key={p.id}><FolderGit2 size={14}/><span>{p.title}</span></p>)}</div>}
   </article>
 }
 
@@ -386,7 +391,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       const coursesRemoved=state.courses?.length||0
       const skillsRemoved=inferSkills(state.courses||[]).length
       onChangeSummary?.({type:'withdraw-analyze',courses:coursesRemoved,skills:skillsRemoved,ts:Date.now()})
-      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
+      setState(s => ({...s,courses:[],approved:false,recommendationReviews:[],projects:[],consents:{...s.consents,analyze:false},audit:[{label:lang==='ar'?'سحب موافقة تحليل السجل ومحو أثره':'Transcript-analysis consent withdrawn and derived effects removed',ts:Date.now()},...s.audit]}))
       return
     }
     if (key === 'insight' && state.consents.insight) {
@@ -437,6 +442,7 @@ function Privacy({ lang, state, setState, log, onExport, onImport, onDelete, onP
       <div className="panel-head"><div><small>{lang==='ar'?'ملكية البيانات':'Data ownership'}</small><h3>{lang==='ar'?'ما المخزن عنك الآن؟':'What is stored about you now?'}</h3></div><span className={state.localPersistence?'status yes':'status conditional'}>{state.localPersistence?(lang==='ar'?'محفوظ على هذا الجهاز':'Saved on this device'):(lang==='ar'?'جلسة مؤقتة':'Session only')}</span></div>
       <div className="ownership-grid">
         <div><strong>{state.courses?.length||0}</strong><span>{lang==='ar'?'سجلات مقررات':'course records'}</span></div>
+        <div><strong>{state.projects?.length||0}</strong><span>{lang==='ar'?'أدلة تطبيقية مصرّح بها':'self-declared applied evidence'}</span></div>
         <div><strong>{digital.confirmed.length}</strong><span>{lang==='ar'?'اهتمامات رقمية مؤكدة':'confirmed digital interests'}</span></div>
         <div><strong>{preferenceCount}</strong><span>{lang==='ar'?'تفضيلات مصرح بها':'declared preferences'}</span></div>
         <div><strong>{state.goal?1:0}</strong><span>{lang==='ar'?'هدف/مسار مختار':'selected target/goal'}</span></div>
@@ -640,6 +646,8 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
     setNotice(lang==='ar' ? 'تم اعتماد السجل. اختر “الاحتفاظ بملفي على هذا الجهاز” إذا أردت العودة إليه بعد إغلاق المتصفح.' : 'Transcript approved. Choose “Keep my profile on this device” if you want it available after closing the browser.')
   }
   const chooseGoal = goal => { setState(s=>({...s,goal})); log(lang==='ar'?'تغيير الهدف':'Goal changed') }
+  const saveProject = record => setState(previous=>({...previous,projects:normalizeProjectEvidence([record,...(previous.projects||[])]),audit:[{label:lang==='ar'?`تسجيل دليل تطبيقي مصرّح: ${record.title}`:`Self-declared applied evidence recorded: ${record.title}`,ts:Date.now()},...previous.audit].slice(0,100)}))
+  const removeProject = id => setState(previous=>({...previous,projects:(previous.projects||[]).filter(p=>p.id!==id),audit:[{label:lang==='ar'?'حذف دليل تطبيقي مصرّح':'Self-declared applied evidence removed',ts:Date.now()},...previous.audit].slice(0,100)}))
   const saveRecommendationReview = record => setState(previous=>({...previous,recommendationReviews:appendRecommendationReview(previous.recommendationReviews,record)}))
   const clearRecommendationReviews = () => setState(previous=>({...previous,recommendationReviews:[],audit:[{label:lang==='ar'?'حذف سجل مراجعات التوصيات':'Recommendation review history deleted',ts:Date.now()},...previous.audit].slice(0,100)}))
   const toggleCompare = id => setCompareIds(ids=>ids.includes(id)?ids.filter(x=>x!==id):(ids.length<3?[...ids,id]:ids))
@@ -773,10 +781,10 @@ function KaminApp({ lang, onClose, entry = 'default', knowledgeSearch = '' }) {
             <div className="panel"><div className="panel-head"><div><small>{t.app.goal}</small><h3>{lang==='ar'?'ما الذي تريد الوصول إليه؟':'Where do you want to go?'}</h3></div></div><div className="goal-options">{Object.entries(t.app.goals).map(([id,label])=><button key={id} className={state.goal===id?'active':''} onClick={()=>chooseGoal(id)}><Target size={16}/>{label}</button>)}</div></div></div>
             {nextDecision?<div className="panel decision"><div className="decision-head"><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{nextDecision.title[lang]}</h3></div><span className={`status ${nextDecision.status}`}>{t.app.fit[nextDecision.status]}</span></div><div className="decision-body"><div className="decision-score"><strong>{t.app.fit[nextDecision.status]}</strong><small>{lang==='ar'?'حكم مفسّر — بلا نسبة غير معايرة':'explained judgment — no uncalibrated percentage'}</small></div><div>{nextDecision.reasons.map((reason,i)=><p key={i}><Check size={15}/>{reason}</p>)}<p className="becomes"><strong>{t.app.becomes}</strong> {nextDecision.becomes}</p></div></div><button className="button primary" onClick={()=>setView('courses')}>{lang==='ar'?'استكشف كل الدورات':'Explore all courses'}</button><RecommendationReview item={nextDecision} kind="course" state={state} lang={lang} onSave={saveRecommendationReview}/></div>:<div className="panel decision decision-locked"><LockKeyhole size={28}/><div><small>{lang==='ar'?'القرار التالي':'Next decision'}</small><h3>{lang==='ar'?'أضف أو اعتمد مقررًا مرتبطًا بقدرة لفتح أول توصية':'Add or approve capability-linked coursework to unlock your first recommendation'}</h3><p>{lang==='ar'?'لا يعرض كامن حكم دورة عندما لا توجد أي مهارة مدعومة بالدليل. يمكنك مراجعة السجل أو إضافة مقرر يدويًا.':'Kamin does not render a course judgment when the profile has zero evidence-backed skills. Review your transcript or add a course manually.'}</p></div></div>}<PilotFeedback lang={lang}/>
           </section>}
-          {view==='studio' && <section className="app-content"><DecisionStudio onSaveReview={saveRecommendationReview} initialTarget={selectedMatch} lang={lang} matches={matches} state={state} graph={personGraph} onReview={()=>{if(!state.approved){setView('start');return}setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('insight')}/></section>}
+          {view==='studio' && <section className="app-content"><DecisionStudio onSaveReview={saveRecommendationReview} projects={state.projects||[]} onSaveProject={saveProject} onRemoveProject={removeProject} initialTarget={selectedMatch} lang={lang} matches={matches} state={state} graph={personGraph} onReview={()=>{if(!state.approved){setView('start');return}setDraft(state.courses.map(row=>({...row})));setReviewConsent(false);setValidation(null);setView('review')}} onGoal={()=>setView('insight')}/></section>}
           {view==='insight' && <section className="app-content"><StudentInsight matches={matches} onInspect={id=>{setSelectedMatch(id);setView('studio')}} lang={lang} state={state} setState={setState} log={log} onGoal={chooseGoal} onExplore={()=>setView('studio')} onRecord={()=>setView('start')} onSave={()=>setView('privacy')}/></section>}
           {view==='matches' && <section className="app-content"><MatchExplorer state={state} onSaveReview={saveRecommendationReview} lang={lang} profile={matchProfile} matches={matches} onPlan={id=>{setSelectedMatch(id);setView('studio')}}/></section>}
-          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang}/>)}</div></section>}
+          {state.approved && view==='skills' && <section className="app-content"><div className="app-title"><small>{t.app.skills}</small><h2>{lang==='ar'?'كل مهارة مرتبطة بدليل':'Every skill is tied to evidence'}</h2><p>{lang==='ar'?'نعرض قوة الدليل فئياً في الإصدار العام، ولا نعرض نسبة رقمية حتى تتم معايرتها بالدراسة.':'The public release shows categorical evidence strength and withholds numeric percentages until research calibration.'}</p></div><div className="skills-grid">{skills.map(s=><SkillCard key={s.id} skill={s} lang={lang} projects={projectsForSkill(state.projects,s.id)}/>)}</div><ProjectEvidencePanel lang={lang} projects={state.projects||[]} onSave={saveProject} onRemove={removeProject}/></section>}
           {state.approved && view==='courses' && <section className="app-content"><div className="app-title app-title-row"><div><small>{t.app.courses}</small><h2>{lang==='ar'?'لا نرتب الدورات فقط؛ نشرح القرار':'We do not just rank courses; we explain the decision'}</h2></div><select value={state.goal||''} onChange={e=>chooseGoal(e.target.value||null)} aria-label={t.app.goal}><option value="">{lang==='ar'?'اختر هدفًا أولًا':'Choose a goal first'}</option>{Object.entries(t.app.goals).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></div><div className="fit-grid">{recs.map(r=><FitCard state={state} onSaveReview={saveRecommendationReview} key={r.id} item={r} lang={lang} compared={compareIds.includes(r.id)} toggle={toggleCompare}/>)}</div></section>}
           {state.approved && view==='compare' && <section className="app-content"><div className="app-title"><small>{t.app.compare}</small><h2>{lang==='ar'?'نفس الأبعاد. قرار أسهل.':'Same dimensions. Easier decision.'}</h2><p>{lang==='ar'?'اختر حتى ثلاث دورات من صفحة الدورات.':'Choose up to three courses from the courses page.'}</p></div><Compare lang={lang} items={compared} onChoose={()=>setView('courses')} onSuggest={()=>setCompareIds(recs.slice(0,2).map(item=>item.id))}/></section>}
           {view==='privacy' && <section className="app-content"><div className="app-title"><small>{t.app.privacy}</small><h2>{lang==='ar'?'أنت صاحب القرار على بياناتك':'You control your data'}</h2><p>{lang==='ar'?'كل غرض له موافقته، والسحب واضح بقدر المنح.':'Each purpose has its own consent, and withdrawal is as clear as granting it.'}</p></div><><WhatChanged change={['withdraw-analyze','withdraw-insight'].includes(changeSummary?.type)?changeSummary:null} lang={lang}/><Privacy lang={lang} state={state} setState={setState} log={log} onExport={exportProfile} onImport={importProfile} onDelete={deleteAll} onPersistenceChange={changePersistence} onChangeSummary={setChangeSummary} onClearReviews={clearRecommendationReviews}/></></section>}

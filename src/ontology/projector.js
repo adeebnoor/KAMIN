@@ -73,6 +73,36 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     }
   }
 
+  // Self-declared applied evidence: visible to reviewers, never a capability claim.
+  for(const project of state?.projects||[]){
+    const pid=`urn:kamin:evidence:project:${slug(project.id)}`
+    graph=addEntity(graph,{
+      '@id':pid,
+      '@type':'Evidence',
+      evidenceType:'student-project-declaration',
+      kind:project.kind,
+      title:project.title,
+      url:project.url||null,
+      description:project.description||'',
+      provenanceLevel:'declared-applied',
+      reviewStatus:project.reviewStatus||'unreviewed',
+      createdAt:project.createdAt,
+    })
+    for(const id of project.skillIds||[]){
+      graph=addClaim(graph,createClaim({
+        id:`urn:kamin:claim:declares-evidence:${slug(project.id)}:${slug(id)}`,
+        predicate:'kamin:declaresEvidenceFor',
+        object:skillId(id),
+        source:pid,
+        sourceType:'student-project-declaration',
+        generatedBy:'urn:kamin:activity:project-declaration',
+        evidenceStrength:'declared-applied',
+        consentPurpose:'urn:kamin:purpose:academic-profile',
+        metadata:{affectsFit:false,reviewRequired:true},
+      }))
+    }
+  }
+
   const primary=educationClassification?.primary
   if(primary){
     const sascedId=`urn:kamin:sasced:${primary.code}`
