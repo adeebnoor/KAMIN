@@ -1,0 +1,10 @@
+[
+  {"id":"goal-is-not-skill","courses":[],"approved":false,"goal":"data","expectedMissing":["database","statistics"]},
+  {"id":"failed-course-is-not-evidence","courses":[{"code":"CPIT-260","name":"Synthetic databases","grade":"F","source":"demo"}],"approved":true,"goal":"data","expectedMissing":["database","statistics"]},
+  {"id":"unknown-course-no-invented-mapping","courses":[{"code":"ZZZZ-999","name":"Synthetic unmapped course","grade":"A","source":"demo"}],"approved":true,"goal":"data","expectedMissing":["database","statistics"]},
+  {"id":"unapproved-document-is-not-approval","courses":[{"code":"CPIT-260","name":"Synthetic databases","grade":"A","source":"demo"}],"approved":false,"goal":"data","expectedMissing":["database","statistics"]},
+  {"id":"one-prerequisite-is-not-all","courses":[{"code":"CPIT-260","name":"Synthetic databases","grade":"A","source":"demo"}],"approved":true,"goal":"data","expectedMissing":["statistics"]},
+  {"id":"duplicate-source-is-not-new-capability","courses":[{"code":"CPIT-260","name":"Synthetic databases","grade":"A","source":"demo"},{"code":"CPIT-260","name":"Synthetic duplicate","grade":"A","source":"demo"}],"approved":true,"goal":"data","expectedMissing":["statistics"]},
+  {"id":"preference-is-not-capability","courses":[],"approved":false,"goal":"data","preferences":{"careerInterest":"investigative","workStructure":"balanced"},"expectedMissing":["database","statistics"]},
+  {"id":"withdrawn-evidence-stays-withdrawn","courses":[],"approved":false,"goal":"data","priorReview":"accepted","expectedMissing":["database","statistics"]}
+]
