@@ -1,8 +1,10 @@
 import {pdplPage} from './pdpl-page.mjs'
+import {capstonePage} from './capstone-page.mjs'
 const card=(title,body)=>`<section class="k-doc-card"><h2>${title}</h2>${body}</section>`
 const p=s=>`<p>${s}</p>`
 const link=(file,label)=>`<a href="/${file}">${label}</a>`
 export const pages = {
+ 'capstone.html':{ar:capstonePage('ar'),en:capstonePage('en')},
  'pdpl.html':{ar:pdplPage('ar'),en:pdplPage('en')},
  'about.html': {
   ar:['عن كامن والفريق','نساعد الطالب على فهم قدراته، والروابط التي تقرّبه من خطوته القادمة.',
@@ -80,4 +82,9 @@ for(const lang of ['ar','en'])pages['changelog.html'][lang][2]=semanticRelease[l
 additions['methodology.html']={
  ar:card('الاستدعاء الدلالي المحلي وحدوده',p('نستخدم paraphrase-multilingual-MiniLM-L12-v2 بإصدار مثبت وملف ONNX مكمّم q8، وتطبيع متوسط المتجهات، وفهرس ثنائي اللغة من الكتالوج المرجعي نفسه. نأخذ أفضل ثلاثة مرشحين فوق عتبة تشابه تشغيلية وضمن هامش من أقرب نتيجة؛ العتبة ليست نسبة جاهزية أو دقة معايرة. تبقى العبارة في ذاكرة الشاشة ولا تدخل ملف Person 360.')+p('الكتالوج تجريبي ومحدود؛ يجب تقييم الاسترجاع بالعربية والإنجليزية مع خبراء ومستخدمين قبل الادعاء بفعالية مهنية. الاستدعاء لا يولد حقيقة في الرسم ولا يبدّل نتائج القواعد.')+p('<a href="https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/tree/2c4055b12046f11709e9df2c122e59ffbdc2f900">بطاقة النموذج والإصدار المثبت</a>')),
  en:card('Local semantic recall and its limits',p('We use a pinned q8 ONNX paraphrase-multilingual-MiniLM-L12-v2 model, normalised mean pooling and a bilingual index built from the same reference catalog. Up to three candidates pass an operational similarity threshold and stay within a margin of the best result; it is not a readiness percentage or calibrated accuracy. The phrase stays in screen memory and is not added to Person 360.')+p('The catalog is limited and experimental. Arabic/English retrieval needs expert and user evaluation before career-effectiveness claims. Recall creates no graph fact and does not change rule-based judgments.')+p('<a href="https://huggingface.co/Xenova/paraphrase-multilingual-MiniLM-L12-v2/tree/2c4055b12046f11709e9df2c122e59ffbdc2f900">Model card and pinned revision</a>'))
+}
+
+for(const lang of ["ar","en"]){
+ additions["validation.html"][lang]+=card(lang==="ar"?"خطة فريق التطوير":"Capstone delivery plan",link("capstone.html",lang==="ar"?"الأدوار، أول أسبوعين، ونهاية الفصل":"Roles, first two weeks and the semester release gate"))
+ pages["changelog.html"][lang][2]=card(lang==="ar"?"30 سبتمبر 2026 · جاهزية الفريق والنشر":"30 September 2026 · Team and hosting readiness",p(lang==="ar"?"تحديث وصف الخدمات العاملة، نشر خطة فريق التخرج والتقييم، وتجهيز روابط الصفحات وبيانات الفهرسة للنقل إلى Cloudflare Pages. الاستضافة الحالية باقية على Render؛ هذه التهيئة لا تعني اكتمال النقل.":"Updated live service descriptions, published the capstone and evaluation plan, and prepared document routes and search metadata for Cloudflare Pages. Hosting remains on Render; preparation is not a completed migration."))+pages["changelog.html"][lang][2]
 }

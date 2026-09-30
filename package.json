@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "node scripts/prepare-assets.mjs && node scripts/prepare-semantic.mjs && vite build && node scripts/build-public-pages.mjs && node scripts/check-performance.mjs && node scripts/prepare-hosting.mjs",
+    "build": "node scripts/prepare-assets.mjs && node scripts/prepare-semantic.mjs && vite build && node scripts/build-public-pages.mjs && node scripts/check-public-routes.mjs && node scripts/check-performance.mjs && node scripts/prepare-hosting.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "test:watch": "vitest",

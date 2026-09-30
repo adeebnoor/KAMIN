@@ -12,7 +12,8 @@ const apply=()=>{
  const title=document.body.dataset[lang==='ar'?'titleAr':'titleEn'];if(title)document.title=title
  const description=document.body.dataset[lang==='ar'?'descriptionAr':'descriptionEn'];if(description)document.querySelector('meta[name="description"]')?.setAttribute('content',description)
  if(location.hash){const candidates=[...document.querySelectorAll('[id]')].filter(n=>n.id===location.hash.slice(1));const visible=candidates.find(n=>n.getClientRects().length);visible?.scrollIntoView()}
- const page=location.pathname.split('/').pop()
+ const segment=location.pathname.split('/').pop()
+ const page=segment&&!segment.endsWith('.html')?segment+'.html':segment
  const header=document.querySelector('.k-site-header');if(header)header.outerHTML=headerHtml(lang,page)
  const footer=document.querySelector('.k-site-footer');if(footer)footer.outerHTML=footerHtml(lang)
  const skip=document.querySelector('.k-skip');if(skip)skip.textContent=lang==='ar'?'تجاوز إلى المحتوى':'Skip to content'

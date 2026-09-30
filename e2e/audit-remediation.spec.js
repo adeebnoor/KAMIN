@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-const publicPages=['pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
+const publicPages=['capstone','pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
   test.setTimeout(120_000)
@@ -101,4 +101,18 @@ test('a match opens its own development plan without inventing evidence',async({
  await expect(page.getByLabel('Pathway to explore')).toHaveValue('job-cyber-analyst')
  await expect(page.getByRole('tab',{name:'Development plan',exact:true})).toHaveAttribute('aria-selected','true')
  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
+})
+
+test("published team plan and AI status match the released baseline",async({page})=>{
+ await page.goto("/en/capstone.html")
+ await expect(page.getByRole("main")).toContainText("three-college")
+ await expect(page.getByRole("main")).toContainText("two HR managers")
+ const report=await new AxeBuilder({page}).analyze()
+ expect(report.violations.filter(v=>["serious","critical"].includes(v.impact)),JSON.stringify(report.violations)).toEqual([])
+ await page.goto("/en/services.html")
+ const card=page.locator("article").filter({has:page.getByRole("heading",{name:"Pathway discovery & AI",exact:true})})
+ await expect(card).toContainText("Working pilot + planned extensions")
+ await expect(card).toContainText("runs locally")
+ await page.goto("/ar/services.html")
+ await expect(page.getByRole("main")).toContainText("تجربة عاملة + تطوير مخطط")
 })

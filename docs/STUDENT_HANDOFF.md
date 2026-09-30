@@ -149,3 +149,9 @@ A feature is not complete until:
 Production handoff: https://kamin-12mf.onrender.com/
 
 Kamin 1.0 processes transcript/OCR data locally in the browser. Institutional centralized storage or external sharing remains behind a separate compliance/hosting gate.
+
+## September 2026 release and student contribution boundary
+
+Start with `CAPSTONE_ROADMAP_20260927.md`, `KICKOFF_TASKS.csv`, `PILOT_PROTOCOL_DRAFT.md` and `CLOUDFLARE_PAGES_HANDOFF.md`. Current local recall, encrypted snapshots and graph exports are documented in `SEMANTIC_TOOLS_20260929.md`; they are the baseline, not student deliverables. The first-semester gate is a usable release plus an approved three-college pilot, followed by the rest of the ten-month improvement and evaluation period.
+
+Use `npm ci`, `npm test`, `npm run build`, and `npm run preview` to reproduce the complete website. Node 22 is the supported build baseline. The optional model downloads at build time and on first opted-in browser use; do not confuse its download size with initial page weight. Run `npx playwright install chromium` and `npm run e2e` for the browser gate.
