@@ -10,6 +10,7 @@ Scope: the live release at https://kamin-12mf.onrender.com reviewed end to end (
 | No RFC 9116 security contact (`/.well-known/security.txt` → 404) while the site claims a security posture. | HTTP 404. | Published `security.txt` with two contact routes, policy link and expiry; `SECURITY.md` gains a reporting section. | `e2e/hosting-hygiene.spec.js`. |
 | PWA `start_url` forced `?lang=ar`, overriding the language the student chose. | `manifest.json`. | `start_url: "/"` so the stored language applies. | `e2e/hosting-hygiene.spec.js`. |
 | Landing preloaded `kamin-logo-v3.webp` but never renders it (browser warning on every visit). | Console warning, network log. | Preload removed; the asset is still served for the workspace. | `e2e/hosting-hygiene.spec.js` fails on any preload warning. |
+| Transcript parser cut any row whose title contains a two-to-four digit number (for example `PHYS-101 Physics 101 A`) into two fragments, so the real course was silently dropped into the "rows need review" bucket. Found by feeding 1,500 synthetic rows: 10 parsed, 2,980 rejected. | Node timing run on 30 Sep 2026; reproduced in the browser. | Merged-row splitting now keeps a fragment with the preceding text unless it is a complete row (code + grade); genuinely merged rows still split. | `tests/engine.test.js` (title-with-number case) and `e2e/adversarial-inputs.spec.js` (markup injection, duplicates, out-of-range grade, Arabic digits, 1,500-row upload, hostile SPARQL). |
 
 ## Verified as sound (no change)
 

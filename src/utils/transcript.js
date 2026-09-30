@@ -105,7 +105,16 @@ function splitMergedRows(line){
   const text=normalize(line)
   const matches=findCourseMatches(text)
   if(matches.length<=1) return [text]
-  return matches.map((match,i)=>text.slice(match.index,matches[i+1]?.index ?? text.length).trim()).filter(Boolean)
+  const segments=matches.map((match,i)=>text.slice(match.index,matches[i+1]?.index ?? text.length).trim()).filter(Boolean)
+  // A segment becomes its own row only when it is a complete row (code + grade); otherwise it
+  // stays with the preceding text. A title that merely contains a number, such as
+  // "PHYS-101 Physics 101 A", is therefore kept whole instead of being cut in two and lost.
+  const parts=[]
+  for(const segment of segments){
+    if(parts.length && !parseLine(segment)) parts[parts.length-1]+=` ${segment}`
+    else parts.push(segment)
+  }
+  return parts.length>1 ? parts : [text]
 }
 
 export function parseTranscriptTextDetailed(text) {

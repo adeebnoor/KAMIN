@@ -82,6 +82,10 @@ describe('portable transcript parsing', () => {
     expect(rows.map(r=>r.code)).toEqual(['CPIT-251','CPIT-252'])
   })
 
+  it('keeps a title that contains a number on one row instead of splitting it', () => {
+    const rows=parseTranscriptText('PHYS-101 Physics 101 A\nCPIT-1010 Course number 10 B')
+    expect(rows.map(r=>[r.code,r.name,r.grade])).toEqual([['PHYS-101','Physics','A'],['CPIT-1010','Course number','B']])
+  })
   it('reports rejected course-like rows instead of silently replacing them with demo data', () => {
     const report=parseTranscriptTextDetailed('CPIT 251 Systems Analysis UNKNOWN\nSTAT 201 Applied Statistics 3 B 12.00')
     expect(report.courses).toHaveLength(1)
