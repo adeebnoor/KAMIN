@@ -184,6 +184,6 @@
 }
 @media(max-width:500px){
   .k-network-actions{display:grid;grid-template-columns:1fr}.k-network-actions .button{width:100%}.k-network-report{font-size:.86rem}
-  .k-network-stage{min-height:360px;overflow-x:auto}.k-network-stage>svg{min-width:620px}.k-network-node{width:112px}.k-network-node.person{left:2%}.k-network-node.course{left:34%}.k-network-node.interest{left:34%}.k-network-node.capability{left:63%}.k-network-node.opportunity,.k-network-node.project{right:0}
+  .k-network-stage{min-height:360px;overflow:hidden}.k-network-node{width:112px}.k-network-node.person{left:2%}.k-network-node.course{left:34%}.k-network-node.interest{left:34%}.k-network-node.capability{left:63%}.k-network-node.opportunity,.k-network-node.project{right:0}
   .k-network-legend{justify-content:flex-start}.k-advantage-grid{grid-template-columns:1fr}.k-advantage-grid article{border-inline-end:0;border-bottom:1px solid #ded3b8}.k-advantage-grid article:last-child{border-bottom:0}
 }
