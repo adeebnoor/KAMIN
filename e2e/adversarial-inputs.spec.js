@@ -152,7 +152,7 @@ test.describe('document integrity signals',()=>{
 test.describe('from gap to evidence',()=>{
  test('a student can attach self-declared project evidence to a gap without changing any judgment',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -189,7 +189,7 @@ test.describe('from gap to evidence',()=>{
 test.describe('portable export',()=>{
  test('the CLR-shaped export is unsigned, self-asserted and carries provenance levels',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -210,7 +210,7 @@ test.describe('portable export',()=>{
 test.describe('task → evidence → review loop',()=>{
  test('a student can start a gap task, attach an output, self-assess and record a local review that never upgrades the level',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -250,7 +250,7 @@ test.describe('task → evidence → review loop',()=>{
 test.describe('pathway comparison',()=>{
  test('compares pathways on evidence present, missing, work required and opt-in constraints without a readiness percentage',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -275,7 +275,7 @@ test.describe('pathway comparison',()=>{
 test.describe('capability suggestion from a project description',()=>{
  test('suggests capabilities with the supporting sentence, abstains without one, and never ticks anything itself',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -303,7 +303,7 @@ test.describe('capability suggestion from a project description',()=>{
 test.describe('verifiable credential import',()=>{
  test('an unsigned export is reported unverified with plain reasons, and garbage is rejected',async({page})=>{
   await page.goto('/ar/')
-  await page.getByRole('button',{name:'جرّب ببيانات توضيحية',exact:true}).click()
+  await page.getByRole('button',{name:'جرّب مثالًا حيًا',exact:true}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
