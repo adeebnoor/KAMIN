@@ -124,7 +124,7 @@
 .k-network-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.82fr) minmax(520px,1.18fr);gap:60px;align-items:center;padding-bottom:58px}
 .k-network-copy{min-width:0}.k-network-overline{display:block;color:#6d775e;font-size:.78rem;font-weight:800;letter-spacing:.11em;line-height:1.8}
 [dir=rtl] .k-network-overline{letter-spacing:0}
-.k-network-copy h1{margin:17px 0 20px;color:#215d5a;font-size:clamp(2.75rem,5vw,5.2rem);font-weight:850;line-height:1.12;letter-spacing:-.055em;text-wrap:balance}
+.k-network-copy h1{margin:17px 0 20px;color:#215d5a;font-size:clamp(2.75rem,5vw,5.2rem);font-weight:800;line-height:1.12;letter-spacing:-.055em;text-wrap:balance}
 .k-network-copy h1 em{font-style:normal;color:var(--k-gold)}
 [dir=rtl] .k-network-copy h1{font-size:clamp(3rem,5.1vw,5.6rem);line-height:1.45;letter-spacing:0}
 .k-network-copy>p{max-width:650px;margin:0;color:#4a5d5d;font-size:1.07rem;line-height:1.95}
