@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('h1:visible')).toContainText('افهم قدراتك.')
+  await expect(page.locator('h1:visible')).toContainText('أشخاص. اهتمامات.')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await expect(page.getByText(/مقررات مستخرجة/)).toBeVisible()
@@ -23,7 +23,7 @@ test('language switch sets LTR English experience', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'التبديل إلى الإنجليزية' }).click()
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr')
-  await expect(page.locator('h1:visible')).toContainText('Understand your capabilities.')
+  await expect(page.locator('h1:visible')).toContainText('People. Interests.')
 })
 
 test('public landing has no serious or critical axe violations', async ({ page }) => {

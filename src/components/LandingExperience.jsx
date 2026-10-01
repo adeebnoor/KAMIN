@@ -4,6 +4,7 @@ import { ChevronDown, ClipboardCheck, ArrowLeft, ArrowRight, UploadCloud, Shield
 import QuickTour from './QuickTour.jsx'
 import RelationshipNetwork from './RelationshipNetwork.jsx'
 import InferenceDemo from './InferenceExplorer.jsx'
+import CompetitiveHero from './CompetitiveHero.jsx'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 export default function LandingExperience({ lang, onTry, onProfile, onKnowledge, onSample }) {
   const [knowledgeSearch,setKnowledgeSearch]=useState('')
@@ -21,18 +22,7 @@ export default function LandingExperience({ lang, onTry, onProfile, onKnowledge,
     [Route, tr(lang, 'حوّل الفجوة إلى خطة', 'Turn a gap into a plan'), tr(lang, 'اختر مسارًا، وحدد ما يحتاج دليلًا، واحصل على خطوات عملية قابلة للمراجعة.', 'Choose a pathway, identify missing evidence and build a practical plan you can review.')],
   ]
   return <div className="landing-v2 landing-v3">
-    <section id="home" className="k-hero">
-      <picture className="k-hero-art" aria-hidden="true"><source media="(max-width: 640px)" srcSet="/images/kamin-horizon-mobile.webp"/><img src="/images/kamin-horizon.webp" alt="" width="1792" height="1024" fetchPriority="high" decoding="async"/></picture>
-      <div className="shell k-hero-content">
-        <span className="k-overline">{tr(lang,'كامن · اكتشف ما يمكن أن تصبحه','KAMIN · DISCOVER WHAT YOU COULD BECOME')}</span>
-        <h1>{tr(lang,'افهم قدراتك.','Understand your capabilities.')}<br/><em>{tr(lang,'واكتشف خطوتك القادمة.','Discover your next step.')}</em></h1>
-        <p>{tr(lang,'من اهتماماتك إلى أدلتك، ومن دراستك إلى مساراتك. رؤية أوضح لما تملكه، وخطوة عملية لما تريد الوصول إليه.','From your interests to your evidence. From your studies to your possibilities. See what you bring—and choose a practical next step.')}</p>
-        <div className="k-hero-actions"><button className="button primary" onClick={onSample}>{tr(lang,'جرّب ببيانات توضيحية','Try with sample data')}</button><button className="button secondary" onClick={onProfile}>{tr(lang,'ابدأ بناء ملفك','Build your profile')}</button></div>
-        <div className="k-hero-note"><ShieldCheck size={18}/><span>{tr(lang,'دون حساب. بياناتك تُعالج داخل متصفحك.','No account needed. Your information stays in your browser.')}</span></div>
-        <a className="k-hero-report" href={pageHref('sample-report.html',lang)}>{tr(lang,'شاهد تقريرًا تجريبيًا','View a sample report')}</a>
-      </div>
-      <div className="shell k-hero-bottom"><span>{tr(lang,'قدراتك أوضح. خطوتك أقرب.','CLARITY FOR YOUR NEXT STEP.')}</span><a href="#journey">{tr(lang,'اكتشف التجربة','Discover the experience')}<ChevronDown size={18}/></a></div>
-    </section>
+    <CompetitiveHero lang={lang} onSample={onSample} onProfile={onProfile} reportHref={pageHref('sample-report.html',lang)}/>
     <section id="journey" className="k-journey shell" aria-label={tr(lang,'رحلتك في كامن','Your journey in Kamin')}>
       <div className="k-section-intro"><span className="k-overline">{tr(lang,'طموحك يبدأ بفهمك لنفسك','YOUR AMBITION STARTS WITH UNDERSTANDING YOURSELF')}</span><h2>{tr(lang,'من معرفة نفسك، إلى خطوة تعرف سببها.','From knowing yourself to knowing your next move.')}</h2></div>
       <div className="k-journey-grid">{services.map(([Icon,title,text],i)=><article key={title}><div className="k-journey-top"><span>0{i+1}</span><Icon size={27}/></div><h3>{title}</h3><p>{text}</p></article>)}</div>
