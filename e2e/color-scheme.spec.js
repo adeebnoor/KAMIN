@@ -44,7 +44,7 @@ for(const scheme of ['light','dark'])for(const lang of ['ar','en']){
    await page.goto(`/${lang}/`)
    await page.evaluate(()=>document.fonts.ready)
    expect(await page.evaluate(sweep,'main'),'landing').toEqual([])
-   await page.getByRole('button',{name:ar?'جرّب ببيانات توضيحية':'Try with sample data',exact:true}).click()
+   await page.getByRole('button',{name:ar?'جرّب مثالًا حيًا':'Try a live example',exact:true}).click()
    await expect(page.locator('.pilot-sample-note')).toBeVisible()
    expect(await page.evaluate(sweep,'.app-overlay'),'transcript review').toEqual([])
    await page.getByRole('checkbox',{name:ar?/أوافق صراحةً/:/I explicitly consent/}).check()
