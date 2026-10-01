@@ -1,4 +1,4 @@
-import {ArrowLeft, ArrowRight, BookOpen, BrainCircuit, BriefcaseBusiness, Fingerprint, GraduationCap, Network, ShieldCheck, Sparkles, UserRound} from 'lucide-react'
+import {ArrowLeft, ArrowRight, BookOpen, Compass, Fingerprint, GraduationCap, Network, Route, ShieldCheck, Users} from 'lucide-react'
 
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 
@@ -22,14 +22,14 @@ export default function CompetitiveHero({lang, onSample, onProfile, reportHref})
             'Instead of an opaque fit score, Kamin connects your coursework, projects and interests to traceable capabilities and pathways. You can see the evidence, the gap and why a recommendation appeared.'
           )}</p>
           <div className="k-network-actions">
-            <button className="button primary" onClick={onSample}><Sparkles size={19}/>{tr(lang,'جرّب مثالًا حيًا','Try a live example')}</button>
+            <button className="button primary" onClick={onSample}><Compass size={19}/>{tr(lang,'جرّب مثالًا حيًا','Try a live example')}</button>
             <button className="button secondary" onClick={onProfile}><Fingerprint size={19}/>{tr(lang,'ابنِ ملف قدراتك','Build your capability profile')}</button>
           </div>
           <a className="k-network-report" href={reportHref}>{tr(lang,'شاهد تقريرًا تجريبيًا','View a sample report')}<Arrow size={17}/></a>
           <div className="k-ai-principle" aria-label={tr(lang,'مبدأ القرار في كامن','Kamin decision principle')}>
-            <span><BrainCircuit size={18}/><b>{tr(lang,'الذكاء يقترح','AI suggests')}</b></span>
+            <span><Network size={18}/><b>{tr(lang,'الذكاء يقترح','AI suggests')}</b></span>
             <span><BookOpen size={18}/><b>{tr(lang,'الدليل يبرّر','Evidence justifies')}</b></span>
-            <span><UserRound size={18}/><b>{tr(lang,'الإنسان يقرر','Humans decide')}</b></span>
+            <span><Users size={18}/><b>{tr(lang,'الإنسان يقرر','Humans decide')}</b></span>
           </div>
         </div>
 
@@ -53,11 +53,11 @@ export default function CompetitiveHero({lang, onSample, onProfile, reportHref})
                 <path className="k-link solid" d="M520 240 C580 265 600 315 646 320" markerEnd="url(#kArrow)"/>
                 <path className="k-link verify" d="M650 305 C610 270 575 230 530 228" markerEnd="url(#kArrowGold)"/>
               </svg>
-              <GraphNode className="person" Icon={UserRound} eyebrow={tr(lang,'أنت','You')} title={tr(lang,'ملفك','Your profile')}/>
+              <GraphNode className="person" Icon={Users} eyebrow={tr(lang,'أنت','You')} title={tr(lang,'ملفك','Your profile')}/>
               <GraphNode className="course" Icon={GraduationCap} eyebrow={tr(lang,'دليل','Evidence')} title="CPIT-260"/>
-              <GraphNode className="interest" Icon={Sparkles} eyebrow={tr(lang,'سياق','Context')} title={tr(lang,'اهتمام: البيانات','Interest: data')}/>
+              <GraphNode className="interest" Icon={Compass} eyebrow={tr(lang,'سياق','Context')} title={tr(lang,'اهتمام: البيانات','Interest: data')}/>
               <GraphNode className="capability" Icon={Network} eyebrow={tr(lang,'قدرة','Capability')} title={tr(lang,'قواعد البيانات','Databases')}/>
-              <GraphNode className="opportunity" Icon={BriefcaseBusiness} eyebrow={tr(lang,'مسار','Pathway')} title={tr(lang,'محلل بيانات','Data Analyst')}/>
+              <GraphNode className="opportunity" Icon={Route} eyebrow={tr(lang,'مسار','Pathway')} title={tr(lang,'محلل بيانات','Data Analyst')}/>
               <GraphNode className="project" Icon={ShieldCheck} eyebrow={tr(lang,'تحقق','Verification')} title={tr(lang,'مشروع عملي','Practical project')}/>
             </div>
             <div className="k-network-legend">
