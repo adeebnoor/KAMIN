@@ -17,9 +17,8 @@ for(const lang of ['ar','en'])for(const file of pages){
     const title=page.locator('h1:visible')
     await expect(title).toHaveCount(1)
     if(file==='index.html'){
-      const hero=page.locator('.k-hero-art img')
-      await expect(hero).toBeVisible()
-      await hero.evaluate(img=>img.decode())
+      await expect(page.locator('.k-network-stage')).toBeVisible()
+      await expect(page.locator('.k-advantage-grid')).toBeVisible()
     }
     const typography=await title.evaluate(el=>{
       const style=getComputedStyle(el)
@@ -28,7 +27,7 @@ for(const lang of ['ar','en'])for(const file of pages){
     expect(typography.family).toContain(lang==='ar'?'Noto Sans Arabic Variable':'Inter')
     expect(typography.weight).toBe('800')
     expect(typography.synthesis).toBe('none')
-    expect(typography.color).toBe(file==='index.html'?'rgb(255, 255, 255)':'rgb(11, 47, 91)')
+    expect(typography.color).toBe(file==='index.html'?'rgb(33, 93, 90)':'rgb(11, 47, 91)')
     expect(typography.faces).toEqual(expect.arrayContaining([expect.objectContaining({family:lang==='ar'?'Noto Sans Arabic Variable':'Inter',weight:'100 900',status:'loaded'})]))
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
     if(['guide.html','services.html','404.html','interoperability.html'].includes(file)){
