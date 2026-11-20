@@ -1,0 +1,80 @@
+{
+  "set": "dev-set.json",
+  "setSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+  "frozenAt": null,
+  "ranAt": "2026-10-26T20:44:13.423Z",
+  "kaminCommit": "b92eef2",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-lexicon-v1",
+    "metrics": {
+      "en": {
+        "cases": 13,
+        "tp": 15,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1,
+        "f1": 1,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.07692307692307693,
+        "negatives": 1,
+        "correctAbstentions": 1,
+        "medianMs": 0.04230000000001155
+      },
+      "ar": {
+        "cases": 14,
+        "tp": 16,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1,
+        "recall": 0.9411764705882353,
+        "f1": 0.9696969696969697,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.21428571428571427,
+        "negatives": 3,
+        "correctAbstentions": 3,
+        "medianMs": 0.039400000000000546
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-embed-sentence-v1",
+    "threshold": 0.52,
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "tunedAt": "2026-10-26T20:14:09.591Z",
+    "devMacroF1": 0.7212,
+    "metrics": {
+      "en": {
+        "cases": 13,
+        "tp": 9,
+        "fp": 0,
+        "fn": 6,
+        "precision": 1,
+        "recall": 0.6,
+        "f1": 0.7499999999999999,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.3076923076923077,
+        "negatives": 1,
+        "correctAbstentions": 1,
+        "medianMs": 6.992999999999938
+      },
+      "ar": {
+        "cases": 14,
+        "tp": 9,
+        "fp": 0,
+        "fn": 8,
+        "precision": 1,
+        "recall": 0.5294117647058824,
+        "f1": 0.6923076923076924,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.35714285714285715,
+        "negatives": 3,
+        "correctAbstentions": 3,
+        "medianMs": 8.52430000000004
+      }
+    }
+  }
+}

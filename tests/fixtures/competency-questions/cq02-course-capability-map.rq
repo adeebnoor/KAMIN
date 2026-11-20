@@ -1,0 +1,2 @@
+PREFIX k: <urn:kamin:>
+SELECT ?course ?code ?cap WHERE { GRAPH <urn:kamin:graph:reference> { ?course k:mapsToCapability ?cap . OPTIONAL { ?course k:code ?code } } } ORDER BY ?course

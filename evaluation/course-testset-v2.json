@@ -1,0 +1,118 @@
+[
+ {
+  "id": "ct2-CPCS-203",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-203 Programming (II)",
+  "text": "The objective of this course is to cover the basic and intermediate concepts of object oriented programming. Topics include the use of numerical data, primitive data types, selection statements, repetition statements, class, standard classes, object, instance of a class, object oriented programming, software development, constructor, methods, call by values, call by reference, UML, state memory diagram, class diagram, arrays, method overloading, constructor overloading, overriding, this, new, exception and assertions, Inheritance, encapsulation, data abstraction, private, public, protected, exception, inheritance, abstract class, polymorphism, file handling.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPCS-473",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-473 Computer Networks Practice",
+  "text": "The objective of this course is to explore topics related to the practical aspects of networks, thereby familiarizing students with the various network components. The course provides an understanding of the network design and analysis as well as network architecture, including requirements validation and traceability. Students will be introduced to analyzing, developing, and validating requirements regarding the network architecture, in addition to network management principles and performance evaluation.",
+  "expected": [
+   "requirements"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-380",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-380 Multimedia Technologies",
+  "text": "The objective of this course is to study multimedia technologies and programming methods to manipulate multimedia. Topics include creating and modifying images, modifying sounds, splicing words into sentences, reversing sounds, writing programs to generate dynamic web-pages from databases, and creating animations and movies with special effects.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPCS-466",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-466 Systems Programming",
+  "text": "The objective of this course is to explore the design, development, and operation of system applications. Topics include the difference between system software and application software in terms of development features and area of application, file systems, permanent and temporary storage systems, assembly compiler, high-level languages, application setup, memory management system, and processes carried out under the operating systems.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPCS-391",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-391 Computer Graphics (I)",
+  "text": "The objective of this course is to study the hardware and software principles of interactive raster graphics. Topics include an introduction to the basic concepts of computer graphics, 2-D and 3-D modeling and transformations, viewing transformations, projections, rendering techniques, graphical software packages, and graphics systems. Students will use a standard computer graphics API to reinforce concepts and study fundamental computer graphics algorithms.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-285",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-285 Computer Graphics",
+  "text": "The objective of this course is to study the hardware and software principles of interactive raster graphics. Topics include an introduction to the basic concepts of computer graphics, vector and pixel displaying system, basic computer graphics techniques, graphical software, the use of API(s) for computer graphics, color models, coordinates homogeneous, transformation, rotation, clipping, representation of objects through polygons, two-dimensional and threedimensional computer graphics techniques, coordinate transformations, drawing curves and surfaces, shading and lighting models, graphics devices, animation techniques, ray tracing, and the design and drawing of two-dimensional and three-dimensional graphics objects in OpenGL in C++.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-260",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-260 Operating Systems",
+  "text": "The objective of this course is to provide an introduction to the basic concepts of modern operating systems. The course covers the design of operating systems and the way they work, in terms of efficiency and reliability, in addition to comparing between the techniques used inside the operating systems, in terms of time and space complexity. Topics include the basic components of different operating systems, organizing and managing processes, computing synchronization, different scheduling techniques for processors, storage devices, memory management, file systems, and input/output systems.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPCS-414",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-414 High Performance Computing",
+  "text": "The objective of this course is to provide an indepth overview of the current state of the art in high-performance computing. Additionally, the course provides more information about the architecture of high-performance computers.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPCS-424",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-424 Theory Of Computation",
+  "text": "The objective of this course is to introduce students, with a background in Sciences, Engineering, or Mathematics, to some of the basic principles pertaining to the modeling and analysis of computational problems and their solutions.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-201",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-201 Introduction to Computing",
+  "text": "The objective of this course is to present computer science subject areas and applications in ways that serve to motivate the study of computer science and to put into context the various subjects that students encounter later in their studies. Topics include an introduction to the discipline of computing, computer systems, number systems, data representation, basic computer organization, operating system functionality, basics of networking, the Internet, an overview of database systems, models, software engineering methodologies, and programming languages.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-100",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-100 Computer Skills",
+  "text": "The course introduces the students to the main concepts and terminologies of information technology, and equips them with the knowledge to administer one of the widely-used operating systems. Topics include Computer Skills Introduction to information Technology, Operating Systems (Microsoft Windows), Word Processing (Microsoft Word), Data Sheets (Microsoft Excel), Databases (Microsoft Access), Presentations (Microsoft Power Point), Internet (Microsoft IE), E-Mails (Microsoft Outlook), E-Learning and Distance Learning.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct2-CPIT-475",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-475 Wireless Data Networks",
+  "text": "The objective of this course is to explore principles of IT Infrastructure, Networking and System Administration. Topics include cellular architecture, GSM, GPRS, UMTS, 802.11 WLAN infrastructure designing, and planning and administration.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ }
+]

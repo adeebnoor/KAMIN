@@ -1,0 +1,47 @@
+{
+  "version": "ai-drafts-v1-proposed-labels",
+  "model": "fixture-model",
+  "labels": {
+    "aid-en-01": {
+      "labels": [
+        "database"
+      ],
+      "reason": "Fixture.",
+      "ambiguity": "low"
+    },
+    "aid-en-02": {
+      "labels": [
+        "testing"
+      ],
+      "reason": "Fixture.",
+      "ambiguity": "low"
+    },
+    "aid-en-03": {
+      "labels": [
+        "project"
+      ],
+      "reason": "Fixture: a proposal the reviewers reject.",
+      "ambiguity": "low"
+    },
+    "aid-ar-01": {
+      "labels": [
+        "software",
+        "project"
+      ],
+      "reason": "Fixture.",
+      "ambiguity": "low"
+    },
+    "aid-ar-02": {
+      "labels": [
+        "cyber"
+      ],
+      "reason": "Fixture.",
+      "ambiguity": "low"
+    },
+    "aid-ar-03": {
+      "labels": [],
+      "reason": "Fixture.",
+      "ambiguity": "low"
+    }
+  }
+}

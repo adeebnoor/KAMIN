@@ -44,8 +44,10 @@ A successfully parsed course is **not automatically skill evidence**.
 
 - Approved course mappings are explicit and versionable.
 - Failed, withdrawn, incomplete, or unknown grades create no evidence.
+- A course completed by transfer (`TR`) or passed without a grade (`P`) counts, but at most as a limited clue, with its own reason; `IC`, `NF`, `NP`, `W`, `WF`, `IP`, `DN` and `F` create no evidence (Task 54, `kamin-evidence-levels-v2` in `src/evidence/levels.js`).
 - Unmapped courses remain visible but create no skill and do not affect a recommendation.
-- The current percentages are preliminary indicators, not calibrated mastery probabilities.
+- A course grade is a clue to an expected learning outcome, not a guarantee of mastery. The evidence level depends on the grade and the type of assessment (`COURSE_EVIDENCE_PRINCIPLE` in `src/content/trustCopy.js`).
+- Evidence is shown as an ordinal level (strong, moderate, limited, none) with its reasons; no percentage is shown to students (`src/evidence/levels.js`).
 
 ## Semantic similarity
 

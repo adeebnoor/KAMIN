@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 import { readFile } from 'node:fs/promises'
 import AxeBuilder from '@axe-core/playwright'
 import jsonld from 'jsonld'
@@ -12,7 +12,8 @@ for(const lang of ['ar','en'])test(`semantic example changes with inputs and exp
   await page.getByLabel(ar?'تضمين الأدلة الأكاديمية الوهمية':'Include synthetic academic evidence').uncheck()
   await expect(proof.locator('.inference-limits')).toContainText(ar?'لا يوجد في هذا الملف دليل':'This profile has no evidence')
   await expect(proof.locator('.inference-result')).toContainText(ar?'يرتبط تفضيله':'preference connection')
-  await proof.locator('summary').click()
+  // Task 28: the RDF / JSON-LD export is now a "Technical details" block (still the proof's only summary).
+  await proof.locator('.inference-technical > summary').click()
   const downloadEvent=page.waitForEvent('download')
   await proof.getByRole('button',{name:ar?'تنزيل الشبكة بصيغة JSON-LD':'Download graph as JSON-LD'}).click()
   const download=await downloadEvent

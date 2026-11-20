@@ -1,0 +1,8 @@
+{
+  "file": "dialect-set.json",
+  "sha256": "c000972c48c704dfd94b878d887ea7c02276b2f9cae6ebbe9b1c1cfefdc01019",
+  "frozenAt": "2026-11-11T03:21:16.963304Z",
+  "cases": 22,
+  "kaminCommit": "unknown",
+  "note": "Frozen test set: no edits and no threshold tuning on it. Any change = a new version with a new date."
+}

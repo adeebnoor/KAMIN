@@ -1,0 +1,5 @@
+PREFIX k: <urn:kamin:>
+SELECT ?target ?missing WHERE {
+  GRAPH <urn:kamin:graph:reference> { ?target k:requiresCapability ?missing . FILTER(STRSTARTS(STR(?target),"urn:kamin:target:")) }
+  FILTER NOT EXISTS { GRAPH <urn:kamin:graph:profile-input> { ?c k:predicate k:demonstrates ; k:object ?missing ; k:status "active" } }
+} ORDER BY ?target

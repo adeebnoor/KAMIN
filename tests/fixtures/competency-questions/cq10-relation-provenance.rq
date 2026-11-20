@@ -1,0 +1,7 @@
+PREFIX k: <urn:kamin:>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# Which source, decision role and review date does each reference relation carry?
+# Today: 0 rows. The edge attributes in ictKgV1.js are dropped when the reference graph is built.
+SELECT ?s ?p ?o ?source ?role ?reviewed WHERE { GRAPH <urn:kamin:graph:reference> {
+  ?edge rdf:subject ?s ; rdf:predicate ?p ; rdf:object ?o ; k:sourceId ?source ; k:decisionRole ?role .
+  OPTIONAL { ?edge k:reviewedAt ?reviewed } } }

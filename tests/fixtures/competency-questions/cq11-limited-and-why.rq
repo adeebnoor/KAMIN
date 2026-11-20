@@ -1,0 +1,13 @@
+PREFIX k: <urn:kamin:>
+# Which capabilities of the person are not strong, and why? (Task 34)
+# The capability's level is the strongest of its active kamin:demonstrates claims; the factors are
+# the kamin:limitingFactor codes of the claims at that level (limitingReasons() in levels.js).
+SELECT DISTINCT ?cap ?level ?factor WHERE { GRAPH <urn:kamin:graph:profile-input> {
+  ?claim k:predicate k:demonstrates ; k:object ?cap ; k:status "active" ; k:evidenceLevel ?level ; k:limitingFactor ?factor .
+  VALUES (?level ?rank) { ("none" 0) ("limited" 1) ("moderate" 2) }
+  FILTER NOT EXISTS {
+    ?stronger k:predicate k:demonstrates ; k:object ?cap ; k:status "active" ; k:evidenceLevel ?higher .
+    VALUES (?higher ?higherRank) { ("none" 0) ("limited" 1) ("moderate" 2) ("strong" 3) }
+    FILTER(?higherRank > ?rank) }
+  FILTER NOT EXISTS { ?verified k:predicate k:verifiedBy ; k:object ?cap ; k:status "active" }
+} } ORDER BY ?cap ?factor

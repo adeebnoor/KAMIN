@@ -1,0 +1,63 @@
+@prefix kamin: <urn:kamin:> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kamin:ClaimShape
+  a sh:NodeShape ;
+  sh:targetClass kamin:Claim ;
+  sh:property [
+    sh:path kamin:subject ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path kamin:predicate ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path prov:wasGeneratedBy ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path prov:generatedAtTime ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime
+  ] .
+
+kamin:ObservationShape
+  a sh:NodeShape ;
+  sh:targetClass kamin:Observation ;
+  sh:property [
+    sh:path kamin:instrument ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path kamin:instrumentVersion ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path kamin:consentPurpose ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    sh:path prov:generatedAtTime ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime
+  ] .
+
+# Cross-field governance rules such as "self-reported psychometrics may not
+# satisfy a formal gate" remain enforced by application/rule-engine tests.

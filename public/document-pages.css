@@ -8,6 +8,8 @@
 .k-document .note,.k-document .banner,.k-document .suppressed{padding:16px;border:1px solid var(--line);border-radius:var(--radius-small);background:var(--soft);color:var(--muted)}.k-document .banner,.k-document .gap{background:var(--warn-bg);color:var(--warn)}.k-document .suppressed{border-style:dashed}
 .k-document .actions{margin-top:24px}.k-document .btn{display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border-radius:var(--radius-small);text-decoration:none;font-weight:700;background:var(--navy);color:var(--paper)}.k-document .btn.alt{background:var(--paper);color:var(--navy);border:1px solid var(--line)}
 .k-document table{width:100%;border-collapse:collapse;background:var(--paper)}.k-document th,.k-document td{border-bottom:1px solid var(--line);padding:12px;text-align:start;vertical-align:top;overflow-wrap:anywhere}.k-document th{color:var(--navy);background:var(--navy-3)}
+/* Test results page (Task 17): commit titles are shown as written in git and may have no place to break (page names joined by commas). Break anywhere rather than run off a phone screen, in both languages. */
+.k-document .k-changes{overflow-wrap:anywhere}
 .k-document summary{cursor:pointer;font-weight:700;color:var(--navy)}.k-document .faq{display:grid;gap:12px}.k-document .faq details{margin:0}
 .k-document .score{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.k-document .evidence,.k-document .path,.k-document .architecture{display:grid;gap:10px}.k-document .ev{display:grid;grid-template-columns:1fr auto;gap:12px}.k-document .ev strong{color:var(--navy)}.k-document .ev small{color:var(--muted)}.k-document .path div{background:var(--soft);border-radius:var(--radius-small);padding:12px}
 .k-document .next,.k-document[data-page=interoperability] .decision{background:var(--navy);color:var(--paper);padding:24px;border-radius:var(--radius)}.k-document .next h2,.k-document .next p,.k-document[data-page=interoperability] .decision h2,.k-document[data-page=interoperability] .decision p{color:var(--paper)}
@@ -17,3 +19,5 @@
 @media(max-width:720px){.k-document .grid,.k-document .grid3,.k-document[data-page=advisor] .grid,.k-document[data-page=interoperability] .grid,.k-document .architecture div,.k-document[data-page=validation] .decision{grid-template-columns:1fr}.k-document .card,.k-document .empty,.k-document details{padding:20px}}
 @media(max-width:460px){.k-document[data-page=admin] .grid,.k-document .flow{grid-template-columns:1fr}}
 .k-governance{color:#526478;font-size:.82rem;line-height:1.7}
+/* What runs where: whole words in the feature table. Cells otherwise inherit overflow-wrap:anywhere, which let the table squeeze the first column and break "capabilities" mid-word; the table scrolls inside .k-doc-table instead. */
+.k-document[data-page=runs-where] .k-doc-table th,.k-document[data-page=runs-where] .k-doc-table td{overflow-wrap:normal}

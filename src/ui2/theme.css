@@ -1,0 +1,81 @@
+/* Task 61 · light and dark theme for the new interface (src/ui2, behind ?ui=next; loads with its lazy chunk
+   only, so the old interface never reads this file and stays light only).
+   The dark values use the SAME token names as public/brand.css, whose light values are not changed. Brand
+   navy and gold stay the brand: the dark surfaces are deep navies derived from --navy (#0b2f5b), the text
+   is near-white, gold stays the accent. --navy itself becomes a light navy tint, because it is used both as
+   text on the surface and as the fill of the main button (with --paper text).
+   <html data-theme> is set before the first render (src/themeChoice.js, src/main.jsx): "dark" always uses
+   the dark values, "system" uses them when the device is dark, "light" never does. The two dark blocks below
+   must stay identical (tests/themeContrast.test.js checks it and every text/background pair in both themes). */
+
+/* Values that differ between the themes and are not brand tokens. Light first. */
+/* Task 75 · the old interface's look (Amjd, 2026-11-19: "make it look like the supervisor's version"). The light values
+   are the old interface's own, copied from its CSS, not new colours: the working surface, cards and lines of
+   src/redesign.css ("Bring the working product into the same warm, graph-led identity": #f4f0e6, #fffdf8, #d9d0bd, 10px
+   corners), its top bar (#fff, line #d8d0bd), sidebar (#082d3a, current item #165565 with the #a3e2d6 bar, labels
+   #d9e4ee, src/styles.css and src/redesign.css), main button (#08756e, hover #065d58), the "ك" mark (.brand-mark: brand
+   navy and gold-2), the phone's bottom bar (current item #f3f7fb), the landing hero (#fbf8f0 → #f4efe2 → #edf4ef with the
+   #b4a77f dotted grid, heading #215d5a, text #4a5d5d, line #d9d1be, .k-network-hero) and its focus colour (#087f78, the
+   brand --teal). They apply to the new interface only (<html data-theme>); public/brand.css is unchanged. The dark
+   values below keep Task 61's surfaces; the sidebar and the mark stay the old ones (already dark). */
+:root[data-theme]{
+ --soft:#f4f0e6;--paper:#fffdf8;--line:#d9d0bd;--radius-card:10px;
+ --ui2-focus:var(--teal);
+ --ui2-scrim:var(--ink);
+ --ui2-bar:#fff;--ui2-bar-line:#d8d0bd;
+ --ui2-rail:#082d3a;--ui2-rail-ink:#d9e4ee;--ui2-rail-current:#165565;--ui2-rail-current-ink:#fff;--ui2-rail-mark:#a3e2d6;
+ --ui2-tab-current:#f3f7fb;
+ --ui2-primary:#08756e;--ui2-primary-hover:#065d58;--ui2-on-primary:#fff;
+ --ui2-mark:#0b2f5b;--ui2-mark-ink:#ead398;--ui2-mark-line:rgb(201 154 61 / 38%);
+ --ui2-hero-1:#fbf8f0;--ui2-hero-2:#f4efe2;--ui2-hero-3:#edf4ef;--ui2-hero-dot:#b4a77f;--ui2-hero-ink:#215d5a;--ui2-hero-text:#4a5d5d;--ui2-hero-line:#d9d1be;
+ --ui2-card-shadow:0 12px 40px #17495b08;
+}
+:root[data-theme],:root[data-theme] body{background:var(--soft)}
+
+:root[data-theme="dark"]{
+ --navy:#9ec5f0;--navy-2:#c2dbf7;--navy-3:#1b3d66;--gold:#c99a3d;--gold-2:#4a3a16;
+ --ink:#eaf0f7;--muted:#a9b9cc;--line:#2c4a70;--paper:#10284a;--soft:#0a1c36;--success:#6fd6b0;
+ --success-bg:#0f3a33;--warn:#f1c86a;--warn-bg:#3b2f0c;--danger:#ffa3a3;--danger-bg:#4a1c22;
+ --shadow:0 18px 55px rgb(0 0 0 / 45%);
+ --teal:#5fcfc5;--deep:#d6eef2;--mist:#0f3236;
+ --ui2-focus:var(--gold);--ui2-scrim:#000;
+ --ui2-bar:#10284a;--ui2-bar-line:#2c4a70;
+ --ui2-rail:#082d3a;--ui2-rail-ink:#d9e4ee;--ui2-rail-current:#165565;--ui2-rail-current-ink:#fff;--ui2-rail-mark:#a3e2d6;
+ --ui2-tab-current:#1b3d66;
+ --ui2-primary:#5fcfc5;--ui2-primary-hover:#a7d4c8;--ui2-on-primary:#082d3a;
+ --ui2-mark:#0b2f5b;--ui2-mark-ink:#ead398;--ui2-mark-line:rgb(201 154 61 / 38%);
+ --ui2-hero-1:#10284a;--ui2-hero-2:#0a1c36;--ui2-hero-3:#0f3236;--ui2-hero-dot:#2c4a70;--ui2-hero-ink:#a7d4c8;--ui2-hero-text:#a9b9cc;--ui2-hero-line:#2c4a70;
+ --ui2-card-shadow:0 12px 40px rgb(0 0 0 / 35%);
+}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --navy:#9ec5f0;--navy-2:#c2dbf7;--navy-3:#1b3d66;--gold:#c99a3d;--gold-2:#4a3a16;
+  --ink:#eaf0f7;--muted:#a9b9cc;--line:#2c4a70;--paper:#10284a;--soft:#0a1c36;--success:#6fd6b0;
+  --success-bg:#0f3a33;--warn:#f1c86a;--warn-bg:#3b2f0c;--danger:#ffa3a3;--danger-bg:#4a1c22;
+  --shadow:0 18px 55px rgb(0 0 0 / 45%);
+  --teal:#5fcfc5;--deep:#d6eef2;--mist:#0f3236;
+  --ui2-focus:var(--gold);--ui2-scrim:#000;
+  --ui2-bar:#10284a;--ui2-bar-line:#2c4a70;
+  --ui2-rail:#082d3a;--ui2-rail-ink:#d9e4ee;--ui2-rail-current:#165565;--ui2-rail-current-ink:#fff;--ui2-rail-mark:#a3e2d6;
+  --ui2-tab-current:#1b3d66;
+  --ui2-primary:#5fcfc5;--ui2-primary-hover:#a7d4c8;--ui2-on-primary:#082d3a;
+  --ui2-mark:#0b2f5b;--ui2-mark-ink:#ead398;--ui2-mark-line:rgb(201 154 61 / 38%);
+  --ui2-hero-1:#10284a;--ui2-hero-2:#0a1c36;--ui2-hero-3:#0f3236;--ui2-hero-dot:#2c4a70;--ui2-hero-ink:#a7d4c8;--ui2-hero-text:#a9b9cc;--ui2-hero-line:#2c4a70;
+  --ui2-card-shadow:0 12px 40px rgb(0 0 0 / 35%);
+ }
+}
+
+/* Task 66 · the old interface's parts that Profile reuses unchanged (the card behind a capability, the "what changed"
+   summary, the college note, More's three panels) paint light surfaces with their own CSS. Inside .ui2-legacy the
+   brand tokens keep public/brand.css's light values, exactly (tests/uiNextProfile.test.js compares).
+   Task 75 (Amjd, 2026-11-19: they were light cards on the dark page): in the LIGHT theme only (<html data-scheme>, the
+   theme shown, src/ui2/scheme.js), so light mode is unchanged. In the dark theme the dark tokens above apply inside them
+   too, and src/ui2/legacy-dark.css turns the old CSS's fixed light colours dark. */
+:root[data-scheme="light"] .ui2-legacy{
+ --navy:#0b2f5b;--navy-2:#153f70;--navy-3:#edf3f9;--gold:#c99a3d;--gold-2:#ead398;
+ --ink:#10243f;--muted:#526478;--line:#dce5ee;--paper:#fff;--soft:#f6f8fb;--success:#146c55;
+ --success-bg:#e8f6f0;--warn:#815900;--warn-bg:#fff4d6;--danger:#9a3030;--danger-bg:#fff0f0;
+ --accent:var(--navy);--accent-soft:var(--navy-3);--text-secondary:var(--muted);
+ --shadow:0 18px 55px rgb(11 47 91 / 9%);--teal:#087f78;--deep:#082d3a;--mist:#edf5f4;
+ --ui2-focus:var(--navy-2);
+}

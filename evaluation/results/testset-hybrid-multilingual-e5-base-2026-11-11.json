@@ -1,0 +1,83 @@
+{
+  "set": "testset.json",
+  "setSha256": "f63fc3b1dc54c03479d92fa155ff95d08384229e61a5841c59e8d2947f99186e",
+  "frozenAt": "2026-10-26T20:14:09.969Z",
+  "ranAt": "2026-11-11T17:34:54.011Z",
+  "kaminCommit": "b92eef2",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-lexicon-v1",
+    "metrics": {
+      "ar": {
+        "cases": 20,
+        "tp": 14,
+        "fp": 1,
+        "fn": 9,
+        "precision": 0.9333333333333333,
+        "recall": 0.6086956521739131,
+        "f1": 0.7368421052631579,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.5,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 0.027999999999998693
+      },
+      "en": {
+        "cases": 20,
+        "tp": 13,
+        "fp": 2,
+        "fn": 10,
+        "precision": 0.8666666666666667,
+        "recall": 0.5652173913043478,
+        "f1": 0.6842105263157895,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.55,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 0.013500000000000512
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1",
+    "model": "multilingual-e5-base",
+    "prefix": "query: ",
+    "threshold": 0.91,
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "tunedAt": "2026-11-11T17:34:50.576Z",
+    "devMacroF1": 0.9848,
+    "modelDir": "multilingual-e5-base",
+    "metrics": {
+      "ar": {
+        "cases": 20,
+        "tp": 15,
+        "fp": 1,
+        "fn": 8,
+        "precision": 0.9375,
+        "recall": 0.6521739130434783,
+        "f1": 0.7692307692307693,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.45,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 11.308500000000095
+      },
+      "en": {
+        "cases": 20,
+        "tp": 13,
+        "fp": 2,
+        "fn": 10,
+        "precision": 0.8666666666666667,
+        "recall": 0.5652173913043478,
+        "f1": 0.6842105263157895,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.55,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 12.947799999999916
+      }
+    }
+  }
+}

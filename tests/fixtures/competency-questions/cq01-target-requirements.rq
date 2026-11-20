@@ -1,0 +1,2 @@
+PREFIX k: <urn:kamin:>
+SELECT ?target ?cap WHERE { GRAPH <urn:kamin:graph:reference> { ?target k:requiresCapability ?cap } } ORDER BY ?target

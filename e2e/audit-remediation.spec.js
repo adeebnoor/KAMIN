@@ -1,6 +1,7 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { openView, openMatch } from './nav.js'
 import AxeBuilder from '@axe-core/playwright'
-const publicPages=['catalog','capstone','pdpl','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
+const publicPages=['catalog','capstone','pdpl','runs-where','tests','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
   test.setTimeout(120_000)
@@ -83,11 +84,11 @@ test('empty comparison offers courses and a working two-course starting point',a
  await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي',exact:true}).click()
  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
  await page.getByRole('button',{name:/أعتمد السجل/}).click()
- const more=page.getByRole('button',{name:'المزيد',exact:true});if(await more.isVisible())await more.click()
- await page.getByRole('button',{name:'المقارنة',exact:true}).first().click()
+ await openView(page,'المقارنة')
  await expect(page.getByRole('button',{name:'اختر الدورات',exact:true})).toBeVisible()
  await page.getByRole('button',{name:'قارن اقتراحين',exact:true}).click()
- await expect(page.locator('.compare-table thead th')).toHaveCount(3)
+ // Task 23: the Compare tab also shows the pathway comparison above; read the course comparison.
+ await expect(page.locator('.compare-courses .compare-table thead th')).toHaveCount(3)
 })
 
 test('a match opens its own development plan without inventing evidence',async({page})=>{
@@ -95,8 +96,10 @@ test('a match opens its own development plan without inventing evidence',async({
  await page.getByRole('checkbox').check()
  await page.getByRole('button',{name:'Start my profile',exact:true}).click()
  await page.locator('input[name="goal"][value="cyber"]').check()
- await page.getByRole('button',{name:'Matches',exact:true}).first().click()
+ await openView(page,'Matches')
  const card=page.locator('.match-card').filter({has:page.getByRole('heading',{name:'Junior Cybersecurity Analyst',exact:true})})
+ // Task 23: the plan button is in the pathway's opened row.
+ await openMatch(page,'job-cyber-analyst')
  const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
  await card.getByRole('button',{name:'Open this pathway’s plan',exact:true}).click()
  await expect(page.getByLabel('Pathway to explore')).toHaveValue('job-cyber-analyst')

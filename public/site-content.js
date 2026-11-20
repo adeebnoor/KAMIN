@@ -12,6 +12,8 @@ export const footerItems = [
   ['contact.html', 'التواصل والمساعدة', 'Contact & help'],
   ['privacy.html', 'الخصوصية', 'Privacy'],
   ['pdpl.html', 'مطابقة PDPL', 'PDPL mapping'],
+  ['runs-where.html', 'ما الذي يعمل وأين', 'What runs where'],
+  ['tests.html', 'نتائج الاختبارات والتغييرات', 'Test results & changes'],
   ['faq.html', 'الأسئلة الشائعة', 'FAQ'],
   ['catalog.html', 'الكتالوج والمصادر', 'Catalog & sources'],
   ['?view=knowledge', 'مستكشف المعرفة', 'Knowledge explorer'],

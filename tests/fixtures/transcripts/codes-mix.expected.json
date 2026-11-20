@@ -1,0 +1,34 @@
+{
+  "fixture": "codes-mix",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "NP with 0 credits (summer training), W, IC, IP, P, WF, DN, NF and one unknown code (ZZ)",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "COMPUTING & INFORMATION TECH",
+    "collegeId": "FCIT",
+    "majorRaw": "INFORMATION TECHNOLOGY",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": "PART TIME"
+  },
+  "checkGpa": "2.94",
+  "rows": [
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":88,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-110","credits":{"ua":3,"ue":0},"marks":"W","letter":"W","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-110","credits":{"ua":3,"ue":3},"marks":91,"letter":"A","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":85,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ELI-102","credits":{"ua":2,"ue":2},"marks":84,"letter":"B","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"STAT-110","credits":{"ua":3,"ue":0},"marks":"WF","letter":"WF","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"PHYS-110","credits":{"ua":3,"ue":0},"marks":"DN","letter":"DN","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":90,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-290","credits":{"ua":0,"ue":0},"marks":"NP","letter":"NP","term":"SUMMER","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-240","credits":{"ua":3,"ue":3},"marks":38,"letter":"NF","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-250","credits":{"ua":3,"ue":3},"marks":"ZZ","letter":"ZZ","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIS-334","credits":{"ua":3,"ue":3},"marks":"IC","letter":"IC","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"COMM-101","credits":{"ua":2,"ue":2},"marks":"P","letter":"P","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-251","credits":{"ua":3,"ue":0},"marks":"IP","letter":"IP","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-260","credits":{"ua":3,"ue":0},"marks":"IP","letter":"IP","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ISLS-201","credits":{"ua":2,"ue":0},"marks":"IP","letter":"IP","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false}
+  ]
+}

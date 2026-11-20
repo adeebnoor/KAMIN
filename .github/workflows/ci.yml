@@ -6,12 +6,21 @@ on:
     branches: [main]
 permissions:
   contents: read
+# Task 47: onnxruntime-node (a dependency of @huggingface/transformers, used only by Node tools) would
+# download its CUDA 12 binaries from NuGet on linux/x64. KAMIN runs the model in the browser (WASM), so skip it.
+# This replaces the old .npmrc key, which npm reports as an unknown project config.
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # 75: e2e has 1440 tests (about 660 when the limit was set to 30); run 44605095196 was cancelled at 30 min inside e2e.
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Task 17: the test results page lists the changes since scripts/test-report.config.json changesSince.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -20,9 +29,25 @@ jobs:
         run: npm audit --audit-level=high --json
       - run: npx playwright install --with-deps chromium
       - run: npm run test
+        id: unit
       - run: npm run build
         id: build
       - run: npm run e2e
+        id: e2e
+      # Task 17: public/tests.html for this commit. Fails if the committed page claims other test counts.
+      - name: Test results page
+        if: always() && steps.unit.outcome != 'skipped' && steps.e2e.outcome != 'skipped'
+        run: npm run test:report -- --check-committed
+      - name: Test results page artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-page
+          path: |
+            public/tests.html
+            reports
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Public page visual regression gate
         if: always() && steps.build.outcome == 'success'
         run: npm run visual
@@ -62,6 +87,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: redesign-review
-          path: design-review
+          path: test-results/design-review
           if-no-files-found: ignore
           retention-days: 14

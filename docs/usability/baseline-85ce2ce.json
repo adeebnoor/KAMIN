@@ -1,0 +1,212 @@
+{
+  "commit": "85ce2ce",
+  "measured": "2026-11-11",
+  "browser": "Playwright Chromium; desktop-chromium = Desktop Chrome 1280x720, mobile-chromium = Pixel 7 412x839",
+  "note": "Before Tasks 09-14. Spec: docs/usability/baseline-85ce2ce.spec.js",
+  "mobile-chromium": {
+    "reach-upload": {
+      "clicks": 0,
+      "inputs": 0,
+      "screens": 1,
+      "choicesAtStart": 16,
+      "steps": []
+    },
+    "build-profile": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 16,
+      "steps": [
+        "try the synthetic example",
+        "consent",
+        "approve"
+      ]
+    },
+    "open-evidence": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 30,
+      "steps": [
+        "more",
+        "مهاراتي"
+      ]
+    },
+    "understand-recommendation": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 30,
+      "steps": [
+        "فرصي",
+        "open the explanation"
+      ]
+    },
+    "choose-learning-step": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 30,
+      "steps": [
+        "more",
+        "الدورات",
+        "choose a course"
+      ]
+    },
+    "save-profile": {
+      "clicks": 1,
+      "inputs": 0,
+      "screens": 1,
+      "choicesAtStart": 30,
+      "steps": [
+        "keep my profile"
+      ]
+    },
+    "restore-backup": {
+      "clicks": 2,
+      "inputs": 1,
+      "screens": 2,
+      "choicesAtStart": 16,
+      "steps": [
+        "الخصوصية",
+        "type: backup passphrase",
+        "choose the backup file"
+      ]
+    },
+    "correct-record": {
+      "clicks": 3,
+      "inputs": 1,
+      "screens": 3,
+      "choicesAtStart": 30,
+      "steps": [
+        "my data",
+        "type: new grade",
+        "save",
+        "confirm"
+      ]
+    },
+    "withdraw-transcript-consent": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 30,
+      "steps": [
+        "الخصوصية",
+        "withdraw"
+      ]
+    },
+    "delete-all-data": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 30,
+      "steps": [
+        "الخصوصية",
+        "delete my data",
+        "confirm"
+      ]
+    }
+  },
+  "desktop-chromium": {
+    "reach-upload": {
+      "clicks": 0,
+      "inputs": 0,
+      "screens": 1,
+      "choicesAtStart": 21,
+      "steps": []
+    },
+    "build-profile": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 21,
+      "steps": [
+        "try the synthetic example",
+        "consent",
+        "approve"
+      ]
+    },
+    "open-evidence": {
+      "clicks": 1,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 35,
+      "steps": [
+        "مهاراتي"
+      ]
+    },
+    "understand-recommendation": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 35,
+      "steps": [
+        "فرصي",
+        "open the explanation"
+      ]
+    },
+    "choose-learning-step": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 35,
+      "steps": [
+        "الدورات",
+        "choose a course"
+      ]
+    },
+    "save-profile": {
+      "clicks": 1,
+      "inputs": 0,
+      "screens": 1,
+      "choicesAtStart": 35,
+      "steps": [
+        "keep my profile"
+      ]
+    },
+    "restore-backup": {
+      "clicks": 2,
+      "inputs": 1,
+      "screens": 2,
+      "choicesAtStart": 21,
+      "steps": [
+        "الخصوصية",
+        "type: backup passphrase",
+        "choose the backup file"
+      ]
+    },
+    "correct-record": {
+      "clicks": 3,
+      "inputs": 1,
+      "screens": 3,
+      "choicesAtStart": 35,
+      "steps": [
+        "my data",
+        "type: new grade",
+        "save",
+        "confirm"
+      ]
+    },
+    "withdraw-transcript-consent": {
+      "clicks": 2,
+      "inputs": 0,
+      "screens": 2,
+      "choicesAtStart": 35,
+      "steps": [
+        "الخصوصية",
+        "withdraw"
+      ]
+    },
+    "delete-all-data": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 35,
+      "steps": [
+        "الخصوصية",
+        "delete my data",
+        "confirm"
+      ]
+    }
+  }
+}

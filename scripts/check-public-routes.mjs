@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import {parse} from 'parse5'
 import {hostingConfig} from './hosting-config.mjs'
 import {pageHref} from '../public/site-content.js'
+import {COURSE_EVIDENCE_PRINCIPLE} from '../src/content/trustCopy.js'
 const {origin,documentUrls}=hostingConfig()
 const nodes=n=>[n,...(n.childNodes||[]).flatMap(nodes)]
 const attrs=n=>Object.fromEntries((n.attrs||[]).map(a=>[a.name,a.value]))
@@ -19,6 +20,11 @@ for(const lang of ['ar','en'])for(const file of(await readdir(`dist/${lang}`)).f
   if(url.origin!==origin)continue
   assert(!url.searchParams.has('lang'),`${file}: legacy language query in ${a.href}`)
   if(documentUrls==='clean')assert(!url.pathname.endsWith('.html'),`${file}: HTML link on clean host: ${a.href}`)
+ }
+ // Task 03: the methodology page states that a course grade is a clue, not a guarantee.
+ if(file==='methodology.html'){
+  const shown=tree.filter(n=>attrs(n)['data-course-evidence-principle']!==undefined).map(n=>nodes(n).filter(x=>x.nodeName==='#text').map(x=>x.value).join(''))
+  assert(shown.includes(COURSE_EVIDENCE_PRINCIPLE[lang]),`${lang}/methodology.html must show the course-evidence principle`)
  }
  checked++
 }

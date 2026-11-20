@@ -1,0 +1,612 @@
+{
+  "version": "kamin-learning-opportunities-v3-2026-11-18",
+  "note": "Task 19: the local list Kamin suggests learning steps from. Built and reviewed by the team; nothing is fetched from providerUrl (display text only), no API, no scraping. Every item stays 'illustrative' until two department reviewers approve it (Task 36: scripts/path-review, 'reviewers' holds their two roles, never names, and 'reviewedAt' the date). Items with a 'goals' list also feed the existing course-fit cards (src/data.js `opportunities`). Task 57: \"supports\" (the capabilities an item builds; \"teaches\" is kept as an alias for one release and always equals it), \"improves\" (the pathways and professions in src/matching/targets.js that require one of them) and \"source\" (kau-catalog with a catalogue reference, or illustrative). Schema: learning-opportunities.schema.json. Task 36: status 'retired' keeps an item for history and it is never suggested; every item with an invented source (source.type 'invented') is retired. source.type: 'kau-catalog' (official catalogue page), 'department-offer' (the department's own offer), 'provider-page' (a real provider's own page), 'invented' (no real provider).",
+  "items": [
+    {
+      "id": "ba",
+      "kind": "course",
+      "title": {
+        "ar": "أساسيات تحليل الأعمال",
+        "en": "Business Analysis Foundations"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "requirements"
+      ],
+      "teaches": [
+        "requirements"
+      ],
+      "requires": [
+        "requirements"
+      ],
+      "improves": [
+        "job-business-analyst",
+        "training-product-discovery",
+        "job-systems-analyst"
+      ],
+      "level": "intro",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "kamin-pilot-catalog-2026-09",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example from Kamin’s pilot list; there is no real provider.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      },
+      "goals": [
+        "management",
+        "product"
+      ],
+      "duration": {
+        "ar": "6 أسابيع",
+        "en": "6 weeks"
+      },
+      "cost": {
+        "ar": "تقديرية",
+        "en": "Illustrative"
+      },
+      "outcome": {
+        "ar": "صياغة احتياج أعمال واضح وتحويله إلى متطلبات قابلة للتنفيذ.",
+        "en": "Turn a business need into clear, actionable requirements."
+      }
+    },
+    {
+      "id": "sql",
+      "kind": "course",
+      "title": {
+        "ar": "SQL للمحللين",
+        "en": "SQL for Analysts"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "database"
+      ],
+      "teaches": [
+        "database"
+      ],
+      "requires": [],
+      "improves": [
+        "job-data-analyst",
+        "training-data-portfolio",
+        "training-bi-dashboard",
+        "job-database-administrator"
+      ],
+      "level": "intro",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "kamin-pilot-catalog-2026-09",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example from Kamin’s pilot list; there is no real provider.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      },
+      "goals": [
+        "data",
+        "product"
+      ],
+      "duration": {
+        "ar": "5 أسابيع",
+        "en": "5 weeks"
+      },
+      "cost": {
+        "ar": "تقديرية",
+        "en": "Illustrative"
+      },
+      "outcome": {
+        "ar": "بناء تقرير أسبوعي آلي بالاعتماد على استعلامات SQL.",
+        "en": "Build an automated weekly report using SQL queries."
+      }
+    },
+    {
+      "id": "capm",
+      "kind": "certificate",
+      "title": {
+        "ar": "CAPM — تأسيس إدارة المشاريع",
+        "en": "CAPM — Project Management Foundation"
+      },
+      "provider": "PMI",
+      "providerUrl": "https://www.pmi.org/certifications",
+      "supports": [
+        "project"
+      ],
+      "teaches": [
+        "project"
+      ],
+      "requires": [],
+      "improves": [
+        "job-project-coordinator"
+      ],
+      "level": "intro",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "kamin-pilot-catalog-2026-09",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "A real PMI certificate. The details here have not yet been reviewed by two team members.",
+      "source": {
+        "type": "provider-page",
+        "ref": "https://www.pmi.org/certifications",
+        "note": "Real PMI certificate; shown as an illustrative example until the team reviews it."
+      },
+      "goals": [
+        "management"
+      ],
+      "duration": {
+        "ar": "بحسب المزود والاستعداد",
+        "en": "Depends on provider and readiness"
+      },
+      "cost": {
+        "ar": "راجع المزود",
+        "en": "See provider"
+      },
+      "outcome": {
+        "ar": "بناء أساس منهجي في مفاهيم وممارسات إدارة المشاريع.",
+        "en": "Build a structured foundation in project-management concepts and practices."
+      }
+    },
+    {
+      "id": "pmp",
+      "kind": "certificate",
+      "title": {
+        "ar": "PMP — محترف إدارة المشاريع",
+        "en": "PMP — Project Management Professional"
+      },
+      "provider": "PMI",
+      "providerUrl": "https://www.pmi.org/certifications/project-management-pmp",
+      "supports": [],
+      "teaches": [],
+      "requires": [
+        "project"
+      ],
+      "improves": [],
+      "level": "advanced",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "kamin-pilot-catalog-2026-09",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "A real PMI certificate. Its eligibility rule was checked on pmi.org on 2026-09-26; the rest has not yet been reviewed by two team members.",
+      "source": {
+        "type": "provider-page",
+        "ref": "https://www.pmi.org/certifications/project-management-pmp",
+        "note": "Real PMI certificate; shown as an illustrative example until the team reviews it."
+      },
+      "goals": [
+        "management"
+      ],
+      "duration": {
+        "ar": "حسب الأهلية والاستعداد",
+        "en": "Depends on eligibility and readiness"
+      },
+      "cost": {
+        "ar": "راجع PMI",
+        "en": "See PMI"
+      },
+      "outcome": {
+        "ar": "الاستعداد لشهادة مهنية متقدمة بعد استيفاء متطلبات الأهلية الرسمية.",
+        "en": "Prepare for an advanced professional credential after meeting official eligibility requirements."
+      },
+      "formalGate": {
+        "id": "PMI-PMP-EXPERIENCE",
+        "text": {
+          "ar": "لحامل البكالوريوس: 36 شهرًا من خبرة قيادة المشاريع و35 ساعة تدريب بحسب قاعدة BRD الحالية.",
+          "en": "For a bachelor’s degree holder: 36 months of project leadership experience and 35 hours of training under the current BRD rule."
+        },
+        "source": "https://www.pmi.org/certifications/project-management-pmp",
+        "reviewed": "2026-09-26",
+        "alternative": {
+          "ar": "ابدأ بمسار تحليل الأعمال أو CAPM، ثم أعد تقييم PMP بعد اكتساب الخبرة.",
+          "en": "Start with business analysis or CAPM, then reassess PMP after gaining experience."
+        }
+      }
+    },
+    {
+      "id": "cyber-foundations",
+      "kind": "course",
+      "title": {
+        "ar": "أساسيات الأمن السيبراني",
+        "en": "Cybersecurity Foundations"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "cyber"
+      ],
+      "teaches": [
+        "cyber"
+      ],
+      "requires": [],
+      "improves": [
+        "job-cyber-analyst"
+      ],
+      "level": "intro",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "kamin-pilot-catalog-2026-09",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example from Kamin’s pilot list; there is no real provider.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      },
+      "goals": [
+        "cyber"
+      ],
+      "duration": {
+        "ar": "7 أسابيع",
+        "en": "7 weeks"
+      },
+      "cost": {
+        "ar": "تقديرية",
+        "en": "Illustrative"
+      },
+      "outcome": {
+        "ar": "فهم أساسيات حماية الأنظمة والبيانات وتطبيق ضوابط أولية.",
+        "en": "Understand core system/data protection concepts and apply baseline controls."
+      }
+    },
+    {
+      "id": "fcit-cpit-240",
+      "kind": "university-course",
+      "courseCode": "CPIT-240",
+      "title": {
+        "ar": "قواعد البيانات (1)",
+        "en": "Databases (I)"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "database"
+      ],
+      "teaches": [
+        "database"
+      ],
+      "requires": [],
+      "improves": [
+        "job-data-analyst",
+        "training-data-portfolio",
+        "training-bi-dashboard",
+        "job-database-administrator"
+      ],
+      "level": "intro",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "CPIT-240 · FCIT Catalog 2024-25, p. 60",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "fcit-cpit-340",
+      "kind": "university-course",
+      "courseCode": "CPIT-340",
+      "title": {
+        "ar": "قواعد البيانات (2)",
+        "en": "Database (II)"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "database"
+      ],
+      "teaches": [
+        "database"
+      ],
+      "requires": [
+        "database"
+      ],
+      "improves": [
+        "job-data-analyst",
+        "training-data-portfolio",
+        "training-bi-dashboard",
+        "job-database-administrator"
+      ],
+      "level": "intermediate",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "CPIT-340 · FCIT Catalog 2024-25, p. 61",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "fcit-stat-110",
+      "kind": "university-course",
+      "courseCode": "STAT-110",
+      "title": {
+        "ar": "الإحصاء العام (1)",
+        "en": "General Statistics (1)"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "statistics"
+      ],
+      "teaches": [
+        "statistics"
+      ],
+      "requires": [],
+      "improves": [
+        "job-data-analyst"
+      ],
+      "level": "intro",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "STAT-110 · FCIT Catalog 2024-25, p. 10",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "fcit-cpit-250",
+      "kind": "university-course",
+      "courseCode": "CPIT-250",
+      "title": {
+        "ar": "تحليل وتصميم النظم",
+        "en": "System Analysis & Design"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "requirements"
+      ],
+      "teaches": [
+        "requirements"
+      ],
+      "requires": [],
+      "improves": [
+        "job-business-analyst",
+        "training-product-discovery",
+        "job-systems-analyst"
+      ],
+      "level": "intro",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-57",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "CPIT-250 · FCIT Catalog 2024-25, p. 60",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "fcit-cpit-251",
+      "kind": "university-course",
+      "courseCode": "CPIT-251",
+      "title": {
+        "ar": "هندسة البرمجيات (1)",
+        "en": "Software Engineering (I)"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "software",
+        "requirements"
+      ],
+      "teaches": [
+        "software",
+        "requirements"
+      ],
+      "requires": [],
+      "improves": [
+        "job-business-analyst",
+        "job-software-engineer",
+        "training-product-discovery",
+        "job-qa-tester",
+        "job-web-developer",
+        "job-systems-analyst"
+      ],
+      "level": "intro",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "CPIT-251 · FCIT Catalog 2024-25, p. 60",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "fcit-cpit-425",
+      "kind": "university-course",
+      "courseCode": "CPIT-425",
+      "title": {
+        "ar": "أمن المعلومات",
+        "en": "Information Security"
+      },
+      "provider": "FCIT, King Abdulaziz University",
+      "providerUrl": null,
+      "supports": [
+        "cyber"
+      ],
+      "teaches": [
+        "cyber"
+      ],
+      "requires": [],
+      "improves": [
+        "job-cyber-analyst"
+      ],
+      "level": "intermediate",
+      "language": [
+        "en"
+      ],
+      "status": "illustrative",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "Official FCIT Catalog 2024-25; the capabilities come from Kamin’s official course map. Prerequisites and teaching language are not yet checked by the team.",
+      "source": {
+        "type": "kau-catalog",
+        "ref": "CPIT-425 · FCIT Catalog 2024-25, p. 62",
+        "note": "Official KAU course; capabilities from Kamin’s official course map."
+      }
+    },
+    {
+      "id": "illustrative-testing-basics",
+      "kind": "course",
+      "title": {
+        "ar": "أساسيات اختبار البرمجيات",
+        "en": "Software Testing Basics"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "testing"
+      ],
+      "teaches": [
+        "testing"
+      ],
+      "requires": [],
+      "improves": [
+        "job-qa-tester"
+      ],
+      "level": "intro",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example that shows the shape of the list; there is no real provider. To be replaced by a reviewed item.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      }
+    },
+    {
+      "id": "illustrative-web-basics",
+      "kind": "course",
+      "title": {
+        "ar": "أساسيات تطوير واجهات الويب",
+        "en": "Web Interface Basics"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "web-development"
+      ],
+      "teaches": [
+        "web-development"
+      ],
+      "requires": [],
+      "improves": [
+        "job-web-developer"
+      ],
+      "level": "intro",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example that shows the shape of the list; there is no real provider. To be replaced by a reviewed item.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      }
+    },
+    {
+      "id": "illustrative-db-operations",
+      "kind": "course",
+      "title": {
+        "ar": "تشغيل قواعد البيانات والنسخ الاحتياطي",
+        "en": "Database Operations and Backup"
+      },
+      "provider": "مثال توضيحي · Illustrative pilot",
+      "providerUrl": null,
+      "supports": [
+        "db-operations"
+      ],
+      "teaches": [
+        "db-operations"
+      ],
+      "requires": [
+        "database"
+      ],
+      "improves": [
+        "job-database-administrator"
+      ],
+      "level": "intermediate",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "retired",
+      "retiredAt": "2026-11-18",
+      "addedBy": "task-19-skeleton-ai-draft",
+      "reviewers": null,
+      "reviewedAt": null,
+      "sourceNote": "An invented example that shows the shape of the list; there is no real provider. To be replaced by a reviewed item.",
+      "source": {
+        "type": "invented",
+        "ref": null,
+        "note": "Invented example; there is no real provider."
+      }
+    }
+  ]
+}

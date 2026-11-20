@@ -1,0 +1,58 @@
+﻿kit,kamin-fcit-review-v1
+instructions,"Read docs/DEPARTMENT_REVIEW.md first. Fill reviewer_name, reviewer_role and review_date (YYYY-MM-DD) below, then a decision on every row. اقرأ الدليل أولًا، واملأ بيانات المراجع ثم قرارًا في كل سطر."
+catalog,FCIT Catalog 2024-25
+mapping_version,fcit-map-v1
+export_date,2026-11-17
+reviewer_name,Fixture Reviewer (not a real person)
+reviewer_role,IT department reviewer
+review_date,2026-11-20
+
+code,title_en,catalog_page,learning_outcome_en,learning_outcome_ar,capability_id,capability_label_en,capability_label_ar,decision,corrected_outcome_en,corrected_outcome_ar,assessment,title_ar_official,note
+STAT-110,General Statistics (1),10,Apply basic statistical methods to describe and summarise data,تطبيق الأساليب الإحصائية الأساسية لوصف البيانات وتلخيصها,statistics,Quantitative analysis,التحليل الكمي,approve,,,exam,,
+STAT-210,Probability Theory,10,Apply probability concepts to quantify uncertainty,تطبيق مفاهيم الاحتمالات لتقدير عدم اليقين,statistics,Quantitative analysis,التحليل الكمي,approve,,,exam,,
+CPIS-334,Introduction to Software Project Management,43,"Plan, execute and control an information systems project",تخطيط مشروع نظم معلومات وتنفيذه ومتابعته,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIT-240,Databases (I),60,Design a relational database and query it with SQL,تصميم قاعدة بيانات علائقية والاستعلام منها بلغة SQL,database,Databases,قواعد البيانات,maybe,,,exam,,
+CPIT-250,System Analysis & Design,60,Analyse system requirements and model a system design,تحليل متطلبات النظام ونمذجة تصميمه,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIT-251,Software Engineering (I),60,"Apply software engineering principles to specify, design and test software",تطبيق مبادئ هندسة البرمجيات في توصيف البرمجيات وتصميمها واختبارها,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIT-251,Software Engineering (I),60,"Apply software engineering principles to specify, design and test software",تطبيق مبادئ هندسة البرمجيات في توصيف البرمجيات وتصميمها واختبارها,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIT-252,Software Design Patterns,60,Apply software design patterns to structure a solution,تطبيق أنماط تصميم البرمجيات لبناء الحل,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIT-260,Operating Systems,60,"Explain how operating systems manage processes, memory and files",شرح كيفية إدارة أنظمة التشغيل للعمليات والذاكرة والملفات,,,,approve,,,exam,,
+CPIT-305,Advanced Programming,61,Build applications with advanced Java programming techniques,بناء تطبيقات بتقنيات برمجة جافا المتقدمة,,,,approve,,,exam,,
+CPIT-330,IT Issues & Management,61,Manage a software project with Agile and Scrum practices,إدارة مشروع برمجي بممارسات Agile وScrum,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIT-340,Database (II),61,Apply advanced database concepts such as tuning and concurrency control,تطبيق مفاهيم قواعد البيانات المتقدمة مثل الضبط والتحكم في التزامن,database,Databases,قواعد البيانات,approve,,,exam,,
+CPIT-425,Information Security,62,Explain cryptosystems and network security threats and controls,شرح أنظمة التشفير وتهديدات أمن الشبكات وضوابطها,cyber,Cybersecurity fundamentals,أساسيات الأمن السيبراني,approve,,,exam,,
+CPIT-435,Needs Assessment & Technology Evaluation,62,Identify organisational needs and evaluate technology to meet them,تحديد احتياجات المنظمة وتقييم التقنية المناسبة لها,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIT-455,Software Engineering (II),63,Apply advanced software engineering techniques across the life cycle,تطبيق تقنيات هندسة البرمجيات المتقدمة عبر دورة الحياة,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIT-498,Senior Project (I),64,Plan and analyse an integrated IT project and present its proposal,تخطيط مشروع تقنية معلومات متكامل وتحليله وعرض مقترحه,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIT-498,Senior Project (I),64,Plan and analyse an integrated IT project and present its proposal,تخطيط مشروع تقنية معلومات متكامل وتحليله وعرض مقترحه,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIT-499,Senior Project (II),64,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIT-499,Senior Project (II),64,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,project,Project management,إدارة المشاريع,approve,,,exam,,
+STAT-352,Applied Probability & Random Processes,19,Apply probability models and random processes to computing problems,تطبيق نماذج الاحتمالات والعمليات العشوائية على مسائل حاسوبية,statistics,Quantitative analysis,التحليل الكمي,approve,,,exam,,
+CPCS-241,Databases (I),23,Design a relational database and query it with SQL,تصميم قاعدة بيانات علائقية والاستعلام منها بلغة SQL,database,Databases,قواعد البيانات,approve,,,exam,,
+CPCS-351,Software Engineering 1,24,"Apply software engineering principles to specify, design and test software",تطبيق مبادئ هندسة البرمجيات في توصيف البرمجيات وتصميمها واختبارها,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-351,Software Engineering 1,24,"Apply software engineering principles to specify, design and test software",تطبيق مبادئ هندسة البرمجيات في توصيف البرمجيات وتصميمها واختبارها,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPCS-353,Software Eng. Practices,24,Apply professional software engineering practices,تطبيق الممارسات المهنية في هندسة البرمجيات,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-404,Component-Based Computing,25,Build software from reusable components,بناء البرمجيات من مكونات قابلة لإعادة الاستخدام,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-405,Software Technology Topics,26,Apply current software technologies to a development problem,تطبيق تقنيات برمجيات حديثة على مسألة تطوير,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-425,Information Security,26,Explain cryptosystems and network security threats and controls,شرح أنظمة التشفير وتهديدات أمن الشبكات وضوابطها,cyber,Cybersecurity fundamentals,أساسيات الأمن السيبراني,approve,,,exam,,
+CPCS-442,Databases (II),26,Apply advanced database concepts such as tuning and concurrency control,تطبيق مفاهيم قواعد البيانات المتقدمة مثل الضبط والتحكم في التزامن,database,Databases,قواعد البيانات,approve,,,exam,,
+CPCS-454,Object-Oriented Analysis & Design,27,Model a system with object-oriented analysis and design,نمذجة نظام بالتحليل والتصميم الكائني,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-457,Software Engineering Theory,27,Explain the theoretical foundations of software engineering,شرح الأسس النظرية لهندسة البرمجيات,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-463,Computing Systems Security,27,Explain how computing systems are secured,شرح كيفية تأمين أنظمة الحوسبة,cyber,Cybersecurity fundamentals,أساسيات الأمن السيبراني,approve,,,exam,,
+CPCS-498,Senior Project 1,28,Plan and analyse an integrated computing project and present its proposal,تخطيط مشروع حوسبة متكامل وتحليله وعرض مقترحه,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPCS-498,Senior Project 1,28,Plan and analyse an integrated computing project and present its proposal,تخطيط مشروع حوسبة متكامل وتحليله وعرض مقترحه,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPCS-499,Senior Project (II),28,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPCS-499,Senior Project (II),28,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIS-240,Database Management Systems (I),42,Design a relational database and query it with SQL,تصميم قاعدة بيانات علائقية والاستعلام منها بلغة SQL,database,Databases,قواعد البيانات,approve,,,exam,,
+CPIS-250,Software Engineering,42,Apply software engineering principles to build an information system,تطبيق مبادئ هندسة البرمجيات في بناء نظام معلومات,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIS-312,Information & Computer Security,43,Explain information security threats and controls,شرح تهديدات أمن المعلومات وضوابطها,cyber,Cybersecurity fundamentals,أساسيات الأمن السيبراني,approve,,,exam,,
+CPIS-330,Advanced Project & Quality Management,43,"Manage project scope, schedule, risk and quality",إدارة نطاق المشروع وجدوله ومخاطره وجودته,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIS-340,Database Management Systems II,44,Apply advanced database concepts such as transactions and concurrency,تطبيق مفاهيم قواعد البيانات المتقدمة مثل المعاملات والتزامن,database,Databases,قواعد البيانات,approve,,,exam,,
+CPIS-350,Systems Design Patterns,44,Apply design patterns to information systems,تطبيق أنماط التصميم على نظم المعلومات,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIS-351,IS Analysis & Architecture Design,44,Analyse information system requirements and design its architecture,تحليل متطلبات نظام المعلومات وتصميم معماريته,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIS-352,IS Applications Design & Development,44,Design and develop an information system application,تصميم تطبيق نظام معلومات وتطويره,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIS-360,Advanced Information Systems Technologies,45,Apply advanced data technologies in information systems,تطبيق تقنيات البيانات المتقدمة في نظم المعلومات,database,Databases,قواعد البيانات,approve,,,exam,,
+CPIS-498,Senior Project (I),48,Plan and analyse an integrated information systems project and present its proposal,تخطيط مشروع نظم معلومات متكامل وتحليله وعرض مقترحه,requirements,Requirements analysis,تحليل المتطلبات,approve,,,exam,,
+CPIS-498,Senior Project (I),48,Plan and analyse an integrated information systems project and present its proposal,تخطيط مشروع نظم معلومات متكامل وتحليله وعرض مقترحه,project,Project management,إدارة المشاريع,approve,,,exam,,
+CPIS-499,Senior Project (II),48,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,software,Software engineering,هندسة البرمجيات,approve,,,exam,,
+CPIS-499,Senior Project (II),48,"Design, build, test and deliver the graduation project",تصميم مشروع التخرج وبناؤه واختباره وتسليمه,project,Project management,إدارة المشاريع,approve,,,exam,,

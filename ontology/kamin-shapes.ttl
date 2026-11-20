@@ -1,10 +1,17 @@
 @prefix kamin: <urn:kamin:> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+# Kamin SHACL shapes, ontology version 0.4.0 (Task 33). tests/shacl.test.js validates the graphs the
+# app builds against this file on every `npm test` run (rdf-validate-shacl, local, no network):
+# the demo knowledge-workspace graph and the graph of each synthetic KAU transcript after approval.
+# SHACL Core only (no SHACL-SPARQL).
+
 kamin:ClaimShape
   a sh:NodeShape ;
+  rdfs:comment "Every claim keeps one subject, one predicate, its source, the activity that made it and one time."@en ;
   sh:targetClass kamin:Claim ;
   sh:property [
     sh:path kamin:subject ;
@@ -57,6 +64,74 @@ kamin:ObservationShape
     sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:datatype xsd:dateTime
+  ] .
+
+# A course mapping (official course map: course → learning outcome → possible capability) is a
+# reviewable reference relation. Every course or learning outcome that maps to something says which
+# map version it belongs to, whether it was reviewed, and which official catalog it comes from.
+kamin:CourseMappingShape
+  a sh:NodeShape ;
+  rdfs:comment "A course mapping has exactly one mappingVersion, one reviewStatus in {proposed, reviewed}, and a catalogSource."@en ;
+  sh:targetSubjectsOf kamin:mapsToCapability , kamin:hasLearningOutcome , kamin:supportsCapability ;
+  sh:property [
+    sh:path kamin:mappingVersion ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A course mapping needs exactly one kamin:mappingVersion."
+  ] ;
+  sh:property [
+    sh:path kamin:reviewStatus ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( "proposed" "reviewed" ) ;
+    sh:message "A course mapping needs exactly one kamin:reviewStatus, proposed or reviewed."
+  ] ;
+  sh:property [
+    sh:path kamin:catalogSource ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:string ;
+    sh:message "A course mapping needs its kamin:catalogSource (the official catalog)."
+  ] .
+
+# Every kamin:demonstrates claim (a capability clue from courses) carries its ordinal evidence level,
+# the basis of that level, the version of the level rules, and its source. SHACL Core cannot target
+# "claims whose predicate is kamin:demonstrates" directly, so the shape targets every claim and
+# requires: the predicate is not kamin:demonstrates, OR the claim meets kamin:DemonstratesClaimRules.
+# A claim that breaks the rules gives exactly one violation, on the claim itself.
+kamin:EvidenceClaimShape
+  a sh:NodeShape ;
+  rdfs:comment "Every kamin:demonstrates claim has evidenceLevel in {none, limited, moderate, strong}, evidenceBasis, evidenceLevelsVersion and prov:wasDerivedFrom."@en ;
+  sh:targetClass kamin:Claim ;
+  sh:or (
+    [ sh:not [ sh:path kamin:predicate ; sh:hasValue kamin:demonstrates ] ]
+    kamin:DemonstratesClaimRules
+  ) ;
+  sh:message "A kamin:demonstrates claim needs exactly one kamin:evidenceLevel in {none, limited, moderate, strong}, one kamin:evidenceBasis, one kamin:evidenceLevelsVersion and a prov:wasDerivedFrom." .
+
+kamin:DemonstratesClaimRules
+  a sh:NodeShape ;
+  rdfs:comment "What a kamin:demonstrates claim must carry. Used through kamin:EvidenceClaimShape; it has no target of its own."@en ;
+  sh:property [
+    sh:path kamin:evidenceLevel ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:in ( "none" "limited" "moderate" "strong" )
+  ] ;
+  sh:property [
+    sh:path kamin:evidenceBasis ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path kamin:evidenceLevelsVersion ;
+    sh:minCount 1 ;
+    sh:maxCount 1
+  ] ;
+  sh:property [
+    sh:path prov:wasDerivedFrom ;
+    sh:minCount 1
   ] .
 
 # Cross-field governance rules such as "self-reported psychometrics may not

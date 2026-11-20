@@ -1,0 +1,18 @@
+/* Task 13 · design tokens for the app. Brand colours, fonts and the base radius/shadow stay in
+   public/brand.css (the single brand source, docs/BRAND_SYSTEM.md); this file adds the spacing
+   scale, text sizes and control heights. All app CSS uses these tokens for padding, margin and
+   gap; tests/designTokens.test.js rejects new hard-coded spacing.
+   Custom properties only: the build copies this file to public/tokens.css and the public pages
+   load it before semantic-tools.css (which uses --space-*). Rules for elements go in other files
+   (the one card style is in cards.css), so sharing this file cannot restyle the public pages. */
+:root{
+ --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;
+ --text-sm:.85rem;--text-base:1rem;--text-lg:1.15rem;--text-xl:1.45rem;
+ --radius-card:12px;--radius-pill:999px;
+ --control-h:40px;
+ --card-pad:var(--space-4);
+ --measure:70ch;
+}
+/* touch screens get 44px targets */
+@media (pointer:coarse){:root{--control-h:44px}}
+@media (max-width:600px){:root{--card-pad:var(--space-3)}}

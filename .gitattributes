@@ -1,0 +1,18 @@
+# Task 48: one line ending for every text file on every machine (Windows checkouts too), so a
+# run on Windows and a run on Linux CI read the same bytes and no PR shows CRLF/LF noise.
+* text=auto eol=lf
+*.png binary
+*.webp binary
+*.pdf binary
+
+# Task 07: frozen evaluation sets are identified by their sha256, so their bytes must be
+# identical on every machine (no CRLF conversion on Windows checkouts).
+eval/project-suggest/*.json text eol=lf
+# Task 38b: the Claude drafts and proposed labels are hashed into testset-ai-v3.json; same bytes on every machine.
+eval/project-suggest/ai-drafts/*.json text eol=lf
+eval/project-suggest/ai-drafts/claude/*.json text eol=lf
+tests/fixtures/ai-review/*.json text eol=lf
+# Task 42: the pathway-search sets are identified by their sha256 (testset.lock.json).
+eval/pathway-recall/*.json text eol=lf
+# Browser-model evaluation: frozen sets are identified by their sha256 (*.lock.json).
+evaluation/*.json text eol=lf

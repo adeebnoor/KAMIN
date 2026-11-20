@@ -1,49 +1,114 @@
-import { opportunities, courseSkillMap, skills as skillCatalog } from '../data.js'
+import { opportunities, skills as skillCatalog } from '../data.js'
+import { canonicalCourseCode } from '../ontology/registry.js'
+import { mappingReviewStatus } from '../catalog/fcit.js'
+import { normalizeGrade } from './grades.js'
+import { rowProvenance } from './provenance.js'
+import { evidenceLevel, strongest, compareLevels, EVIDENCE_LEVELS_VERSION } from '../evidence/levels.js'
+import { normalizeCollege } from '../catalog/colleges.js'
+import { courseMapFor, courseSkillMapFor } from '../catalog/courseMaps.js'
 
-const ARABIC_GRADES = new Map([
-  ['أ+','A+'],['أ','A'],['ب+','B+'],['ب','B'],['ج+','C+'],['ج','C'],['د+','D+'],['د','D'],
-  ['هـ','F'],['ه','F'],['ح','W'],['م','I'],
-])
-const NON_EVIDENCE = new Set(['F','W','WF','I','IP','NP','DN'])
-const normalizeCode = (code) => String(code || '').trim().toUpperCase().replace(/\s+/g,'-').replace(/--+/g,'-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/,'$1-$2')
-export const normalizeGrade = (grade) => {
-  const raw=String(grade || '').trim().replace(/\s+/g,'').toUpperCase()
-  return ARABIC_GRADES.get(raw) || raw
-}
-const gradeWeight = (grade) => {
-  const g=normalizeGrade(grade)
-  if (!g || NON_EVIDENCE.has(g)) return null
-  if (/^A[+-]?$/.test(g)) return 1
-  if (/^B[+-]?$/.test(g)) return .88
-  if (/^C[+-]?$/.test(g)) return .72
-  if (/^D[+-]?$/.test(g)) return .58
-  const numeric=Number(g)
-  if (!Number.isNaN(numeric) && numeric >= 50 && numeric <= 100) return Math.max(.5,Math.min(1,numeric/100))
-  return null
-}
-const strengthLabel=(value)=>value>=.86?'high':value>=.68?'medium':'low'
+export { normalizeGrade }
+const normalizeCode = canonicalCourseCode
+const skillEntry = id => skillCatalog[id] || (id === 'cyber' ? { id, labels: { ar: 'الأمن السيبراني', en: 'Cybersecurity' } } : null)
 
-export function inferSkills(courses) {
-  const evidenceBySkill=new Map()
-  for (const course of courses || []) {
-    const weight=gradeWeight(course.grade)
-    if (weight === null) continue
-    const mapping=courseSkillMap[normalizeCode(course.code)]
-    if (!mapping) continue
-    for (const id of mapping.skills) {
-      if (!skillCatalog[id] && id !== 'cyber') continue
-      const list=evidenceBySkill.get(id)||[]
-      list.push({...course,learningOutcome:mapping.learningOutcome,evidenceType:mapping.evidenceType,weight})
-      evidenceBySkill.set(id,list)
+// Evidence level of one transcript row against the official course map (Task 02). Task 37: the map of
+// `college` (FCIT when omitted, as before); a college without an approved map has no mapping.
+export function rowEvidence(course, { college = 'FCIT' } = {}) {
+  const code = normalizeCode(course?.code)
+  const mapping = courseSkillMapFor(college)?.[code]
+  const entry = courseMapFor(college)?.course(code) || null
+  const provenance = rowProvenance(course)
+  return evidenceLevel({
+    grade: course?.grade,
+    originalGrade: course?.edits?.grade,
+    editedFields: provenance.edits,
+    assessment: entry?.assessment,
+    provenance: provenance.level,
+    mappingStatus: !mapping ? 'missing' : mappingReviewStatus(entry) === 'reviewed' ? 'approved' : 'proposed',
+  })
+}
+
+// Verified credentials from a trusted issuer (tier T4) are practical evidence for the
+// capabilities they declare. Only records whose issuer was trusted at import count.
+function practicalEvidence(credentials) {
+  const items = []
+  for (const record of credentials || []) {
+    if (record?.outcome !== 'verified' || record.issuerTrusted !== true) continue
+    for (const achievement of record.achievements || []) {
+      const id = String(achievement?.id || '').match(/^urn:kamin:skill:([a-z0-9-]+)$/)?.[1]
+      if (!id || !skillEntry(id)) continue
+      const level = evidenceLevel({ provenance: 'verified-credential' })
+      items.push({ skillId: id, kind: 'credential', credentialId: record.credentialId || record.id, issuerId: record.issuerId, issuerName: record.issuerName, name: achievement.name || null, evidenceLevel: level.level, basis: level.basis, reasons: level.reasons })
     }
   }
-  return [...evidenceBySkill.entries()].map(([id,evidence])=>{
-    const catalog=skillCatalog[id] || {id,labels:{ar:'الأمن السيبراني',en:'Cybersecurity'}}
-    const avg=evidence.reduce((sum,e)=>sum+e.weight,0)/evidence.length
-    const applied=evidence.some(e=>e.evidenceType==='applied')
-    const preliminary=Math.round(Math.min(96,(avg*82)+(applied?8:0)+Math.min(6,(evidence.length-1)*3)))
-    return {...catalog,confidence:preliminary,confidenceLabel:strengthLabel(avg),isPreliminary:true,evidence}
-  }).sort((a,b)=>b.confidence-a.confidence)
+  return items
+}
+
+/**
+ * Capabilities supported by evidence. Each row carries its own ordinal level and reasons; the
+ * capability shows its academic and practical levels separately (strongest supporting row of
+ * each kind). A row whose level is 'none' — failed/withdrawn, typed by hand, unmapped — creates
+ * nothing. No numeric confidence is produced.
+ *
+ * `college` selects the approved course map (Task 04; Task 37: that college's own map, from
+ * src/catalog/courseMaps.js). Library callers that omit it get the FCIT map; the app always passes
+ * the student's choice, and `null` (not chosen) or a college without an approved map gives no
+ * academic evidence. Verified credentials do not depend on the college.
+ */
+export function inferSkills(courses, { credentials = [], college = 'FCIT' } = {}) {
+  const academic = new Map()
+  const courseMap = courseSkillMapFor(college)
+  for (const course of courseMap ? courses || [] : []) {
+    const mapping = courseMap[normalizeCode(course?.code)]
+    if (!mapping) continue
+    const result = rowEvidence(course, { college })
+    if (result.level === 'none') continue
+    for (const id of mapping.skills) {
+      if (!skillEntry(id)) continue
+      const list = academic.get(id) || []
+      list.push({ ...course, learningOutcome: mapping.learningOutcome, evidenceType: mapping.evidenceType, evidenceLevel: result.level, basis: result.basis, reasons: result.reasons, factors: result.factors })
+      academic.set(id, list)
+    }
+  }
+  const practical = new Map()
+  for (const item of practicalEvidence(credentials)) practical.set(item.skillId, [...(practical.get(item.skillId) || []), item])
+
+  return [...new Set([...academic.keys(), ...practical.keys()])].map(id => {
+    const evidence = academic.get(id) || []
+    const practicalItems = practical.get(id) || []
+    const academicLevel = evidence.length ? strongest(...evidence.map(e => e.evidenceLevel)) : 'none'
+    const practicalLevel = practicalItems.length ? strongest(...practicalItems.map(e => e.evidenceLevel)) : 'none'
+    const best = [...evidence].sort((a, b) => compareLevels(b.evidenceLevel, a.evidenceLevel))[0]
+    return {
+      ...skillEntry(id),
+      evidenceLevel: strongest(academicLevel, practicalLevel),
+      academicLevel, practicalLevel,
+      basis: practicalLevel !== 'none' ? 'practical' : 'academic',
+      reasons: best?.reasons || practicalItems[0]?.reasons || [],
+      evidenceLevelsVersion: EVIDENCE_LEVELS_VERSION,
+      isPreliminary: true,
+      evidence,
+      practicalEvidence: practicalItems,
+    }
+  }).sort((a, b) => compareLevels(b.evidenceLevel, a.evidenceLevel) || b.evidence.length - a.evidence.length || a.id.localeCompare(b.id))
+}
+
+// Rows typed by hand that would map to a capability: shown as "waiting for a document or
+// review" and never counted as evidence.
+export function awaitingEvidence(courses, { college = 'FCIT' } = {}) {
+  const courseMap = courseSkillMapFor(college)
+  return (courseMap ? courses || [] : []).flatMap(course => {
+    const mapping = courseMap[normalizeCode(course?.code)]
+    if (!mapping || rowProvenance(course).level !== 'declared') return []
+    return [{ code: normalizeCode(course.code), name: course.name, grade: course.grade, skills: mapping.skills.filter(skillEntry), reasons: rowEvidence(course, { college }).reasons }]
+  })
+}
+
+// The capabilities of a saved profile: only after approval, using the
+// student's own college (null until chosen). App surfaces use this, never inferSkills(state.courses).
+export function profileSkills(state) {
+  if (!state?.approved) return []
+  return inferSkills(state.courses, { credentials: state.credentials, college: normalizeCollege(state.college) })
 }
 
 const statusRank={yes:0,conditional:1,no:2}

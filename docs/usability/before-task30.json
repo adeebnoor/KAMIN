@@ -1,0 +1,616 @@
+{
+  "commit": "ui2/guards (Task 30), app code of dba572c (main), before Tasks 20-29",
+  "measured": "2026-11-12",
+  "browser": "Playwright Chromium 153; desktop-chromium = Desktop Chrome 1280x720, mobile-chromium = Pixel 7 412x839; the 360px checks use a 360x740 window in both projects",
+  "note": "Before Tasks 20-29, measured on Windows 11. The budget uses the Linux numbers of the same code (before-task30-linux.json, as in CI); Courses, Show connections, phone Matches and the English Review cut-off fields differ, see docs/USABILITY_BASELINE.md (Windows and Linux). Specs: e2e/page-length.spec.js, e2e/a11y-all-views.spec.js. Keys end in the language (.ar / .en). Copied from test-results/usability.json.",
+  "desktop-chromium": {
+    "axe.ar": {
+      "start": [],
+      "review": [],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [],
+      "privacy": [],
+      "audit": []
+    },
+    "axe.en": {
+      "start": [],
+      "review": [],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [],
+      "privacy": [],
+      "audit": []
+    },
+    "back-button": {
+      "ok": false,
+      "steps": {
+        "opened": {
+          "path": "/ar/",
+          "app": true,
+          "section": "home",
+          "tab": null
+        },
+        "twoTabsLater": {
+          "path": "/ar/",
+          "app": true,
+          "section": "next",
+          "tab": "tab-compare"
+        },
+        "back1": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        },
+        "back2": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        },
+        "back3": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        }
+      }
+    },
+    "cut-off-inputs-360.ar": {
+      "start": [],
+      "review": [
+        "رمز المقرر 1 88>42",
+        "اسم المقرر 1 147>42",
+        "رمز المقرر 2 84>42",
+        "اسم المقرر 2 150>42",
+        "رمز المقرر 3 88>42",
+        "اسم المقرر 3 127>42",
+        "رمز المقرر 4 90>42",
+        "اسم المقرر 4 229>42",
+        "رمز المقرر 5 84>42",
+        "اسم المقرر 5 120>42",
+        "رمز المقرر 6 89>42",
+        "اسم المقرر 6 130>42",
+        "رمز المقرر 7 88>42",
+        "اسم المقرر 7 110>42"
+      ],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [
+        "اسم المقرر CPIT-251 150>148",
+        "اسم المقرر CPIS-334 229>148"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "cut-off-inputs-360.en": {
+      "start": [],
+      "review": [
+        "Course code 1 88>40",
+        "Course name 1 212>40",
+        "Course code 2 84>40",
+        "Course name 2 199>40",
+        "Grade 2 37>33",
+        "Course code 3 88>40",
+        "Course name 3 116>40",
+        "Course code 4 90>40",
+        "Course name 4 360>40",
+        "Grade 4 34>33",
+        "Course code 5 84>40",
+        "Course name 5 171>40",
+        "Grade 5 37>33",
+        "Course code 6 89>40",
+        "Course name 6 147>40",
+        "Course code 7 88>40",
+        "Course name 7 160>40",
+        "Grade 7 37>33"
+      ],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [
+        "Course name CPIT-250 212>134",
+        "Course name CPIT-251 199>134",
+        "Course name CPIS-334 360>134",
+        "Course name STAT-110 171>134",
+        "Course name CPIT-499 147>134",
+        "Course name CPIT-260 160>134"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "message-covers-heading.ar": [
+      ".toast covers 416x16px of the heading"
+    ],
+    "message-covers-heading.en": [
+      ".toast covers 416x34px of the heading"
+    ],
+    "page-length.ar": {
+      "start": {
+        "screens": 1.1,
+        "scrollHeight": 658,
+        "clientHeight": 612
+      },
+      "review": {
+        "screens": 2.8,
+        "scrollHeight": 1701,
+        "clientHeight": 612
+      },
+      "dashboard": {
+        "screens": 1.6,
+        "scrollHeight": 994,
+        "clientHeight": 612
+      },
+      "matches": {
+        "screens": 13,
+        "scrollHeight": 7956,
+        "clientHeight": 612
+      },
+      "courses": {
+        "screens": 4.8,
+        "scrollHeight": 2929,
+        "clientHeight": 612
+      },
+      "compare": {
+        "screens": 1.1,
+        "scrollHeight": 660,
+        "clientHeight": 612
+      },
+      "studio": {
+        "screens": 4.7,
+        "scrollHeight": 2900,
+        "clientHeight": 612
+      },
+      "insight": {
+        "screens": 1.3,
+        "scrollHeight": 813,
+        "clientHeight": 612
+      },
+      "mydata": {
+        "screens": 2.9,
+        "scrollHeight": 1797,
+        "clientHeight": 612
+      },
+      "privacy": {
+        "screens": 6.3,
+        "scrollHeight": 3854,
+        "clientHeight": 612
+      },
+      "audit": {
+        "screens": 1.3,
+        "scrollHeight": 791,
+        "clientHeight": 612
+      }
+    },
+    "page-length.en": {
+      "start": {
+        "screens": 1.1,
+        "scrollHeight": 658,
+        "clientHeight": 612
+      },
+      "review": {
+        "screens": 2.8,
+        "scrollHeight": 1742,
+        "clientHeight": 612
+      },
+      "dashboard": {
+        "screens": 1.7,
+        "scrollHeight": 1057,
+        "clientHeight": 612
+      },
+      "matches": {
+        "screens": 14.5,
+        "scrollHeight": 8856,
+        "clientHeight": 612
+      },
+      "courses": {
+        "screens": 5.3,
+        "scrollHeight": 3257,
+        "clientHeight": 612
+      },
+      "compare": {
+        "screens": 1.1,
+        "scrollHeight": 659,
+        "clientHeight": 612
+      },
+      "studio": {
+        "screens": 5.1,
+        "scrollHeight": 3115,
+        "clientHeight": 612
+      },
+      "insight": {
+        "screens": 1.4,
+        "scrollHeight": 850,
+        "clientHeight": 612
+      },
+      "mydata": {
+        "screens": 2.9,
+        "scrollHeight": 1787,
+        "clientHeight": 612
+      },
+      "privacy": {
+        "screens": 6.6,
+        "scrollHeight": 4057,
+        "clientHeight": 612
+      },
+      "audit": {
+        "screens": 1.3,
+        "scrollHeight": 818,
+        "clientHeight": 612
+      }
+    },
+    "sideways-scroll-360.ar": {
+      "start": [],
+      "review": [
+        "div.table-scroll 650>292"
+      ],
+      "dashboard": [],
+      "matches": [
+        "div.table-scroll 600>292"
+      ],
+      "courses": [],
+      "compare": [],
+      "studio": [
+        "div.relationship-map-scroll 1000>326",
+        "div.inference-triples 650>294"
+      ],
+      "insight": [
+        "div.insight-intro 342>328"
+      ],
+      "mydata": [
+        "div.app-content-wrap 702>360",
+        "section.app-content 702>360",
+        "div[data-testid=\"my-data\"] 686>328"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "sideways-scroll-360.en": {
+      "start": [],
+      "review": [
+        "div.table-scroll 717>292"
+      ],
+      "dashboard": [],
+      "matches": [
+        "div.table-scroll 600>292"
+      ],
+      "courses": [],
+      "compare": [],
+      "studio": [
+        "div.relationship-map-scroll 1000>326",
+        "div.inference-triples 650>294"
+      ],
+      "insight": [
+        "div.insight-intro 342>328"
+      ],
+      "mydata": [
+        "div.app-content-wrap 702>360",
+        "section.app-content 702>360",
+        "div[data-testid=\"my-data\"] 686>328"
+      ],
+      "privacy": [],
+      "audit": []
+    }
+  },
+  "mobile-chromium": {
+    "axe.ar": {
+      "start": [],
+      "review": [],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [],
+      "privacy": [],
+      "audit": []
+    },
+    "axe.en": {
+      "start": [],
+      "review": [],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [],
+      "privacy": [],
+      "audit": []
+    },
+    "back-button": {
+      "ok": false,
+      "steps": {
+        "opened": {
+          "path": "/ar/",
+          "app": true,
+          "section": "home",
+          "tab": null
+        },
+        "twoTabsLater": {
+          "path": "/ar/",
+          "app": true,
+          "section": "next",
+          "tab": "tab-compare"
+        },
+        "back1": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        },
+        "back2": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        },
+        "back3": {
+          "path": "blank",
+          "app": false,
+          "section": null,
+          "tab": null
+        }
+      }
+    },
+    "cut-off-inputs-360.ar": {
+      "start": [],
+      "review": [
+        "رمز المقرر 1 88>42",
+        "اسم المقرر 1 147>42",
+        "رمز المقرر 2 84>42",
+        "اسم المقرر 2 150>42",
+        "رمز المقرر 3 88>42",
+        "اسم المقرر 3 127>42",
+        "رمز المقرر 4 90>42",
+        "اسم المقرر 4 229>42",
+        "رمز المقرر 5 84>42",
+        "اسم المقرر 5 120>42",
+        "رمز المقرر 6 89>42",
+        "اسم المقرر 6 130>42",
+        "رمز المقرر 7 88>42",
+        "اسم المقرر 7 110>42"
+      ],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [
+        "اسم المقرر CPIT-251 150>148",
+        "اسم المقرر CPIS-334 229>148"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "cut-off-inputs-360.en": {
+      "start": [],
+      "review": [
+        "Course code 1 88>40",
+        "Course name 1 212>40",
+        "Course code 2 84>40",
+        "Course name 2 199>40",
+        "Grade 2 37>33",
+        "Course code 3 88>40",
+        "Course name 3 116>40",
+        "Course code 4 90>40",
+        "Course name 4 360>40",
+        "Grade 4 34>33",
+        "Course code 5 84>40",
+        "Course name 5 171>40",
+        "Grade 5 37>33",
+        "Course code 6 89>40",
+        "Course name 6 147>40",
+        "Course code 7 88>40",
+        "Course name 7 160>40",
+        "Grade 7 37>33"
+      ],
+      "dashboard": [],
+      "matches": [],
+      "courses": [],
+      "compare": [],
+      "studio": [],
+      "insight": [],
+      "mydata": [
+        "Course name CPIT-250 212>134",
+        "Course name CPIT-251 199>134",
+        "Course name CPIS-334 360>134",
+        "Course name STAT-110 171>134",
+        "Course name CPIT-499 147>134",
+        "Course name CPIT-260 160>134"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "message-covers-heading.ar": [
+      ".toast covers 380x34px of the heading"
+    ],
+    "message-covers-heading.en": [
+      ".toast covers 380x63px of the heading"
+    ],
+    "page-length.ar": {
+      "start": {
+        "screens": 1,
+        "scrollHeight": 693,
+        "clientHeight": 693
+      },
+      "review": {
+        "screens": 2.7,
+        "scrollHeight": 1900,
+        "clientHeight": 693
+      },
+      "dashboard": {
+        "screens": 2.2,
+        "scrollHeight": 1548,
+        "clientHeight": 693
+      },
+      "matches": {
+        "screens": 24.3,
+        "scrollHeight": 16871,
+        "clientHeight": 693
+      },
+      "courses": {
+        "screens": 6.7,
+        "scrollHeight": 4619,
+        "clientHeight": 693
+      },
+      "compare": {
+        "screens": 1,
+        "scrollHeight": 693,
+        "clientHeight": 693
+      },
+      "studio": {
+        "screens": 5.5,
+        "scrollHeight": 3825,
+        "clientHeight": 693
+      },
+      "insight": {
+        "screens": 1.6,
+        "scrollHeight": 1099,
+        "clientHeight": 693
+      },
+      "mydata": {
+        "screens": 2.6,
+        "scrollHeight": 1787,
+        "clientHeight": 693
+      },
+      "privacy": {
+        "screens": 7.1,
+        "scrollHeight": 4892,
+        "clientHeight": 693
+      },
+      "audit": {
+        "screens": 1.2,
+        "scrollHeight": 808,
+        "clientHeight": 693
+      }
+    },
+    "page-length.en": {
+      "start": {
+        "screens": 1.1,
+        "scrollHeight": 777,
+        "clientHeight": 693
+      },
+      "review": {
+        "screens": 3.2,
+        "scrollHeight": 2195,
+        "clientHeight": 693
+      },
+      "dashboard": {
+        "screens": 2.5,
+        "scrollHeight": 1749,
+        "clientHeight": 693
+      },
+      "matches": {
+        "screens": 28.1,
+        "scrollHeight": 19460,
+        "clientHeight": 693
+      },
+      "courses": {
+        "screens": 7.7,
+        "scrollHeight": 5338,
+        "clientHeight": 693
+      },
+      "compare": {
+        "screens": 1.2,
+        "scrollHeight": 845,
+        "clientHeight": 693
+      },
+      "studio": {
+        "screens": 6.3,
+        "scrollHeight": 4389,
+        "clientHeight": 693
+      },
+      "insight": {
+        "screens": 1.8,
+        "scrollHeight": 1246,
+        "clientHeight": 693
+      },
+      "mydata": {
+        "screens": 2.6,
+        "scrollHeight": 1808,
+        "clientHeight": 693
+      },
+      "privacy": {
+        "screens": 7.9,
+        "scrollHeight": 5497,
+        "clientHeight": 693
+      },
+      "audit": {
+        "screens": 1.3,
+        "scrollHeight": 921,
+        "clientHeight": 693
+      }
+    },
+    "sideways-scroll-360.ar": {
+      "start": [],
+      "review": [
+        "div.table-scroll 650>292"
+      ],
+      "dashboard": [],
+      "matches": [
+        "div.table-scroll 600>292"
+      ],
+      "courses": [],
+      "compare": [],
+      "studio": [
+        "div.relationship-map-scroll 1000>326",
+        "div.inference-triples 650>294"
+      ],
+      "insight": [
+        "div.insight-intro 342>328"
+      ],
+      "mydata": [
+        "div.app-content-wrap 702>360",
+        "section.app-content 702>360",
+        "div[data-testid=\"my-data\"] 686>328"
+      ],
+      "privacy": [],
+      "audit": []
+    },
+    "sideways-scroll-360.en": {
+      "start": [],
+      "review": [
+        "div.table-scroll 717>292"
+      ],
+      "dashboard": [],
+      "matches": [
+        "div.table-scroll 600>292"
+      ],
+      "courses": [],
+      "compare": [],
+      "studio": [
+        "div.relationship-map-scroll 1000>326",
+        "div.inference-triples 650>294"
+      ],
+      "insight": [
+        "div.insight-intro 342>328"
+      ],
+      "mydata": [
+        "div.app-content-wrap 702>360",
+        "section.app-content 702>360",
+        "div[data-testid=\"my-data\"] 686>328"
+      ],
+      "privacy": [],
+      "audit": []
+    }
+  }
+}

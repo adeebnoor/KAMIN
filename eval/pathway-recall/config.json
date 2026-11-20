@@ -1,0 +1,40 @@
+{
+  "harness": "kamin-eval-pathway-recall-v1",
+  "tunedOn": "dev-set.json",
+  "tunedOnSha256": "1c08b07fcb692cbb66f9b2d18bb1af1d23225e910f1fdc5e07f51fa443c5d129",
+  "cases": 40,
+  "objective": "case accuracy on the dev set (positive: an expected pathway in the top 3; should-find-nothing: an empty list); ties → higher MRR, then closest to the app values",
+  "grid": {
+    "minScore": [
+      0.15,
+      0.75,
+      0.025
+    ],
+    "window": [
+      0.02,
+      0.3,
+      0.02,
+      "and 1 (no window)"
+    ]
+  },
+  "appValues": {
+    "minScore": 0.25,
+    "window": 0.12,
+    "limit": 3
+  },
+  "tuned": {
+    "minScore": 0.55,
+    "window": 0.12
+  },
+  "dev": {
+    "app": {
+      "accuracy": 0.65,
+      "mrr": 0.8269
+    },
+    "tuned": {
+      "accuracy": 0.825,
+      "mrr": 0.7115
+    }
+  },
+  "note": "Reported only. The app keeps minScore 0.25 and window 0.12 until a separate decision changes them."
+}

@@ -1,0 +1,55 @@
+{
+  "set": "dialect-set.json",
+  "setSha256": "c000972c48c704dfd94b878d887ea7c02276b2f9cae6ebbe9b1c1cfefdc01019",
+  "frozenAt": "2026-11-11T03:21:16.963304Z",
+  "ranAt": "2026-11-19T17:08:32.033Z",
+  "kaminCommit": "7291c06",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-lexicon-v1",
+    "metrics": {
+      "ar": {
+        "cases": 22,
+        "tp": 4,
+        "fp": 6,
+        "fn": 18,
+        "precision": 0.4,
+        "recall": 0.18181818181818182,
+        "f1": 0.25000000000000006,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.5909090909090909,
+        "negatives": 2,
+        "correctAbstentions": 1,
+        "medianMs": 0.020299999999998875
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1",
+    "model": "multilingual-e5-base",
+    "prefix": "query: ",
+    "threshold": 0.91,
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "tunedAt": "2026-11-19T17:08:25.765Z",
+    "devMacroF1": 0.9848,
+    "modelDir": "multilingual-e5-base",
+    "metrics": {
+      "ar": {
+        "cases": 22,
+        "tp": 5,
+        "fp": 7,
+        "fn": 17,
+        "precision": 0.4166666666666667,
+        "recall": 0.22727272727272727,
+        "f1": 0.29411764705882354,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.5454545454545454,
+        "negatives": 2,
+        "correctAbstentions": 1,
+        "medianMs": 12.95659999999998
+      }
+    }
+  }
+}

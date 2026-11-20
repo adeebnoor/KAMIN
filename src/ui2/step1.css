@@ -1,0 +1,81 @@
+/* Task 62 · step 1 of the new interface: the upload area, the reading skeleton, the result card, the approval and
+   the "Fix something" sheet. Loads with src/ui2/screens/Upload.jsx only (its own lazy chunk).
+   Tokens only, as in ui2.css: brand colours from public/brand.css (dark values in src/ui2/theme.css), spacing,
+   text sizes and radius from src/tokens.css. The reused review rows (src/components/CourseReview.jsx) keep their
+   Task 22 layout; their white fields and cards are painted with the theme's surfaces here, so they read in both
+   themes (tests/themeContrast.test.js checks every pair). */
+
+/* ----- The upload area and the privacy promise ----- */
+.ui2-drop{display:grid;justify-items:center;gap:var(--space-2);width:100%;min-height:200px;padding:var(--space-6) var(--space-4);border:2px dashed var(--muted);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);font:inherit;text-align:center;cursor:pointer}
+.ui2-drop:hover,.ui2-drop.is-dragging{background:var(--navy-3);color:var(--ink);border-color:var(--navy)}
+.ui2-drop-title{font-size:var(--text-lg);font-weight:700;color:var(--navy)}
+.ui2-drop-hint{font-size:var(--text-sm);color:var(--muted)}
+.ui2-page p.ui2-privacy{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2);margin:var(--space-3) 0 0;font-size:var(--text-sm);line-height:1.5}
+.ui2-privacy svg{flex:none}
+.ui2-why{display:grid;gap:var(--space-3)}
+.ui2-why p{margin:0;line-height:1.6}
+.ui2-why a{color:var(--navy);font-weight:650;text-underline-offset:3px}
+
+/* ----- While the file is read: the stage, a skeleton of the card, Cancel ----- */
+.ui2-reading{display:grid;justify-items:start;gap:var(--space-3)}
+.ui2-page p.ui2-reading-stage{margin:0}
+.ui2-result-skeleton{width:100%}
+.ui2-result-skeleton span{display:block;height:16px;border-radius:var(--radius-small);background:var(--line)}
+.ui2-result-skeleton span:first-child{width:70%;height:24px}
+.ui2-result-skeleton span:nth-child(3){width:55%}
+@media (prefers-reduced-motion:no-preference){.ui2-result-skeleton span{animation:ui2-pulse 1.4s ease-in-out infinite}}
+
+/* ----- A file that could not be read ----- */
+.ui2-error{display:grid;gap:var(--space-3);margin-bottom:var(--space-4);padding:var(--space-4);border:1px solid var(--danger);border-inline-start-width:4px;border-radius:var(--radius-card);background:var(--danger-bg);color:var(--danger)}
+.ui2-page p.ui2-error-text{display:flex;align-items:flex-start;gap:var(--space-2);margin:0;color:inherit;font-weight:700;line-height:1.5}
+.ui2-error-text svg{flex:none;margin-top:2px}
+.ui2-error-actions{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+
+/* ----- The result card ----- */
+.ui2-card{display:grid;gap:var(--space-3);padding:var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-result-line{margin:0;font-size:var(--text-lg);font-weight:650;line-height:1.5;color:var(--navy);overflow-wrap:anywhere}
+.ui2-result-line:focus{outline:none}
+.ui2-result-line strong{font-weight:800}
+.ui2-card .ui2-college{display:grid;gap:var(--space-2);margin:0;color:var(--ink);line-height:1.5}
+.ui2-card .ui2-college p{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2);margin:0}
+.ui2-card .college-fix-option{background:var(--paper);color:var(--navy);border-color:var(--muted)}
+.ui2-card .college-fix-option[aria-pressed="true"]{background:var(--navy-3)}
+.ui2-card p.ui2-result-note{margin:0;padding:var(--space-2) var(--space-3);border-radius:var(--radius-small);background:var(--warn-bg);color:var(--warn);font-size:var(--text-sm);line-height:1.5}
+.ui2-result-fix{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-2)}
+.ui2-card p.ui2-result-look{margin:0;font-weight:700;color:var(--warn)}
+.ui2-card p.evidence-principle{margin:0;font-size:var(--text-sm)}
+
+/* ----- Consent and Approve, under the card ----- */
+.ui2-approve{display:grid;gap:var(--space-3);margin-top:var(--space-4);padding:var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink)}
+.ui2-consent{display:flex;align-items:flex-start;gap:var(--space-2);font-weight:600;line-height:1.5;cursor:pointer}
+.ui2-consent input{flex:none;width:20px;height:20px;margin:2px 0 0}
+.ui2-approve-action{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:var(--space-2)}
+.ui2-approve p.ui2-approve-reason{margin:0;font-size:var(--text-sm);font-weight:700;color:var(--warn)}
+.ui2-another{margin-top:var(--space-2)}
+
+/* ----- "Fix something": the review's rows, one card per course at every width (the sheet is a narrow panel on
+   desktop too), in the theme's colours ----- */
+.ui2-fix{display:grid;gap:var(--space-3)}
+.ui2-fix-check{margin:0;font-weight:700;color:var(--navy)}
+.ui2-fix .course-list-wrap{border:0;background:none}
+.ui2-fix .course-table,.ui2-fix .course-table tbody{display:block}
+.ui2-fix .course-table thead{display:none}
+.ui2-fix .course-table tr{display:block;position:relative;padding:var(--space-2) var(--space-3);margin-bottom:var(--space-2);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink)}
+.ui2-fix .course-table td{display:block;padding:0;border:0;width:auto}
+.ui2-fix .course-table .course-cell{gap:var(--space-1);justify-items:stretch}
+.ui2-fix .course-table .course-code{justify-self:start;max-width:calc(100% - 9rem)}
+.ui2-fix .course-table .grade-cell{position:absolute;top:var(--space-2);inset-inline-end:calc(var(--space-3) + 44px)}
+.ui2-fix .course-table .delete-cell{position:absolute;top:var(--space-2);inset-inline-end:var(--space-3);width:auto}
+.ui2-fix .course-table .status-cell{width:auto;margin-top:var(--space-1)}
+.ui2-fix .course-row[data-attention]>td:first-child{border:0}
+.ui2-fix .course-row[data-attention]{border-inline-start:4px solid var(--warn)}
+.ui2-fix .course-row.tone-issue{border-inline-start-color:var(--danger)}
+.ui2-fix .course-table input,.ui2-fix .course-table textarea{background:var(--paper);color:var(--ink);border-color:var(--muted)}
+.ui2-fix .course-table input:focus,.ui2-fix .course-table textarea:focus{background:var(--paper);color:var(--ink)}
+.ui2-fix .course-table input.course-code{color:var(--navy)}
+.ui2-fix .manual-row{margin:0;background:var(--soft);color:var(--ink)}
+.ui2-fix .manual-row input{background:var(--paper);color:var(--ink);border:1px solid var(--muted);border-radius:var(--radius-small);min-height:var(--control-h);padding-inline:var(--space-2)}
+.ui2-fix .manual-row button{background:var(--navy);color:var(--paper)}
+.ui2-fix-note{display:flex;align-items:flex-start;gap:var(--space-2);margin:0;font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-fix-note svg{flex:none;margin-top:2px}
+.ui2-fix>.ui2-btn-primary{justify-self:end}

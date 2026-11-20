@@ -13,10 +13,16 @@ permissions:
 concurrency:
   group: propose-baselines-${{ github.ref }}
   cancel-in-progress: true
+# Task 47: onnxruntime-node (a dependency of @huggingface/transformers, used only by Node tools) would
+# download its CUDA 12 binaries from NuGet on linux/x64. KAMIN runs the model in the browser (WASM), so skip it.
+# This replaces the old .npmrc key, which npm reports as an unknown project config.
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
 jobs:
   propose:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # Task 47: 30 like the quality gate (the same build and render steps needed more than 20 there).
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,16 +33,25 @@ jobs:
       - run: npm run build
       - name: Render candidates on the gate's runner image
         run: npm run visual || true
+      # Task 47: the branch name reaches the shell only through quoted environment variables,
+      # never as ${{ }} text pasted into the script.
       - name: Pages named by the branch
         id: pages
-        run: echo "list=$(echo '${{ github.ref_name }}' | sed 's#^propose-baselines/##; s#+#,#g')" >> "$GITHUB_OUTPUT"
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: echo "list=$(printf '%s' "$REF_NAME" | sed 's#^propose-baselines/##; s#+#,#g')" >> "$GITHUB_OUTPUT"
       - name: Copy only the named pages into the versioned baselines
-        run: node scripts/approve-visual-candidates.mjs visual-candidates --approve "${{ steps.pages.outputs.list }}"
+        env:
+          PAGES: ${{ steps.pages.outputs.list }}
+        run: node scripts/approve-visual-candidates.mjs visual-candidates --approve "$PAGES"
       - name: Commit the proposal to this branch for human review
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          PAGES: ${{ steps.pages.outputs.list }}
         run: |
           git config user.name "kamin-visual-proposal[bot]"
           git config user.email "visual-proposal@users.noreply.github.com"
           git add e2e/visual-baselines
-          if git diff --cached --quiet; then echo "No baseline changes for ${{ steps.pages.outputs.list }}"; exit 0; fi
-          git commit -m "Propose visual baselines for ${{ steps.pages.outputs.list }}" -m "Rendered by CI on the quality gate's runner image. Review the image diff, then merge to main; CI never merges this itself."
-          git push origin HEAD:${{ github.ref_name }}
+          if git diff --cached --quiet; then echo "No baseline changes for $PAGES"; exit 0; fi
+          git commit -m "Propose visual baselines for $PAGES" -m "Rendered by CI on the quality gate's runner image. Review the image diff, then merge to main; CI never merges this itself."
+          git push origin "HEAD:$REF_NAME"

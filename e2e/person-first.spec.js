@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 import AxeBuilder from '@axe-core/playwright'
+import { INSIGHT_CONSENT } from './nav.js'
 async function startProfile(page, lang='ar'){
  await page.goto(`/?lang=${lang}`)
  await page.getByRole('button',{name:lang==='ar'?'ابدأ بناء ملفك':'Build your profile',exact:true}).first().click()
- await page.getByRole('checkbox',{name:lang==='ar'?/أوافق على بناء ملف Person 360/:/I consent to building my Person 360/}).check()
+ await page.getByRole('checkbox',{name:INSIGHT_CONSENT[lang]}).check()
  await page.getByRole('button',{name:lang==='ar'?'ابدأ بصمتي':'Start my profile',exact:true}).click()
 }
 test('interests build a visible network before any transcript and never become evidence',async({page})=>{
@@ -13,14 +14,14 @@ test('interests build a visible network before any transcript and never become e
  await page.locator('.optional-preferences > summary').click()
  await page.getByLabel('طريقة التعلم المفضلة',{exact:true}).selectOption('project-based')
  const dialog=page.getByRole('dialog')
- await expect(dialog.locator('.profile-node').filter({hasText:'اهتماماتك'})).toContainText('تحليلي واستقصائي')
+ await expect(dialog.locator('.profile-node').filter({hasText:'اهتماماتك'})).toContainText('حل المشكلات والتحليل')
  await expect(dialog.locator('.profile-node').filter({hasText:'طريقة تعلّمك'})).toContainText('بالمشاريع')
  const state=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
  expect(state.approved).toBe(false)
  expect(state.courses).toEqual([])
  expect(state.goal).toBe('data')
  await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
- await expect(dialog.locator('.profile-network')).toContainText('تحليلي واستقصائي')
+ await expect(dialog.locator('.profile-network')).toContainText('حل المشكلات والتحليل')
  await page.getByRole('tab',{name:'مساعد القرار',exact:true}).click()
  await expect(page.locator('.guide-answer')).toContainText('الاهتمام المهني الذي اخترته متوافق')
  await page.getByLabel('اختر سؤالك').selectOption('missing')
@@ -41,7 +42,7 @@ test('profile choices and network are accessible in both languages',async({page}
  await startProfile(page,'en')
  await page.locator('input[type="radio"][name="careerInterest"][value="social"]').check()
  await page.locator('input[type="radio"][name="goal"][value="product"]').check()
- await expect(page.getByRole('dialog').locator('.profile-node').filter({hasText:'Interests'})).toContainText('Social / helping')
+ await expect(page.getByRole('dialog').locator('.profile-node').filter({hasText:'Interests'})).toContainText('Helping and teaching')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
  const report=await new AxeBuilder({page}).analyze()
  expect(report.violations.filter(v=>['serious','critical'].includes(v.impact)),JSON.stringify(report.violations)).toEqual([])
@@ -49,5 +50,5 @@ test('profile choices and network are accessible in both languages',async({page}
  await page.getByRole('button',{name:'Switch to Arabic',exact:true}).click()
  await page.getByRole('button',{name:'ابدأ بناء ملفك',exact:true}).first().click()
  await expect(page.locator('input[name="careerInterest"][value="social"]')).toBeChecked()
- await expect(page.getByRole('dialog').locator('.profile-node').filter({hasText:'اهتماماتك'})).toContainText('مساعدة وتطوير الآخرين')
+ await expect(page.getByRole('dialog').locator('.profile-node').filter({hasText:'اهتماماتك'})).toContainText('مساعدة الآخرين وتعليمهم')
 })

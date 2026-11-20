@@ -8,7 +8,7 @@ import {
   strongestCapabilityPath,
 } from './graph.js'
 import { deriveKnowledgeInsights } from '../knowledge/query.js'
-import { inferRelations } from './inference.js'
+import { inferRelations, sweepOrphanInferences } from './inference.js'
 
 const text=(ar,en,lang)=>lang==='ar'?ar:en
 const pref=(profile,key)=>profile?.preferences?.[key]||null
@@ -18,7 +18,13 @@ const preferenceObject=index=>Object.fromEntries(
   [...(index?.preferences||new Map()).entries()].map(([scheme,value])=>[scheme,value.key])
 )
 
-export function buildMatchingProfile({graph=null,skills=[],goal=null,insight=null}={}){
+// Task 65 · a goal is one of the four directions of the old interface ('data', 'cyber', …) or, from the new
+// interface's step 4 (Task 58's goals), a pathway id. A pathway aligns with a goal when it supports that
+// direction, or when it is the pathway chosen. Every chosen goal counts (at most 3); the first is the main one.
+const goalList=(main,goals)=>[...new Set([main,...(Array.isArray(goals)?goals:[])].filter(g=>typeof g==='string'&&g))]
+const alignedGoal=(goals,target,keys)=>goals.find(g=>g===target.id||keys.includes(g))||null
+
+export function buildMatchingProfile({graph=null,skills=[],goal=null,goals=[],insight=null}={}){
   if(graph?.['@type']==='Person'){
     const index=indexPersonGraph(graph)
     return {
@@ -27,6 +33,7 @@ export function buildMatchingProfile({graph=null,skills=[],goal=null,insight=nul
       index,
       skills:[...index.capabilities.keys()],
       goal:index.goal?.key||null,
+      goals:goalList(index.goal?.key,goals),
       preferences:preferenceObject(index),
     }
   }
@@ -34,6 +41,7 @@ export function buildMatchingProfile({graph=null,skills=[],goal=null,insight=nul
     mode:'legacy-flat',
     skills:(skills||[]).map(skill=>skill.id),
     goal:goal||null,
+    goals:goalList(goal,goals),
     preferences:{...(insight?.declaredPreferences||{})},
   }
 }
@@ -45,8 +53,8 @@ function graphCapabilitySummary(path,target,lang){
     : path?.capabilityLabel?.[lang]||path?.capabilityLabel?.ar||path?.capabilityLabel?.en||path?.capabilityKey
   const title=target.title?.[lang]||target.title?.ar||target.title?.en||target.id
   return text(
-    `المسار الدلالي: ${course} → ${capability} → ${title}.`,
-    `Semantic path: ${course} → ${capability} → ${title}.`,
+    `مسار الدليل: ${course} → ${capability} → ${title}.`,
+    `Evidence path: ${course} → ${capability} → ${title}.`,
     lang,
   )
 }
@@ -85,7 +93,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
         pathText:describeCapabilityPath(best,target,lang),
         relationChain:[
           best.courseId ? {from:best.evidenceId,predicate:'kamin:courseContext',to:best.courseId} : null,
-          {from:best.personId,predicate:'kamin:demonstrates',to:best.capabilityId,claimId:best.claimId},
+          {from:best.personId,predicate:best.relation||'kamin:demonstrates',to:best.capabilityId,claimId:best.claimId},
           {from:targetGraph['@id'],predicate:'kamin:requiresCapability',to:edge.object},
         ].filter(Boolean),
       })
@@ -128,13 +136,15 @@ function judgeGraphTarget(profile,target,lang='ar'){
   }
 
   const targetGoalEdges=targetGraph.edges.filter(edge=>edge.subject===targetGraph['@id'] && edge.predicate==='kamin:supportsGoal')
-  const selectedGoal=index.goal?.key||null
-  const goalMatch=selectedGoal ? targetGoalEdges.some(edge=>edge.objectKey===selectedGoal) : null
-  if(selectedGoal){
+  const selectedGoals=profile.goals?.length?profile.goals:goalList(index.goal?.key)
+  const matchedGoal=alignedGoal(selectedGoals,target,targetGoalEdges.map(edge=>edge.objectKey))
+  const selectedGoal=matchedGoal||selectedGoals[0]||null
+  const goalMatch=selectedGoal ? Boolean(matchedGoal) : null
+  if(selectedGoal&&index.goal){
     const edge=targetGoalEdges.find(item=>item.objectKey===selectedGoal)
     semanticPaths.push({
       kind:'goal-alignment',
-      status:edge?'supported':'outside-current-goal',
+      status:matchedGoal?'supported':'outside-current-goal',
       targetId:target.id,
       personClaimId:index.goal.claimId,
       personGoalId:index.goal.objectId,
@@ -144,8 +154,8 @@ function judgeGraphTarget(profile,target,lang='ar'){
     })
   }
   if(goalMatch===true) support.push(text(
-    'هدفك المصرح به متصل بهذا المسار داخل الرسم الدلالي.',
-    'Your declared goal is connected to this pathway in the semantic graph.',
+    'هدفك المصرح به مرتبط بهذا المسار في كتالوج كامن.',
+    'Your declared goal is linked to this pathway in the KAMIN catalog.',
     lang,
   ))
   else if(goalMatch===false) limits.push(text(
@@ -213,7 +223,7 @@ function judgeGraphTarget(profile,target,lang='ar'){
     limitingMechanisms:limits,
     missingSkills:missing,
     semanticPaths,
-    inferences:inferRelations(profile.graph['@id'],semanticPaths),
+    inferences:sweepOrphanInferences(inferRelations(profile.graph['@id'],semanticPaths),profile.graph),
     knowledgeInsights,
     graphTrace:{
       personGraphId:profile.graph?.['@id']||null,
@@ -254,7 +264,8 @@ function judgeLegacyTarget(profile,target,lang='ar'){
     support.push(text('لا توجد مهارة أكاديمية إلزامية في الملف المرجعي لهذا المسار.','This reference pathway has no mandatory academic-skill prerequisite.',lang))
   }
 
-  const goalMatch=profile.goal ? (target.goals||[]).includes(profile.goal) : null
+  const selectedGoals=profile.goals?.length?profile.goals:goalList(profile.goal)
+  const goalMatch=selectedGoals.length ? Boolean(alignedGoal(selectedGoals,target,target.goals||[])) : null
   if(goalMatch===true) support.push(text('المسار متوافق مع الهدف الذي اخترته.','The pathway aligns with your selected goal.',lang))
   else if(goalMatch===false) limits.push(text('المسار ليس ضمن هدفك الحالي؛ يمكن استكشافه لكن لا نعده توصية رئيسية.','This pathway is outside your current goal; it can be explored but is not treated as a primary recommendation.',lang))
 

@@ -1,9 +1,10 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { openView, openPrivacySection, INSIGHT_CONSENT } from './nav.js'
 import oxigraph from 'oxigraph'
 import AxeBuilder from '@axe-core/playwright'
 async function profile(page){
  await page.goto('/en/?start=profile')
- await page.getByRole('checkbox',{name:/I consent to building my Person 360/}).check()
+ await page.getByRole('checkbox',{name:INSIGHT_CONSENT.en}).check()
  await page.getByRole('button',{name:'Start my profile',exact:true}).click()
 }
 async function lab(page){await page.goto('/en/?view=knowledge');await page.getByRole('tab',{name:'SPARQL lab',exact:true}).click()}
@@ -49,6 +50,7 @@ test('encrypted snapshot is reviewed, opened locally, stripped from URL and neve
  await profile(page)
  await page.locator('input[name="goal"][value="data"]').check()
  await page.getByRole('button',{name:'Profile saving options',exact:true}).click()
+ await openPrivacySection(page,'share') // Task 27: the snapshot is in "Share with an advisor"
  const section=page.locator('.snapshot-share')
  expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')).approved)).toBe(false)
  await expect(section.locator('#snapshot-requirements')).toContainText('To share without a transcript')
@@ -115,7 +117,7 @@ test('multilingual WASM recall loads only after opt-in, keeps text local and del
  const target=await section.locator('.recall-results h4').first().innerText()
  await section.getByRole('button',{name:'Inspect pathway and evidence',exact:true}).first().click()
  await expect(page.getByLabel('Pathway to explore')).toContainText(target)
- await page.getByRole('button',{name:'Interests & goal',exact:true}).first().click()
+ await openView(page,'Interests & goal')
  await page.locator('.semantic-recall').getByText('Enable local exploration — optional',{exact:true}).click()
  await page.getByRole('button',{name:'Stop and delete model files',exact:true}).click()
  expect(await page.evaluate(()=>caches.keys())).not.toContain('kamin-embedding-model-v1')

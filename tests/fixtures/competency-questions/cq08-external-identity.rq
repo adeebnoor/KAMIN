@@ -1,0 +1,6 @@
+PREFIX k: <urn:kamin:>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+SELECT ?relation ?external ?scheme ?notation ?source WHERE { GRAPH <urn:kamin:graph:reference> {
+  <urn:kamin:target:job-data-analyst> k:knowledgeAnchor ?occ .
+  ?occ ?relation ?external . FILTER(?relation IN (skos:exactMatch, skos:relatedMatch, skos:closeMatch))
+  OPTIONAL { ?external k:conceptScheme ?scheme } OPTIONAL { ?external k:notation ?notation } OPTIONAL { ?external k:sourceId ?source } } }

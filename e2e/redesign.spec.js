@@ -1,4 +1,5 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { openView } from './nav.js'
 import AxeBuilder from '@axe-core/playwright'
 
 for(const lang of ['ar','en']){
@@ -12,11 +13,12 @@ for(const lang of ['ar','en']){
     await expect(page.locator('.k-ai-principle')).toContainText(t('الإنسان يقرر','Humans decide'))
     const accessibility=await new AxeBuilder({page}).analyze()
     expect(accessibility.violations.filter(v=>['serious','critical'].includes(v.impact))).toEqual([])
-    await page.screenshot({path:`design-review/${info.project.name}/${lang}-home.png`,fullPage:true})
+    await page.screenshot({path:`test-results/design-review/${info.project.name}/${lang}-home.png`,fullPage:true})
     await page.getByRole('button',{name:t('جرّب مثالًا حيًا','Try a live example'),exact:true}).click()
     await page.getByRole('checkbox',{name:lang==='ar'?/أوافق صراحةً/:/I explicitly consent/}).check()
     await page.getByRole('button',{name:t('أعتمد السجل','Approve transcript'),exact:true}).click()
-    await page.getByRole('button',{name:t('فرصي','Matches'),exact:true}).click()
+    // Task 23: the pathway comparison moved from Matches to the Compare tab.
+    await openView(page,t('المقارنة','Compare'))
     const panel=page.getByRole('region',{name:t('مقارنة المسارات','Pathway comparison'),exact:true})
     await panel.getByRole('checkbox',{name:t('مسؤول قواعد البيانات','Database Administrator'),exact:true}).check()
     const scroll=page.getByRole('region',{name:t('جدول مقارنة المسارات — قابل للتمرير','Pathway comparison table — scrollable'),exact:true})
@@ -28,7 +30,7 @@ for(const lang of ['ar','en']){
       const outside=[...content.querySelectorAll('.match-group,.match-card,.app-title,.pathway-compare')].filter(node=>{const r=node.getBoundingClientRect();return r.left<viewport.left-1||r.right>viewport.right+1}).map(node=>node.className)
       return {panelWithin:bounds.left>=viewport.left-1&&bounds.right<=viewport.right+1,extra:content.scrollWidth-content.clientWidth,outside}
     })
-    await page.screenshot({path:`design-review/${info.project.name}/${lang}-comparison.png`,fullPage:true})
+    await page.screenshot({path:`test-results/design-review/${info.project.name}/${lang}-comparison.png`,fullPage:true})
     expect(overflow.panelWithin).toBe(true)
     expect(overflow.extra,JSON.stringify(overflow)).toBeLessThanOrEqual(1)
     await expect(panel).toContainText(t('تشغيل قواعد البيانات واستعادتها','Database operations and recovery'))

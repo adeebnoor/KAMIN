@@ -1,4 +1,4 @@
-export const KAMIN_ONTOLOGY_VERSION = '0.3.0'
+export const KAMIN_ONTOLOGY_VERSION = '0.4.0'
 
 export const NAMESPACES = {
   rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -173,6 +173,11 @@ export const KAMIN_RELATIONS = {
   knowledgeAnchor: 'kamin:knowledgeAnchor',
   marketSignalsCapability: 'kamin:marketSignalsCapability',
   workActivity: 'kamin:workActivity',
+  mapsToCapability: 'kamin:mapsToCapability',
+  hasLearningOutcome: 'kamin:hasLearningOutcome',
+  supportsCapability: 'kamin:supportsCapability',
+  mappingVersion: 'kamin:mappingVersion',
+  reviewStatus: 'kamin:reviewStatus',
 }
 
 export const JSON_LD_CONTEXT = {
@@ -234,6 +239,13 @@ export const EXTERNAL_ID_POLICY = {
   credential: 'Prefer CLR/Open Badge/CTDL identifier when available',
   sasced: 'Represent SASCED code as a SKOS concept in the Kamin-managed concept scheme',
 }
+
+// One canonical course identity everywhere: transcript review, inference, the
+// personal graph, the reference graph and the ICT knowledge graph. "cpit 240",
+// "CPIT240" and "CPIT--240" all become "CPIT-240".
+export const canonicalCourseCode = code => String(code || '').trim().toUpperCase().replace(/\s+/g, '-').replace(/--+/g, '-').replace(/^([A-Z]{2,8})-?(\d{2,4})$/, '$1-$2')
+export const courseIri = code => `urn:kamin:course:${canonicalCourseCode(code)}`
+export const learningOutcomeIri = id => `urn:kamin:learning-outcome:${String(id || '').trim().toUpperCase()}`
 
 export function expandTerm(term){
   if(typeof term!=='string') return term

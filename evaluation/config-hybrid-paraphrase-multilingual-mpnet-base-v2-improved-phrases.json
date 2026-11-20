@@ -1,0 +1,10 @@
+{
+  "method": "eval-lexicon+examples-v1+improved+phrases",
+  "model": "paraphrase-multilingual-mpnet-base-v2",
+  "prefix": "",
+  "threshold": 0.77,
+  "tunedOn": "course-dev-set.json",
+  "tunedOnSha256": "58faad0815385f36306effeb8e7f7747900cbd178240410012fa7b625800fdca",
+  "tunedAt": "2026-11-19T17:08:05.767Z",
+  "devMacroF1": 0.6087
+}

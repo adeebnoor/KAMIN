@@ -1,4 +1,5 @@
 export const PSYCHOMETRIC_REGISTRY_VERSION = '0.1.0'
+// Task 28: the notes are shown on Interests & goal, so they are in plain words (ids and fields unchanged).
 
 export const PSYCHOMETRIC_INSTRUMENTS = {
   onetMiniIp30: {
@@ -48,8 +49,8 @@ export const PSYCHOMETRIC_INSTRUMENTS = {
     status:'reference-model',
     decisionRole:'preference-fit',
     notes:{
-      ar:'تُستخدم أبعاد القيم كنموذج دلالي وربط بالمهن. أداة القياس الموجهة للطالب تحتاج اختيار/تحقق منفصل.',
-      en:'Use the work-value dimensions as an occupational semantic model. The student-facing measurement instrument requires a separate validated design choice.',
+      ar:'نستخدم أبعاد القيم لوصف المهن وربطها. أداة القياس الموجهة للطالب تحتاج اختيارًا وتحققًا منفصلين.',
+      en:'We use the work-value dimensions to describe and link occupations. A student-facing measurement instrument needs a separate, validated design choice.',
     },
   },
   onetWorkStyles: {
@@ -62,8 +63,8 @@ export const PSYCHOMETRIC_INSTRUMENTS = {
     status:'reference-model',
     decisionRole:'work-environment-fit',
     notes:{
-      ar:'O*NET يربط أنماط العمل بالمهن ويصدر البيانات بصيغ RDF/JSON-LD. نستخدم المفاهيم والروابط ولا نحول ratings المهنية إلى تشخيص للفرد.',
-      en:'O*NET links Work Styles to occupations and publishes RDF/JSON-LD. Reuse concepts and links without treating occupation ratings as a diagnosis of an individual.',
+      ar:'O*NET يربط أنماط العمل بالمهن. نستخدم المفاهيم والروابط، ولا نحوّل تقديرات المهن إلى تشخيص للفرد.',
+      en:'O*NET links Work Styles to occupations. We reuse its concepts and links, never occupation ratings as a diagnosis of an individual.',
     },
   },
 }

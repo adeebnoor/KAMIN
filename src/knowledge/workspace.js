@@ -1,12 +1,14 @@
-import { skills, courseSkillMap, demoCourses } from '../data.js'
+import { skills, demoCourses } from '../data.js'
+import { catalogCourses, mappingReviewStatus } from '../catalog/fcit.js'
 import { targetProfiles, TARGET_CATALOG_VERSION } from '../matching/targets.js'
 import { buildTargetSemanticGraph } from '../matching/graph.js'
 import { buildMatchingProfile, matchTargets } from '../matching/engine.js'
 import { projectStateToPerson360 } from '../ontology/projector.js'
 import { buildInferenceDataset } from '../ontology/rdf.js'
-import { JSON_LD_CONTEXT } from '../ontology/registry.js'
+import { JSON_LD_CONTEXT, courseIri, learningOutcomeIri } from '../ontology/registry.js'
 import { inferSkills } from '../utils/engine.js'
 import { DIGITAL_TOPICS, DIGITAL_METHOD, DIGITAL_NOTICE } from '../digitalInterests.js'
+import { ICT_KG_REVIEWED_AT } from './ictKgV1.js'
 
 export const KNOWLEDGE_VERSION = `${TARGET_CATALOG_VERSION} · 2026-09-27`
 const ref = id => ({'@id':id})
@@ -24,9 +26,79 @@ export function searchKnowledge(text='',kind='all'){
   return knowledgeConcepts.filter(c=>(kind==='all'||c.kind===kind)&&tokens.every(t=>normalize(`${c.id} ${c.label.ar} ${c.label.en}`).includes(t)))
 }
 export function buildReferenceDataset(){
+  const edges=targetGraphs.flatMap(g=>g.edges)
   const nodes=targetGraphs.flatMap(g=>[...g.entities,...g.edges.map(e=>({'@id':e.subject,[e.predicate]:ref(e.object)}))])
-  for(const [code,mapping] of Object.entries(courseSkillMap)) nodes.push({'@id':`urn:kamin:course:${code}`,'@type':'Course',code,'kamin:mapsToCapability':mapping.skills.map(s=>ref(`urn:kamin:skill:${s}`))})
+  nodes.push(...courseCatalogNodes(),...relationProvenanceNodes(edges))
   return {'@context':JSON_LD_CONTEXT,'@graph':[{'@id':'urn:kamin:graph:reference','@graph':nodes}]}
+}
+
+// Every reference relation that carries a source keeps it in RDF as an rdf:Statement with
+// kamin:sourceId, kamin:decisionRole and (when reviewed) kamin:reviewedAt, so a SPARQL
+// query can ask where each relation comes from (competency question cq10).
+export const FCIT_SOURCE_ID='source-fcit-catalog-2024-25'
+const relationId=({subject,predicate,object})=>{
+  let h=0x811c9dc5
+  for(const ch of `${subject} ${predicate} ${object}`){h^=ch.codePointAt(0);h=Math.imul(h,0x01000193)>>>0}
+  return `urn:kamin:relation:${h.toString(16).padStart(8,'0')}`
+}
+export function relationProvenanceNodes(edges=[],courses=catalogCourses){
+  const statements=new Map()
+  const add=(edge,meta)=>{
+    const id=relationId(edge)
+    if(statements.has(id)) return
+    statements.set(id,{
+      '@id':id,'@type':'rdf:Statement',
+      'rdf:subject':ref(edge.subject),'rdf:predicate':ref(edge.predicate),'rdf:object':ref(edge.object),
+      'kamin:sourceId':meta.sourceId,'kamin:decisionRole':meta.decisionRole,
+      ...(meta.reviewedAt?{'kamin:reviewedAt':meta.reviewedAt}:{}),
+      ...(meta.reviewStatus?{'kamin:reviewStatus':meta.reviewStatus}:{}),
+      ...(meta.mappingVersion?{'kamin:mappingVersion':meta.mappingVersion}:{}),
+    })
+  }
+  for(const edge of edges) if(edge.sourceId&&edge.decisionRole) add(edge,{sourceId:edge.sourceId,decisionRole:edge.decisionRole,reviewedAt:ICT_KG_REVIEWED_AT,reviewStatus:edge.reviewStatus})
+  for(const course of courses){
+    const meta={sourceId:FCIT_SOURCE_ID,decisionRole:'academic-course-mapping',reviewedAt:course.reviewedAt,reviewStatus:mappingReviewStatus(course),mappingVersion:course.mappingVersion}
+    const cid=courseIri(course.code)
+    for(const skill of course.capabilities) add({subject:cid,predicate:'kamin:mapsToCapability',object:`urn:kamin:skill:${skill}`},meta)
+    for(const lo of course.learningOutcomes){
+      const lid=learningOutcomeIri(lo.id),loMeta={...meta,reviewStatus:lo.status}
+      add({subject:cid,predicate:'kamin:hasLearningOutcome',object:lid},loMeta)
+      for(const skill of course.capabilities) add({subject:lid,predicate:'kamin:supportsCapability',object:`urn:kamin:skill:${skill}`},loMeta)
+    }
+  }
+  return [...statements.values()]
+}
+
+// course → learning outcome → capability, with the catalog source, mapping version and
+// review status on every node. Official courses with no capability still appear (with
+// their outcome) so a query can show that they yield nothing.
+const languageMap=value=>Object.fromEntries(Object.entries(value||{}).filter(([,text])=>typeof text==='string'&&text))
+export function courseCatalogNodes(courses=catalogCourses){
+  const nodes=[]
+  for(const course of courses){
+    const capabilities=course.capabilities.map(s=>ref(`urn:kamin:skill:${s}`))
+    const reviewStatus=mappingReviewStatus(course)
+    nodes.push({
+      '@id':courseIri(course.code),'@type':'Course',code:course.code,
+      ...(Object.keys(languageMap(course.title)).length?{name:languageMap(course.title)}:{}),
+      'kamin:catalogSource':course.catalog,
+      'kamin:catalogPage':course.catalogPage,
+      'kamin:mappingVersion':course.mappingVersion,
+      'kamin:reviewStatus':reviewStatus,
+      'kamin:verification':course.verification,
+      'kamin:mapsToCapability':capabilities,
+      'kamin:hasLearningOutcome':course.learningOutcomes.map(lo=>ref(learningOutcomeIri(lo.id))),
+    })
+    for(const lo of course.learningOutcomes) nodes.push({
+      '@id':learningOutcomeIri(lo.id),'@type':'elm:LearningOutcome',
+      label:languageMap({ar:lo.ar,en:lo.en}),
+      'kamin:catalogSource':course.catalog,
+      'kamin:mappingVersion':course.mappingVersion,
+      'kamin:reviewStatus':lo.status,
+      'kamin:supportsCapability':capabilities,
+    })
+  }
+  return nodes
 }
 export function buildSyntheticGraph(){
   const date='2026-09-27T00:00:00.000Z'

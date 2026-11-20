@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { OccupationTaxonomyRegistry, normalizeCrosswalk } from '../src/taxonomy/occupationTaxonomy.js'
-import { createExternalOccupationTaxonomy } from '../src/taxonomy/externalService.js'
+import { readdirSync, readFileSync } from 'node:fs'
+import path from 'node:path'
+
+const TAXONOMY_DIR = path.resolve(import.meta.dirname, '../src/taxonomy')
 
 describe('occupation taxonomy abstraction',()=>{
   it('requires lookup, crosswalk and search without embedding taxonomy logic',()=>{
@@ -12,20 +15,28 @@ describe('occupation taxonomy abstraction',()=>{
     expect(()=>normalizeCrosswalk({fromTaxonomy:'a',toTaxonomy:'b',fromCode:'1',toCode:'2',relation:'sameAs'})).toThrow('INVALID_SKOS_MATCH_RELATION')
   })
 
-  it('keeps the implementation behind an external service contract',async()=>{
+  // Task 49: the external taxonomy service (src/taxonomy/externalService.js, config.js) is deleted.
+  // This test used to drive that service with a fake fetch; it now drives the same contract through a
+  // static, local adapter in the registry, and checks that nothing in src/taxonomy can call out.
+  it('runs search and crosswalk through a static local adapter; no service and no fetch in src/taxonomy',async()=>{
     const calls=[]
-    const adapter=createExternalOccupationTaxonomy({
-      taxonomyId:'private-taxonomy',
-      endpoint:'/api/occupations',
-      fetchImpl:async url=>{
-        calls.push(url)
-        return {ok:true,json:async()=>url.includes('action=search')?[{code:'X1'}]:{fromTaxonomy:'private-taxonomy',toTaxonomy:'esco',fromCode:'X1',toCode:'E1',relation:'closeMatch'}}
-      },
-    })
-    const rows=await adapter.search('analyst')
+    const local={
+      async lookup(code){ calls.push(['lookup',code]); return code==='X1'?{code:'X1'}:null },
+      async search(query){ calls.push(['search',query]); return query==='analyst'?[{code:'X1'}]:[] },
+      async crosswalk(fromTaxonomy,toTaxonomy,code){ calls.push(['crosswalk',code]); return {fromTaxonomy,toTaxonomy,fromCode:code,toCode:'E1',relation:'closeMatch'} },
+    }
+    const registry=new OccupationTaxonomyRegistry().register('Local-Reference',local)
+    expect(registry.has('local-reference')).toBe(true)
+    const rows=await registry.search('local-reference','analyst')
     expect(rows[0].code).toBe('X1')
-    const mapped=await adapter.crosswalk('private-taxonomy','esco','X1')
-    expect(mapped.relation).toBe('closeMatch')
-    expect(calls.join(' ')).not.toMatch(/classification|hierarchy|scoring/)
+    expect(await registry.lookup('local-reference','X1')).toEqual({code:'X1'})
+    const mapped=await registry.crosswalk('local-reference','esco','X1')
+    expect(mapped).toEqual({fromTaxonomy:'local-reference',toTaxonomy:'esco',fromCode:'X1',toCode:'E1',relation:'closeMatch'})
+    expect(JSON.stringify(calls)).not.toMatch(/classification|hierarchy|scoring/)
+    expect(()=>registry.search('ssco','analyst')).toThrow('OCCUPATION_TAXONOMY_NOT_REGISTERED')
+
+    expect(readdirSync(TAXONOMY_DIR).sort()).toEqual(['occupationTaxonomy.js'])
+    const source=readFileSync(path.join(TAXONOMY_DIR,'occupationTaxonomy.js'),'utf8')
+    expect(source).not.toMatch(/\bfetch\w*\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|import\.meta\.env|https?:\/\//)
   })
 })

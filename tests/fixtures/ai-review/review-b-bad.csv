@@ -1,0 +1,7 @@
+﻿id,text,decision,edited_text,testing (تصميم وتنفيذ اختبارات البرمجيات / Software test design and execution),db-operations (تشغيل قواعد البيانات واستعادتها / Database operations and recovery),web-development (تطوير واجهات الويب / Web interface development),systems-analysis (تحليل النظم وسير العمل / Systems and workflow analysis),requirements (تحليل المتطلبات / Requirements analysis),software (هندسة البرمجيات / Software engineering),database (قواعد البيانات / Databases),project (إدارة المشاريع / Project management),statistics (التحليل الكمي / Quantitative analysis),cyber (أساسيات الأمن السيبراني / Cybersecurity fundamentals),ai-work (توظيف الذكاء الاصطناعي في العمل / AI use at work),note
+CONFIRM,"I did not open or inspect Claude's proposed labels or self-review (ai-drafts/claude, sealed) before submitting this review.",confirmed,,,,,,,,,,,,,
+aid-en-01,"Fixture draft aid-en-01: placeholder text, not a real description.",keep,,,,,,,,1,,,,,
+aid-en-02,"Fixture draft aid-en-02: placeholder text, not a real description.",maybe,,1,,,,,,,,,,,
+aid-en-03,"Fixture draft aid-en-03: placeholder text, not a real description.",reject,,,,,,,,,1,,,,
+aid-ar-01,مسودة تجريبية aid-ar-01: نص بديل وليس وصفًا حقيقيًا.,edit,,,,,,,1,,,,,,
+aid-ar-02,مسودة تجريبية aid-ar-02: نص بديل وليس وصفًا حقيقيًا.,keep,,,,,,,,,,,1,,

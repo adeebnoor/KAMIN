@@ -1,11 +1,16 @@
-import { addClaim, addEntity, createClaim, emptyPerson360 } from '../person360.js'
+import { addClaim, addEntity, createClaim, emptyPerson360, sweepOrphans } from '../person360.js'
 import { DIGITAL_METHOD, DIGITAL_NOTICE, DIGITAL_PURPOSE, digitalInterestClaims } from '../digitalInterests.js'
 import { rowProvenance, provenanceStrength } from '../utils/provenance.js'
 import { taskById } from '../tasks/catalog.js'
+import { courseIri } from './registry.js'
+import { FCIT_MAPPING_VERSION } from '../catalog/fcit.js'
+import { EVIDENCE_LEVELS_VERSION, limitingReasons } from '../evidence/levels.js'
 const taskSkillIds=id=>taskById(id)?.skillIds||[]
 
 const slug=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g,'-').replace(/^-|-$/g,'')
-const courseId=code=>`urn:kamin:course:${slug(code)}`
+// Same IRI as the reference graph and the ICT knowledge graph (urn:kamin:course:CPIT-240),
+// so "course the student took → kamin:mapsToCapability" joins across graphs.
+const courseId=courseIri
 const evidenceId=(type,key)=>`urn:kamin:evidence:${type}:${slug(key)}`
 const skillId=id=>`urn:kamin:skill:${slug(id)}`
 const preferenceId=(scheme,option)=>`urn:kamin:preference:${slug(scheme)}:${slug(option)}`
@@ -59,19 +64,24 @@ export function projectStateToPerson360({state,skills=[],educationClassification
       label:skill.labels||skill.label||skill.id,
       alignmentStatus:skill.uri?'externally-aligned':'pilot-local-unmapped',
     })
-    const evidence=(skill.evidence||[]).map(item=>evidenceId('course',item.code))
-    for(const [index,source] of evidence.entries()){
-      graph=addClaim(graph,createClaim({
+    for(const [index,item] of (skill.evidence||[]).entries()){
+      // Ordinal evidence level of this row (Task 02); legacy callers may still pass confidenceLabel.
+      const level=item.evidenceLevel||skill.evidenceLevel||skill.confidenceLabel||'preliminary'
+      const claim=createClaim({
         id:`urn:kamin:claim:demonstrates:${slug(skill.id)}:${index+1}`,
         predicate:'kamin:demonstrates',
         object:sid,
-        source,
+        source:evidenceId('course',item.code),
         sourceType:'approved-course-mapping',
         generatedBy:'urn:kamin:activity:skill-inference',
-        evidenceStrength:skill.confidenceLabel||'preliminary',
+        evidenceStrength:level,
         consentPurpose:'urn:kamin:purpose:academic-profile',
-        metadata:{mappingVersion:'pilot-v1'},
-      }))
+        metadata:{mappingVersion:FCIT_MAPPING_VERSION,...(item.reasons?{evidenceReasons:item.reasons.map(r=>r.code)}:{})},
+      })
+      // Task 34: why this row is not strong, as the codes the dashboard's "why limited" line reads
+      // (limitingReasons() in src/evidence/levels.js). A strong row has none; the rules are unchanged.
+      const limitingFactor=[...new Set(limitingReasons({level,reasons:item.reasons}).map(r=>r.code))]
+      graph=addClaim(graph,{...claim,evidenceLevel:level,evidenceLevelsVersion:EVIDENCE_LEVELS_VERSION,evidenceBasis:item.basis||'academic',...(limitingFactor.length?{limitingFactor}:{})})
     }
   }
 
@@ -237,5 +247,6 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     }
   }
 
-  return graph
+  // Task 04: no evidence claim may outlive its evidence (e.g. skills computed before an edit).
+  return sweepOrphans(graph).graph
 }

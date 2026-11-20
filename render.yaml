@@ -2,7 +2,8 @@ services:
   - type: web
     runtime: static
     name: kamin
-    buildCommand: npm install --no-audit --no-fund && npm run build
+    # Task 47: install exactly the lockfile versions CI tested; skip onnxruntime-node's CUDA download (see ci.yml).
+    buildCommand: ONNXRUNTIME_NODE_INSTALL=skip npm ci --no-audit --no-fund && npm run build
     staticPublishPath: dist
     headers:
       - path: /assets/*

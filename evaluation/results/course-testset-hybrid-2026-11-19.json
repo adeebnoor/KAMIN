@@ -1,0 +1,55 @@
+{
+  "set": "course-testset.json",
+  "setSha256": "99a6783cd3de745d1b591f34dc38f255423ad8fecd9249a4badf901227aeb2e3",
+  "frozenAt": "2026-11-19T17:06:20.360Z",
+  "ranAt": "2026-11-19T17:06:29.756Z",
+  "kaminCommit": "7291c06",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-lexicon-v1",
+    "metrics": {
+      "en": {
+        "cases": 25,
+        "tp": 24,
+        "fp": 13,
+        "fn": 6,
+        "precision": 0.6486486486486487,
+        "recall": 0.8,
+        "f1": 0.7164179104477612,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.16,
+        "negatives": 6,
+        "correctAbstentions": 3,
+        "medianMs": 0.053400000000003445
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1",
+    "model": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+    "prefix": "",
+    "threshold": 0.5,
+    "tunedOn": "course-dev-set.json",
+    "tunedOnSha256": "58faad0815385f36306effeb8e7f7747900cbd178240410012fa7b625800fdca",
+    "tunedAt": "2026-11-19T17:06:27.494Z",
+    "devMacroF1": 0.6452,
+    "modelDir": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+    "metrics": {
+      "en": {
+        "cases": 25,
+        "tp": 27,
+        "fp": 25,
+        "fn": 3,
+        "precision": 0.5192307692307693,
+        "recall": 0.9,
+        "f1": 0.6585365853658537,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.12,
+        "negatives": 6,
+        "correctAbstentions": 3,
+        "medianMs": 18.30399999999986
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "set": "dialect.json",
+  "setSha256": "bfa9140b70d7eafea5165348e4846a45d7e6b668df27eebb18b9be2e544d282b",
+  "frozenAt": null,
+  "ranAt": "2026-10-26T20:39:41.552Z",
+  "kaminCommit": "b92eef2",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-lexicon-v1",
+    "metrics": {
+      "ar": {
+        "cases": 2,
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "precision": null,
+        "recall": 0,
+        "f1": null,
+        "unsupportedClaims": 0,
+        "abstentionRate": 1,
+        "negatives": 0,
+        "correctAbstentions": 0,
+        "medianMs": 1.3237000000000023
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-embed-sentence-v1",
+    "threshold": 0.52,
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "tunedAt": "2026-10-26T20:14:09.591Z",
+    "devMacroF1": 0.7212,
+    "metrics": {
+      "ar": {
+        "cases": 2,
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "precision": null,
+        "recall": 0,
+        "f1": null,
+        "unsupportedClaims": 0,
+        "abstentionRate": 1,
+        "negatives": 0,
+        "correctAbstentions": 0,
+        "medianMs": 29.763500000000022
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+/* Task 67 · Settings. Loads with src/ui2/screens/Settings.jsx only (its own lazy chunk). Tokens only, as in ui2.css: brand
+   colours from public/brand.css (dark values in src/ui2/theme.css), spacing, text sizes and radius from src/tokens.css.
+   The groups, the rows and the "Save on this device" switch are --paper boxes on the --soft page; the sub-pages hold
+   the old interface's components inside .ui2-legacy (tests/themeContrast.test.js checks every pair in both themes).
+   Compact on purpose: the list fits in 1.2 screens of a 390×844 phone. */
+
+.ui2-settings-group,.ui2-settings-preview{margin:0 0 var(--space-3);padding:var(--space-2) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-settings h2{margin:var(--space-1) 0;font-size:var(--text-base);line-height:1.3;color:var(--navy)}
+.ui2-settings-list{margin:0;padding:0;list-style:none}
+.ui2-settings-list>li+li{border-top:1px solid var(--line)}
+
+/* ----- A row: icon, name, status, chevron ----- */
+.ui2-settings-row{display:flex;align-items:center;gap:var(--space-2);width:100%;min-height:var(--control-h);padding:var(--space-1) 0;border:0;background:none;color:var(--navy);font:inherit;font-weight:650;text-align:start;cursor:pointer}
+.ui2-settings-row:hover .ui2-settings-row-label{text-decoration:underline;text-underline-offset:3px}
+.ui2-settings-row svg{flex:none}
+.ui2-settings-row-label{flex:1;min-width:0}
+.ui2-settings-row-status{flex:none;font-size:var(--text-sm);font-weight:500;color:var(--muted)}
+.ui2-settings-row-open{transform:rotate(-90deg)}
+[dir="rtl"] .ui2-settings-row-open{transform:rotate(90deg)}
+
+/* ----- Save on this device: the status, the sentence, one button ----- */
+.ui2-settings-save{display:grid;justify-items:start;gap:var(--space-1);padding:var(--space-2) 0}
+.ui2-page .ui2-settings-save p{margin:0;font-size:var(--text-sm);line-height:1.5}
+.ui2-settings-save p.ui2-settings-save-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);width:100%;font-size:var(--text-base);color:var(--navy)}
+.ui2-settings-save-head strong{flex:1}
+.ui2-settings-save .ui2-btn{margin-top:var(--space-1)}
+
+/* ----- A sub-page: Back to Settings, the section's title (an h2 on the --soft page; the h1 "Settings" is for screen
+   readers there), the section ----- */
+.ui2-settings-back{gap:var(--space-1);margin-bottom:var(--space-1)}
+.ui2-page h2.ui2-settings-title{margin:0 0 var(--space-2);font-size:var(--text-xl);line-height:1.25;color:var(--navy)}
+.ui2-page h2.ui2-settings-title:focus{outline:none}
+.ui2-settings-section{min-width:0}
+.ui2-page p.ui2-settings-actions{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.ui2-settings-legacy{margin:0 0 var(--space-3);border-radius:var(--radius-card);overflow-wrap:anywhere}
+.ui2-settings-legacy>.panel,.ui2-settings-legacy .my-data .panel{margin:0 0 var(--space-3)}
+
+/* ----- Consents: what withdrawing would remove ----- */
+.ui2-settings-preview h3{margin:var(--space-1) 0;font-size:var(--text-base);line-height:1.3;color:var(--navy)}
+.ui2-page .ui2-settings-preview p{margin:0 0 var(--space-1);font-size:var(--text-sm);line-height:1.5}
+.ui2-settings-preview-item{border-top:1px solid var(--line)}
+.ui2-settings-preview-item summary{display:flex;align-items:center;min-height:var(--control-h);font-weight:650;color:var(--navy);cursor:pointer}
+.ui2-settings-preview-item ul{margin:0 0 var(--space-2);padding-inline-start:var(--space-4);font-size:var(--text-sm);line-height:1.5}
+
+/* The old interface's parts, unchanged (the sub-pages' components): as in Profile (src/ui2/profile.css), inside
+   .ui2-legacy the brand tokens keep public/brand.css's light values in both themes (src/ui2/theme.css). */
+.ui2-legacy{color-scheme:light;color:var(--ink);background:var(--paper)}

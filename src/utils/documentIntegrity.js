@@ -57,11 +57,13 @@ export function decodeQrFromImageData(imageData) {
   return result?.data || null
 }
 
-// Only http(s) links become clickable; anything else is shown as text.
+// Only http(s) links become clickable. The QR code's own text is never kept: a transcript's QR code
+// can encode the student number (Task 55). A link keeps its address (needed for "Verify at the source";
+// only the host is shown); anything else keeps nothing but the fact that a QR code was found.
 export function describeQr(text) {
   let url = null
   try { const parsed = new URL(text); if (['https:', 'http:'].includes(parsed.protocol)) url = parsed.toString() } catch { /* not a URL */ }
-  return { text: String(text).slice(0, 500), url, host: url ? new URL(url).host : null }
+  return { url, host: url ? new URL(url).host : null }
 }
 
 const MAX_SCAN_EDGE = 1800
@@ -90,7 +92,7 @@ export async function scanQrFromImageFile(file) {
 // Render the first pages of a pdf.js document and look for QR codes.
 export async function scanQrFromPdf(doc, pages = 2) {
   if (typeof document === 'undefined') return []
-  const found = []
+  const found = [], seen = new Set()
   for (let number = 1; number <= Math.min(pages, doc.numPages); number += 1) {
     try {
       const page = await doc.getPage(number)
@@ -101,8 +103,9 @@ export async function scanQrFromPdf(doc, pages = 2) {
       const context = canvas.getContext('2d', { willReadFrequently: true })
       await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 2 * scale }) }).promise
       const text = decodeQrFromImageData(context.getImageData(0, 0, canvas.width, canvas.height))
-      if (text && !found.some(item => item.text === text)) found.push(describeQr(text))
+      if (text && !seen.has(text)) { seen.add(text); found.push(describeQr(text)) }
     } catch { /* a page that cannot render is simply skipped */ }
   }
+  seen.clear()
   return found
 }

@@ -1,0 +1,37 @@
+{
+  "_comment": "Task 46: a KAMIN session saved before Task 46 (made-up data). The usage log holds the old upload and project lines, which copied the file name and the project title. Loading must drop exactly those four lines and change nothing else.",
+  "courses": [
+    { "code": "CPIT-251", "name": "Systems Analysis and Design", "grade": "A", "source": "pdf" },
+    { "code": "CPIT-240", "name": "Database Management", "grade": "B+", "source": "pdf" }
+  ],
+  "approved": true,
+  "goal": null,
+  "consents": { "analyze": true, "insight": false, "advisor": false, "research": false },
+  "audit": [
+    { "label": "تسجيل دليل تطبيقي مصرّح: TEST PROJECT TITLE", "ts": 1763380000600 },
+    { "label": "Self-declared applied evidence recorded: TEST PROJECT TITLE", "ts": 1763380000500 },
+    { "label": "Approved record edited; capabilities recomputed: 0 added, 0 removed, 0 changed level", "ts": 1763380000400 },
+    { "label": "Transcript analysis consent granted and record approved", "ts": 1763380000300 },
+    { "label": "قراءة ملف محلي: Transcript_TEST-NAME_0000001.pdf", "ts": 1763380000200 },
+    { "label": "Local file read: Transcript_TEST-NAME_0000001.pdf", "ts": 1763380000100 }
+  ],
+  "recommendationReviews": [],
+  "projects": [
+    {
+      "id": "project-0000-test-0001",
+      "title": "TEST PROJECT TITLE",
+      "kind": "project",
+      "skillIds": ["database"],
+      "url": null,
+      "description": "",
+      "createdAt": "2026-11-17T10:00:00.000Z",
+      "level": "declared-applied",
+      "reviewStatus": "unreviewed"
+    }
+  ],
+  "tasks": [],
+  "credentials": [],
+  "college": "FCIT",
+  "needsReview": [],
+  "localPersistence": true
+}

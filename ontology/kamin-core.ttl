@@ -1,42 +1,597 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix kamin: <urn:kamin:> .
 @prefix schema: <https://schema.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix ceterms: <https://purl.org/ctdl/terms/> .
 @prefix ceasn: <https://purl.org/ctdlasn/terms/> .
+@prefix elm: <http://data.europa.eu/snb/model/ontology/> .
+@prefix dpv: <https://w3id.org/dpv#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Version 0.4.0 (Task 33): every kamin: term the app writes is declared here, with an Arabic and an
+# English label, a comment, a domain and a range. `node scripts/ontology-terms.mjs` builds the app's
+# graphs and lists any term that is used but not declared; tests/ontologyTerms.test.js fails on one.
+# No 0.3.0 term was removed. Published at /ontology/kamin-core.ttl (current), /ontology/0.4.0/ and,
+# unchanged, /ontology/0.3.0/.
+#
+# Domain and range: rdfs:domain / rdfs:range when a term is used on one kind of node only;
+# schema:domainIncludes / schema:rangeIncludes when it is used on several (no inference is drawn
+# from those). External classes are the ones src/ontology/registry.js names: schema:Person,
+# schema:Course, schema:Occupation, elm:LearningOpportunity, elm:LearningOutcome, ceasn:Competency
+# (a capability), skos:Concept, prov:Entity (evidence), prov:Activity, dpv:Purpose.
+# Values the app writes as plain JSON text (dates included) have the range xsd:string.
 
 kamin:ontology
   a owl:Ontology ;
   rdfs:label "Kamin Person 360 thin ontology"@en ;
   rdfs:label "أنطولوجيا كامن الرشيقة لنموذج الفرد 360"@ar ;
-  owl:versionInfo "0.3.0" .
+  rdfs:comment "Local extension terms for Kamin graphs. Domain concepts stay in their source vocabularies."@en ;
+  owl:versionInfo "0.4.0" ;
+  owl:versionIRI <urn:kamin:ontology:0.4.0> ;
+  owl:priorVersion <urn:kamin:ontology:0.3.0> .
 
-kamin:Claim a owl:Class ; rdfs:subClassOf prov:Entity .
-kamin:Observation a owl:Class ; rdfs:subClassOf prov:Entity .
-kamin:Goal a owl:Class ; rdfs:subClassOf skos:Concept .
-kamin:Constraint a owl:Class ; rdfs:subClassOf skos:Concept .
-kamin:FitAssessment a owl:Class ; rdfs:subClassOf prov:Entity .
-kamin:FitMechanism a owl:Class ; rdfs:subClassOf prov:Entity .
-kamin:Outcome a owl:Class ; rdfs:subClassOf prov:Entity .
+# ---------------------------------------------------------------------------------------------
+# Classes
+# ---------------------------------------------------------------------------------------------
 
-kamin:subject a owl:ObjectProperty ; rdfs:domain kamin:Claim .
-kamin:predicate a owl:ObjectProperty ; rdfs:domain kamin:Claim .
-kamin:object a owl:ObjectProperty ; rdfs:domain kamin:Claim .
-kamin:value a owl:DatatypeProperty ; rdfs:domain kamin:Claim .
-kamin:instrument a owl:DatatypeProperty ; rdfs:domain kamin:Observation .
-kamin:instrumentVersion a owl:DatatypeProperty ; rdfs:domain kamin:Observation .
-kamin:consentPurpose a owl:ObjectProperty ; rdfs:domain prov:Entity .
-kamin:evidenceStrength a owl:DatatypeProperty ; rdfs:domain prov:Entity .
-kamin:fitTarget a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment .
-kamin:mechanism a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment ; rdfs:range kamin:FitMechanism .
+kamin:Claim a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "claim"@en , "ادعاء"@ar ;
+  rdfs:comment "A qualified statement about the person (subject, predicate, object) that keeps its source, the activity that made it, its time and its consent purpose."@en .
+kamin:Observation a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "observation"@en , "ملاحظة"@ar ;
+  rdfs:comment "A value measured by a named instrument version, kept apart from claims."@en .
+kamin:Goal a owl:Class ; rdfs:subClassOf skos:Concept ;
+  rdfs:label "goal"@en , "هدف"@ar ;
+  rdfs:comment "A career or learning direction the student declares or a pathway supports."@en .
+kamin:Constraint a owl:Class ; rdfs:subClassOf skos:Concept ;
+  rdfs:label "constraint"@en , "قيد"@ar ;
+  rdfs:comment "A declared limit on suitable options (time, place, cost). Not written by the app today; kept from 0.3.0."@en .
+kamin:FitAssessment a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "fit assessment"@en , "تقييم الملاءمة"@ar ;
+  rdfs:comment "The rule-based, uncalibrated judgement of how a profile relates to one pathway. Ordinal; never a percentage."@en .
+kamin:FitMechanism a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "fit mechanism"@en , "آلية الملاءمة"@ar ;
+  rdfs:comment "A named mechanism that explains a fit assessment. Not written by the app today; kept from 0.3.0."@en .
+kamin:Outcome a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "outcome"@en , "نتيجة"@ar ;
+  rdfs:comment "A later observed outcome used to validate fit. Not written by the app today; kept from 0.3.0."@en .
+kamin:Inference a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "inference"@en , "استنتاج"@ar ;
+  rdfs:comment "A bounded conclusion of an application rule, stored as an rdf:Statement with its premises and rule. It does not assert readiness."@en .
+kamin:Consent a owl:Class ; rdfs:subClassOf prov:Entity , dpv:Consent ;
+  rdfs:label "consent record"@en , "سجل موافقة"@ar ;
+  rdfs:comment "A purpose-specific consent the student gave in the app, with its notice version and status."@en .
+kamin:WorkActivity a owl:Class ; rdfs:subClassOf skos:Concept ;
+  rdfs:label "work activity"@en , "نشاط عمل"@ar ;
+  rdfs:comment "A work activity of an occupation (O*NET Content Model), used as context only."@en .
+kamin:OpportunityKnowledgeGraph a owl:Class ; rdfs:subClassOf prov:Entity ;
+  rdfs:label "opportunity knowledge graph"@en , "رسم معرفي للفرص"@ar ;
+  rdfs:comment "A versioned, reviewed bundle of occupation, capability and learning entities and their relations (the ICT knowledge graph)."@en .
+kamin:Record a owl:Class ;
+  rdfs:label "nested record"@en , "سجل متداخل"@ar ;
+  rdfs:comment "A record written as a node inside another node and without its own rdf:type: a relation record (kamin:edge), a task output (kamin:outputs), a local review (kamin:localReviews) or a self-assessment (kamin:selfAssessment). Membership follows from the range of those properties."@en .
 
+# ---------------------------------------------------------------------------------------------
+# Graph structure (Person 360 document and knowledge graph document)
+# ---------------------------------------------------------------------------------------------
+
+kamin:hasClaim a owl:ObjectProperty ;
+  rdfs:label "has claim"@en , "لديه ادعاء"@ar ;
+  rdfs:comment "Links the person to each of their claims (JSON key \"claims\")."@en ;
+  rdfs:domain schema:Person ; rdfs:range kamin:Claim .
+kamin:entity a owl:ObjectProperty ;
+  rdfs:label "has entity"@en , "يتضمن كيانًا"@ar ;
+  rdfs:comment "Links a person graph or a knowledge graph to an entity it describes (JSON key \"entities\"): a course, an evidence item, a capability, a concept."@en ;
+  schema:domainIncludes schema:Person , kamin:OpportunityKnowledgeGraph ; rdfs:range rdfs:Resource .
+kamin:edge a owl:ObjectProperty ;
+  rdfs:label "has relation record"@en , "لديه سجل علاقة"@ar ;
+  rdfs:comment "Links a pathway or a knowledge graph to a relation record (JSON key \"edges\") that holds kamin:subject, kamin:predicate, kamin:object and the relation's source."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity , kamin:OpportunityKnowledgeGraph ; rdfs:range kamin:Record .
+kamin:ontologyVersion a owl:DatatypeProperty ;
+  rdfs:label "ontology version"@en , "إصدار الأنطولوجيا"@ar ;
+  rdfs:comment "Version of this ontology the person graph was written with (owl:versionInfo above)."@en ;
+  rdfs:domain schema:Person ; rdfs:range xsd:string .
+kamin:psychometricRegistryVersion a owl:DatatypeProperty ;
+  rdfs:label "psychometric registry version"@en , "إصدار سجل المقاييس النفسية"@ar ;
+  rdfs:comment "Version of the psychometric instrument registry in force when the person graph was written."@en ;
+  rdfs:domain schema:Person ; rdfs:range xsd:string .
+kamin:updatedAt a owl:DatatypeProperty ;
+  rdfs:label "updated at"@en , "وقت التحديث"@ar ;
+  rdfs:comment "When the person graph was last rebuilt (ISO 8601 date-time as text)."@en ;
+  rdfs:domain schema:Person ; rdfs:range xsd:string .
+kamin:metadata a owl:DatatypeProperty ;
+  rdfs:label "metadata"@en , "بيانات وصفية"@ar ;
+  rdfs:comment "Extra machine details kept as one JSON value (for example the mapping version and evidence reasons of a claim)."@en ;
+  schema:domainIncludes kamin:Claim , prov:Entity , kamin:Consent ; rdfs:range rdf:JSON .
+kamin:version a owl:DatatypeProperty ;
+  rdfs:label "version"@en , "الإصدار"@ar ;
+  rdfs:comment "Version of a rule, a pathway catalog entry or a knowledge graph."@en ;
+  schema:domainIncludes prov:Activity , elm:LearningOpportunity , schema:Occupation , kamin:OpportunityKnowledgeGraph ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Claims, evidence levels and consent
+# ---------------------------------------------------------------------------------------------
+
+kamin:subject a owl:ObjectProperty ;
+  rdfs:label "subject"@en , "الموضوع"@ar ;
+  rdfs:comment "The node a claim or a relation record is about."@en ;
+  schema:domainIncludes kamin:Claim , kamin:Record ; rdfs:range rdfs:Resource .
+kamin:predicate a owl:ObjectProperty ;
+  rdfs:label "predicate"@en , "العلاقة"@ar ;
+  rdfs:comment "The relation a claim or a relation record states (a kamin: property)."@en ;
+  schema:domainIncludes kamin:Claim , kamin:Record ; rdfs:range rdf:Property .
+kamin:object a owl:ObjectProperty ;
+  rdfs:label "object"@en , "الطرف الآخر"@ar ;
+  rdfs:comment "The node a claim or a relation record points to."@en ;
+  schema:domainIncludes kamin:Claim , kamin:Record ; rdfs:range rdfs:Resource .
+kamin:value a owl:DatatypeProperty ;
+  rdfs:label "value"@en , "القيمة"@ar ;
+  rdfs:comment "A literal value of a claim when it has no object node. Not written by the app today; kept from 0.3.0."@en ;
+  rdfs:domain kamin:Claim ; rdfs:range rdfs:Literal .
+kamin:sourceType a owl:DatatypeProperty ;
+  rdfs:label "source type"@en , "نوع المصدر"@ar ;
+  rdfs:comment "What kind of source a claim or an evidence item comes from (transcript, approved course mapping, self-declared, imported credential...)."@en ;
+  schema:domainIncludes kamin:Claim , prov:Entity ; rdfs:range xsd:string .
+kamin:status a owl:DatatypeProperty ;
+  rdfs:label "status"@en , "الحالة"@ar ;
+  rdfs:comment "Lifecycle state of a claim, consent, evidence item or catalog entry (for example active, withdrawn, illustrative-pilot)."@en ;
+  schema:domainIncludes kamin:Claim , kamin:Consent , prov:Entity , schema:Course , elm:LearningOpportunity ; rdfs:range xsd:string .
+kamin:consentPurpose a owl:ObjectProperty ;
+  rdfs:label "consent purpose"@en , "غرض الموافقة"@ar ;
+  rdfs:comment "The purpose the student consented to for this claim, observation or consent record."@en ;
+  rdfs:domain prov:Entity ; rdfs:range dpv:Purpose .
+kamin:evidenceStrength a owl:DatatypeProperty ;
+  rdfs:label "evidence strength"@en , "قوة الدليل"@ar ;
+  rdfs:comment "Ordinal strength word of a claim or inference (for example limited, self-reported, declared-applied). Never a number."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+# Ordinal evidence level of a claim (none < limited < moderate < strong): the weakest of grade,
+# assessment type, source and mapping status. A clue to an expected outcome, not proof of mastery.
+kamin:evidenceLevel a owl:DatatypeProperty ;
+  rdfs:label "ordinal evidence level"@en , "مستوى الدليل الترتيبي"@ar ;
+  rdfs:comment "none < limited < moderate < strong: the weakest of grade, assessment type, source and mapping status. A clue to an expected outcome, not proof of mastery."@en ;
+  rdfs:domain kamin:Claim ; rdfs:range xsd:string .
+kamin:evidenceLevelsVersion a owl:DatatypeProperty ;
+  rdfs:label "evidence level rule version"@en , "إصدار قواعد مستوى الدليل"@ar ;
+  rdfs:comment "Version of the evidence-level rules (src/evidence/levels.js) that set kamin:evidenceLevel."@en ;
+  rdfs:domain kamin:Claim ; rdfs:range xsd:string .
+kamin:evidenceBasis a owl:DatatypeProperty ;
+  rdfs:label "academic (course) or practical (reviewed or verified) evidence"@en , "أساس الدليل: أكاديمي أو عملي"@ar ;
+  rdfs:comment "academic when the claim rests on courses, practical when it rests on reviewed or verified work."@en ;
+  rdfs:domain kamin:Claim ; rdfs:range xsd:string .
+# Task 34: why a claim is not strong. One value per limiting reason code from limitingReasons() in
+# src/evidence/levels.js (the codes the dashboard's "why is this level limited?" line reads), for
+# example mapping-proposed or assessment-unknown. A strong claim has none. Asked by cq11.
+kamin:limitingFactor a owl:DatatypeProperty ;
+  rdfs:label "limiting factor"@en , "العامل المقيِّد"@ar ;
+  rdfs:comment "A reason code that caps the claim's kamin:evidenceLevel below strong (for example mapping-proposed, assessment-unknown, grade-low). Same codes as limitingReasons() in src/evidence/levels.js; a strong claim has none."@en ;
+  rdfs:domain kamin:Claim ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# What the person studied, shows, declares and prefers (claim predicates)
+# ---------------------------------------------------------------------------------------------
+
+kamin:studied a owl:ObjectProperty ;
+  rdfs:label "studied course"@en , "درس المقرر"@ar ;
+  rdfs:comment "The person passed or took this course according to an approved transcript row."@en ;
+  rdfs:domain schema:Person ; rdfs:range schema:Course .
+kamin:demonstrates a owl:ObjectProperty ;
+  rdfs:label "has course evidence for capability"@en , "لديه دليل من المقررات على القدرة"@ar ;
+  rdfs:comment "Courses the person studied are mapped to this capability. The claim carries an ordinal evidence level; a grade is a clue to an expected outcome, never proof of mastery."@en ;
+  rdfs:domain schema:Person ; rdfs:range ceasn:Competency .
+kamin:verifiedBy a owl:ObjectProperty ;
+  rdfs:label "has capability verified by a trusted credential"@en , "لديه قدرة موثقة بشهادة من جهة موثوقة"@ar ;
+  rdfs:comment "A credential from a trusted issuer, verified on import, names this capability. Only this relation is institution-verified."@en ;
+  rdfs:domain schema:Person ; rdfs:range ceasn:Competency .
+kamin:declaresEvidenceFor a owl:ObjectProperty ;
+  rdfs:label "declares evidence for capability"@en , "يصرّح بدليل على القدرة"@ar ;
+  rdfs:comment "The student declares a project, task output or unverified credential as evidence for this capability. Visible to reviewers; never a capability claim and never affects fit."@en ;
+  rdfs:domain schema:Person ; rdfs:range ceasn:Competency .
+kamin:academicContext a owl:ObjectProperty ;
+  rdfs:label "academic context"@en , "السياق الأكاديمي"@ar ;
+  rdfs:comment "The SASCED field of study inferred from the course prefixes of the transcript. Context, not a capability."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:pursuesGoal a owl:ObjectProperty ;
+  rdfs:label "pursues goal"@en , "يسعى إلى هدف"@ar ;
+  rdfs:comment "A goal the student declared. Self-reported context, never evidence."@en ;
+  rdfs:domain schema:Person ; rdfs:range kamin:Goal .
+kamin:hasConfirmedInterest a owl:ObjectProperty ;
+  rdfs:label "has confirmed interest"@en , "لديه اهتمام أكّده"@ar ;
+  rdfs:comment "An interest topic the student confirmed from a suggestion on text they chose, under the digital-interests consent. Context, not evidence of skill."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:courseContext a owl:ObjectProperty ;
+  rdfs:label "course context"@en , "سياق المقرر"@ar ;
+  rdfs:comment "The course an evidence item (a transcript row) belongs to."@en ;
+  rdfs:domain prov:Entity ; rdfs:range schema:Course .
+
+kamin:prefers a owl:ObjectProperty ;
+  rdfs:label "declares preference"@en , "يصرّح بتفضيل"@ar ;
+  rdfs:comment "A preference the student declared in one scheme. The app writes one sub-property per scheme, kamin:prefers:<scheme>. Self-reported context."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:careerInterest a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares career interest"@en , "يصرّح باهتمام مهني"@ar ;
+  rdfs:comment "Declared preference in the careerInterest scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:workValue a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares work value"@en , "يصرّح بقيمة عمل"@ar ;
+  rdfs:comment "Declared preference in the workValue scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:workStructure a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares work structure"@en , "يصرّح بنمط تنظيم العمل"@ar ;
+  rdfs:comment "Declared preference in the workStructure scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:collaboration a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares collaboration style"@en , "يصرّح بأسلوب التعاون"@ar ;
+  rdfs:comment "Declared preference in the collaboration scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:pace a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares work pace"@en , "يصرّح بوتيرة العمل"@ar ;
+  rdfs:comment "Declared preference in the pace scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:responsibility a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares responsibility style"@en , "يصرّح بنوع المسؤولية"@ar ;
+  rdfs:comment "Declared preference in the responsibility scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+kamin:prefers:learningMode a owl:ObjectProperty ; rdfs:subPropertyOf kamin:prefers ;
+  rdfs:label "declares learning mode"@en , "يصرّح بطريقة التعلم"@ar ;
+  rdfs:comment "Declared preference in the learningMode scheme (src/insight.js)."@en ;
+  rdfs:domain schema:Person ; rdfs:range skos:Concept .
+
+# ---------------------------------------------------------------------------------------------
 # Bounded application-rule conclusions. These properties do not assert readiness.
-kamin:Inference a owl:Class ; rdfs:subClassOf prov:Entity .
-kamin:hasCapabilityEvidenceFor a owl:ObjectProperty ; rdfs:label "has pilot capability evidence for a pathway requirement"@en .
-kamin:hasGoalContextFor a owl:ObjectProperty ; rdfs:label "has declared goal context for a pathway"@en .
-kamin:hasPreferenceContextFor a owl:ObjectProperty ; rdfs:label "has declared preference context for a pathway"@en .
+# ---------------------------------------------------------------------------------------------
+
+kamin:hasCapabilityEvidenceFor a owl:ObjectProperty ;
+  rdfs:label "has pilot capability evidence for a pathway requirement"@en , "لديه دليل قدرة تجريبي لمتطلب مسار"@ar ;
+  rdfs:comment "Rule R1: a capability the pathway requires has course or verified evidence in the profile. Not readiness."@en ;
+  rdfs:domain schema:Person ; schema:rangeIncludes schema:Occupation , elm:LearningOpportunity .
+kamin:hasGoalContextFor a owl:ObjectProperty ;
+  rdfs:label "has declared goal context for a pathway"@en , "لديه سياق هدف مصرّح به لمسار"@ar ;
+  rdfs:comment "Rule conclusion: the student's declared goal is one the pathway supports. Context only."@en ;
+  rdfs:domain schema:Person ; schema:rangeIncludes schema:Occupation , elm:LearningOpportunity .
+kamin:hasPreferenceContextFor a owl:ObjectProperty ;
+  rdfs:label "has declared preference context for a pathway"@en , "لديه سياق تفضيل مصرّح به لمسار"@ar ;
+  rdfs:comment "Rule R3: a declared preference is compatible with the pathway. Context only; never satisfies a requirement."@en ;
+  rdfs:domain schema:Person ; schema:rangeIncludes schema:Occupation , elm:LearningOpportunity .
+kamin:hasInterestContextFor a owl:ObjectProperty ;
+  rdfs:label "has confirmed interest context for a pathway"@en , "لديه سياق اهتمام مؤكد لمسار"@ar ;
+  rdfs:comment "Rule conclusion: a confirmed interest topic relates to the pathway. Context only."@en ;
+  rdfs:domain schema:Person ; schema:rangeIncludes schema:Occupation , elm:LearningOpportunity .
+kamin:assertedIn a owl:ObjectProperty ;
+  rdfs:label "asserted in graph"@en , "مُثبت في الرسم"@ar ;
+  rdfs:comment "The named graph that holds the conclusion of this inference."@en ;
+  rdfs:domain kamin:Inference ; rdfs:range rdfs:Resource .
+kamin:scope a owl:DatatypeProperty ;
+  rdfs:label "scope"@en , "النطاق"@ar ;
+  rdfs:comment "What a conclusion, knowledge graph or review covers (for example pilot-capability-evidence, self-declared-context)."@en ;
+  schema:domainIncludes kamin:Inference , kamin:OpportunityKnowledgeGraph , kamin:Record ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Fit assessment
+# ---------------------------------------------------------------------------------------------
+
+kamin:fitTarget a owl:ObjectProperty ;
+  rdfs:label "fit target"@en , "المسار المقيَّم"@ar ;
+  rdfs:comment "The pathway a fit assessment is about."@en ;
+  rdfs:domain kamin:FitAssessment ; schema:rangeIncludes schema:Occupation , elm:LearningOpportunity .
+kamin:mechanism a owl:ObjectProperty ;
+  rdfs:label "mechanism"@en , "الآلية"@ar ;
+  rdfs:comment "A mechanism that explains a fit assessment. Not written by the app today; kept from 0.3.0."@en ;
+  rdfs:domain kamin:FitAssessment ; rdfs:range kamin:FitMechanism .
+kamin:judgment a owl:DatatypeProperty ;
+  rdfs:label "judgement"@en , "الحكم"@ar ;
+  rdfs:comment "Ordinal judgement word of a fit assessment (exploratory, conditional, fits). Never a percentage."@en ;
+  rdfs:domain kamin:FitAssessment ; rdfs:range xsd:string .
+kamin:calibrationStatus a owl:DatatypeProperty ;
+  rdfs:label "calibration status"@en , "حالة المعايرة"@ar ;
+  rdfs:comment "States that the fit rules are not calibrated against outcomes (graph-rule-based-uncalibrated)."@en ;
+  rdfs:domain kamin:FitAssessment ; rdfs:range xsd:string .
+kamin:ruleVersion a owl:DatatypeProperty ;
+  rdfs:label "rule version"@en , "إصدار القواعد"@ar ;
+  rdfs:comment "Version of the fit rules that produced the assessment."@en ;
+  rdfs:domain kamin:FitAssessment ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Pathways (target catalog) and the ICT knowledge graph
+# ---------------------------------------------------------------------------------------------
+
+kamin:requiresCapability a owl:ObjectProperty ;
+  rdfs:label "requires capability"@en , "يتطلب قدرة"@ar ;
+  rdfs:comment "A capability the pathway needs (pilot requirement)."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range ceasn:Competency .
+kamin:developsCapability a owl:ObjectProperty ;
+  rdfs:label "develops capability"@en , "ينمّي قدرة"@ar ;
+  rdfs:comment "A learning opportunity or course that can develop the capability (a development bridge)."@en ;
+  schema:domainIncludes elm:LearningOpportunity , schema:Course ; rdfs:range ceasn:Competency .
+kamin:supportsGoal a owl:ObjectProperty ;
+  rdfs:label "supports goal"@en , "يدعم هدفًا"@ar ;
+  rdfs:comment "A goal the pathway serves."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range kamin:Goal .
+kamin:relatesToTopic a owl:ObjectProperty ;
+  rdfs:label "relates to topic"@en , "يرتبط بموضوع"@ar ;
+  rdfs:comment "An interest topic the pathway relates to."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:compatiblePreference a owl:ObjectProperty ;
+  rdfs:label "compatible with preference"@en , "يتوافق مع تفضيل"@ar ;
+  rdfs:comment "A declared-preference option the pathway is compatible with. The app writes one sub-property per scheme, kamin:compatiblePreference:<scheme>."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:compatiblePreference:careerInterest a owl:ObjectProperty ; rdfs:subPropertyOf kamin:compatiblePreference ;
+  rdfs:label "compatible with career interest"@en , "يتوافق مع اهتمام مهني"@ar ;
+  rdfs:comment "Compatible option in the careerInterest scheme."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:compatiblePreference:workValue a owl:ObjectProperty ; rdfs:subPropertyOf kamin:compatiblePreference ;
+  rdfs:label "compatible with work value"@en , "يتوافق مع قيمة عمل"@ar ;
+  rdfs:comment "Compatible option in the workValue scheme."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:compatiblePreference:workStructure a owl:ObjectProperty ; rdfs:subPropertyOf kamin:compatiblePreference ;
+  rdfs:label "compatible with work structure"@en , "يتوافق مع نمط تنظيم العمل"@ar ;
+  rdfs:comment "Compatible option in the workStructure scheme."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:compatiblePreference:collaboration a owl:ObjectProperty ; rdfs:subPropertyOf kamin:compatiblePreference ;
+  rdfs:label "compatible with collaboration style"@en , "يتوافق مع أسلوب التعاون"@ar ;
+  rdfs:comment "Compatible option in the collaboration scheme."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range skos:Concept .
+kamin:targetId a owl:DatatypeProperty ;
+  rdfs:label "pathway identifier"@en , "معرّف المسار"@ar ;
+  rdfs:comment "Short catalog identifier of a pathway (for example job-data-analyst)."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range xsd:string .
+kamin:targetType a owl:DatatypeProperty ;
+  rdfs:label "pathway type"@en , "نوع المسار"@ar ;
+  rdfs:comment "job or training."@en ;
+  schema:domainIncludes schema:Occupation , elm:LearningOpportunity ; rdfs:range xsd:string .
+kamin:classifiedAs a owl:ObjectProperty ;
+  rdfs:label "classified as"@en , "مصنّف ضمن"@ar ;
+  rdfs:comment "An occupation code (O*NET-SOC, ESCO) the pathway is classified under."@en ;
+  rdfs:domain schema:Occupation ; rdfs:range skos:Concept .
+kamin:knowledgeAnchor a owl:ObjectProperty ;
+  rdfs:label "knowledge anchor"@en , "مرساة المعرفة"@ar ;
+  rdfs:comment "The knowledge-graph occupation a catalog pathway is anchored to."@en ;
+  rdfs:domain schema:Occupation ; rdfs:range schema:Occupation .
+kamin:knowledgeStatus a owl:DatatypeProperty ;
+  rdfs:label "knowledge status"@en , "حالة المعرفة"@ar ;
+  rdfs:comment "Which reviewed knowledge-graph path backs the pathway (for example golden-path-v1)."@en ;
+  rdfs:domain schema:Occupation ; rdfs:range xsd:string .
+kamin:marketSignalsCapability a owl:ObjectProperty ;
+  rdfs:label "market signals capability"@en , "يشير السوق إلى قدرة"@ar ;
+  rdfs:comment "Dated employer-demand signal for a capability in an occupation (O*NET, United States). Context only; never a requirement."@en ;
+  rdfs:domain schema:Occupation ; rdfs:range ceasn:Competency .
+kamin:workActivity a owl:ObjectProperty ;
+  rdfs:label "work activity"@en , "نشاط العمل"@ar ;
+  rdfs:comment "A work activity of the occupation (O*NET), context only."@en ;
+  rdfs:domain schema:Occupation ; rdfs:range kamin:WorkActivity .
+kamin:sourceUrl a owl:DatatypeProperty ;
+  rdfs:label "source URL"@en , "رابط المصدر"@ar ;
+  rdfs:comment "Web address of the external source page of a concept (text)."@en ;
+  schema:domainIncludes schema:Occupation , kamin:WorkActivity ; rdfs:range xsd:string .
+kamin:conceptScheme a owl:DatatypeProperty ;
+  rdfs:label "concept scheme"@en , "مخطط المفاهيم"@ar ;
+  rdfs:comment "Name or identifier of the scheme a concept or code belongs to (for example SASCED, O*NET-SOC, ESCO)."@en ;
+  schema:domainIncludes skos:Concept , schema:Occupation ; rdfs:range xsd:string .
+kamin:notation a owl:DatatypeProperty ;
+  rdfs:label "notation"@en , "الرمز"@ar ;
+  rdfs:comment "Short code of a concept, goal, capability or occupation within its scheme."@en ;
+  schema:domainIncludes skos:Concept , kamin:Goal , ceasn:Competency , schema:Occupation ; rdfs:range xsd:string .
+kamin:scheme a owl:DatatypeProperty ;
+  rdfs:label "preference scheme"@en , "مخطط التفضيل"@ar ;
+  rdfs:comment "The declared-preference scheme of a preference concept or relation record (for example urn:kamin:preference-scheme:careerInterest or careerInterest)."@en ;
+  schema:domainIncludes skos:Concept , kamin:Record ; rdfs:range xsd:string .
+kamin:objectKey a owl:DatatypeProperty ;
+  rdfs:label "object key"@en , "مفتاح الطرف الآخر"@ar ;
+  rdfs:comment "Short local key of the object of a relation record (for example database)."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:geography a owl:DatatypeProperty ;
+  rdfs:label "geography"@en , "النطاق الجغرافي"@ar ;
+  rdfs:comment "Country a market signal was observed in."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:observationWindow a owl:DatatypeProperty ;
+  rdfs:label "observation window"@en , "فترة الرصد"@ar ;
+  rdfs:comment "Date interval a market signal was observed in (start/end as text)."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:observedShare a owl:DatatypeProperty ;
+  rdfs:label "observed share"@en , "النسبة المرصودة"@ar ;
+  rdfs:comment "Share of job postings that named the capability in the source data. Shown as context only; never a student score."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:double .
+kamin:signal a owl:DatatypeProperty ;
+  rdfs:label "signal type"@en , "نوع المؤشر"@ar ;
+  rdfs:comment "What a market signal measures (for example employer-job-postings-software-skill)."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Official course map (FCIT Catalog 2024-25): course → learning outcome → possible capability.
+# A mapping is a reviewable reference relation, not evidence of a student's mastery.
+# ---------------------------------------------------------------------------------------------
+
+kamin:mapsToCapability a owl:ObjectProperty ;
+  rdfs:label "course maps to a possible capability"@en , "يرتبط المقرر بقدرة محتملة"@ar ;
+  rdfs:comment "Reviewable reference relation from the official course map. Not evidence of a student's mastery."@en ;
+  rdfs:domain schema:Course ; rdfs:range ceasn:Competency .
+kamin:hasLearningOutcome a owl:ObjectProperty ;
+  rdfs:label "course has learning outcome"@en , "للمقرر مخرج تعلم"@ar ;
+  rdfs:comment "A learning outcome the official catalog states for the course."@en ;
+  rdfs:domain schema:Course ; rdfs:range elm:LearningOutcome .
+kamin:supportsCapability a owl:ObjectProperty ;
+  rdfs:label "learning outcome supports a possible capability"@en , "يدعم مخرج التعلم قدرة محتملة"@ar ;
+  rdfs:comment "Reviewable reference relation from a learning outcome to a capability."@en ;
+  rdfs:domain elm:LearningOutcome ; rdfs:range ceasn:Competency .
+kamin:catalogSource a owl:DatatypeProperty ;
+  rdfs:label "official catalog the mapping was taken from"@en , "الدليل الرسمي الذي أُخذ منه الربط"@ar ;
+  rdfs:comment "Name of the official catalog (for example FCIT Catalog 2024-25)."@en ;
+  schema:domainIncludes schema:Course , elm:LearningOutcome ; rdfs:range xsd:string .
+kamin:mappingVersion a owl:DatatypeProperty ;
+  rdfs:label "course map version"@en , "إصدار خريطة المقررات"@ar ;
+  rdfs:comment "Version of the course map a mapping belongs to (for example fcit-map-v1)."@en ;
+  schema:domainIncludes schema:Course , elm:LearningOutcome , rdf:Statement ; rdfs:range xsd:string .
+kamin:reviewStatus a owl:DatatypeProperty ;
+  rdfs:label "review status (proposed | reviewed)"@en , "حالة المراجعة (مقترح | مراجَع)"@ar ;
+  rdfs:comment "Review state of a mapping or relation (proposed, reviewed) or of declared evidence (unreviewed...)."@en ;
+  schema:domainIncludes schema:Course , elm:LearningOutcome , rdf:Statement , prov:Entity , kamin:Record ; rdfs:range xsd:string .
+kamin:verification a owl:DatatypeProperty ;
+  rdfs:label "source verification state of a catalog entry"@en , "حالة التحقق من مصدر مدخل الدليل"@ar ;
+  rdfs:comment "Whether the course entry was checked against the official catalog."@en ;
+  rdfs:domain schema:Course ; rdfs:range xsd:string .
+kamin:catalogPage a owl:DatatypeProperty ;
+  rdfs:label "page of the official catalog that states the course"@en , "صفحة الدليل الرسمي التي تذكر المقرر"@ar ;
+  rdfs:comment "Page number in the official catalog."@en ;
+  rdfs:domain schema:Course ; rdfs:range xsd:integer .
+kamin:code a owl:DatatypeProperty ;
+  rdfs:label "course code"@en , "رمز المقرر"@ar ;
+  rdfs:comment "Canonical course code (for example CPIT-240)."@en ;
+  rdfs:domain schema:Course ; rdfs:range xsd:string .
+kamin:grade a owl:DatatypeProperty ;
+  rdfs:label "grade"@en , "التقدير"@ar ;
+  rdfs:comment "Letter grade as approved by the student. A clue to an expected learning outcome, never a guarantee of mastery."@en ;
+  schema:domainIncludes schema:Course , prov:Entity ; rdfs:range xsd:string .
+kamin:hours a owl:DatatypeProperty ;
+  rdfs:label "credit hours"@en , "الساعات المعتمدة"@ar ;
+  rdfs:comment "Credit hours of the course as printed on the transcript."@en ;
+  rdfs:domain schema:Course ; rdfs:range xsd:integer .
+
+# Relation provenance: a reference relation reified as rdf:Statement (or a relation record) keeps its
+# source, decision role and review date so it can be queried.
+kamin:sourceId a owl:DatatypeProperty ;
+  rdfs:label "identifier of the source a relation comes from"@en , "معرّف مصدر العلاقة"@ar ;
+  rdfs:comment "Identifier of the source of a relation or entity (for example source-esco-1.2.1, source-fcit-catalog-2024-25)."@en ;
+  schema:domainIncludes rdf:Statement , kamin:Record , schema:Course , schema:Occupation , elm:LearningOpportunity , kamin:WorkActivity ; rdfs:range xsd:string .
+kamin:decisionRole a owl:DatatypeProperty ;
+  rdfs:label "what the relation may be used for in a decision"@en , "ما يجوز استخدام العلاقة له في القرار"@ar ;
+  rdfs:comment "For example academic-course-mapping, development-bridge, context-only."@en ;
+  schema:domainIncludes rdf:Statement , kamin:Record ; rdfs:range xsd:string .
+kamin:reviewedAt a owl:DatatypeProperty ;
+  rdfs:label "date the relation was reviewed against its source"@en , "تاريخ مراجعة العلاقة مع مصدرها"@ar ;
+  rdfs:comment "Review date as text (YYYY-MM-DD). Absent when no review took place."@en ;
+  schema:domainIncludes rdf:Statement , kamin:OpportunityKnowledgeGraph ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Evidence items (prov:Entity) and their nested records
+# ---------------------------------------------------------------------------------------------
+
+kamin:evidenceType a owl:DatatypeProperty ;
+  rdfs:label "evidence type"@en , "نوع الدليل"@ar ;
+  rdfs:comment "What the evidence item is (transcript row, student project declaration, task output declaration, imported credential verification)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:sourceDocument a owl:DatatypeProperty ;
+  rdfs:label "source document"@en , "المستند المصدر"@ar ;
+  rdfs:comment "Where a transcript row came from (pdf, manual, demo...). Never a file name."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:provenanceLevel a owl:DatatypeProperty ;
+  rdfs:label "provenance level"@en , "مستوى المصدر"@ar ;
+  rdfs:comment "Trust level of the source of an evidence item (for example extracted, edited, declared-applied, institution-verified)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:editedFields a owl:DatatypeProperty ;
+  rdfs:label "edited field"@en , "حقل معدَّل"@ar ;
+  rdfs:comment "A field of a transcript row the student changed after extraction (one value per field)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:gradeRaisedByStudent a owl:DatatypeProperty ;
+  rdfs:label "grade raised by student"@en , "رفع الطالب التقدير"@ar ;
+  rdfs:comment "True when the student edited a grade upward; such a row cannot raise the evidence level."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:boolean .
+kamin:kind a owl:DatatypeProperty ;
+  rdfs:label "project kind"@en , "نوع المشروع"@ar ;
+  rdfs:comment "Kind of a declared project (for example repository)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:url a owl:DatatypeProperty ;
+  rdfs:label "link"@en , "الرابط"@ar ;
+  rdfs:comment "Link the student gave for a project or task output (text)."@en ;
+  schema:domainIncludes prov:Entity , kamin:Record ; rdfs:range xsd:string .
+kamin:description a owl:DatatypeProperty ;
+  rdfs:label "description"@en , "الوصف"@ar ;
+  rdfs:comment "Student's description of a declared project."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:createdAt a owl:DatatypeProperty ;
+  rdfs:label "created at"@en , "وقت الإنشاء"@ar ;
+  rdfs:comment "When a declared project was added (ISO 8601 date-time as text)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:task a owl:DatatypeProperty ;
+  rdfs:label "task identifier"@en , "معرّف المهمة"@ar ;
+  rdfs:comment "Catalog identifier of the practice task an output belongs to."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:outputs a owl:ObjectProperty ;
+  rdfs:label "task output"@en , "مخرَج المهمة"@ar ;
+  rdfs:comment "An output the student attached to a practice task (link or note, and time)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range kamin:Record .
+kamin:selfAssessment a owl:ObjectProperty ;
+  rdfs:label "self-assessment"@en , "التقييم الذاتي"@ar ;
+  rdfs:comment "The student's own assessment of a task output. Self-reported."@en ;
+  rdfs:domain prov:Entity ; rdfs:range kamin:Record .
+kamin:localReviews a owl:ObjectProperty ;
+  rdfs:label "local review"@en , "مراجعة محلية"@ar ;
+  rdfs:comment "A review of a task output recorded on this device by a named peer, advisor or the student. Declared, not verified."@en ;
+  rdfs:domain prov:Entity ; rdfs:range kamin:Record .
+kamin:issuerVerification a owl:DatatypeProperty ;
+  rdfs:label "issuer verification"@en , "تحقق الجهة المصدِرة"@ar ;
+  rdfs:comment "Whether an issuer verified the item (none for task outputs)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:credentialId a owl:DatatypeProperty ;
+  rdfs:label "credential identifier"@en , "معرّف الشهادة"@ar ;
+  rdfs:comment "Identifier of the imported credential document."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:issuer a owl:DatatypeProperty ;
+  rdfs:label "issuer"@en , "الجهة المصدِرة"@ar ;
+  rdfs:comment "Identifier (DID) of the issuer of an imported credential."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:issuerTrusted a owl:DatatypeProperty ;
+  rdfs:label "issuer trusted"@en , "الجهة المصدِرة موثوقة"@ar ;
+  rdfs:comment "True when the issuer was on the trusted list at import time."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:boolean .
+kamin:outcome a owl:DatatypeProperty ;
+  rdfs:label "verification outcome"@en , "نتيجة التحقق"@ar ;
+  rdfs:comment "Result of verifying an imported credential (verified, unverified, ...)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:reasons a owl:DatatypeProperty ;
+  rdfs:label "verification reason"@en , "سبب نتيجة التحقق"@ar ;
+  rdfs:comment "A reason code for the verification outcome (one value per reason)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:importedAt a owl:DatatypeProperty ;
+  rdfs:label "imported at"@en , "وقت الاستيراد"@ar ;
+  rdfs:comment "When a credential was imported (ISO 8601 date-time as text)."@en ;
+  rdfs:domain prov:Entity ; rdfs:range xsd:string .
+kamin:note a owl:DatatypeProperty ;
+  rdfs:label "note"@en , "ملاحظة"@ar ;
+  rdfs:comment "Free-text note of a task output or review."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:at a owl:DatatypeProperty ;
+  rdfs:label "recorded at"@en , "وقت التسجيل"@ar ;
+  rdfs:comment "When a task output or review was recorded (ISO 8601 date-time as text)."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:reviewerLabel a owl:DatatypeProperty ;
+  rdfs:label "reviewer label"@en , "اسم المراجِع"@ar ;
+  rdfs:comment "Name the student typed for the reviewer of a task output."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:role a owl:DatatypeProperty ;
+  rdfs:label "reviewer role"@en , "دور المراجِع"@ar ;
+  rdfs:comment "student, peer or advisor."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:decision a owl:DatatypeProperty ;
+  rdfs:label "review decision"@en , "قرار المراجعة"@ar ;
+  rdfs:comment "reviewed or needs-improvement."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+kamin:level a owl:DatatypeProperty ;
+  rdfs:label "review level"@en , "مستوى المراجعة"@ar ;
+  rdfs:comment "Trust level of a local review (declared)."@en ;
+  rdfs:domain kamin:Record ; rdfs:range xsd:string .
+
+# ---------------------------------------------------------------------------------------------
+# Capabilities, goals and observations
+# ---------------------------------------------------------------------------------------------
+
+kamin:alignmentStatus a owl:DatatypeProperty ;
+  rdfs:label "alignment status"@en , "حالة المواءمة"@ar ;
+  rdfs:comment "Whether a capability is aligned to an external framework URI (externally-aligned) or local to the pilot (pilot-local-unmapped)."@en ;
+  rdfs:domain ceasn:Competency ; rdfs:range xsd:string .
+kamin:goalType a owl:DatatypeProperty ;
+  rdfs:label "goal type"@en , "نوع الهدف"@ar ;
+  rdfs:comment "Kind of goal (for example career-direction)."@en ;
+  rdfs:domain kamin:Goal ; rdfs:range xsd:string .
+kamin:instrument a owl:DatatypeProperty ;
+  rdfs:label "instrument"@en , "أداة القياس"@ar ;
+  rdfs:comment "Instrument that produced an observation. Not written by the app today; kept from 0.3.0."@en ;
+  rdfs:domain kamin:Observation ; rdfs:range xsd:string .
+kamin:instrumentVersion a owl:DatatypeProperty ;
+  rdfs:label "instrument version"@en , "إصدار أداة القياس"@ar ;
+  rdfs:comment "Version of the instrument that produced an observation."@en ;
+  rdfs:domain kamin:Observation ; rdfs:range xsd:string .
 
 # External domain concepts remain in their source ontologies/vocabularies:
 # schema:Person, schema:Course, schema:Occupation

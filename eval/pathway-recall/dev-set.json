@@ -1,0 +1,431 @@
+{
+ "name": "pathway-recall-dev",
+ "role": "dev",
+ "version": "2026-11-18",
+ "provenance": "Written by Claude, approved by the team and the supervisor (stated by Amjd, 2026-11-18)",
+ "writing": "Queries written first, from what a student would type, without opening the matching code, the lexicon or the pathway texts; then labelled from the pathway ids and names only; frozen before any method was run on them.",
+ "pathwayCatalog": "kamin-targets-v2-20260930",
+ "labelRule": "expected lists every pathway that a careful adviser would show for the student's goal, judged from the 19 pathway ids and names only (the job and its practice project; a general pathway such as Junior Software Engineer for a specific kind of programming). Any one of them in the results counts as a hit. [] means none of the 19 serves the goal, so the right answer is 'nothing found'.",
+ "fields": {
+  "id": "case id",
+  "lang": "ar or en",
+  "query": "the text typed into the pathway search",
+  "dialect": "true for Saudi dialect",
+  "intent": "the writer's note on the goal; never read by a method",
+  "expected": "pathway ids, any of which is a hit; [] = should find nothing"
+ },
+ "cases": [
+  {
+   "id": "d-ar-01",
+   "lang": "ar",
+   "query": "ابغى اتعلم الهكر الأخلاقي",
+   "dialect": true,
+   "intent": "ethical hacking",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "d-ar-02",
+   "lang": "ar",
+   "query": "محلل بيانات في شركة اتصالات",
+   "dialect": false,
+   "intent": "data analysis",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-ar-03",
+   "lang": "ar",
+   "query": "برمجة مواقع ويب",
+   "dialect": false,
+   "intent": "web development",
+   "expected": [
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "d-ar-04",
+   "lang": "ar",
+   "query": "ودي أصمم تطبيقات",
+   "dialect": true,
+   "intent": "app development",
+   "expected": [
+    "job-software-engineer",
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "d-ar-05",
+   "lang": "ar",
+   "query": "الذكاء الاصطناعي",
+   "dialect": false,
+   "intent": "AI",
+   "expected": [
+    "training-ai-work"
+   ]
+  },
+  {
+   "id": "d-ar-06",
+   "lang": "ar",
+   "query": "قواعد البيانات",
+   "dialect": false,
+   "intent": "databases",
+   "expected": [
+    "job-database-administrator",
+    "training-database-administrator",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-ar-07",
+   "lang": "ar",
+   "query": "إدارة المشاريع",
+   "dialect": false,
+   "intent": "project management",
+   "expected": [
+    "job-project-coordinator"
+   ]
+  },
+  {
+   "id": "d-ar-08",
+   "lang": "ar",
+   "query": "شبكات الحاسب",
+   "dialect": false,
+   "intent": "networking",
+   "expected": []
+  },
+  {
+   "id": "d-ar-09",
+   "lang": "ar",
+   "query": "أبي أشتغل في السحابة",
+   "dialect": true,
+   "intent": "cloud",
+   "expected": []
+  },
+  {
+   "id": "d-ar-10",
+   "lang": "ar",
+   "query": "اختبار التطبيقات قبل إطلاقها",
+   "dialect": false,
+   "intent": "testing",
+   "expected": [
+    "job-qa-tester",
+    "training-qa-tester"
+   ]
+  },
+  {
+   "id": "d-ar-11",
+   "lang": "ar",
+   "query": "تجربة المستخدم",
+   "dialect": false,
+   "intent": "UX",
+   "expected": []
+  },
+  {
+   "id": "d-ar-12",
+   "lang": "ar",
+   "query": "الدعم الفني",
+   "dialect": false,
+   "intent": "IT support",
+   "expected": []
+  },
+  {
+   "id": "d-ar-13",
+   "lang": "ar",
+   "query": "تحليل متطلبات النظام",
+   "dialect": false,
+   "intent": "requirements",
+   "expected": [
+    "job-business-analyst",
+    "job-systems-analyst",
+    "training-product-discovery",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "d-ar-14",
+   "lang": "ar",
+   "query": "الإحصاء التطبيقي",
+   "dialect": false,
+   "intent": "statistics",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-ar-15",
+   "lang": "ar",
+   "query": "هندسة البرمجيات",
+   "dialect": false,
+   "intent": "software engineering",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "d-ar-16",
+   "lang": "ar",
+   "query": "وش أسوي لو أحب الأرقام والجداول؟",
+   "dialect": true,
+   "intent": "numbers / data",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-ar-17",
+   "lang": "ar",
+   "query": "أمن المعلومات في البنوك",
+   "dialect": false,
+   "intent": "security",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "d-ar-18",
+   "lang": "ar",
+   "query": "أبي أكون مهندس معماري للمباني",
+   "dialect": true,
+   "intent": "NOTHING: building architecture",
+   "expected": []
+  },
+  {
+   "id": "d-ar-19",
+   "lang": "ar",
+   "query": "تعلم اللغة الفرنسية",
+   "dialect": false,
+   "intent": "NOTHING: French",
+   "expected": []
+  },
+  {
+   "id": "d-ar-20",
+   "lang": "ar",
+   "query": "التصوير الفوتوغرافي",
+   "dialect": false,
+   "intent": "NOTHING: photography",
+   "expected": []
+  },
+  {
+   "id": "d-en-01",
+   "lang": "en",
+   "query": "cyber security analyst",
+   "dialect": false,
+   "intent": "security",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "d-en-02",
+   "lang": "en",
+   "query": "data analysis with excel and python",
+   "dialect": false,
+   "intent": "data analysis",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-en-03",
+   "lang": "en",
+   "query": "web development",
+   "dialect": false,
+   "intent": "web",
+   "expected": [
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "d-en-04",
+   "lang": "en",
+   "query": "mobile app developer",
+   "dialect": false,
+   "intent": "mobile",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "d-en-05",
+   "lang": "en",
+   "query": "artificial intelligence",
+   "dialect": false,
+   "intent": "AI",
+   "expected": [
+    "training-ai-work"
+   ]
+  },
+  {
+   "id": "d-en-06",
+   "lang": "en",
+   "query": "database",
+   "dialect": false,
+   "intent": "databases",
+   "expected": [
+    "job-database-administrator",
+    "training-database-administrator",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-en-07",
+   "lang": "en",
+   "query": "project management",
+   "dialect": false,
+   "intent": "project management",
+   "expected": [
+    "job-project-coordinator"
+   ]
+  },
+  {
+   "id": "d-en-08",
+   "lang": "en",
+   "query": "network engineer",
+   "dialect": false,
+   "intent": "networking",
+   "expected": []
+  },
+  {
+   "id": "d-en-09",
+   "lang": "en",
+   "query": "cloud engineer",
+   "dialect": false,
+   "intent": "cloud",
+   "expected": []
+  },
+  {
+   "id": "d-en-10",
+   "lang": "en",
+   "query": "QA tester",
+   "dialect": false,
+   "intent": "testing",
+   "expected": [
+    "job-qa-tester",
+    "training-qa-tester"
+   ]
+  },
+  {
+   "id": "d-en-11",
+   "lang": "en",
+   "query": "user experience",
+   "dialect": false,
+   "intent": "UX",
+   "expected": []
+  },
+  {
+   "id": "d-en-12",
+   "lang": "en",
+   "query": "technical support",
+   "dialect": false,
+   "intent": "IT support",
+   "expected": []
+  },
+  {
+   "id": "d-en-13",
+   "lang": "en",
+   "query": "business analyst requirements",
+   "dialect": false,
+   "intent": "requirements",
+   "expected": [
+    "job-business-analyst",
+    "job-systems-analyst",
+    "training-product-discovery",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "d-en-14",
+   "lang": "en",
+   "query": "statistics",
+   "dialect": false,
+   "intent": "statistics",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-en-15",
+   "lang": "en",
+   "query": "software engineering",
+   "dialect": false,
+   "intent": "software engineering",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "d-en-16",
+   "lang": "en",
+   "query": "i'm good with numbers what should i do",
+   "dialect": false,
+   "intent": "numbers / data",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "d-en-17",
+   "lang": "en",
+   "query": "security in banks",
+   "dialect": false,
+   "intent": "security",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "d-en-18",
+   "lang": "en",
+   "query": "architect for buildings",
+   "dialect": false,
+   "intent": "NOTHING: building architecture",
+   "expected": []
+  },
+  {
+   "id": "d-en-19",
+   "lang": "en",
+   "query": "learn french",
+   "dialect": false,
+   "intent": "NOTHING: French",
+   "expected": []
+  },
+  {
+   "id": "d-en-20",
+   "lang": "en",
+   "query": "photography",
+   "dialect": false,
+   "intent": "NOTHING: photography",
+   "expected": []
+  }
+ ]
+}

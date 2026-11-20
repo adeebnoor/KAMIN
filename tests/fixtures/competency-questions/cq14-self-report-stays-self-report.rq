@@ -1,0 +1,6 @@
+PREFIX k: <urn:kamin:>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+# Does any academic capability claim rest on a course row the student typed by hand? (Task 34; expected 0 rows)
+SELECT ?claim ?cap ?evidence WHERE { GRAPH <urn:kamin:graph:profile-input> {
+  ?claim k:predicate k:demonstrates ; k:object ?cap ; k:evidenceBasis "academic" ; prov:wasDerivedFrom ?evidence .
+  ?evidence k:provenanceLevel "declared" } } ORDER BY ?claim

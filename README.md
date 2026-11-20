@@ -4,6 +4,8 @@
 
 🌐 **Live public release:** https://kamin-12mf.onrender.com
 
+🧪 **Test results and changes:** https://kamin-12mf.onrender.com/en/tests.html ([العربية](https://kamin-12mf.onrender.com/ar/tests.html)), the numbers of the last real test run, the evaluation summary and the list of changes.
+
 The release is deployed from `main` only after the GitHub quality gate passes (unit tests, production build, desktop/mobile browser journeys, and accessibility checks).
 
 Kamin 1.0 focuses its public launch on final-year students and recent graduates. It turns reviewed academic evidence and structured user inputs into a user-owned Capability Profile 360°, then produces explainable learning, job, and training judgments with visible evidence, gaps, and next steps. The internal semantic architecture remains Person 360, while the public product deliberately narrows its beachhead and does not claim unmeasured accuracy, signed partner networks, or automated hiring decisions.
@@ -29,23 +31,37 @@ Research-dependent functions such as Saudi-normalized psychometric scores, learn
 
 Kamin exposes a taxonomy-neutral occupation interface with `lookup`, `search`, and SKOS-governed `crosswalk` operations. The public repository contains no SSCO classification rules, hierarchy-construction logic, proprietary scoring method, SSCO ontology assets, or SSCO crosswalk table.
 
-- `VITE_SSCO_ENABLED=false` is the required/default public state.
-- Any SSCO implementation is consumed only through a separately controlled runtime service.
-- No SSCO mapping data may be published here without a dated written clearance decision.
+- Kamin uses **no external taxonomy service** and has no switch or endpoint for one. Every taxonomy adapter is static and local, and runs in the browser like the rest of the app (`src/taxonomy/occupationTaxonomy.js`).
+- The SSCO crosswalk is a static, local reference only. No SSCO mapping data may be published here without a dated written clearance decision.
 - Job target profiles can carry nullable `onet`, `esco`, and `ssco` identifiers without embedding any taxonomy-specific method.
 
 See `docs/OCCUPATION_TAXONOMY_BOUNDARY.md` and the pull-request IP gate.
 
 ## Evidence and skill mapping
 
+- A course grade is a clue to an expected learning outcome, not a guarantee of mastery. The evidence level depends on the grade and the type of assessment.
 - Parsing a course is not the same as mapping it to a skill.
 - Student judgments use only explicitly approved course → learning outcome → skill mappings.
 - An unmapped course remains visible in the record but creates no skill and changes no judgment.
 - Semantic similarity / embeddings may be used later to **suggest candidate mappings to a department reviewer**. They are not accepted as direct evidence until a human reviewer approves the mapping.
 
+## Evaluation
+
+The project-suggestion assistant is measured with a local, reproducible harness (no external APIs): see [docs/EVALUATION_PROTOCOL.md](docs/EVALUATION_PROTOCOL.md) and run `npm run eval:suggest`.
+
 ## Quality gates
 
 `npm run check` runs deterministic engine tests, a production build, browser journeys on desktop/mobile Chromium, an axe accessibility scan for serious/critical issues, and a WCAG AA text-contrast sweep of the landing and student workspace under both operating-system colour schemes (`e2e/color-scheme.spec.js`).
+
+### Test results page (`public/tests.html`)
+
+The public page [tests.html](https://kamin-12mf.onrender.com/en/tests.html) is generated, never written by hand:
+
+1. `npm test` writes `reports/vitest.json` and `npm run e2e` writes `reports/playwright.json` (both git-ignored).
+2. `npm run test:report` reads them, the latest Task 07 evaluation in `eval/project-suggest/results/` and `git log` since `changesSince` in `scripts/test-report.config.json`, and writes `public/tests.html`.
+3. Commit `public/tests.html` after the code commit it measures. The build adds a line saying which version the site was built from and whether its code matches the version the tests ran on.
+
+The script refuses a partial run (not every test file ran) unless `--allow-partial` is passed, and the page then says so. Anything that has not been measured says "not measured yet". CI regenerates the page for its own commit and fails if the committed page claims a different number of tests.
 
 The production build also generates PWA icons, a horizontal social card, and self-hosted OCR runtime assets.
 

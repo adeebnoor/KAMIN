@@ -1,0 +1,4 @@
+PREFIX k: <urn:kamin:>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?cap ?evidence ?sourceType ?strength ?status ?mapping WHERE { GRAPH <urn:kamin:graph:profile-input> {
+ ?claim k:predicate k:demonstrates ; k:object ?cap ; prov:wasDerivedFrom ?evidence ; k:sourceType ?sourceType ; k:evidenceStrength ?strength ; k:status ?status ; k:metadata ?mapping } } ORDER BY ?cap

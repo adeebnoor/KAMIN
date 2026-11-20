@@ -15,7 +15,10 @@ function graph({approved=true,interest='investigative',demo=false,target='job-da
 }
 describe('sourced relationship map',()=>{
  it('uses supported academic paths and records source on every edge',()=>{
-  const g=graph();expect(g.routes.job.supported).toBe(true);expect(g.edges.find(e=>e.id==='inference').source.en).toContain('R1')
+  const g=graph();expect(g.routes.job.supported).toBe(true)
+  // Task 28: the rule id and version stay on the edge (`technical`, shown under "Technical details");
+  // the visible source says it in plain words.
+  const inference=g.edges.find(e=>e.id==='inference');expect(inference.technical).toMatch(/^R1 · kamin-relations-v\d+$/);expect(inference.source.en).not.toMatch(/R1|kamin-relations/);expect(inference.source.ar).not.toMatch(/R1|kamin-relations/)
   for(const e of g.edges){expect(g.nodes.some(n=>n.id===e.from)).toBe(true);expect(g.nodes.some(n=>n.id===e.to)).toBe(true);expect(e.source.ar).toBeTruthy()}
  })
  it('withdrawal removes academic evidence and inferred readiness links',()=>{

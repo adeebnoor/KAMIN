@@ -1,0 +1,65 @@
+/* Task 75 · the old interface's look on the new interface's parts (Amjd, 2026-11-19: "the new interface is too plain; make
+   it look like the old interface the supervisor's version had ... reuse the old CSS and brand.css, do not invent a new
+   style"). Every value here is the old interface's own, through the tokens of src/ui2/theme.css (light: the old CSS's
+   colours; dark: Task 61's surfaces). Where each one comes from:
+   - top bar: the old app's top bar (.app-topbar: white, the warm line #d8d0bd) with the old brand of its sidebar
+     (.app-brand: the "ك" .brand-mark, then "Kamin" and the tagline);
+   - side rail: the old sidebar (.app-sidebar: #082d3a, labels #d9e4ee, rows with icon and label, 6px corners, the current
+     item #165565 with its 3px #a3e2d6 bar, src/redesign.css); the phone's tab bar: the old .bottom-nav (white, the
+     current item on #f3f7fb);
+   - buttons: the old 7px corners (.button,.text-button,.icon-button) and the old main button #08756e (hover #065d58);
+   - cards: the old warm card (#fffdf8, line #d9d0bd, 10px corners: the tokens) with the old soft card shadow
+     (.relationship-network: 0 12px 40px #17495b08);
+   - page headings: the old title line (.app-title: the warm line under the title, tight letter spacing in English);
+   - Home: the old landing hero (.k-network-hero: the cream-to-mint gradient, the dotted grid, the teal heading).
+   Loads with the new interface only (AppNext.jsx, after ui2.css and theme.css). Colour rules are classified in
+   tests/themeContrast.test.js. */
+
+/* ----- Top bar and brand ----- */
+.ui2-topbar{background:var(--ui2-bar);border-bottom-color:var(--ui2-bar-line)}
+.ui2-logo{gap:var(--space-2);padding-inline-end:var(--space-1);text-decoration:none}
+.ui2-mark{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;border:1px solid var(--ui2-mark-line);background:var(--ui2-mark);color:var(--ui2-mark-ink);font-size:1.45rem;font-weight:900;line-height:1}
+.ui2-brand{display:grid;line-height:1.2;text-align:start}
+.ui2-brand strong{font-size:var(--text-base);font-weight:800;color:var(--navy)}
+.ui2-brand small{font-size:.72rem;color:var(--muted)}
+@media (max-width:899.98px){.ui2-brand small{display:none}}
+@media (max-width:559.98px){.ui2-brand{display:none}}
+
+/* ----- Buttons, chips: the old 7px corners and the old main button ----- */
+.ui2-btn,button.ui2-chip,.ui2-chip{border-radius:7px}
+.ui2-btn-primary{background:var(--ui2-primary);border-color:var(--ui2-primary);color:var(--ui2-on-primary)}
+.ui2-btn-primary:hover{background:var(--ui2-primary-hover);border-color:var(--ui2-primary-hover);color:var(--ui2-on-primary)}
+
+/* ----- Tabs: the old sidebar from 760px, the old bottom bar under it ----- */
+@media (max-width:759.98px){
+ .ui2-body .ui2-tabs{background:var(--ui2-bar);color:var(--ink);border-top-color:var(--ui2-bar-line)}
+ .ui2-tabs .ui2-tab[aria-current]{background:var(--ui2-tab-current);color:var(--navy)}
+}
+@media (min-width:760px){
+ .ui2{--ui2-rail-w:220px}
+ .ui2-body .ui2-tabs{background:var(--ui2-rail);color:var(--ui2-rail-ink);border-inline-end-color:var(--ui2-rail)}
+ .ui2-tabs ul{gap:var(--space-1);padding-inline:var(--space-3)}
+ .ui2-tabs .ui2-tab{flex-direction:row;justify-content:flex-start;gap:var(--space-2);min-height:var(--control-h);padding-inline:var(--space-3);border-radius:6px;font-size:.91rem;color:var(--ui2-rail-ink);background:var(--ui2-rail)}
+ .ui2-tabs .ui2-tab:hover{color:var(--ui2-rail-current-ink);background:var(--ui2-rail-current)}
+ .ui2-tabs .ui2-tab[aria-current]{color:var(--ui2-rail-current-ink);background:var(--ui2-rail-current);box-shadow:inset 3px 0 0 var(--ui2-rail-mark)}
+}
+
+/* ----- Cards: the old card's shadow on every box of the new interface (the surface, line and corners are the tokens) ----- */
+.ui2 :is(.ui2-card,.ui2-approve,.ui2-project,.ui2-project-form,.ui2-interest,.ui2-interest-consent,.ui2-interest-question,.ui2-interest-other,.ui2-goals,.ui2-feed-empty,.ui2-step,.ui2-plan-empty,.ui2-plan-item,.ui2-plan-offer,.ui2-profile-head,.ui2-profile-caps,.ui2-profile-map,.ui2-profile-section,.ui2-profile-more,.ui2-profile-links,.ui2-settings-group,.ui2-settings-preview,.ui2-help-group,.ui2-legacy){box-shadow:var(--ui2-card-shadow)}
+
+/* ----- Profile: a capability's level word in the old level badge (.evidence-level-row b: --navy on --navy-3, round) ----- */
+.ui2 .ui2-cap-level{padding:2px var(--space-2);border-radius:999px;background:var(--navy-3);color:var(--navy)}
+
+/* ----- Page headings: the old title line ----- */
+/* Compact (4px under the words, the heading's own 8px after the line), so no page grows past its length budget. */
+.ui2-page>h1{padding-bottom:var(--space-1);border-bottom:1px solid var(--line)}
+:root[lang="en"] .ui2-page>h1{letter-spacing:-.025em}
+
+/* ----- Home: the old landing hero ----- */
+.ui2-page.ui2-home{position:relative;isolation:isolate;overflow:hidden;padding:var(--space-6) var(--space-5);border:1px solid var(--ui2-hero-line);border-radius:12px;color:var(--ui2-hero-text);background:linear-gradient(135deg,var(--ui2-hero-1) 0%,var(--ui2-hero-2) 55%,var(--ui2-hero-3) 100%);box-shadow:var(--ui2-card-shadow)}
+.ui2-page.ui2-home::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.35;background-image:radial-gradient(circle at 1px 1px,var(--ui2-hero-dot) 1px,transparent 0);background-size:26px 26px}
+.ui2-page.ui2-home>h1{padding-bottom:0;margin:0;border-bottom:0;font-weight:800;color:var(--ui2-hero-ink)}
+:root[lang="en"] .ui2-page.ui2-home>h1{letter-spacing:-.035em}
+.ui2-page.ui2-home .ui2-home-idea{display:grid;gap:var(--space-1);margin:0;padding:0;list-style:none}
+.ui2-page.ui2-home .ui2-home-idea li{max-width:60ch;font-size:1.05rem;line-height:1.7;color:var(--ui2-hero-text)}
+@media (max-width:480px){.ui2-page.ui2-home{padding:var(--space-5) var(--space-4)}}

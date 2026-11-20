@@ -1,0 +1,56 @@
+{
+  "note": "Task 15: maximum clicks per task (shortest route, app already open, checkboxes and confirmations included) and maximum visible controls when a journey starts. Set to the values measured after Tasks 09-15; see docs/USABILITY_BASELINE.md. Raising a number needs a reason in the PR. Raised once, by Task 26 (2026-11-15, approved by the project owner): choices start-screen 10 -> 11 (the language button in the app top bar) and dashboard 22 -> 24 (the language button and the save status chip). Task 26 requires both in the top bar on every screen, and the texts it removed were not controls. No click count changed. Task 23 (2026-11-15) adds matches: 24, the visible controls on My next step → Matches at load (measured 24 desktop / 23 phone; the task allows up to 30; it had 111). Raised by Task 29 (2026-11-16, approved by the project owner): dashboard 24 -> 25 for the one “What do the levels mean?” toggle that Task 29 requires under the My capabilities heading (measured 25 desktop / 24 phone). No click count changed.",
+  "clicks": {
+    "reach-upload": 0,
+    "build-profile": 3,
+    "open-evidence": 1,
+    "understand-recommendation": 2,
+    "choose-learning-step": 3,
+    "save-profile": 1,
+    "restore-backup": 2,
+    "correct-record": 3,
+    "withdraw-transcript-consent": 3,
+    "delete-all-data": 3
+  },
+  "choices": {
+    "start-screen": 11,
+    "dashboard": 25,
+    "matches": 24
+  },
+  "screens": {
+    "note": "Task 30: how many screens long each app view may be with the synthetic example (content height of .app-content-wrap divided by its visible height). Set to the values measured on 2026-11-12, before Tasks 20-29, on Linux (the CI quality gate, ubuntu-24.04; reproduced to the pixel in the mcr.microsoft.com/playwright:v1.63.0-noble image); see docs/USABILITY_BASELINE.md. Windows lays out a few lines differently (text that sits exactly at a line break), so a Windows run can differ; Linux is the reference. The test allows 3% (at least 0.1 screen) for font differences between machines. A number may only go down: the task that shortens a view lowers its number in the same PR. Raising one needs a reason in the PR. Raised once, measured on Linux on 2026-11-13 after PR #27: mydata on the phone, ar 2.6 -> 2.7 (1787 -> 1863px) and en 2.6 -> 2.9 (1808 -> 1994px). PR #27 made My data fit the screen (it was 702px wide), so its text now wraps at the phone's width instead of running off to the side; desktop is unchanged (2.9). Task 22 (2026-11-15, approved by the project owner): review lowered to what it measures now (one summary card, a shorter top). mydata raised: its course table scrolled sideways inside its own box (650px in 292px) with cut-off fields; it now shows the same readable rows as the review screen (a card per course on phones, code and full name on two lines on desktop), so every course takes more height. Measured on Linux (CI run 43730527312, identical on Windows): mydata desktop ar and en 2.9 -> 3.0 (1902 / 1892px), phone ar 2.7 -> 3.2 (2315px), phone en 2.9 -> 3.5 (2484px); review desktop ar and en 2.8 -> 2.2 (1356 / 1400px), phone ar 2.7 (1891px), phone en 3.2 -> 3.1 (2181px). Task 23 (2026-11-15, approved by the project owner): matches lowered from 13 / 14.5 / 24.4 / 28.1 to 1.9 / 1.9 / 1.9 / 2.0 (a short list: 1211px desktop, 1353 / 1416px phone ar / en); compare raised from 1.1 / 1.1 / 1 / 1.2 to 2.2 / 2.3 / 2.2 / 2.8 (1352 / 1415px desktop, 1560 / 1971px phone), because the pathway comparison moved there from Matches, as the task requires. Measured on Linux, CI run 43741781940 (Windows identical except matches phone en, 1386px = 1.9). Task 24 (2026-11-15): courses lowered from 4.8 / 5.6 / 6.2 / 7.8 to 1.3 / 1.3 / 1.2 / 1.3 (816px desktop, 861 / 921px phone ar / en): one rule line instead of a ranking block on every card, the learning path as one line, the not-for-now cards behind one button. Measured on Linux, CI run 43748884734 (identical on Windows). Task 27 (2026-11-16): privacy lowered from 6.3 / 6.6 / 7.1 / 7.9 to 1.8 / 1.9 / 2.2 / 2.4 (1148 / 1192px desktop, 1540 / 1736px phone ar / en): a status card and five sections, only Permissions open. Measured on Linux, CI run 43840369186 (Windows identical except phone ar, 1515px = 2.1). Task 29 (2026-11-16, approved by the project owner): dashboard en raised, desktop 1.7 -> 1.8 and phone 2.5 -> 2.7. The one shared line “All limited for the same reasons, not your grades: …” that Task 29 requires above the capability list adds height on every layout; the capability card was then tightened (12px top/bottom padding, 4px between its heading, buttons and shared line) so the whole card fits the visible app window at 1366x768. Measured on Linux, CI run 43864785467: desktop ar 1057 -> 1079px (1.7), en 1121 -> 1139px (1.8); phone ar 1611 -> 1648px (2.3), en 1842 -> 1898px (2.7). Only the two English numbers crossed their limit; the Arabic ones stay (1.6 / 2.2, within the allowance). Task 28 (2026-11-16): insight lowered from 1.3 / 1.4 / 1.6 / 1.8 to 1 / 1.1 / 1.4 / 1.5 (653 / 690px desktop, 994 / 1046px phone ar / en; the unlabeled row of six icons is gone) and studio from 4.7 / 5.1 / 5.6 / 6.4 to 4.6 / 5 / 5.4 / 6 (2900 / 3115px desktop, 3862 / 4273px phone; the rule id and version line moved under Technical details). Measured on Linux, CI run 43929320708 (Windows identical except studio phone ar, 3785px = 5.3).",
+    "desktop-chromium": {
+      "ar": { "start": 1.1, "review": 2.2, "dashboard": 1.6, "matches": 1.9, "courses": 1.3, "compare": 2.2, "studio": 4.6, "insight": 1, "mydata": 3, "privacy": 1.8, "audit": 1.3 },
+      "en": { "start": 1.1, "review": 2.2, "dashboard": 1.8, "matches": 1.9, "courses": 1.3, "compare": 2.3, "studio": 5, "insight": 1.1, "mydata": 3, "privacy": 1.9, "audit": 1.3 }
+    },
+    "mobile-chromium": {
+      "ar": { "start": 1, "review": 2.7, "dashboard": 2.2, "matches": 1.9, "courses": 1.2, "compare": 2.2, "studio": 5.4, "insight": 1.4, "mydata": 3.2, "privacy": 2.2, "audit": 1.2 },
+      "en": { "start": 1.1, "review": 3.1, "dashboard": 2.7, "matches": 2, "courses": 1.3, "compare": 2.8, "studio": 6, "insight": 1.5, "mydata": 3.5, "privacy": 2.4, "audit": 1.3 }
+    }
+  },
+  "newInterface": {
+    "note": "Task 69 (2026-11-19): the new interface (src/ui2) is the default; these are its budgets, one entry per view of src/ui2/views.js, checked by the last block of e2e/page-length.spec.js in Arabic and English on the desktop and phone projects. clicks: the most clicks from Home to open the view by the shortest route a student takes (e2e/roles.js counts every click, tap, tick and untick): before a record, Home 0 and step 1 1 (Start); with the approved synthetic example, projects 1 (Continue), interests 2 (Continue, Skip for now), next 2 (My plan, See your next steps), plan 1 and profile 1 (their tabs), settings 2 (Profile, Settings), help 1 (Help in the footer on Home). choices: the most visible controls on the whole page when the view opens (top bar, tabs and footer included), the same in both languages and on both projects. screens: the document's height divided by the window height (the new interface is a full page, not the old app window), with the same allowance as above (3%, at least 0.1 screen). Measured on Windows, not Linux CI (the team works on one computer for now), with the default Playwright windows of the projects (1280x720 desktop, Pixel 7 phone 412x839); re-measure on Linux CI when CI is used again and replace these numbers in one change. Clicks and choices may only go down, as everywhere in this file. The old interface's budgets above stay for ?ui=old until Task 70 deletes it. Task 74 (2026-11-19): profile choices 25 → 26, the one \"My map\" row the team and the supervisor asked for (Person 360 map); raising it was approved by the owner on 2026-11-19. My plan's development plan (K08) and step 4's review (K37) live inside sheets, so no other number changed.",
+    "clicks": { "home": 0, "upload": 1, "projects": 1, "interests": 2, "next": 2, "plan": 1, "profile": 1, "settings": 2, "help": 1 },
+    "choices": { "home": 19, "upload": 12, "projects": 13, "interests": 26, "next": 32, "plan": 33, "profile": 26, "settings": 17, "help": 26 },
+    "screens": {
+      "desktop-chromium": {
+        "ar": { "home": 1, "upload": 1, "projects": 1, "interests": 1.5, "next": 1.4, "plan": 1.6, "profile": 1.6, "settings": 1.1, "help": 1 },
+        "en": { "home": 1, "upload": 1, "projects": 1, "interests": 1.5, "next": 1.4, "plan": 1.5, "profile": 1.6, "settings": 1.1, "help": 1 }
+      },
+      "mobile-chromium": {
+        "ar": { "home": 1, "upload": 1, "projects": 1, "interests": 1.5, "next": 1.8, "plan": 2, "profile": 1.6, "settings": 1.1, "help": 1.2 },
+        "en": { "home": 1, "upload": 1, "projects": 1, "interests": 1.9, "next": 1.9, "plan": 2, "profile": 1.7, "settings": 1.1, "help": 1.2 }
+      }
+    }
+  },
+  "sidewaysScroll360": {
+    "note": "Task 30: how many elements inside each app view may be wider than their box on a 360px screen. A view that is not listed must have none. These are the problems measured on 2026-11-12, recorded so they cannot grow. review and mydata: fixed by Task 22 (2026-11-15); their lines are deleted, so the check now fails if either scrolls sideways again (mydata had been 3, the whole page 702px wide, until PR #27, then 1, the course table in its own scroll box, div.table-scroll 650>292). matches (comparison table): fixed by Task 23, which moved the pathway comparison to the Compare tab, where its table is an intentional, labelled scroll region (data-scroll-x); its line is deleted. insight (intro 14px too wide): fixed by Task 28, which removed the unlabeled icon row; its line is deleted. studio (relationship map and RDF list): no task yet. To allow sideways scroll on purpose, mark the element data-scroll-x and delete its line here.",
+    "studio": 2
+  },
+  "cutOffInputs360": {
+    "note": "Task 30: how many text fields in each app view may show only part of their text on a 360px screen, per language. A view that is not listed must have none. Measured on 2026-11-12 on Linux (the CI quality gate). On Windows English review shows 18: the Grade 4 field is 1px narrower there (33px for 34px of text). Fixed by Task 22 (2026-11-15): review was ar 14 / en 17 and mydata ar 2 / en 6; both lines are deleted, so no text field on those views may cut its text again."
+  },
+  "knownProblems": {
+    "note": "Task 30: checks that fail today, measured on 2026-11-12. Each check still runs in every e2e run and writes what it saw to test-results/usability.json; while a problem is listed here for a project, the test does not fail on it. The task that fixes a problem deletes its entry in the same PR, and from then on the test fails if the problem comes back."
+  }
+}

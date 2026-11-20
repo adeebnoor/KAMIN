@@ -18,8 +18,8 @@ export default function CompetitiveHero({lang, onSample, onProfile, reportHref})
           <span className="k-network-overline">{tr(lang,'كامن · شبكة قدرات مدعومة بالدليل','KAMIN · EVIDENCE-BACKED CAPABILITY NETWORK')}</span>
           <h1>{tr(lang,<>أشخاص. اهتمامات.<br/>قدرات. <em>فرص.</em></>,<>People. Interests.<br/>Capabilities. <em>Opportunities.</em></>)}</h1>
           <p>{tr(lang,
-            'بدل نسبة توافق غامضة، يربط كامن مقرراتك ومشاريعك واهتماماتك بقدرات ومسارات يمكن تتبعها. ترى أين يوجد الدليل، وأين توجد الفجوة، ولماذا ظهرت التوصية.',
-            'Instead of an opaque fit score, Kamin connects your coursework, projects and interests to traceable capabilities and pathways. You can see the evidence, the gap and why a recommendation appeared.'
+            'يربط كامن مقرراتك ومشاريعك واهتماماتك بقدرات ومسارات يمكن تتبعها، فترى الدليل والفجوة وسبب كل توصية.',
+            'Kamin connects your coursework, projects and interests to traceable capabilities and pathways, so you see the evidence, the gap and why each recommendation appears.'
           )}</p>
           <div className="k-network-actions">
             <button className="button primary" onClick={onSample}><Compass size={19}/>{tr(lang,'جرّب مثالًا حيًا','Try a live example')}</button>
@@ -54,7 +54,7 @@ export default function CompetitiveHero({lang, onSample, onProfile, reportHref})
                 <path className="k-link verify" d="M650 305 C610 270 575 230 530 228" markerEnd="url(#kArrowGold)"/>
               </svg>
               <GraphNode className="person" Icon={Users} eyebrow={tr(lang,'أنت','You')} title={tr(lang,'ملفك','Your profile')}/>
-              <GraphNode className="course" Icon={GraduationCap} eyebrow={tr(lang,'دليل','Evidence')} title="CPIT-260"/>
+              <GraphNode className="course" Icon={GraduationCap} eyebrow={tr(lang,'دليل','Evidence')} title="CPIT-240"/>
               <GraphNode className="interest" Icon={Compass} eyebrow={tr(lang,'سياق','Context')} title={tr(lang,'اهتمام: البيانات','Interest: data')}/>
               <GraphNode className="capability" Icon={Network} eyebrow={tr(lang,'قدرة','Capability')} title={tr(lang,'قواعد البيانات','Databases')}/>
               <GraphNode className="opportunity" Icon={Route} eyebrow={tr(lang,'مسار','Pathway')} title={tr(lang,'محلل بيانات','Data Analyst')}/>

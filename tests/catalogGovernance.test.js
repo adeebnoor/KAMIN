@@ -24,7 +24,7 @@ describe('catalog governance', () => {
     expect(data.ssco).toMatchObject({ code: null, status: 'unresolved' })
     expect(relationGovernance({ id: 'x', occupationCodes: { ssco: '2511' }, source: { checked: '2026-09-30' } }).ssco.status).toBe('pending-code-and-meaning-review')
     expect(governanceLine(data, 'ar')).toContain('SSCO: غير محسوم')
-    expect(mappingGovernance('CPIT-260').validityScope.en).toMatch(/course codes only/)
+    expect(mappingGovernance('CPIT-240').validityScope.en).toMatch(/course codes only/)
     expect(mappingGovernance('ZZZZ-999')).toBeNull()
   })
 

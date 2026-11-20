@@ -1,0 +1,53 @@
+id,lang,expected,predicted,unsupported_ids,tp,fp,fn,unsupported,abstained,correct_abstention,wrong_abstention,false_alarm
+ai-en-01,en,database,database,,1,0,0,0,false,false,false,false
+ai-en-02,en,testing,,,0,0,1,0,true,false,true,false
+ai-en-03,en,db-operations,db-operations,,1,0,0,0,false,false,false,false
+ai-en-04,en,requirements,requirements,,1,0,0,0,false,false,false,false
+ai-en-05,en,web-development,,,0,0,1,0,true,false,true,false
+ai-en-06,en,project,,,0,0,1,0,true,false,true,false
+ai-en-07,en,systems-analysis,,,0,0,1,0,true,false,true,false
+ai-en-08,en,statistics,,,0,0,1,0,true,false,true,false
+ai-en-09,en,testing,,,0,0,1,0,true,false,true,false
+ai-en-10,en,cyber,,,0,0,1,0,true,false,true,false
+ai-en-11,en,ai-work,,,0,0,1,0,true,false,true,false
+ai-en-12,en,cyber,,,0,0,1,0,true,false,true,false
+ai-en-13,en,statistics,,,0,0,1,0,true,false,true,false
+ai-en-14,en,software,,,0,0,1,0,true,false,true,false
+ai-en-15,en,ai-work,,,0,0,1,0,true,false,true,false
+ai-en-16,en,requirements database,database,,1,0,1,0,false,false,false,false
+ai-en-17,en,software testing,,,0,0,2,0,true,false,true,false
+ai-en-18,en,project statistics,,,0,0,2,0,true,false,true,false
+ai-en-19,en,cyber web-development,,,0,0,2,0,true,false,true,false
+ai-en-20,en,,,,0,0,0,0,true,true,false,false
+ai-en-21,en,,,,0,0,0,0,true,true,false,false
+ai-en-22,en,,,,0,0,0,0,true,true,false,false
+ai-en-23,en,,,,0,0,0,0,true,true,false,false
+ai-en-24,en,,,,0,0,0,0,true,true,false,false
+ai-en-25,en,,,,0,0,0,0,true,true,false,false
+ai-ar-01,ar,database,database db-operations,,1,1,0,0,false,false,false,false
+ai-ar-02,ar,testing,testing,,1,0,0,0,false,false,false,false
+ai-ar-03,ar,db-operations,db-operations,,1,0,0,0,false,false,false,false
+ai-ar-04,ar,requirements,requirements,,1,0,0,0,false,false,false,false
+ai-ar-05,ar,web-development,web-development,,1,0,0,0,false,false,false,false
+ai-ar-06,ar,project,,,0,0,1,0,true,false,true,false
+ai-ar-07,ar,systems-analysis,,,0,0,1,0,true,false,true,false
+ai-ar-08,ar,statistics,,,0,0,1,0,true,false,true,false
+ai-ar-09,ar,testing,,,0,0,1,0,true,false,true,false
+ai-ar-10,ar,cyber,,,0,0,1,0,true,false,true,false
+ai-ar-11,ar,ai-work,,,0,0,1,0,true,false,true,false
+ai-ar-12,ar,cyber,,,0,0,1,0,true,false,true,false
+ai-ar-13,ar,statistics,,,0,0,1,0,true,false,true,false
+ai-ar-14,ar,software,,,0,0,1,0,true,false,true,false
+ai-ar-15,ar,ai-work,,,0,0,1,0,true,false,true,false
+ai-ar-16,ar,requirements database,database requirements,,2,0,0,0,false,false,false,false
+ai-ar-17,ar,software testing,,,0,0,2,0,true,false,true,false
+ai-ar-18,ar,project statistics,project,,1,0,1,0,false,false,false,false
+ai-ar-19,ar,database,database,,1,0,0,0,false,false,false,false
+ai-ar-20,ar,project,,,0,0,1,0,true,false,true,false
+ai-ar-21,ar,testing,,,0,0,1,0,true,false,true,false
+ai-ar-22,ar,web-development,web-development,,1,0,0,0,false,false,false,false
+ai-ar-23,ar,,,,0,0,0,0,true,true,false,false
+ai-ar-24,ar,,,,0,0,0,0,true,true,false,false
+ai-ar-25,ar,,,,0,0,0,0,true,true,false,false
+ai-ar-26,ar,,,,0,0,0,0,true,true,false,false
+ai-ar-27,ar,,,,0,0,0,0,true,true,false,false

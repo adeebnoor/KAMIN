@@ -1,8 +1,13 @@
 import { normalizeRecommendationReviews } from '../review/recommendations.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
+import { normalizeFreeInterests } from '../interests/freeInterestState.js'
 import { normalizeProjectEvidence } from './projectEvidence.js'
 import { normalizeTaskProgress } from '../tasks/progress.js'
 import { normalizeCredentialRecords } from '../credentials/records.js'
+import { normalizeCollege, cleanTranscriptText } from '../catalog/colleges.js'
+import { mergeNeedsReview } from '../evidence/needsReview.js'
+import { cleanAuditEntries } from './auditPrivacy.js'
+import { planFields } from '../plan/plan.js'
 const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
@@ -71,19 +76,25 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
     state:{
       courses:safeArray(state.courses,1000),
       approved:!!state.approved,
-      goal:state.goal??null,
+      // Task 58: goal (= goals[0]), goals, the saved steps of My plan and the "not for me" marks.
+      ...planFields(state),
       consents:{
         analyze:!!state.approved && !!state.consents?.analyze,
         insight:!!state.consents?.insight,
         advisor:false,
         research:false,
       },
-      insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests)} : {},
-      audit:safeArray(state.audit,100),
+      insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests),freeInterests:normalizeFreeInterests(state.insight.freeInterests)} : {},
+      audit:cleanAuditEntries(state.audit,100), // Task 46: no old lines with a file name or project title
       recommendationReviews:normalizeRecommendationReviews(state.recommendationReviews),
       projects:normalizeProjectEvidence(state.projects),
       tasks:normalizeTaskProgress(state.tasks),
       credentials:normalizeCredentialRecords(state.credentials),
+      college:normalizeCollege(state.college),
+      // Task 55: the college and major as printed on the transcript (free text, cleaned).
+      collegeRaw:cleanTranscriptText(state.collegeRaw),
+      major:cleanTranscriptText(state.major),
+      needsReview:mergeNeedsReview(state.needsReview,[],[]),
     },
     person360:person360 && typeof person360==='object' ? person360 : null,
   }
@@ -100,19 +111,27 @@ export function normalizePortableState(payload){
   return {
     courses,
     approved,
-    goal:typeof source.goal==='string' ? source.goal : null,
+    // Task 58: older backups have only goal; it becomes goals [goal]. Anything malformed is dropped.
+    ...planFields(source),
     consents:{
       analyze:approved && !!source.consents?.analyze,
       insight:!!source.consents?.insight,
       advisor:false,
       research:false,
     },
-    insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests)} : {},
-    audit:safeArray(source.audit,100).filter(entry=>entry && typeof entry==='object'),
+    insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests),freeInterests:normalizeFreeInterests(source.insight.freeInterests)} : {},
+    // Task 46: a backup made before Task 46 may hold usage-log lines with a file name or a project title.
+    audit:cleanAuditEntries(safeArray(source.audit,100)),
     recommendationReviews:normalizeRecommendationReviews(source.recommendationReviews,{imported:true}),
     projects:normalizeProjectEvidence(source.projects),
     tasks:normalizeTaskProgress(source.tasks),
     credentials:normalizeCredentialRecords(source.credentials),
+    // Task 04: backups made before the college field restore as "not chosen"; never assume FCIT.
+    college:normalizeCollege(source.college),
+    // Task 55: older backups have neither; anything that is not a short line of text is dropped.
+    collegeRaw:cleanTranscriptText(source.collegeRaw),
+    major:cleanTranscriptText(source.major),
+    needsReview:mergeNeedsReview(source.needsReview,[],[]),
   }
 }
 

@@ -1,0 +1,30 @@
+{
+  "fixture": "unknown-college",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "a college text that matches no known college (FCIT, SCI, MED)",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "FACULTY OF ECONOMICS & ADMIN.",
+    "collegeId": null,
+    "majorRaw": "ACCOUNTING",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": null
+  },
+  "checkGpa": "4.19",
+  "rows": [
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":91,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ECON-101","credits":{"ua":3,"ue":3},"marks":86,"letter":"B+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ACCT-210","credits":{"ua":3,"ue":3},"marks":79,"letter":"C+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":93,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ELI-102","credits":{"ua":2,"ue":2},"marks":84,"letter":"B","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ACCT-211","credits":{"ua":3,"ue":3},"marks":88,"letter":"B+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MGT-201","credits":{"ua":3,"ue":3},"marks":90,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"LA-101","credits":{"ua":2,"ue":2},"marks":92,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"STAT-110","credits":{"ua":3,"ue":3},"marks":71,"letter":"C","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ACCT-301","credits":{"ua":3,"ue":3},"marks":83,"letter":"B","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"FIN-201","credits":{"ua":3,"ue":3},"marks":76,"letter":"C+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":95,"letter":"A+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false}
+  ]
+}

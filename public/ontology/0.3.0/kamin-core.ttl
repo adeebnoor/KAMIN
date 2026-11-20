@@ -1,0 +1,67 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix kamin: <urn:kamin:> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix ceterms: <https://purl.org/ctdl/terms/> .
+@prefix ceasn: <https://purl.org/ctdlasn/terms/> .
+@prefix elm: <http://data.europa.eu/snb/model/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+kamin:ontology
+  a owl:Ontology ;
+  rdfs:label "Kamin Person 360 thin ontology"@en ;
+  rdfs:label "أنطولوجيا كامن الرشيقة لنموذج الفرد 360"@ar ;
+  owl:versionInfo "0.3.0" .
+
+kamin:Claim a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:Observation a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:Goal a owl:Class ; rdfs:subClassOf skos:Concept .
+kamin:Constraint a owl:Class ; rdfs:subClassOf skos:Concept .
+kamin:FitAssessment a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:FitMechanism a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:Outcome a owl:Class ; rdfs:subClassOf prov:Entity .
+
+kamin:subject a owl:ObjectProperty ; rdfs:domain kamin:Claim .
+kamin:predicate a owl:ObjectProperty ; rdfs:domain kamin:Claim .
+kamin:object a owl:ObjectProperty ; rdfs:domain kamin:Claim .
+kamin:value a owl:DatatypeProperty ; rdfs:domain kamin:Claim .
+kamin:instrument a owl:DatatypeProperty ; rdfs:domain kamin:Observation .
+kamin:instrumentVersion a owl:DatatypeProperty ; rdfs:domain kamin:Observation .
+kamin:consentPurpose a owl:ObjectProperty ; rdfs:domain prov:Entity .
+kamin:evidenceStrength a owl:DatatypeProperty ; rdfs:domain prov:Entity .
+# Ordinal evidence level of a claim (none < limited < moderate < strong): the weakest of grade,
+# assessment type, source and mapping status. A clue to an expected outcome, not proof of mastery.
+kamin:evidenceLevel a owl:DatatypeProperty ; rdfs:domain kamin:Claim ; rdfs:label "ordinal evidence level"@en .
+kamin:evidenceLevelsVersion a owl:DatatypeProperty ; rdfs:domain kamin:Claim ; rdfs:label "evidence level rule version"@en .
+kamin:evidenceBasis a owl:DatatypeProperty ; rdfs:domain kamin:Claim ; rdfs:label "academic (course) or practical (reviewed or verified) evidence"@en .
+kamin:fitTarget a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment .
+kamin:mechanism a owl:ObjectProperty ; rdfs:domain kamin:FitAssessment ; rdfs:range kamin:FitMechanism .
+
+# Bounded application-rule conclusions. These properties do not assert readiness.
+kamin:Inference a owl:Class ; rdfs:subClassOf prov:Entity .
+kamin:hasCapabilityEvidenceFor a owl:ObjectProperty ; rdfs:label "has pilot capability evidence for a pathway requirement"@en .
+kamin:hasGoalContextFor a owl:ObjectProperty ; rdfs:label "has declared goal context for a pathway"@en .
+kamin:hasPreferenceContextFor a owl:ObjectProperty ; rdfs:label "has declared preference context for a pathway"@en .
+
+# Official course map (FCIT Catalog 2024-25): course → learning outcome → possible capability.
+# A mapping is a reviewable reference relation, not evidence of a student's mastery.
+kamin:mapsToCapability a owl:ObjectProperty ; rdfs:domain schema:Course ; rdfs:label "course maps to a possible capability"@en .
+kamin:hasLearningOutcome a owl:ObjectProperty ; rdfs:domain schema:Course ; rdfs:range elm:LearningOutcome ; rdfs:label "course has learning outcome"@en .
+kamin:supportsCapability a owl:ObjectProperty ; rdfs:domain elm:LearningOutcome ; rdfs:label "learning outcome supports a possible capability"@en .
+kamin:catalogSource a owl:DatatypeProperty ; rdfs:label "official catalog the mapping was taken from"@en .
+kamin:mappingVersion a owl:DatatypeProperty ; rdfs:label "course map version"@en .
+kamin:reviewStatus a owl:DatatypeProperty ; rdfs:label "review status (proposed | reviewed)"@en .
+kamin:verification a owl:DatatypeProperty ; rdfs:label "source verification state of a catalog entry"@en .
+kamin:catalogPage a owl:DatatypeProperty ; rdfs:label "page of the official catalog that states the course"@en .
+
+# Relation provenance: a reference relation reified as rdf:Statement keeps its source,
+# decision role and review date so it can be queried.
+kamin:sourceId a owl:DatatypeProperty ; rdfs:domain rdf:Statement ; rdfs:label "identifier of the source a relation comes from"@en .
+kamin:decisionRole a owl:DatatypeProperty ; rdfs:domain rdf:Statement ; rdfs:label "what the relation may be used for in a decision"@en .
+kamin:reviewedAt a owl:DatatypeProperty ; rdfs:domain rdf:Statement ; rdfs:label "date the relation was reviewed against its source"@en .
+
+# External domain concepts remain in their source ontologies/vocabularies:
+# schema:Person, schema:Course, schema:Occupation
+# ceterms:Credential, ceasn:Competency, skos:Concept, prov:Entity.

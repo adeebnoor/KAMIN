@@ -1,0 +1,1108 @@
+{
+ "version": "kamin-capability-lexicon-v1",
+ "builtOn": "dev-set.json only (eval/project-suggest); general domain vocabulary, no test-set text consulted",
+ "rule": "A strong term is enough on its own in a sentence. A weak term counts only together with another term (strong or weak) of the same capability in the same sentence.",
+ "capabilities": {
+  "database": {
+   "strong": [
+    {
+     "t": "sql",
+     "why": "query language for relational databases"
+    },
+    {
+     "t": "postgresql",
+     "why": "database system"
+    },
+    {
+     "t": "postgres",
+     "why": "database system"
+    },
+    {
+     "t": "mysql",
+     "why": "database system"
+    },
+    {
+     "t": "sqlite",
+     "why": "database system"
+    },
+    {
+     "t": "mongodb",
+     "why": "database system"
+    },
+    {
+     "t": "nosql",
+     "why": "database family"
+    },
+    {
+     "t": "database",
+     "why": "direct name"
+    },
+    {
+     "t": "relational schema",
+     "why": "database design"
+    },
+    {
+     "t": "erd",
+     "why": "entity-relationship diagram"
+    },
+    {
+     "t": "entity relationship",
+     "why": "database design"
+    },
+    {
+     "t": "foreign key",
+     "why": "relational design"
+    },
+    {
+     "t": "primary key",
+     "why": "relational design"
+    },
+    {
+     "t": "stored procedure",
+     "why": "database programming"
+    },
+    {
+     "t": "قاعدة بيانات",
+     "why": "direct name"
+    },
+    {
+     "t": "قواعد بيانات",
+     "why": "direct name (plural)"
+    },
+    {
+     "t": "استعلام",
+     "why": "query"
+    },
+    {
+     "t": "مفتاح أجنبي",
+     "why": "foreign key"
+    },
+    {
+     "t": "قاعدة تدريبية",
+     "why": "training database (dev-set ar-04; same phrase as the baseline lexicon)"
+    }
+   ],
+   "weak": [
+    {
+     "t": "query",
+     "why": "can be a search query"
+    },
+    {
+     "t": "join",
+     "why": "only with another database term"
+    },
+    {
+     "t": "table",
+     "why": "tables are also documents or schedules"
+    },
+    {
+     "t": "schema",
+     "why": "can be a JSON or XML schema"
+    },
+    {
+     "t": "index",
+     "why": "generic word"
+    },
+    {
+     "t": "normalization",
+     "why": "also text or data normalisation"
+    },
+    {
+     "t": "جدول",
+     "why": "also a timetable"
+    },
+    {
+     "t": "جداول",
+     "why": "also timetables"
+    },
+    {
+     "t": "مخطط",
+     "why": "any diagram"
+    },
+    {
+     "t": "قاعدة",
+     "why": "also a rule"
+    }
+   ]
+  },
+  "db-operations": {
+   "strong": [
+    {
+     "t": "backup",
+     "why": "database operation"
+    },
+    {
+     "t": "restore",
+     "why": "recovery"
+    },
+    {
+     "t": "replication",
+     "why": "database operation"
+    },
+    {
+     "t": "point in time recovery",
+     "why": "recovery"
+    },
+    {
+     "t": "dba",
+     "why": "database administration"
+    },
+    {
+     "t": "نسخ احتياطي",
+     "why": "backup"
+    },
+    {
+     "t": "نسخة احتياطية",
+     "why": "backup"
+    },
+    {
+     "t": "استعادة",
+     "why": "restore"
+    }
+   ],
+   "weak": [
+    {
+     "t": "permissions",
+     "why": "also file or app permissions"
+    },
+    {
+     "t": "privileges",
+     "why": "also app privileges"
+    },
+    {
+     "t": "server",
+     "why": "generic"
+    },
+    {
+     "t": "صلاحيات",
+     "why": "also app permissions"
+    },
+    {
+     "t": "خادم",
+     "why": "generic"
+    }
+   ]
+  },
+  "web-development": {
+   "strong": [
+    {
+     "t": "html",
+     "why": "web markup"
+    },
+    {
+     "t": "css",
+     "why": "web styling"
+    },
+    {
+     "t": "react",
+     "why": "web UI library"
+    },
+    {
+     "t": "angular",
+     "why": "web framework"
+    },
+    {
+     "t": "vue",
+     "why": "web framework"
+    },
+    {
+     "t": "next js",
+     "why": "web framework"
+    },
+    {
+     "t": "front end",
+     "why": "web interface"
+    },
+    {
+     "t": "frontend",
+     "why": "web interface"
+    },
+    {
+     "t": "responsive",
+     "why": "web layout"
+    },
+    {
+     "t": "web page",
+     "why": "direct"
+    },
+    {
+     "t": "web interface",
+     "why": "direct"
+    },
+    {
+     "t": "web app",
+     "why": "direct"
+    },
+    {
+     "t": "website",
+     "why": "direct"
+    },
+    {
+     "t": "tailwind",
+     "why": "web styling"
+    },
+    {
+     "t": "bootstrap",
+     "why": "web styling"
+    },
+    {
+     "t": "واجهة ويب",
+     "why": "web interface"
+    },
+    {
+     "t": "صفحة ويب",
+     "why": "web page"
+    },
+    {
+     "t": "موقع إلكتروني",
+     "why": "website"
+    },
+    {
+     "t": "متجاوب",
+     "why": "responsive"
+    }
+   ],
+   "weak": [
+    {
+     "t": "javascript",
+     "why": "also back-end"
+    },
+    {
+     "t": "web",
+     "why": "generic"
+    },
+    {
+     "t": "ui",
+     "why": "also desktop or mobile"
+    },
+    {
+     "t": "ويب",
+     "why": "generic"
+    },
+    {
+     "t": "واجهة",
+     "why": "any interface"
+    }
+   ]
+  },
+  "software": {
+   "strong": [
+    {
+     "t": "software engineering",
+     "why": "direct"
+    },
+    {
+     "t": "refactor",
+     "why": "code design work"
+    },
+    {
+     "t": "design pattern",
+     "why": "software design"
+    },
+    {
+     "t": "repository pattern",
+     "why": "software design"
+    },
+    {
+     "t": "object oriented",
+     "why": "software design"
+    },
+    {
+     "t": "backend",
+     "why": "server-side software"
+    },
+    {
+     "t": "back end",
+     "why": "server-side software"
+    },
+    {
+     "t": "microservice",
+     "why": "software architecture"
+    },
+    {
+     "t": "spring boot",
+     "why": "back-end framework"
+    },
+    {
+     "t": "django",
+     "why": "back-end framework"
+    },
+    {
+     "t": "express",
+     "why": "back-end framework"
+    },
+    {
+     "t": "هندسة البرمجيات",
+     "why": "direct"
+    },
+    {
+     "t": "وحدة برمجية",
+     "why": "software module"
+    },
+    {
+     "t": "إعادة هيكلة",
+     "why": "refactoring"
+    },
+    {
+     "t": "هيكلة",
+     "why": "restructuring code"
+    },
+    {
+     "t": "خادم خلفي",
+     "why": "back-end"
+    },
+    {
+     "t": "نمط تصميم",
+     "why": "design pattern"
+    }
+   ],
+   "weak": [
+    {
+     "t": "implement",
+     "why": "also non-software plans"
+    },
+    {
+     "t": "module",
+     "why": "also a course module"
+    },
+    {
+     "t": "api",
+     "why": "consuming an API is not software engineering alone"
+    },
+    {
+     "t": "code",
+     "why": "generic"
+    },
+    {
+     "t": "program",
+     "why": "also an academic programme"
+    },
+    {
+     "t": "python",
+     "why": "also data analysis"
+    },
+    {
+     "t": "java",
+     "why": "language name"
+    },
+    {
+     "t": "node",
+     "why": "also a graph node"
+    },
+    {
+     "t": "docker",
+     "why": "deployment"
+    },
+    {
+     "t": "class",
+     "why": "also a lecture"
+    },
+    {
+     "t": "function",
+     "why": "generic"
+    },
+    {
+     "t": "service",
+     "why": "generic"
+    },
+    {
+     "t": "pipeline",
+     "why": "generic"
+    },
+    {
+     "t": "parser",
+     "why": "software component"
+    },
+    {
+     "t": "develop",
+     "why": "generic"
+    },
+    {
+     "t": "نفذت",
+     "why": "also non-software work"
+    },
+    {
+     "t": "طبقت",
+     "why": "also non-software plans"
+    },
+    {
+     "t": "برمج",
+     "why": "programming, generic alone"
+    },
+    {
+     "t": "كود",
+     "why": "generic"
+    },
+    {
+     "t": "واجهة برمجية",
+     "why": "API"
+    },
+    {
+     "t": "تطوير",
+     "why": "generic"
+    },
+    {
+     "t": "نظام",
+     "why": "generic"
+    },
+    {
+     "t": "أصناف",
+     "why": "classes, generic alone"
+    }
+   ]
+  },
+  "testing": {
+   "strong": [
+    {
+     "t": "unit test",
+     "why": "direct"
+    },
+    {
+     "t": "test case",
+     "why": "direct"
+    },
+    {
+     "t": "integration test",
+     "why": "direct"
+    },
+    {
+     "t": "test coverage",
+     "why": "direct"
+    },
+    {
+     "t": "pytest",
+     "why": "test framework"
+    },
+    {
+     "t": "jest",
+     "why": "test framework"
+    },
+    {
+     "t": "junit",
+     "why": "test framework"
+    },
+    {
+     "t": "selenium",
+     "why": "test framework"
+    },
+    {
+     "t": "cypress",
+     "why": "test framework"
+    },
+    {
+     "t": "اختبار وحدة",
+     "why": "unit test"
+    },
+    {
+     "t": "اختبارات وحدة",
+     "why": "unit tests"
+    },
+    {
+     "t": "حالات اختبار",
+     "why": "test cases"
+    },
+    {
+     "t": "اختبارات آلية",
+     "why": "automated tests"
+    },
+    {
+     "t": "تغطية الاختبار",
+     "why": "test coverage"
+    },
+    {
+     "t": "بيانات اختبار",
+     "why": "test data"
+    }
+   ],
+   "weak": [
+    {
+     "t": "test",
+     "why": "also a statistical or exam test"
+    },
+    {
+     "t": "bug",
+     "why": "only with another testing term"
+    },
+    {
+     "t": "defect",
+     "why": "generic"
+    },
+    {
+     "t": "coverage",
+     "why": "also media coverage"
+    },
+    {
+     "t": "error case",
+     "why": "generic"
+    },
+    {
+     "t": "اختبار",
+     "why": "also a statistical test or an exam"
+    },
+    {
+     "t": "خلل",
+     "why": "generic"
+    },
+    {
+     "t": "أخطاء",
+     "why": "generic"
+    }
+   ]
+  },
+  "systems-analysis": {
+   "strong": [
+    {
+     "t": "workflow",
+     "why": "process analysis"
+    },
+    {
+     "t": "as is",
+     "why": "current-state analysis"
+    },
+    {
+     "t": "use case",
+     "why": "direct"
+    },
+    {
+     "t": "stakeholder",
+     "why": "analysis activity"
+    },
+    {
+     "t": "process map",
+     "why": "direct"
+    },
+    {
+     "t": "bpmn",
+     "why": "process notation"
+    },
+    {
+     "t": "business process",
+     "why": "direct"
+    },
+    {
+     "t": "data flow diagram",
+     "why": "direct"
+    },
+    {
+     "t": "سير العمل",
+     "why": "workflow"
+    },
+    {
+     "t": "أصحاب المصلحة",
+     "why": "stakeholders"
+    },
+    {
+     "t": "حالات الاستخدام",
+     "why": "use cases"
+    },
+    {
+     "t": "تحليل النظم",
+     "why": "direct"
+    },
+    {
+     "t": "مخطط تدفق",
+     "why": "flow diagram"
+    }
+   ],
+   "weak": [
+    {
+     "t": "process",
+     "why": "generic"
+    },
+    {
+     "t": "interview",
+     "why": "also journalism or hiring"
+    },
+    {
+     "t": "إجراءات",
+     "why": "generic"
+    },
+    {
+     "t": "عملية",
+     "why": "generic"
+    }
+   ]
+  },
+  "requirements": {
+   "strong": [
+    {
+     "t": "requirement",
+     "why": "direct"
+    },
+    {
+     "t": "user story",
+     "why": "direct"
+    },
+    {
+     "t": "user stories",
+     "why": "direct"
+    },
+    {
+     "t": "acceptance criteria",
+     "why": "direct"
+    },
+    {
+     "t": "specification",
+     "why": "direct"
+    },
+    {
+     "t": "srs",
+     "why": "requirements specification"
+    },
+    {
+     "t": "متطلبات",
+     "why": "requirements"
+    },
+    {
+     "t": "قصص المستخدم",
+     "why": "user stories"
+    },
+    {
+     "t": "معايير القبول",
+     "why": "acceptance criteria"
+    },
+    {
+     "t": "مواصفات",
+     "why": "specification"
+    }
+   ],
+   "weak": []
+  },
+  "project": {
+   "strong": [
+    {
+     "t": "project plan",
+     "why": "direct"
+    },
+    {
+     "t": "project management",
+     "why": "direct"
+    },
+    {
+     "t": "milestone",
+     "why": "planning"
+    },
+    {
+     "t": "gantt",
+     "why": "schedule chart"
+    },
+    {
+     "t": "project schedule",
+     "why": "direct"
+    },
+    {
+     "t": "scrum",
+     "why": "method"
+    },
+    {
+     "t": "sprint",
+     "why": "method"
+    },
+    {
+     "t": "kanban",
+     "why": "method"
+    },
+    {
+     "t": "work breakdown",
+     "why": "planning"
+    },
+    {
+     "t": "خطة المشروع",
+     "why": "project plan"
+    },
+    {
+     "t": "إدارة المشروع",
+     "why": "project management"
+    },
+    {
+     "t": "إدارة المشاريع",
+     "why": "project management"
+    },
+    {
+     "t": "معالم",
+     "why": "milestones"
+    },
+    {
+     "t": "جدول زمني",
+     "why": "schedule"
+    },
+    {
+     "t": "الجدول الزمني",
+     "why": "schedule"
+    }
+   ],
+   "weak": [
+    {
+     "t": "deadline",
+     "why": "only with another planning term"
+    },
+    {
+     "t": "timeline",
+     "why": "generic"
+    },
+    {
+     "t": "phase",
+     "why": "generic"
+    },
+    {
+     "t": "plan",
+     "why": "generic"
+    },
+    {
+     "t": "agile",
+     "why": "often a buzzword"
+    },
+    {
+     "t": "مراحل",
+     "why": "generic"
+    },
+    {
+     "t": "مواعيد",
+     "why": "generic"
+    },
+    {
+     "t": "خطة",
+     "why": "generic"
+    }
+   ]
+  },
+  "statistics": {
+   "strong": [
+    {
+     "t": "statistic",
+     "why": "direct"
+    },
+    {
+     "t": "regression",
+     "why": "statistical method"
+    },
+    {
+     "t": "confidence interval",
+     "why": "statistical method"
+    },
+    {
+     "t": "hypothesis test",
+     "why": "statistical method"
+    },
+    {
+     "t": "p value",
+     "why": "statistical method"
+    },
+    {
+     "t": "t test",
+     "why": "statistical method"
+    },
+    {
+     "t": "anova",
+     "why": "statistical method"
+    },
+    {
+     "t": "standard deviation",
+     "why": "statistical measure"
+    },
+    {
+     "t": "correlation",
+     "why": "statistical measure"
+    },
+    {
+     "t": "significance test",
+     "why": "statistical method"
+    },
+    {
+     "t": "descriptive",
+     "why": "descriptive statistics"
+    },
+    {
+     "t": "إحصاء",
+     "why": "statistics"
+    },
+    {
+     "t": "إحصائي",
+     "why": "statistical"
+    },
+    {
+     "t": "انحدار",
+     "why": "regression"
+    },
+    {
+     "t": "فاصل الثقة",
+     "why": "confidence interval"
+    },
+    {
+     "t": "انحراف معياري",
+     "why": "standard deviation"
+    },
+    {
+     "t": "تحليل كمي",
+     "why": "quantitative analysis"
+    }
+   ],
+   "weak": [
+    {
+     "t": "mean",
+     "why": "also a verb"
+    },
+    {
+     "t": "average",
+     "why": "generic"
+    },
+    {
+     "t": "median",
+     "why": "generic"
+    },
+    {
+     "t": "distribution",
+     "why": "also logistics"
+    },
+    {
+     "t": "pandas",
+     "why": "dev set labels data processing in Pandas as software"
+    },
+    {
+     "t": "survey",
+     "why": "generic"
+    },
+    {
+     "t": "متوسط",
+     "why": "generic"
+    },
+    {
+     "t": "توزيع",
+     "why": "also distribution of tasks"
+    },
+    {
+     "t": "استبيان",
+     "why": "generic"
+    }
+   ]
+  },
+  "cyber": {
+   "strong": [
+    {
+     "t": "security",
+     "why": "direct"
+    },
+    {
+     "t": "vulnerability",
+     "why": "direct"
+    },
+    {
+     "t": "vulnerabilities",
+     "why": "direct"
+    },
+    {
+     "t": "firewall",
+     "why": "direct"
+    },
+    {
+     "t": "encrypt",
+     "why": "direct"
+    },
+    {
+     "t": "penetration",
+     "why": "direct"
+    },
+    {
+     "t": "threat",
+     "why": "direct"
+    },
+    {
+     "t": "jwt",
+     "why": "token authentication"
+    },
+    {
+     "t": "oauth",
+     "why": "authorisation protocol"
+    },
+    {
+     "t": "oauth2",
+     "why": "authorisation protocol"
+    },
+    {
+     "t": "authentication",
+     "why": "access security"
+    },
+    {
+     "t": "access control",
+     "why": "access security"
+    },
+    {
+     "t": "xss",
+     "why": "web attack"
+    },
+    {
+     "t": "sql injection",
+     "why": "web attack"
+    },
+    {
+     "t": "tls",
+     "why": "secure transport"
+    },
+    {
+     "t": "ssl",
+     "why": "secure transport"
+    },
+    {
+     "t": "أمن",
+     "why": "security"
+    },
+    {
+     "t": "أمنت",
+     "why": "secured"
+    },
+    {
+     "t": "تأمين",
+     "why": "securing"
+    },
+    {
+     "t": "ثغرات",
+     "why": "vulnerabilities"
+    },
+    {
+     "t": "ثغرة",
+     "why": "vulnerability"
+    },
+    {
+     "t": "جدار الحماية",
+     "why": "firewall"
+    },
+    {
+     "t": "تشفير",
+     "why": "encryption"
+    },
+    {
+     "t": "مصادقة",
+     "why": "authentication"
+    },
+    {
+     "t": "اختراق",
+     "why": "penetration"
+    }
+   ],
+   "weak": [
+    {
+     "t": "password",
+     "why": "only with another security term"
+    },
+    {
+     "t": "hash",
+     "why": "also a data structure"
+    },
+    {
+     "t": "login",
+     "why": "generic"
+    },
+    {
+     "t": "كلمات المرور",
+     "why": "only with another security term"
+    },
+    {
+     "t": "صلاحيات",
+     "why": "also app permissions"
+    }
+   ]
+  },
+  "ai-work": {
+   "strong": [
+    {
+     "t": "llm",
+     "why": "direct"
+    },
+    {
+     "t": "chatgpt",
+     "why": "AI tool"
+    },
+    {
+     "t": "prompt",
+     "why": "AI use"
+    },
+    {
+     "t": "machine learning",
+     "why": "direct"
+    },
+    {
+     "t": "deep learning",
+     "why": "direct"
+    },
+    {
+     "t": "neural network",
+     "why": "direct"
+    },
+    {
+     "t": "pytorch",
+     "why": "ML framework"
+    },
+    {
+     "t": "tensorflow",
+     "why": "ML framework"
+    },
+    {
+     "t": "language model",
+     "why": "direct"
+    },
+    {
+     "t": "fine tune",
+     "why": "ML training"
+    },
+    {
+     "t": "chatbot",
+     "why": "AI tool"
+    },
+    {
+     "t": "ai",
+     "why": "direct"
+    },
+    {
+     "t": "نموذج لغوي",
+     "why": "language model"
+    },
+    {
+     "t": "ذكاء اصطناعي",
+     "why": "AI"
+    },
+    {
+     "t": "تعلم آلي",
+     "why": "machine learning"
+    },
+    {
+     "t": "تعلم الآلة",
+     "why": "machine learning"
+    },
+    {
+     "t": "تعلم عميق",
+     "why": "deep learning"
+    },
+    {
+     "t": "شبكة عصبية",
+     "why": "neural network"
+    },
+    {
+     "t": "روبوت محادثة",
+     "why": "chatbot"
+    }
+   ],
+   "weak": [
+    {
+     "t": "model",
+     "why": "also a data or business model"
+    },
+    {
+     "t": "classifier",
+     "why": "only with another ML term"
+    },
+    {
+     "t": "trained",
+     "why": "also staff training"
+    },
+    {
+     "t": "نموذج",
+     "why": "also a form"
+    },
+    {
+     "t": "درب",
+     "why": "also staff training"
+    }
+   ]
+  }
+ }
+}

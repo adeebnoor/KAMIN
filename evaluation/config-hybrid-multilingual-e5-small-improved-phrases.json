@@ -1,0 +1,10 @@
+{
+  "method": "eval-lexicon+examples-v1+improved+phrases",
+  "model": "multilingual-e5-small",
+  "prefix": "query: ",
+  "threshold": 0.88,
+  "tunedOn": "course-dev-set.json",
+  "tunedOnSha256": "58faad0815385f36306effeb8e7f7747900cbd178240410012fa7b625800fdca",
+  "tunedAt": "2026-11-19T17:07:48.734Z",
+  "devMacroF1": 0.5926
+}

@@ -1,0 +1,634 @@
+{
+  "@context": "/ontology/kamin-context.jsonld",
+  "@id": "urn:kamin:person:local",
+  "@type": "Person",
+  "ontologyVersion": "0.4.0",
+  "psychometricRegistryVersion": "0.1.0",
+  "entities": [
+    {
+      "@id": "urn:kamin:course:CPIT-250",
+      "@type": "Course",
+      "code": "CPIT-250",
+      "name": {
+        "ar": "تحليل وتصميم النظم",
+        "en": "System Analysis & Design"
+      },
+      "grade": "A",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpit-250",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIT-250",
+      "grade": "A",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:CPIT-251",
+      "@type": "Course",
+      "code": "CPIT-251",
+      "name": {
+        "ar": "هندسة البرمجيات (1)",
+        "en": "Software Engineering (I)"
+      },
+      "grade": "B+",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpit-251",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIT-251",
+      "grade": "B+",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:CPIT-240",
+      "@type": "Course",
+      "code": "CPIT-240",
+      "name": {
+        "ar": "قواعد البيانات (1)",
+        "en": "Databases (I)"
+      },
+      "grade": "B",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpit-240",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIT-240",
+      "grade": "B",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:CPIS-334",
+      "@type": "Course",
+      "code": "CPIS-334",
+      "name": {
+        "ar": "مقدمة في إدارة مشاريع البرمجيات",
+        "en": "Introduction to Software Project Management"
+      },
+      "grade": "A-",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpis-334",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIS-334",
+      "grade": "A-",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:STAT-110",
+      "@type": "Course",
+      "code": "STAT-110",
+      "name": {
+        "ar": "الإحصاء العام (1)",
+        "en": "General Statistics (1)"
+      },
+      "grade": "B+",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:stat-110",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:STAT-110",
+      "grade": "B+",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:CPIT-499",
+      "@type": "Course",
+      "code": "CPIT-499",
+      "name": {
+        "ar": "مشروع التخرج (2)",
+        "en": "Senior Project (II)"
+      },
+      "grade": "A",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpit-499",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIT-499",
+      "grade": "A",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:course:CPIT-260",
+      "@type": "Course",
+      "code": "CPIT-260",
+      "name": {
+        "ar": "أنظمة التشغيل",
+        "en": "Operating Systems"
+      },
+      "grade": "B+",
+      "hours": null
+    },
+    {
+      "@id": "urn:kamin:evidence:course:cpit-260",
+      "@type": "Evidence",
+      "evidenceType": "demo",
+      "course": "urn:kamin:course:CPIT-260",
+      "grade": "B+",
+      "sourceDocument": "demo",
+      "provenanceLevel": "synthetic",
+      "editedFields": [],
+      "gradeRaisedByStudent": false
+    },
+    {
+      "@id": "urn:kamin:skill:project",
+      "@type": "Competency",
+      "notation": "project",
+      "label": {
+        "ar": "إدارة المشاريع",
+        "en": "Project management"
+      },
+      "alignmentStatus": "pilot-local-unmapped"
+    },
+    {
+      "@id": "urn:kamin:skill:requirements",
+      "@type": "Competency",
+      "notation": "requirements",
+      "label": {
+        "ar": "تحليل المتطلبات",
+        "en": "Requirements analysis"
+      },
+      "alignmentStatus": "pilot-local-unmapped"
+    },
+    {
+      "@id": "urn:kamin:skill:software",
+      "@type": "Competency",
+      "notation": "software",
+      "label": {
+        "ar": "هندسة البرمجيات",
+        "en": "Software engineering"
+      },
+      "alignmentStatus": "pilot-local-unmapped"
+    },
+    {
+      "@id": "urn:kamin:skill:database",
+      "@type": "Competency",
+      "notation": "database",
+      "label": {
+        "ar": "قواعد البيانات",
+        "en": "Databases"
+      },
+      "alignmentStatus": "pilot-local-unmapped"
+    },
+    {
+      "@id": "urn:kamin:skill:statistics",
+      "@type": "Competency",
+      "notation": "statistics",
+      "label": {
+        "ar": "التحليل الكمي",
+        "en": "Quantitative analysis"
+      },
+      "alignmentStatus": "pilot-local-unmapped"
+    },
+    {
+      "@id": "urn:kamin:goal:data",
+      "@type": "Goal",
+      "notation": "data",
+      "goalType": "career-direction"
+    },
+    {
+      "@id": "urn:kamin:preference:careerinterest:investigative",
+      "@type": "skos:Concept",
+      "scheme": "urn:kamin:preference-scheme:careerInterest",
+      "notation": "investigative"
+    },
+    {
+      "@id": "urn:kamin:topic:data",
+      "@type": "skos:Concept",
+      "label": {
+        "ar": "تحليل البيانات",
+        "en": "Data analysis"
+      },
+      "notation": "data"
+    },
+    {
+      "@id": "urn:kamin:consent:digital-interests",
+      "@type": "kamin:Consent",
+      "consentPurpose": "urn:kamin:purpose:reviewed-interest-context",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "status": "active",
+      "metadata": {
+        "noticeVersion": "digital-interests-consent-2026-09-27",
+        "contextAllowed": true
+      }
+    },
+    {
+      "@id": "urn:kamin:evidence:digital-interest:data",
+      "@type": "Evidence",
+      "label": {
+        "ar": "تأكيد الطالب لاقتراح من نص اختاره",
+        "en": "Student confirmation of a selected-text suggestion"
+      },
+      "sourceType": "student-selected-text",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "metadata": {
+        "matchedTerms": [
+          "sql"
+        ],
+        "methodVersion": "kamin-topic-keywords-v1",
+        "rawTextRetained": false,
+        "reviewStatus": "student-confirmed"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "@id": "urn:kamin:claim:studied:cpit-250",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIT-250",
+      "source": "urn:kamin:evidence:course:cpit-250",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:cpit-251",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIT-251",
+      "source": "urn:kamin:evidence:course:cpit-251",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:cpit-240",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIT-240",
+      "source": "urn:kamin:evidence:course:cpit-240",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:cpis-334",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIS-334",
+      "source": "urn:kamin:evidence:course:cpis-334",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:stat-110",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:STAT-110",
+      "source": "urn:kamin:evidence:course:stat-110",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:cpit-499",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIT-499",
+      "source": "urn:kamin:evidence:course:cpit-499",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:studied:cpit-260",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:studied",
+      "object": "urn:kamin:course:CPIT-260",
+      "source": "urn:kamin:evidence:course:cpit-260",
+      "sourceType": "demo",
+      "generatedBy": "urn:kamin:activity:transcript-approval",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "synthetic",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:project:1",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:project",
+      "source": "urn:kamin:evidence:course:cpis-334",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:project:2",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:project",
+      "source": "urn:kamin:evidence:course:cpit-499",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-project",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:requirements:1",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:requirements",
+      "source": "urn:kamin:evidence:course:cpit-250",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:requirements:2",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:requirements",
+      "source": "urn:kamin:evidence:course:cpit-251",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:software:1",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:software",
+      "source": "urn:kamin:evidence:course:cpit-251",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:software:2",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:software",
+      "source": "urn:kamin:evidence:course:cpit-499",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-project",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:database:1",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:database",
+      "source": "urn:kamin:evidence:course:cpit-240",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:demonstrates:statistics:1",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:demonstrates",
+      "object": "urn:kamin:skill:statistics",
+      "source": "urn:kamin:evidence:course:stat-110",
+      "sourceType": "approved-course-mapping",
+      "generatedBy": "urn:kamin:activity:skill-inference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "limited",
+      "consentPurpose": "urn:kamin:purpose:academic-profile",
+      "status": "active",
+      "metadata": {
+        "mappingVersion": "fcit-map-v1",
+        "evidenceReasons": [
+          "grade-high",
+          "assessment-unknown",
+          "source-synthetic",
+          "mapping-proposed"
+        ]
+      },
+      "evidenceLevel": "limited",
+      "evidenceLevelsVersion": "kamin-evidence-levels-v2",
+      "evidenceBasis": "academic"
+    },
+    {
+      "@id": "urn:kamin:claim:goal:data",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:pursuesGoal",
+      "object": "urn:kamin:goal:data",
+      "source": "urn:kamin:evidence:self-declaration",
+      "sourceType": "self-declared",
+      "generatedBy": "urn:kamin:activity:goal-selection",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "self-reported",
+      "consentPurpose": "urn:kamin:purpose:student-insight",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:preference:careerinterest",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:prefers:careerInterest",
+      "object": "urn:kamin:preference:careerinterest:investigative",
+      "source": "urn:kamin:evidence:self-declaration",
+      "sourceType": "self-declared",
+      "generatedBy": "urn:kamin:activity:structured-preference",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "self-reported",
+      "consentPurpose": "urn:kamin:purpose:student-insight",
+      "status": "active",
+      "metadata": {}
+    },
+    {
+      "@id": "urn:kamin:claim:digital-interest:data",
+      "@type": "Claim",
+      "subject": "urn:kamin:person:local",
+      "predicate": "kamin:hasConfirmedInterest",
+      "object": "urn:kamin:topic:data",
+      "source": "urn:kamin:evidence:digital-interest:data",
+      "sourceType": "student-selected-text",
+      "generatedBy": "urn:kamin:activity:kamin-topic-keywords-v1",
+      "generatedAtTime": "2026-11-18T00:00:00.000Z",
+      "evidenceStrength": "student-confirmed-interest",
+      "consentPurpose": "urn:kamin:purpose:reviewed-interest-context",
+      "status": "active",
+      "metadata": {
+        "consentId": "urn:kamin:consent:digital-interests",
+        "contextAllowed": true,
+        "reviewStatus": "student-confirmed",
+        "methodVersion": "kamin-topic-keywords-v1"
+      }
+    }
+  ],
+  "observations": [],
+  "goals": [],
+  "preferences": [],
+  "constraints": [],
+  "outcomes": [],
+  "updatedAt": "2026-11-18T00:00:00.000Z"
+}

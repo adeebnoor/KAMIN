@@ -1,0 +1,57 @@
+{
+  "cq01-target-requirements.rq": {
+    "minRows": 1,
+    "contains": { "target": ["urn:kamin:target:job-data-analyst"], "cap": ["urn:kamin:skill:database", "urn:kamin:skill:statistics"] }
+  },
+  "cq02-course-capability-map.rq": {
+    "minRows": 1,
+    "contains": { "course": ["urn:kamin:course:CPIT-240", "urn:kamin:course:STAT-110"], "code": ["CPIT-240"], "cap": ["urn:kamin:skill:database"] },
+    "excludes": { "course": ["urn:kamin:course:CPIT-260", "urn:kamin:course:CPIT-305", "urn:kamin:course:STAT-201", "urn:kamin:course:cpit-240"] }
+  },
+  "cq03-studied-course-to-capability.rq": {
+    "minRows": 1,
+    "contains": { "course": ["urn:kamin:course:CPIT-240"], "cap": ["urn:kamin:skill:database", "urn:kamin:skill:statistics"] },
+    "excludes": { "course": ["urn:kamin:course:CPIT-260"] }
+  },
+  "cq04-capability-evidence.rq": {
+    "minRows": 1,
+    "contains": { "cap": ["urn:kamin:skill:database"], "evidence": ["urn:kamin:evidence:course:cpit-240"], "sourceType": ["approved-course-mapping"], "strength": ["limited"] },
+    "excludes": { "evidence": ["urn:kamin:evidence:course:cpit-260"], "sourceType": ["self-declared", "student-selected-text"], "strength": ["high", "medium", "low"] }
+  },
+  "cq05-no-capability-from-self-report.rq": { "ask": false },
+  "cq06-missing-required-capabilities.rq": {
+    "minRows": 1,
+    "contains": { "missing": ["urn:kamin:skill:cyber"] },
+    "excludes": { "target": ["urn:kamin:target:job-data-analyst"] }
+  },
+  "cq07-development-bridges.rq": {
+    "minRows": 1,
+    "contains": { "gap": ["urn:kamin:skill:sql", "urn:kamin:skill:python", "urn:kamin:skill:power-bi"] },
+    "excludes": { "gap": ["urn:kamin:skill:database", "urn:kamin:skill:statistics"] }
+  },
+  "cq08-external-identity.rq": {
+    "rows": 2,
+    "contains": { "notation": ["2511.3", "15-2051.01"], "source": ["source-esco-1.2.1", "source-onet-31.0"] }
+  },
+  "cq09-inference-explanation.rq": {
+    "minRows": 1,
+    "contains": { "evidence": ["urn:kamin:evidence:course:cpit-240", "urn:kamin:evidence:course:stat-110"] },
+    "excludes": { "evidence": ["urn:kamin:evidence:course:cpit-260"] }
+  },
+  "cq10-relation-provenance.rq": {
+    "minRows": 1,
+    "contains": { "source": ["source-fcit-catalog-2024-25"], "role": ["academic-course-mapping"] }
+  },
+  "cq11-limited-and-why.rq": {
+    "rows": 10,
+    "contains": { "cap": ["urn:kamin:skill:database", "urn:kamin:skill:statistics", "urn:kamin:skill:project", "urn:kamin:skill:requirements", "urn:kamin:skill:software"], "level": ["limited"], "factor": ["mapping-proposed", "assessment-unknown"] },
+    "excludes": { "level": ["strong"] }
+  },
+  "cq12-unreviewed-mappings.rq": {
+    "rows": 46,
+    "contains": { "course": ["urn:kamin:course:CPIT-240"], "cap": ["urn:kamin:skill:database"] },
+    "excludes": { "course": ["urn:kamin:course:CPIT-260", "urn:kamin:course:STAT-201"] }
+  },
+  "cq13-no-claim-without-evidence.rq": { "ask": false },
+  "cq14-self-report-stays-self-report.rq": { "rows": 0 }
+}

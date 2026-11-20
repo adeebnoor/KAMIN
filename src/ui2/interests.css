@@ -1,0 +1,48 @@
+/* Task 64 · step 3 of the new interface: the interests consent, the two rows of chips, "Something else?" and the
+   cards of interests in the student's own words. Loads with src/ui2/screens/Interests.jsx only (its own lazy chunk).
+   Tokens only, as in ui2.css: brand colours from public/brand.css (dark values in src/ui2/theme.css), spacing,
+   text sizes and radius from src/tokens.css. The consent box, the chip questions, the text box and the cards are
+   --paper on the --soft page (tests/themeContrast.test.js checks every pair in both themes). */
+
+/* ----- The page: one sentence, the consent status or its reason, the main action ----- */
+.ui2-page p.ui2-interests-line{margin-bottom:var(--space-3)}
+.ui2-page p.ui2-interests-given{display:flex;align-items:flex-start;gap:var(--space-2);font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-page p.ui2-interests-given svg{flex:none;margin-top:var(--space-1)}
+.ui2-page p.ui2-interests-reason{font-size:var(--text-sm);font-weight:700;line-height:1.5;color:var(--warn)}
+.ui2-interests-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);margin-top:var(--space-4)}
+.ui2-page .ui2-interests-technical{margin-top:var(--space-4);font-size:var(--text-sm);color:var(--muted)}
+.ui2-page .ui2-interests-technical summary{min-height:var(--control-h);display:flex;align-items:center;color:var(--navy);font-weight:650;cursor:pointer}
+.ui2-page .ui2-interests-technical p{margin:0 0 var(--space-2);line-height:1.5}
+
+/* ----- The interests consent: the approved sentence next to its checkbox ----- */
+.ui2-interest-consent{display:flex;align-items:flex-start;gap:var(--space-3);margin-bottom:var(--space-2);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);line-height:1.5;cursor:pointer}
+.ui2-interest-consent input{flex:none;width:22px;height:22px;margin-top:var(--space-1);accent-color:var(--navy)}
+
+/* ----- The two questions as chips, and "Something else?" ----- */
+.ui2-interest-question{display:block;margin:0 0 var(--space-3);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-interest-question>p.ui2-interest-hint{margin-bottom:var(--space-2)}
+.ui2-interest-other{display:grid;gap:var(--space-2);margin:0 0 var(--space-3);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-interest-question legend{padding:0;font-weight:650;color:var(--ink)}
+.ui2-interest-question div{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.ui2-interest-question .ui2-chip,.ui2-interest-chips .ui2-chip{margin:0}
+.ui2-interest-question .ui2-chip:disabled,.ui2-interest-chips .ui2-chip:disabled{background:var(--paper);border-color:var(--line);color:var(--muted);cursor:default}
+.ui2-interest-other label{font-weight:650;color:var(--ink)}
+.ui2-interest-other textarea,.ui2-interest-edit textarea{width:100%;min-height:var(--control-h);padding:var(--space-2) var(--space-3);border:1px solid var(--muted);border-radius:var(--radius-small);background:var(--paper);color:var(--ink);font:inherit;line-height:1.5;resize:vertical}
+.ui2-interest-other textarea:disabled{border-color:var(--line);background:var(--paper);color:var(--muted)}
+.ui2-interest-other textarea::placeholder,.ui2-interest-edit textarea::placeholder{color:var(--muted);opacity:1}
+.ui2-interest-other p.ui2-interest-words{margin:0;font-size:var(--text-sm);font-weight:650;line-height:1.5;color:var(--navy)}
+.ui2-interest-other .ui2-btn:disabled,.ui2-interest-edit .ui2-btn:disabled{background:var(--paper);border-color:var(--muted);color:var(--muted);cursor:default}
+.ui2-interest-hint{margin:0;font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-interest-error{margin:0;font-size:var(--text-sm);font-weight:700;line-height:1.5;color:var(--warn)}
+.ui2-interest-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-4)}
+.ui2-interest-actions .ui2-text-btn{gap:var(--space-1)}
+
+/* ----- Interests in the student's own words: one card each ----- */
+.ui2-interest-list{display:grid;gap:var(--space-3);margin-bottom:var(--space-3)}
+.ui2-interest{display:grid;gap:var(--space-2);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-interest p.ui2-interest-label{margin:0;font-size:var(--text-sm);font-weight:650;color:var(--muted)}
+.ui2-interest-text{margin:0;padding-inline-start:var(--space-3);border-inline-start:3px solid var(--navy);color:var(--ink);line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.ui2-interest-chips{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
+.ui2-interest-chips>span{font-size:var(--text-sm);font-weight:650;color:var(--ink)}
+.ui2-interest-edit{display:grid;gap:var(--space-2)}
+.ui2-interest-edit label{font-weight:650;color:var(--ink)}

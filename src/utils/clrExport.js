@@ -72,7 +72,8 @@ export function buildClrExport({ state, skills = [], lang = 'ar', now = new Date
         'kamin:provenanceLevel': project.level,
         'kamin:reviewStatus': project.reviewStatus,
       })),
-      'kamin:evidenceStrength': skill.confidenceLabel || 'preliminary',
+      'kamin:evidenceStrength': skill.evidenceLevel || skill.confidenceLabel || 'preliminary',
+      'kamin:evidenceLevelsVersion': skill.evidenceLevelsVersion || null,
       'kamin:provenanceLevel': provenance.level,
       'kamin:verificationStatus': 'self-asserted',
     }

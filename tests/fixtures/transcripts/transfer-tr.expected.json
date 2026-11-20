@@ -1,0 +1,33 @@
+{
+  "fixture": "transfer-tr",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "EQUIVALENT COURSES with several TR rows (no marks), then KAU terms",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "COMPUTING & INFO. TECH.",
+    "collegeId": "FCIT",
+    "majorRaw": "INFORMATION TECHNOLOGY",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": null
+  },
+  "checkGpa": "4.25",
+  "rows": [
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":null,"letter":"TR","term":null,"year":null,"system":null,"section":"equivalent","retaken":false,"inCourseMap":false},
+    {"code":"ELI-102","credits":{"ua":2,"ue":2},"marks":null,"letter":"TR","term":null,"year":null,"system":null,"section":"equivalent","retaken":false,"inCourseMap":false},
+    {"code":"MATH-110","credits":{"ua":3,"ue":3},"marks":null,"letter":"TR","term":null,"year":null,"system":null,"section":"equivalent","retaken":false,"inCourseMap":false},
+    {"code":"STAT-110","credits":{"ua":3,"ue":3},"marks":null,"letter":"TR","term":null,"year":null,"system":null,"section":"equivalent","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-110","credits":{"ua":3,"ue":3},"marks":null,"letter":"TR","term":null,"year":null,"system":null,"section":"equivalent","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-201","credits":{"ua":3,"ue":3},"marks":84,"letter":"B","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-240","credits":{"ua":3,"ue":3},"marks":91,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":88,"letter":"B+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-202","credits":{"ua":3,"ue":3},"marks":75,"letter":"C+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-250","credits":{"ua":3,"ue":3},"marks":86,"letter":"B+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-251","credits":{"ua":3,"ue":3},"marks":80,"letter":"B","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":93,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-260","credits":{"ua":3,"ue":3},"marks":78,"letter":"C+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-305","credits":{"ua":3,"ue":3},"marks":89,"letter":"B+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ISLS-201","credits":{"ua":2,"ue":2},"marks":95,"letter":"A+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false}
+  ]
+}

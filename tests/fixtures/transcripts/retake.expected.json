@@ -1,0 +1,28 @@
+{
+  "fixture": "retake",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "the same code twice: F, then B+ in a later term",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "COMPUTING AND INFORMATION TECH.",
+    "collegeId": "FCIT",
+    "majorRaw": "INFORMATION TECHNOLOGY",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": null
+  },
+  "checkGpa": "3.95",
+  "rows": [
+    {"code":"CPIT-240","credits":{"ua":3,"ue":3},"marks":52,"letter":"F","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":true,"inCourseMap":true},
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":90,"letter":"A","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":85,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-110","credits":{"ua":3,"ue":3},"marks":77,"letter":"C+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-250","credits":{"ua":3,"ue":3},"marks":82,"letter":"B","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":94,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"STAT-110","credits":{"ua":3,"ue":3},"marks":88,"letter":"B+","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-240","credits":{"ua":3,"ue":3},"marks":87,"letter":"B+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPIT-251","credits":{"ua":3,"ue":3},"marks":91,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"ISLS-201","credits":{"ua":2,"ue":2},"marks":80,"letter":"B","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false}
+  ]
+}

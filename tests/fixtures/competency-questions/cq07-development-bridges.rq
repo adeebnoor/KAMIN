@@ -1,0 +1,7 @@
+PREFIX k: <urn:kamin:>
+SELECT DISTINCT ?gap ?learning WHERE {
+  GRAPH <urn:kamin:graph:reference> {
+    <urn:kamin:occupation:data-analyst> k:marketSignalsCapability ?gap .
+    ?learning a <http://data.europa.eu/snb/model/ontology/LearningOpportunity> ; k:developsCapability ?gap . }
+  FILTER NOT EXISTS { GRAPH <urn:kamin:graph:profile-input> { ?c k:predicate k:demonstrates ; k:object ?gap ; k:status "active" } }
+} ORDER BY ?gap

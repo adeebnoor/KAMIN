@@ -2,8 +2,11 @@ import {readFile,writeFile,readdir,mkdir} from 'node:fs/promises'
 import {parse,parseFragment,serialize} from 'parse5'
 import {headerHtml,footerHtml,text,pageHref} from '../public/site-content.js'
 import {pages,additions,extraFaq} from './public-page-content.mjs'
-import {securityHeaders} from './security-headers.mjs'
+import {metaContentSecurityPolicy} from './security-headers.mjs'
 import {hostingConfig} from './hosting-config.mjs'
+import {COURSE_EVIDENCE_PRINCIPLE} from '../src/content/trustCopy.js'
+import {buildStamp,REPORT_FILE} from './test-report-lib.mjs'
+import {execFileSync} from 'node:child_process'
 const {origin,documentUrls}=hostingConfig()
 const publicPath=(file,lang)=>pageHref(file,lang,documentUrls)
 const documentFile=file=>file==='index.html'?'':documentUrls==='clean'?file.replace(/\.html$/,''):file
@@ -17,6 +20,10 @@ function append(n,html){const children=parseFragment(html).childNodes;for(const 
 function prepend(n,html){const children=parseFragment(html).childNodes;for(const c of children)c.parentNode=n;n.childNodes.unshift(...children)}
 const getText=n=>n.nodeName==='#text'?n.value:(n.childNodes||[]).map(getText).join('')
 const activeIn=(n,lang)=>{for(let p=n;p;p=p.parentNode){const l=attrs(p)['data-kamin-lang'];if(l&&l!==lang)return false}return true}
+// Task 17: which version this build comes from. Hosts give it in an env var; otherwise ask git.
+const gitOut=(...args)=>{try{return execFileSync('git',args,{stdio:['ignore','pipe','ignore']}).toString().trim()}catch{return null}}
+const buildCommit=(process.env.RENDER_GIT_COMMIT||process.env.VERCEL_GIT_COMMIT_SHA||process.env.GITHUB_SHA||gitOut('rev-parse','HEAD')||'').slice(0,7)||null
+const stampFor=body=>{const a=attrs(body),measured=a['data-report-commit'],dirty=a['data-report-dirty']==='true';const sameCode=Boolean(measured&&buildCommit&&!dirty&&gitOut('diff','--name-only',measured,buildCommit,'--','.',`:(exclude)${REPORT_FILE}`)==='');return{measuredCommit:measured&&measured!=='unknown'?measured:null,measuredDirty:dirty,buildCommit,sameCode}}
 const plain=html=>getText(parseFragment(html)).trim().replace(/\s+/g,' ')
 for(const [file,locales]of Object.entries(pages)){
  const sections=Object.entries(locales).map(([lang,[title,lead,body]])=>`<section data-kamin-lang="${lang}" ${lang==='en'?'hidden':''}><h1>${title}</h1><p class="k-doc-lead">${lead}</p>${body}</section>`).join('')
@@ -46,10 +53,16 @@ for(const file of files){
    }
    prepend(body,`<a class="k-skip" href="#main">${text(lang,'تجاوز إلى المحتوى','Skip to content')}</a>${headerHtml(lang,file)}`);append(body,footerHtml(lang))
    for(const n of all(head,n=>n.tagName==='script'&&attrs(n).src==='/static-i18n.js'))set(n,'type','module')
-   append(head,'<link rel="stylesheet" href="/semantic-tools.css">')
+   append(head,'<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/semantic-tools.css">')
   }else{
    const skip=all(body,n=>n.tagName==='a'&&attrs(n).class==='skip-link')[0];if(skip){skip.childNodes=[];append(skip,text(lang,'تجاوز إلى المحتوى','Skip to content'))}
   }
+  // Task 03: the course-evidence principle always comes from the one constant, never a hand copy.
+  for(const n of all(body,n=>attrs(n)['data-course-evidence-principle']!==undefined)){
+   let l='ar';for(let p=n;p;p=p.parentNode){const v=attrs(p)['data-kamin-lang'];if(v){l=v;break}}
+   n.childNodes=[];append(n,`<strong>${escape(COURSE_EVIDENCE_PRINCIPLE[l]||COURSE_EVIDENCE_PRINCIPLE.ar)}</strong>`)
+  }
+  if(file==='tests.html'){const stamp=stampFor(body);for(const n of all(body,n=>attrs(n)['data-build-stamp']!==undefined)){n.childNodes=[];append(n,buildStamp(attrs(n)['data-lang']||lang,stamp))}}
   for(const n of all(body,n=>attrs(n)['data-kamin-lang'])){
    const l=attrs(n)['data-kamin-lang'];if(locale&&l!==lang){remove(n);continue}
    set(n,'lang',l);if(l!==lang){set(n,'hidden','');set(n,'aria-hidden','true');set(n,'inert','')}else{removeAttr(n,'hidden');removeAttr(n,'aria-hidden');removeAttr(n,'inert')}
@@ -58,7 +71,7 @@ for(const file of files){
   const description=home?text(lang,'ابدأ باهتماماتك وهدفك، وافهم الروابط بين أدلتك وقدراتك ومساراتك. ملفك تحت سيطرتك.','Start with your interests and a goal. Understand the connections between evidence, capabilities and pathways in a profile you control.'):ba[`data-description-${lang}`]||plain(all(body,n=>n.tagName==='p'&&activeIn(n,lang)).slice(0,1).map(serialize).join('')).slice(0,170)||title
   const canonical=origin+publicPath(home?'':file,lang)
   for(const n of all(head,n=>n.tagName==='title'||(n.tagName==='meta'&&['description','twitter:card','twitter:title','twitter:description','twitter:image'].includes(attrs(n).name))||(n.tagName==='meta'&&(attrs(n).property?.startsWith('og:')||attrs(n)['http-equiv']==='Content-Security-Policy'))||(n.tagName==='link'&&['canonical','alternate'].includes(attrs(n).rel))||(n.tagName==='script'&&attrs(n).type==='application/ld+json')))remove(n)
-  append(head,`<title>${escape(title)}</title><meta name="description" content="${escape(description)}"><meta http-equiv="Content-Security-Policy" content="${escape(securityHeaders['Content-Security-Policy'].replace("; frame-ancestors 'none'",''))}"><link rel="stylesheet" href="/site-chrome.css"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="ar-SA" href="${origin}/ar/${documentFile(file)}"><link rel="alternate" hreflang="en" href="${origin}/en/${documentFile(file)}"><link rel="alternate" hreflang="x-default" href="${origin}/${documentFile(file)}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${lang==='ar'?'ar_SA':'en_US'}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:image" content="${origin}/og-kamin-${lang}.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${origin}/og-kamin-${lang}.jpg">`)
+  append(head,`<title>${escape(title)}</title><meta name="description" content="${escape(description)}"><meta http-equiv="Content-Security-Policy" content="${escape(metaContentSecurityPolicy)}"><link rel="stylesheet" href="/site-chrome.css"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="ar-SA" href="${origin}/ar/${documentFile(file)}"><link rel="alternate" hreflang="en" href="${origin}/en/${documentFile(file)}"><link rel="alternate" hreflang="x-default" href="${origin}/${documentFile(file)}"><meta property="og:type" content="website"><meta property="og:url" content="${canonical}"><meta property="og:locale" content="${lang==='ar'?'ar_SA':'en_US'}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:image" content="${origin}/og-kamin-${lang}.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${origin}/og-kamin-${lang}.jpg">`)
   const ld=home?{'@type':'SoftwareApplication',name:text(lang,'كامن','Kamin'),applicationCategory:'EducationalApplication',operatingSystem:'Web',offers:{'@type':'Offer',price:'0',priceCurrency:'SAR'},creator:{'@type':'Person',name:'Adeeb Noor',url:'https://adeebnoor.github.io/'}}:file==='faq.html'?{'@type':'FAQPage',mainEntity:extraFaq[lang].map(([q,a])=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}:{'@type':'WebPage',name:title}
   append(head,`<script id="${home?'kamin-ld':'page-ld'}" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org',...ld,url:canonical,inLanguage:lang,description}).replaceAll('<','\\u003c')}</script>`)
   for(const link of all(body,n=>n.tagName==='a'&&attrs(n).href)){

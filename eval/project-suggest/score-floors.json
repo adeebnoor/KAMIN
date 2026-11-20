@@ -1,0 +1,42 @@
+{
+  "note": "Task 40: the lowest scores the lexicon and improved engines may reach on the frozen test sets. npm test (tests/engineScores.test.js) fails on any drop below these values; on a rise it passes and prints \"update the floors\".",
+  "rule": "Floors change only in a PR that names the reason. A lexicon change is tuned on dev-set.json only. Only approved frozen sets have floors: testset.json (v1) and testset-ai-v2.json now, testset-v2.json once it is frozen. Never testset-ai-v3.json (Claude-drafted, reviewed by people) or a diagnostic set.",
+  "harness": "kamin-eval-project-suggest-v1",
+  "measuredAt": "2026-11-17",
+  "measuredOn": "main 71962cb",
+  "counts": "tp, fp, fn are the exact values; precision, recall and f1 are the same values in percent, rounded to 0.1. The test compares exact ratios computed from the counts.",
+  "sets": {
+    "testset.json": {
+      "sha256": "f63fc3b1dc54c03479d92fa155ff95d08384229e61a5841c59e8d2947f99186e",
+      "cases": 40,
+      "methods": {
+        "lexicon": {
+          "ar": { "tp": 14, "fp": 1, "fn": 9, "precision": 93.3, "recall": 60.9, "f1": 73.7 },
+          "en": { "tp": 13, "fp": 2, "fn": 10, "precision": 86.7, "recall": 56.5, "f1": 68.4 },
+          "all": { "tp": 27, "fp": 3, "fn": 19, "precision": 90, "recall": 58.7, "f1": 71.1 }
+        },
+        "improved": {
+          "ar": { "tp": 18, "fp": 1, "fn": 5, "precision": 94.7, "recall": 78.3, "f1": 85.7 },
+          "en": { "tp": 19, "fp": 0, "fn": 4, "precision": 100, "recall": 82.6, "f1": 90.5 },
+          "all": { "tp": 37, "fp": 1, "fn": 9, "precision": 97.4, "recall": 80.4, "f1": 88.1 }
+        }
+      }
+    },
+    "testset-ai-v2.json": {
+      "sha256": "11f5e181eb0beb529611bbc85986c268ac9ba6fe11443c570fa3723ebfd8195d",
+      "cases": 52,
+      "methods": {
+        "lexicon": {
+          "ar": { "tp": 12, "fp": 3, "fn": 13, "precision": 80, "recall": 48, "f1": 60 },
+          "en": { "tp": 13, "fp": 2, "fn": 10, "precision": 86.7, "recall": 56.5, "f1": 68.4 },
+          "all": { "tp": 25, "fp": 5, "fn": 23, "precision": 83.3, "recall": 52.1, "f1": 64.1 }
+        },
+        "improved": {
+          "ar": { "tp": 20, "fp": 2, "fn": 5, "precision": 90.9, "recall": 80, "f1": 85.1 },
+          "en": { "tp": 21, "fp": 1, "fn": 2, "precision": 95.5, "recall": 91.3, "f1": 93.3 },
+          "all": { "tp": 41, "fp": 3, "fn": 7, "precision": 93.2, "recall": 85.4, "f1": 89.1 }
+        }
+      }
+    }
+  }
+}

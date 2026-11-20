@@ -4,6 +4,8 @@
 // SSCO alignment stays unresolved until a code-and-meaning review produces a valid match.
 import { targetProfiles, TARGET_CATALOG_VERSION } from '../matching/targets.js'
 import { courseSkillMap } from '../data.js'
+import { FCIT_CATALOG, catalogCourse, mappingReviewStatus } from './fcit.js'
+import { canonicalCourseCode } from '../ontology/registry.js'
 
 export const DEFAULT_REVIEW_OWNER = { ar: 'مراجع مختص لم يُعيَّن بعد', en: 'Specialist reviewer not yet assigned' }
 export const DEFAULT_VALIDITY_SCOPE = { ar: 'تجربة الحوسبة في KAU-FCIT فقط؛ لا يُعمَّم على برامج أخرى', en: 'KAU-FCIT computing pilot only; not generalised to other programmes' }
@@ -29,13 +31,17 @@ export function relationGovernance(target) {
 }
 
 export function mappingGovernance(code) {
-  const mapping = courseSkillMap[code]
+  const mapping = courseSkillMap[canonicalCourseCode(code)]
   if (!mapping) return null
+  const course = catalogCourse(code)
   return {
-    code, skills: mapping.skills, evidenceType: mapping.evidenceType,
-    source: { title: 'Kamin pilot course-to-outcome mapping', url: '/mapping.html' },
-    version: 'course-skill-map-pilot-v1',
-    reviewedAt: '2026-09-26',
+    code: course.code, skills: mapping.skills, evidenceType: mapping.evidenceType,
+    source: { title: course.catalog, url: '/mapping.html' },
+    version: course.mappingVersion,
+    // Until a named department reviewer signs off, this is the date the map was prepared
+    // against the catalog; reviewStatus stays 'proposed'.
+    reviewedAt: course.reviewedAt || FCIT_CATALOG.preparedAt,
+    reviewStatus: mappingReviewStatus(course),
     reviewOwner: { ar: 'قسم تقنية المعلومات KAU-FCIT (اعتماد معلّق)', en: 'KAU-FCIT IT department (approval pending)' },
     validityScope: { ar: 'رموز مقررات برنامج تقنية المعلومات في KAU-FCIT فقط', en: 'KAU-FCIT IT programme course codes only' },
   }

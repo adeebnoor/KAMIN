@@ -1,0 +1,38 @@
+{
+  "fixture": "fcit-cs-1p",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "FCIT, CS major, 1 page",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "COMPUTING AND INFORMATION TECHNOLOGY",
+    "collegeId": "FCIT",
+    "majorRaw": "COMPUTER SCIENCE",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": null
+  },
+  "checkGpa": "4.00",
+  "rows": [
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":85,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-110","credits":{"ua":3,"ue":3},"marks":90,"letter":"A","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPIT-110","credits":{"ua":3,"ue":3},"marks":45,"letter":"F","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":88,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ELI-102","credits":{"ua":2,"ue":2},"marks":92,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-202","credits":{"ua":3,"ue":3},"marks":81,"letter":"B","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"PHYS-110","credits":{"ua":3,"ue":3},"marks":69,"letter":"D+","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"STAT-110","credits":{"ua":3,"ue":3},"marks":87,"letter":"B+","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPCS-203","credits":{"ua":3,"ue":3},"marks":84,"letter":"B","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-211","credits":{"ua":3,"ue":3},"marks":76,"letter":"C+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-222","credits":{"ua":3,"ue":3},"marks":90,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-202","credits":{"ua":3,"ue":3},"marks":73,"letter":"C","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-204","credits":{"ua":3,"ue":3},"marks":88,"letter":"B+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-241","credits":{"ua":3,"ue":3},"marks":95,"letter":"A+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPCS-214","credits":{"ua":3,"ue":3},"marks":80,"letter":"B","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":91,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-351","credits":{"ua":3,"ue":3},"marks":86,"letter":"B+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":true},
+    {"code":"CPCS-361","credits":{"ua":3,"ue":3},"marks":78,"letter":"C+","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-324","credits":{"ua":3,"ue":3},"marks":83,"letter":"B","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CPCS-425","credits":{"ua":3,"ue":3},"marks":91,"letter":"A","term":"FALL","year":"2023/2024","system":"semester","section":"term","retaken":false,"inCourseMap":true}
+  ]
+}

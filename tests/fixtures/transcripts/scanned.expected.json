@@ -1,0 +1,10 @@
+{
+  "fixture": "scanned",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "an image-only page (no text layer)",
+  "pages": 1,
+  "scanned": true,
+  "student": null,
+  "checkGpa": null,
+  "rows": []
+}

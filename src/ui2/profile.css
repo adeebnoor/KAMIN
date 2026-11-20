@@ -1,0 +1,70 @@
+/* Task 66 · Profile. Loads with src/ui2/screens/Profile.jsx only (its own lazy chunk). Tokens only, as in ui2.css: brand
+   colours from public/brand.css (dark values in src/ui2/theme.css), spacing, text sizes and radius from src/tokens.css.
+   The header, the capabilities, the three sections, More and the two links are --paper boxes on the --soft page; the
+   reasons sheet is --paper (tests/themeContrast.test.js checks every pair in both themes). Compact on purpose: with
+   the synthetic example and the details closed, Profile fits in two screens of a 390×844 phone. */
+
+.ui2-profile-head,.ui2-profile-caps,.ui2-profile-map,.ui2-profile-section,.ui2-profile-more,.ui2-profile-links{margin:0 0 var(--space-3);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-profile h2{margin:0;font-size:var(--text-lg);line-height:1.3;color:var(--navy)}
+.ui2-page .ui2-profile-head p,.ui2-page .ui2-profile-caps p,.ui2-page .ui2-profile-section p,.ui2-page .ui2-profile-more p{margin:0;font-size:var(--text-base);line-height:1.5}
+
+/* ----- The college and major, the transcript line and "Update transcript" ----- */
+.ui2-page .ui2-profile-head p{display:flex;flex-wrap:wrap;align-items:center;gap:0 var(--space-2)}
+.ui2-profile-head svg{flex:none;color:var(--navy)}
+.ui2-page .ui2-profile-head p.ui2-profile-record{color:var(--muted);font-size:var(--text-sm)}
+.ui2-profile-head .ui2-text-btn{gap:var(--space-1)}
+.ui2-profile-empty{display:grid;justify-items:start;gap:var(--space-2)}
+
+/* ----- My capabilities: the shared "because" line, the rows, "What do the levels mean?" ----- */
+.ui2-profile-caps h2{margin-bottom:var(--space-1)}
+.ui2-page p.ui2-why-line{margin:0 0 var(--space-1);font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-cap-list{margin:0;padding:0;list-style:none}
+.ui2-cap{display:flex;align-items:center;gap:var(--space-2);width:100%;min-height:var(--control-h);padding:var(--space-1) 0;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;text-align:start;cursor:pointer}
+.ui2-cap-list li:last-child .ui2-cap{border-bottom:0}
+.ui2-cap:hover .ui2-cap-name{text-decoration:underline;text-underline-offset:3px}
+.ui2-cap-name{flex:1;min-width:0;font-weight:650}
+.ui2-cap-level{flex:none;font-size:var(--text-sm);font-weight:700;color:var(--navy)}
+.ui2-cap-source{display:inline-flex;flex:none;color:var(--muted)}
+.ui2-cap-open{flex:none;transform:rotate(-90deg)}
+[dir="rtl"] .ui2-cap-open{transform:rotate(90deg)}
+.ui2-legend{margin-top:var(--space-1);font-size:var(--text-sm);line-height:1.5;color:var(--ink)}
+.ui2-legend summary{display:flex;align-items:center;min-height:var(--control-h);font-weight:650;color:var(--navy);cursor:pointer}
+.ui2-legend ul{margin:0 0 var(--space-2);padding-inline-start:var(--space-4)}
+.ui2-sheet-body .ui2-legend li{display:list-item}
+.ui2-page .ui2-legend p,.ui2-legend p{margin:0 0 var(--space-2);font-size:var(--text-sm)}
+
+/* ----- My projects, My interests, My goals: a heading with Edit, one line ----- */
+.ui2-profile-section-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 var(--space-3)}
+.ui2-profile-section-head .ui2-text-btn{gap:var(--space-1)}
+.ui2-page p.ui2-profile-summary{font-size:var(--text-sm);color:var(--muted);overflow-wrap:anywhere}
+
+/* ----- More, Settings and Help: rows the height of a control ----- */
+.ui2-more-list,.ui2-profile-links{list-style:none}
+.ui2-more-list{margin:var(--space-1) 0 0;padding:0}
+.ui2-profile-links{padding-block:var(--space-1)}
+/* Task 74 · the "My map" row: a box the height of one control until the map opens (src/ui2/map.css). */
+.ui2-profile-map{padding-block:var(--space-1)}
+.ui2-more-toggle{display:flex;align-items:center;gap:var(--space-2);width:100%;min-height:var(--control-h);padding:0;border:0;background:none;color:var(--navy);font:inherit;font-weight:650;text-align:start;cursor:pointer}
+.ui2-more-toggle:hover span{text-decoration:underline;text-underline-offset:3px}
+.ui2-more-toggle svg{flex:none}
+.ui2-more-panel{margin:var(--space-1) 0 var(--space-3);border-radius:var(--radius-card)}
+.ui2-profile-consent{display:grid;gap:var(--space-2);padding:var(--space-3);border:1px solid var(--line);border-radius:var(--radius-card)}
+.ui2-profile-consent label{display:flex;align-items:flex-start;gap:var(--space-3);line-height:1.5;cursor:pointer}
+.ui2-profile-consent input{flex:none;width:22px;height:22px;margin-top:var(--space-1);accent-color:var(--navy)}
+
+/* ----- The reasons sheet ----- */
+.ui2-cap-details{font-size:var(--text-sm);line-height:1.6;color:var(--ink)}
+.ui2-cap-details h3{margin:var(--space-3) 0 var(--space-1);font-size:var(--text-base);color:var(--navy)}
+.ui2-cap-details p{margin:0 0 var(--space-2)}
+.ui2-cap-details .skill-card{margin:0}
+.ui2-profile-change{margin-bottom:var(--space-3);border-radius:var(--radius-card)}
+.ui2-profile-change .what-changed{margin:0}
+.ui2-profile-college{margin:var(--space-1) 0 var(--space-2);border-radius:var(--radius-card)}
+.ui2-profile-college .college-prompt{margin:0}
+
+/* ----- The old interface's parts, unchanged (the card behind a capability, the summary of what changed, the college
+   note, and More's three panels): their own CSS (src/styles.css and the files next to it) paints light surfaces, so
+   inside .ui2-legacy the brand tokens keep public/brand.css's light values in both themes (the values are in
+   src/ui2/theme.css, the one file of the new interface that holds colour values). In the dark theme they read as
+   light cards on the dark page. ----- */
+.ui2-legacy{color-scheme:light;color:var(--ink);background:var(--paper)}

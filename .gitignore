@@ -2,6 +2,7 @@ node_modules/
 dist/
 playwright-report/
 test-results/
+reports/
 .DS_Store
 .env*
 !.env.example
@@ -19,6 +20,28 @@ public/og-kamin-*.jpg
 public/models/
 public/ai-runtime/
 public/semantic-tools.css
+public/tokens.css
 
 visual-candidates/
 review-candidates/
+
+# Task 38: writers' and reviewers' sheets stay private until import-v2 (never committed).
+eval/project-suggest/v2-kit/work/
+# Task 38b: reviewers' sheets for the Claude-drafted cases stay private until import-ai-review.
+eval/project-suggest/ai-drafts/work/
+# Task 38b: Claude's sealed labels and self-review, restored locally by unseal-proposed (never committed again).
+eval/project-suggest/ai-drafts/sealed/
+# Task 48: generated files never belong in Git.
+# Stray screenshots from b47d839 (an undefined path variable) and e2e/redesign.spec.js output
+# (now written to test-results/design-review/).
+undefined/
+design-review/
+# The owner's local e2e probes; also in playwright.config.js testIgnore.
+e2e/zz-*.spec.js
+e2e/zz-*.probe.js
+# Task 31: department review sheets stay on this computer (a filled sheet holds the reviewer's
+# name). Only the anonymised result enters the repository, in Task 32.
+/review/
+
+# Browser-model evaluation: downloaded comparison models stay local.
+evaluation/models/

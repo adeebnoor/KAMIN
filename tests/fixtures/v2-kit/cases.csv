@@ -1,0 +1,45 @@
+﻿id,lang,category,text,writer_role,author,target
+ar-01,ar,direct,حالة تجريبية ar-01: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,testing
+ar-02,ar,direct,حالة تجريبية ar-02: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,db-operations
+ar-03,ar,direct,حالة تجريبية ar-03: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,web-development
+ar-04,ar,direct,حالة تجريبية ar-04: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,systems-analysis
+ar-05,ar,direct,حالة تجريبية ar-05: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,requirements
+ar-06,ar,direct,حالة تجريبية ar-06: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,software
+ar-07,ar,direct,حالة تجريبية ar-07: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,database
+ar-08,ar,direct,حالة تجريبية ar-08: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,project
+ar-09,ar,synonym,حالة تجريبية ar-09: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,statistics
+ar-10,ar,synonym,حالة تجريبية ar-10: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,cyber
+ar-11,ar,synonym,حالة تجريبية ar-11: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,ai-work
+ar-12,ar,tech-name,حالة تجريبية ar-12: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,testing
+ar-13,ar,tech-name,حالة تجريبية ar-13: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,db-operations
+ar-14,ar,tech-name,حالة تجريبية ar-14: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,web-development
+ar-15,ar,multi,حالة تجريبية ar-15: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,systems-analysis statistics
+ar-16,ar,multi,حالة تجريبية ar-16: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,requirements cyber
+ar-17,ar,multi,حالة تجريبية ar-17: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,software ai-work
+ar-18,ar,should-abstain,حالة تجريبية ar-18: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,
+ar-19,ar,should-abstain,حالة تجريبية ar-19: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,
+ar-20,ar,should-abstain,حالة تجريبية ar-20: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,
+ar-21,ar,dialect,حالة تجريبية ar-21: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,database
+ar-22,ar,dialect,حالة تجريبية ar-22: نص بديل وليس وصفًا حقيقيًا.,fixture,FX-A,project
+en-01,en,direct,"Fixture case en-01: placeholder text, not a real description.",fixture,FX-B,testing
+en-02,en,direct,"Fixture case en-02: placeholder text, not a real description.",fixture,FX-B,db-operations
+en-03,en,direct,"Fixture case en-03: placeholder text, not a real description.",fixture,FX-B,web-development
+en-04,en,direct,"Fixture case en-04: placeholder text, not a real description.",fixture,FX-B,systems-analysis
+en-05,en,direct,"Fixture case en-05: placeholder text, not a real description.",fixture,FX-B,requirements
+en-06,en,direct,"Fixture case en-06: placeholder text, not a real description.",fixture,FX-B,software
+en-07,en,direct,"Fixture case en-07: placeholder text, not a real description.",fixture,FX-B,database
+en-08,en,direct,"Fixture case en-08: placeholder text, not a real description.",fixture,FX-B,project
+en-09,en,synonym,"Fixture case en-09: placeholder text, not a real description.",fixture,FX-B,statistics
+en-10,en,synonym,"Fixture case en-10: placeholder text, not a real description.",fixture,FX-B,cyber
+en-11,en,synonym,"Fixture case en-11: placeholder text, not a real description.",fixture,FX-B,ai-work
+en-12,en,tech-name,"Fixture case en-12: placeholder text, not a real description.",fixture,FX-B,testing
+en-13,en,tech-name,"Fixture case en-13: placeholder text, not a real description.",fixture,FX-B,db-operations
+en-14,en,tech-name,"Fixture case en-14: placeholder text, not a real description.",fixture,FX-B,web-development
+en-15,en,multi,"Fixture case en-15: placeholder text, not a real description.",fixture,FX-B,systems-analysis statistics
+en-16,en,multi,"Fixture case en-16: placeholder text, not a real description.",fixture,FX-B,requirements cyber
+en-17,en,multi,"Fixture case en-17: placeholder text, not a real description.",fixture,FX-B,software ai-work
+en-18,en,should-abstain,"Fixture case en-18: placeholder text, not a real description.",fixture,FX-B,
+en-19,en,should-abstain,"Fixture case en-19: placeholder text, not a real description.",fixture,FX-B,
+en-20,en,should-abstain,"Fixture case en-20: placeholder text, not a real description.",fixture,FX-B,
+en-21,en,direct,"Fixture case en-21: placeholder text, not a real description.",fixture,FX-B,database
+en-22,en,direct,"Fixture case en-22: placeholder text, not a real description.",fixture,FX-B,project

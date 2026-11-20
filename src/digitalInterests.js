@@ -43,6 +43,12 @@ export function suggestDigitalInterests(text, consent){
   if(!normalizeDigitalInterests(consent).analysisConsent) throw new Error('DIGITAL_CONSENT_REQUIRED')
   if(typeof text !== 'string' || !text.trim()) throw new Error('DIGITAL_TEXT_REQUIRED')
   if(text.length > 4000) throw new Error('DIGITAL_TEXT_TOO_LONG')
+  return matchDigitalTopics(text)
+}
+
+// Task 56: the same topic matching, without the digital-analysis consent check, for interests the
+// student writes in their own words (covered by the interests consent).
+export function matchDigitalTopics(text){
   // Whole token sequences avoid matches such as React in "reaction" or AI in "paid".
   const haystack = ` ${tokens(text).join(' ')} `
   return DIGITAL_TOPICS.flatMap(topic => {

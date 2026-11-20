@@ -124,6 +124,22 @@ export function addObservation(graph,observation){
   return {...graph,observations:[...(graph.observations||[]),observation],updatedAt:nowIso()}
 }
 
+// Task 04: evidence claims must point at evidence that still exists. Removes every
+// kamin:demonstrates / kamin:verifiedBy claim whose source evidence entity or capability entity is
+// no longer in the graph (capability checked for demonstrates), and returns what was removed. Other claims are left untouched.
+export const EVIDENCE_PREDICATES = Object.freeze(['kamin:demonstrates','kamin:verifiedBy'])
+export function sweepOrphans(graph){
+  const entityIds=new Set((graph?.entities||[]).map(entity=>entity['@id']))
+  const removed=[]
+  const claims=(graph?.claims||[]).filter(claim=>{
+    if(!EVIDENCE_PREDICATES.includes(claim.predicate)) return true
+    const missing=!claim.source||!entityIds.has(claim.source)?'source-missing':claim.predicate==='kamin:demonstrates'&&claim.object&&!entityIds.has(claim.object)?'object-missing':null
+    if(missing) removed.push({id:claim['@id'],predicate:claim.predicate,source:claim.source||null,object:claim.object||null,reason:missing})
+    return !missing
+  })
+  return {graph:removed.length?{...graph,claims}:graph,removed}
+}
+
 export function validatePerson360(graph){
   const errors=[]
   const warnings=[]

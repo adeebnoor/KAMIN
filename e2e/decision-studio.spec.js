@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
+import { openDashboardMore } from './nav.js'
 import AxeBuilder from '@axe-core/playwright'
 async function openProfile(page) {
  await page.goto('/?lang=ar')
- await page.locator('.hero-other-start summary').click()
- await page.getByRole('button',{name:'ابدأ برفع سجلك'}).first().click()
+ // Task 14: the home page opens the workspace from its closing section.
+ await page.getByRole('button',{name:'افتح مساحة العمل'}).first().click()
  await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي'}).click()
  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
  await page.getByRole('button',{name:/أعتمد السجل/}).click()
@@ -11,7 +12,7 @@ async function openProfile(page) {
 test('network connections explain a source and layout fits mobile',async({page})=>{
  await page.goto('/?lang=ar')
  await page.locator('.pilot-advanced > summary').click()
- await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
+ await page.locator('.relationship-map').getByRole('button',{name:/CPIT-240/}).click()
  await expect(page.locator('.relationship-node-info')).toContainText('لا تعني توثيقًا من الجامعة')
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
  const contained=await page.locator('.relationship-map .relationship-node').evaluateAll(nodes=>nodes.every(n=>{const r=n.getBoundingClientRect();return [...n.querySelectorAll('small,strong,svg')].every(c=>{const b=c.getBoundingClientRect();return b.left>=r.left&&b.right<=r.right&&b.top>=r.top&&b.bottom<=r.bottom})}))
@@ -21,6 +22,7 @@ test('network connections explain a source and layout fits mobile',async({page})
 })
 test('guide and plan use selected target without creating new evidence',async({page})=>{
  await openProfile(page)
+ await openDashboardMore(page)
  await page.getByRole('button',{name:'افتح شبكتي ومساعدي'}).click()
  await page.getByLabel('المسار الذي أريد استكشافه').selectOption('job-cyber-analyst')
  await page.getByText('مسار الدليل الأكاديمي إلى الفرصة',{exact:true}).click()
@@ -46,16 +48,19 @@ test('guide and plan use selected target without creating new evidence',async({p
 })
 test('invalid grades and repeated courses cannot be approved',async({page})=>{
  await openProfile(page)
- await page.getByRole('button',{name:'راجع وصحح بيانات سجلي'}).click()
+ // Task 05: the dashboard opens "My data"; the full re-review is one more click inside it.
+ await page.getByTestId('open-my-data').click()
+ await page.getByRole('button',{name:'أعد مراجعة السجل كاملًا'}).click()
  await page.getByLabel('الدرجة 1',{exact:true}).fill('AAA')
  await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
  await expect(page.getByRole('button',{name:/أعتمد السجل/})).toBeDisabled()
- await expect(page.locator('.quality-review')).toContainText('صيغة درجة غير معروفة')
+ // Task 22: the problem is named on the course's row (it was in a box above the table).
+ await expect(page.getByTestId('course-reason').filter({hasText:'صيغة درجة غير معروفة'})).toBeVisible()
 })
 test('English network and guide retain grounded explanations',async({page})=>{
  await page.goto('/?lang=en')
  await page.locator('.pilot-advanced > summary').click()
- await page.locator('.relationship-map').getByRole('button',{name:/CPIT-260/}).click()
+ await page.locator('.relationship-map').getByRole('button',{name:/CPIT-240/}).click()
  await expect(page.locator('.relationship-node-info')).toContainText('not institutional verification')
  await expect(page.locator('html')).toHaveAttribute('dir','ltr')
 })

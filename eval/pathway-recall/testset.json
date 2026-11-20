@@ -1,0 +1,716 @@
+{
+ "name": "pathway-recall-test",
+ "role": "test",
+ "version": "2026-11-18",
+ "provenance": "Written by Claude, approved by the team and the supervisor (stated by Amjd, 2026-11-18)",
+ "writing": "Queries written first, from what a student would type, without opening the matching code, the lexicon or the pathway texts; then labelled from the pathway ids and names only; frozen before any method was run on them.",
+ "pathwayCatalog": "kamin-targets-v2-20260930",
+ "labelRule": "expected lists every pathway that a careful adviser would show for the student's goal, judged from the 19 pathway ids and names only (the job and its practice project; a general pathway such as Junior Software Engineer for a specific kind of programming). Any one of them in the results counts as a hit. [] means none of the 19 serves the goal, so the right answer is 'nothing found'.",
+ "fields": {
+  "id": "case id",
+  "lang": "ar or en",
+  "query": "the text typed into the pathway search",
+  "dialect": "true for Saudi dialect",
+  "intent": "the writer's note on the goal; never read by a method",
+  "expected": "pathway ids, any of which is a hit; [] = should find nothing"
+ },
+ "cases": [
+  {
+   "id": "t-ar-01",
+   "lang": "ar",
+   "query": "ابي اشتغل في الامن السيبراني",
+   "dialect": true,
+   "intent": "cybersecurity work",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-02",
+   "lang": "ar",
+   "query": "ودي اتعلم تحليل البيانات",
+   "dialect": true,
+   "intent": "data analysis",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-ar-03",
+   "lang": "ar",
+   "query": "أرغب في العمل مطور تطبيقات جوال",
+   "dialect": false,
+   "intent": "mobile app development",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "t-ar-04",
+   "lang": "ar",
+   "query": "كيف أصير مبرمج مواقع",
+   "dialect": true,
+   "intent": "web development",
+   "expected": [
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "t-ar-05",
+   "lang": "ar",
+   "query": "ابغى وظيفة في الذكاء الاصطناعي وتعلم الآلة",
+   "dialect": true,
+   "intent": "AI / machine learning",
+   "expected": []
+  },
+  {
+   "id": "t-ar-06",
+   "lang": "ar",
+   "query": "مهتم بإدارة قواعد البيانات وكتابة استعلامات SQL",
+   "dialect": false,
+   "intent": "databases",
+   "expected": [
+    "job-database-administrator",
+    "training-database-administrator",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-ar-07",
+   "lang": "ar",
+   "query": "أحب أحلل احتياجات العملاء وأكتب المتطلبات",
+   "dialect": false,
+   "intent": "requirements / business analysis",
+   "expected": [
+    "job-business-analyst",
+    "job-systems-analyst",
+    "training-product-discovery",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-08",
+   "lang": "ar",
+   "query": "ودي أكون مدير مشاريع تقنية",
+   "dialect": true,
+   "intent": "IT project management",
+   "expected": [
+    "job-project-coordinator"
+   ]
+  },
+  {
+   "id": "t-ar-09",
+   "lang": "ar",
+   "query": "أبي أشتغل في الشبكات وأجهزة الراوتر",
+   "dialect": true,
+   "intent": "networking",
+   "expected": []
+  },
+  {
+   "id": "t-ar-10",
+   "lang": "ar",
+   "query": "أريد العمل في الحوسبة السحابية",
+   "dialect": false,
+   "intent": "cloud",
+   "expected": []
+  },
+  {
+   "id": "t-ar-11",
+   "lang": "ar",
+   "query": "اختبار البرمجيات وضمان الجودة",
+   "dialect": false,
+   "intent": "software testing / QA",
+   "expected": [
+    "job-qa-tester",
+    "training-qa-tester"
+   ]
+  },
+  {
+   "id": "t-ar-12",
+   "lang": "ar",
+   "query": "تصميم واجهات المستخدم وتجربة المستخدم",
+   "dialect": false,
+   "intent": "UI / UX design",
+   "expected": []
+  },
+  {
+   "id": "t-ar-13",
+   "lang": "ar",
+   "query": "الدعم الفني ومساعدة الموظفين في مشاكل الكمبيوتر",
+   "dialect": false,
+   "intent": "IT support",
+   "expected": []
+  },
+  {
+   "id": "t-ar-14",
+   "lang": "ar",
+   "query": "وش التخصص اللي يخليني اكتشف الاختراقات وأحمي الأنظمة؟",
+   "dialect": true,
+   "intent": "cybersecurity defence",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-15",
+   "lang": "ar",
+   "query": "أبغى أسوي داشبورد وتقارير للإدارة من البيانات",
+   "dialect": true,
+   "intent": "BI dashboards / data analysis",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard"
+   ]
+  },
+  {
+   "id": "t-ar-16",
+   "lang": "ar",
+   "query": "تحليل النظم وتصميمها في الشركات",
+   "dialect": false,
+   "intent": "systems analysis",
+   "expected": [
+    "job-systems-analyst",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-17",
+   "lang": "ar",
+   "query": "أحب الرياضيات والإحصاء وأبغى شغل يستخدمها",
+   "dialect": true,
+   "intent": "statistics / quantitative work",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-ar-18",
+   "lang": "ar",
+   "query": "بناء نماذج تعلم عميق ومعالجة الصور",
+   "dialect": false,
+   "intent": "deep learning / computer vision",
+   "expected": []
+  },
+  {
+   "id": "t-ar-19",
+   "lang": "ar",
+   "query": "مهندس برمجيات يكتب كود نظيف ويشتغل في فريق",
+   "dialect": false,
+   "intent": "software engineering",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "t-ar-20",
+   "lang": "ar",
+   "query": "تطوير الألعاب",
+   "dialect": false,
+   "intent": "game development",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "t-ar-21",
+   "lang": "ar",
+   "query": "حوكمة تقنية المعلومات والامتثال للأنظمة",
+   "dialect": false,
+   "intent": "IT governance / compliance",
+   "expected": []
+  },
+  {
+   "id": "t-ar-22",
+   "lang": "ar",
+   "query": "إدارة أنظمة التشغيل والخوادم لينكس",
+   "dialect": false,
+   "intent": "systems / server administration",
+   "expected": []
+  },
+  {
+   "id": "t-ar-23",
+   "lang": "ar",
+   "query": "أبي أصير عالم بيانات",
+   "dialect": true,
+   "intent": "data science",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-ar-24",
+   "lang": "ar",
+   "query": "حماية البيانات الشخصية والخصوصية",
+   "dialect": false,
+   "intent": "data privacy / protection",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-25",
+   "lang": "ar",
+   "query": "أتمتة العمليات بالذكاء الاصطناعي في الشغل",
+   "dialect": false,
+   "intent": "AI at work / automation",
+   "expected": [
+    "training-ai-work"
+   ]
+  },
+  {
+   "id": "t-ar-26",
+   "lang": "ar",
+   "query": "التحول الرقمي في الجهات الحكومية",
+   "dialect": false,
+   "intent": "digital transformation",
+   "expected": []
+  },
+  {
+   "id": "t-ar-27",
+   "lang": "ar",
+   "query": "كتابة سكربتات بايثون لتحليل الملفات",
+   "dialect": false,
+   "intent": "scripting / data processing",
+   "expected": [
+    "job-data-analyst",
+    "training-python-analytics"
+   ]
+  },
+  {
+   "id": "t-ar-28",
+   "lang": "ar",
+   "query": "ودي أشتغل في البنوك كمحلل أنظمة",
+   "dialect": true,
+   "intent": "systems analyst in banking",
+   "expected": [
+    "job-systems-analyst",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-29",
+   "lang": "ar",
+   "query": "تطوير الواجهات الخلفية وواجهات برمجة التطبيقات",
+   "dialect": false,
+   "intent": "backend / API development",
+   "expected": [
+    "job-software-engineer",
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "t-ar-30",
+   "lang": "ar",
+   "query": "الاستجابة للحوادث الأمنية والتحقيق الجنائي الرقمي",
+   "dialect": false,
+   "intent": "incident response / forensics",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-ar-31",
+   "lang": "ar",
+   "query": "أبي أصير طبيب أسنان",
+   "dialect": true,
+   "intent": "NOTHING: dentistry",
+   "expected": []
+  },
+  {
+   "id": "t-ar-32",
+   "lang": "ar",
+   "query": "وصفات طبخ سهلة للعشاء",
+   "dialect": false,
+   "intent": "NOTHING: cooking",
+   "expected": []
+  },
+  {
+   "id": "t-ar-33",
+   "lang": "ar",
+   "query": "تدريب كرة القدم للمبتدئين",
+   "dialect": false,
+   "intent": "NOTHING: football",
+   "expected": []
+  },
+  {
+   "id": "t-ar-34",
+   "lang": "ar",
+   "query": "دراسة القانون والمحاماة",
+   "dialect": false,
+   "intent": "NOTHING: law",
+   "expected": []
+  },
+  {
+   "id": "t-ar-35",
+   "lang": "ar",
+   "query": "الخط العربي والرسم بالألوان المائية",
+   "dialect": false,
+   "intent": "NOTHING: calligraphy and painting",
+   "expected": []
+  },
+  {
+   "id": "t-en-01",
+   "lang": "en",
+   "query": "I want to work in cybersecurity",
+   "dialect": false,
+   "intent": "cybersecurity",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-en-02",
+   "lang": "en",
+   "query": "how do I become a data analyst",
+   "dialect": false,
+   "intent": "data analysis",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-en-03",
+   "lang": "en",
+   "query": "build iphone and android apps",
+   "dialect": false,
+   "intent": "mobile apps",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "t-en-04",
+   "lang": "en",
+   "query": "front end web developer react",
+   "dialect": false,
+   "intent": "web front end",
+   "expected": [
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "t-en-05",
+   "lang": "en",
+   "query": "machine learning engineer jobs",
+   "dialect": false,
+   "intent": "machine learning",
+   "expected": []
+  },
+  {
+   "id": "t-en-06",
+   "lang": "en",
+   "query": "design and manage databases, write SQL queries",
+   "dialect": false,
+   "intent": "databases",
+   "expected": [
+    "job-database-administrator",
+    "training-database-administrator",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-en-07",
+   "lang": "en",
+   "query": "gather requirements from stakeholders and write user stories",
+   "dialect": false,
+   "intent": "requirements / business analysis",
+   "expected": [
+    "job-business-analyst",
+    "job-systems-analyst",
+    "training-product-discovery",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "t-en-08",
+   "lang": "en",
+   "query": "lead software projects and manage timelines",
+   "dialect": false,
+   "intent": "project management",
+   "expected": [
+    "job-project-coordinator"
+   ]
+  },
+  {
+   "id": "t-en-09",
+   "lang": "en",
+   "query": "configure networks routers and switches",
+   "dialect": false,
+   "intent": "networking",
+   "expected": []
+  },
+  {
+   "id": "t-en-10",
+   "lang": "en",
+   "query": "cloud computing AWS career",
+   "dialect": false,
+   "intent": "cloud",
+   "expected": []
+  },
+  {
+   "id": "t-en-11",
+   "lang": "en",
+   "query": "software testing and QA automation",
+   "dialect": false,
+   "intent": "testing / QA",
+   "expected": [
+    "job-qa-tester",
+    "training-qa-tester"
+   ]
+  },
+  {
+   "id": "t-en-12",
+   "lang": "en",
+   "query": "UX/UI design, wireframes and prototypes",
+   "dialect": false,
+   "intent": "UI / UX design",
+   "expected": []
+  },
+  {
+   "id": "t-en-13",
+   "lang": "en",
+   "query": "help desk IT support job",
+   "dialect": false,
+   "intent": "IT support",
+   "expected": []
+  },
+  {
+   "id": "t-en-14",
+   "lang": "en",
+   "query": "ethical hacking and penetration testing",
+   "dialect": false,
+   "intent": "offensive security",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-en-15",
+   "lang": "en",
+   "query": "build dashboards in power bi for managers",
+   "dialect": false,
+   "intent": "BI dashboards",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard"
+   ]
+  },
+  {
+   "id": "t-en-16",
+   "lang": "en",
+   "query": "systems analyst in a company",
+   "dialect": false,
+   "intent": "systems analysis",
+   "expected": [
+    "job-systems-analyst",
+    "training-systems-analyst"
+   ]
+  },
+  {
+   "id": "t-en-17",
+   "lang": "en",
+   "query": "I like statistics and probability",
+   "dialect": false,
+   "intent": "statistics",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-en-18",
+   "lang": "en",
+   "query": "computer vision and deep learning",
+   "dialect": false,
+   "intent": "deep learning / computer vision",
+   "expected": []
+  },
+  {
+   "id": "t-en-19",
+   "lang": "en",
+   "query": "become a software engineer",
+   "dialect": false,
+   "intent": "software engineering",
+   "expected": [
+    "job-software-engineer"
+   ]
+  },
+  {
+   "id": "t-en-20",
+   "lang": "en",
+   "query": "linux server administration",
+   "dialect": false,
+   "intent": "server administration",
+   "expected": []
+  },
+  {
+   "id": "t-en-21",
+   "lang": "en",
+   "query": "IT governance risk and compliance",
+   "dialect": false,
+   "intent": "IT governance / compliance",
+   "expected": []
+  },
+  {
+   "id": "t-en-22",
+   "lang": "en",
+   "query": "data scientist career path",
+   "dialect": false,
+   "intent": "data science",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-en-23",
+   "lang": "en",
+   "query": "protect personal data privacy",
+   "dialect": false,
+   "intent": "data privacy",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-en-24",
+   "lang": "en",
+   "query": "use AI tools to automate my work",
+   "dialect": false,
+   "intent": "AI at work",
+   "expected": [
+    "training-ai-work"
+   ]
+  },
+  {
+   "id": "t-en-25",
+   "lang": "en",
+   "query": "digital transformation in government",
+   "dialect": false,
+   "intent": "digital transformation",
+   "expected": []
+  },
+  {
+   "id": "t-en-26",
+   "lang": "en",
+   "query": "backend developer apis and microservices",
+   "dialect": false,
+   "intent": "backend development",
+   "expected": [
+    "job-software-engineer",
+    "job-web-developer",
+    "training-web-developer"
+   ]
+  },
+  {
+   "id": "t-en-27",
+   "lang": "en",
+   "query": "incident response and digital forensics",
+   "dialect": false,
+   "intent": "incident response / forensics",
+   "expected": [
+    "job-cyber-analyst"
+   ]
+  },
+  {
+   "id": "t-en-28",
+   "lang": "en",
+   "query": "i wanna do something with data lol",
+   "dialect": false,
+   "intent": "data (vague, casual)",
+   "expected": [
+    "job-data-analyst",
+    "training-bi-dashboard",
+    "training-data-portfolio",
+    "training-python-analytics",
+    "training-sql-analytics"
+   ]
+  },
+  {
+   "id": "t-en-29",
+   "lang": "en",
+   "query": "database administrator backup and recovery",
+   "dialect": false,
+   "intent": "database operations",
+   "expected": [
+    "job-database-administrator",
+    "training-database-administrator"
+   ]
+  },
+  {
+   "id": "t-en-30",
+   "lang": "en",
+   "query": "agile scrum master",
+   "dialect": false,
+   "intent": "agile project management",
+   "expected": [
+    "job-project-coordinator"
+   ]
+  },
+  {
+   "id": "t-en-31",
+   "lang": "en",
+   "query": "become a nurse in a hospital",
+   "dialect": false,
+   "intent": "NOTHING: nursing",
+   "expected": []
+  },
+  {
+   "id": "t-en-32",
+   "lang": "en",
+   "query": "best pizza dough recipe",
+   "dialect": false,
+   "intent": "NOTHING: cooking",
+   "expected": []
+  },
+  {
+   "id": "t-en-33",
+   "lang": "en",
+   "query": "learn to play the guitar",
+   "dialect": false,
+   "intent": "NOTHING: music",
+   "expected": []
+  },
+  {
+   "id": "t-en-34",
+   "lang": "en",
+   "query": "real estate agent license",
+   "dialect": false,
+   "intent": "NOTHING: real estate",
+   "expected": []
+  },
+  {
+   "id": "t-en-35",
+   "lang": "en",
+   "query": "marine biology research",
+   "dialect": false,
+   "intent": "NOTHING: marine biology",
+   "expected": []
+  }
+ ]
+}

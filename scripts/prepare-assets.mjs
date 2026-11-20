@@ -3,8 +3,11 @@ import path from 'node:path'
 import sharp from 'sharp'
 import { ictKnowledgeGraph } from '../src/knowledge/ictKgV1.js'
 import { courseSkillMap } from '../src/data.js'
+import { FCIT_CATALOG } from '../src/catalog/fcit.js'
 
 const root=process.cwd()
+// The public pages load these two app files: tokens.css defines the --space-* that semantic-tools.css uses.
+await copyFile(path.join(root,'src','tokens.css'),path.join(root,'public','tokens.css'))
 await copyFile(path.join(root,'src','semantic-tools.css'),path.join(root,'public','semantic-tools.css'))
 const pub=path.join(root,'public')
 const ocr=path.join(pub,'ocr')
@@ -62,8 +65,11 @@ await writeFile(path.join(knowledgeOut,'ict-kg-v1.jsonld'),JSON.stringify(ictKno
 await writeFile(path.join(mappingOut,'course-skill-map-v1.json'),JSON.stringify({
   version:'kamin-course-skill-map-v1',
   namespace:'KAU-FCIT pilot',
-  status:'governed-pilot-mapping',
-  reviewedAt:'2026-09-27',
+  // Learning outcomes are proposed (not yet department-reviewed), so the public export is a draft.
+  status:'draft',
+  reviewedAt:null,
+  catalog:FCIT_CATALOG.catalog,
+  mappingVersion:FCIT_CATALOG.mappingVersion,
   mappings:courseSkillMap,
 },null,2)+'\n')
 

@@ -1,3 +1,5 @@
+import { cleanAuditEntries } from './auditPrivacy.js'
+
 export const KAMIN_LOCAL_DB = 'kamin-local-profile-v1'
 export const KAMIN_LOCAL_STORE = 'profiles'
 export const KAMIN_LOCAL_KEY = 'current'
@@ -35,7 +37,8 @@ export async function readLocalProfile(){
     })
     await txDone(tx)
     if(!value || value.version!==KAMIN_LOCAL_VERSION || !value.state || typeof value.state!=='object') return null
-    return value.state
+    // Task 46: a copy saved before Task 46 may hold usage-log lines with a file name or a project title.
+    return Array.isArray(value.state.audit) ? {...value.state,audit:cleanAuditEntries(value.state.audit)} : value.state
   } finally { db.close() }
 }
 

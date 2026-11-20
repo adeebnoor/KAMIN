@@ -5,7 +5,7 @@ const rawTargetProfiles=[
   {
     id:'job-business-analyst',type:'job',
     title:{ar:'محلل أعمال',en:'Business Analyst'},
-    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Reference occupation profile — not a job posting'},
+    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Example job profile — not a job posting'},
     goals:['product','management'],
     requiredSkills:['requirements'],
     preferredInterests:['investigative','enterprising','conventional'],
@@ -17,7 +17,7 @@ const rawTargetProfiles=[
   {
     id:'job-data-analyst',type:'job',
     title:{ar:'محلل بيانات',en:'Data Analyst'},
-    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Reference occupation profile — not a job posting'},
+    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Example job profile — not a job posting'},
     goals:['data','product'],
     requiredSkills:['database','statistics'],
     occupationCodes:{esco:'2511.3',onet:'15-2051.01'},
@@ -31,7 +31,7 @@ const rawTargetProfiles=[
   {
     id:'job-project-coordinator',type:'job',
     title:{ar:'منسق مشاريع تقنية',en:'IT Project Coordinator'},
-    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Reference occupation profile — not a job posting'},
+    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Example job profile — not a job posting'},
     goals:['management'],
     requiredSkills:['project'],
     preferredInterests:['enterprising','conventional','social'],
@@ -43,7 +43,7 @@ const rawTargetProfiles=[
   {
     id:'job-software-engineer',type:'job',
     title:{ar:'مهندس برمجيات مبتدئ',en:'Junior Software Engineer'},
-    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Reference occupation profile — not a job posting'},
+    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Example job profile — not a job posting'},
     goals:['product'],
     requiredSkills:['software'],
     preferredInterests:['investigative','realistic'],
@@ -55,7 +55,7 @@ const rawTargetProfiles=[
   {
     id:'job-cyber-analyst',type:'job',
     title:{ar:'محلل أمن سيبراني مبتدئ',en:'Junior Cybersecurity Analyst'},
-    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Reference occupation profile — not a job posting'},
+    subtitle:{ar:'ملف مهني مرجعي — غير إعلان وظيفة',en:'Example job profile — not a job posting'},
     goals:['cyber'],
     requiredSkills:['cyber'],
     preferredInterests:['investigative','realistic','conventional'],

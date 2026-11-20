@@ -8,6 +8,14 @@ export const INFERENCE_RULES = {
   'R4': { ar:'اهتمام تؤكده + مسار مرتبط بالموضوع ← ارتباط باهتمامك', en:'Student-confirmed interest + a pathway about that topic → interest connection' },
 }
 const edge = (subject, predicate, object) => ({ subject, predicate, object })
+// Task 04: a capability-evidence conclusion (R1) must rest on a claim and evidence that still
+// exist in the person graph; anything else is an orphan and is dropped.
+export function sweepOrphanInferences(inferences = [], graph = null) {
+  if (!graph) return inferences
+  const claims = new Set((graph.claims || []).map(c => c['@id']))
+  const entities = new Set((graph.entities || []).map(e => e['@id']))
+  return inferences.filter(i => i.ruleId !== 'R1' || (claims.has(i.claimId) && entities.has(i.evidenceId)))
+}
 export function inferRelations(personId, paths = []) {
   return paths.filter(p => p.status === 'supported').flatMap(p => {
     const target = p.targetNode || `urn:kamin:target:${p.targetId}`

@@ -11,7 +11,17 @@
     "test:watch": "vitest",
     "check": "npm run test && npm run build && npm run e2e",
     "e2e": "playwright test",
-    "visual": "playwright test --config=playwright.visual.config.js"
+    "test:report": "node scripts/test-report.mjs",
+    "review:export": "node scripts/review-kit/export.mjs",
+    "review:check": "node scripts/review-kit/check.mjs",
+    "path-review:export": "node scripts/path-review/export.mjs",
+    "path-review:check": "node scripts/path-review/check.mjs",
+    "catalog:course-fit": "node scripts/catalog/course-fit-cards.mjs",
+    "visual": "playwright test --config=playwright.visual.config.js",
+    "eval:suggest": "node eval/project-suggest/eval.mjs run eval/project-suggest/testset.json",
+    "eval:compare": "node eval/project-suggest/eval.mjs compare eval/project-suggest/testset-ai-v2.json eval/project-suggest/testset.json --date 2026-11-10",
+    "eval:pathways": "node eval/pathway-recall/eval.mjs run",
+    "fixtures:transcripts": "node scripts/make-transcript-fixtures.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",
@@ -36,6 +46,7 @@
     "jsonld": "9.0.0",
     "parse5": "8.0.0",
     "qrcode": "^1.5.4",
+    "rdf-validate-shacl": "0.6.5",
     "sharp": "^0.35.4",
     "vite": "^6.0.5",
     "vitest": "^5.0.2"

@@ -1,0 +1,13 @@
+﻿id,lang,expected,predicted,falsePositives,missed,ok
+"ct2-CPCS-203","en","software","software","","","true"
+"ct2-CPCS-473","en","requirements","requirements","","","true"
+"ct2-CPIT-380","en","web-development","web-development","","","true"
+"ct2-CPCS-466","en","software","software","","","true"
+"ct2-CPCS-391","en","","","","","true"
+"ct2-CPIT-285","en","","","","","true"
+"ct2-CPIT-260","en","","","","","true"
+"ct2-CPCS-414","en","","","","","true"
+"ct2-CPCS-424","en","","","","","true"
+"ct2-CPIT-201","en","","software","software","","false"
+"ct2-CPIT-100","en","","","","","true"
+"ct2-CPIT-475","en","","","","","true"

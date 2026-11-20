@@ -10,7 +10,7 @@ import { skillProvenance } from '../src/utils/provenance.js'
 // and sharing never exceeds the elements the student chose.
 describe('advisor separation in the public release', () => {
   it('a locally declared "advisor" review never changes evidence, level or Fit inputs', () => {
-    const rows = [{ code: 'CPIT-260', name: 'Database Systems', grade: 'B', source: 'pdf' }]
+    const rows = [{ code: 'CPIT-240', name: 'Database (I)', grade: 'B', source: 'pdf' }]
     const before = skillProvenance(inferSkills(rows)[0])
     const descriptor = { key: 'pathway:job-data-analyst', kind: 'pathway', targetId: 'job-data-analyst', title: { ar: 'x', en: 'x' }, judgment: 'conditional', ruleVersion: 'kamin-graph-fit-v1', catalogVersion: 'kamin-targets-v2-20260930', requirements: [], source: null }
     const review = createRecommendationReview({ descriptor, fingerprint: 'a'.repeat(64), draft: { action: 'accepted', reason: 'reviewed', note: '', reviewer: { label: 'Dean of Students', role: 'advisor' }, confidence: 'confident', checks: ['evidence', 'goal', 'limits'] } })

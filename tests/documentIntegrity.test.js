@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest'
 import QRCode from 'qrcode'
 import sharp from 'sharp'
 import { analyzePdfBytes, metadataSignals, decodeQrFromImageData, describeQr } from '../src/utils/documentIntegrity.js'
+import { readFileSync } from 'node:fs'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import DocumentSignals from '../src/components/DocumentSignals.jsx'
 
 const encoder = new TextEncoder()
 const pdf = (body) => encoder.encode(`%PDF-1.7\n${body}\ntrailer\n<< /Root 1 0 R >>\nstartxref\n9\n%%EOF\n`)
@@ -57,8 +61,40 @@ describe('QR code reading', () => {
     const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
     const text = decodeQrFromImageData({ data: new Uint8ClampedArray(data), width: info.width, height: info.height })
     expect(text).toBe('https://verify.example-university.edu.sa/t/ABC123')
-    expect(describeQr(text)).toEqual({ text, url: text, host: 'verify.example-university.edu.sa' })
+    // Task 55: the QR text itself is no longer kept; a link keeps its address and host only.
+    expect(describeQr(text)).toEqual({ url: text, host: 'verify.example-university.edu.sa' })
     expect(describeQr('javascript:alert(1)').url).toBeNull()
     expect(describeQr('STUDENT-4411').url).toBeNull()
+  })
+})
+
+// Task 55 (found in Task 53): a transcript's QR code can encode the student number. Its text is never kept
+// in what the reader returns and never shown on the review screen. The number below is made up.
+describe('QR code text is never kept or shown (Task 55)', () => {
+  const MADE_UP_NUMBER = '0000977'
+  const visible = html => html.replace(/<[^>]+>/g, ' ')
+  it('a QR code that is not a link keeps nothing but the fact that it is there', async () => {
+    const png = await QRCode.toBuffer(`KAU STUDENT NO: ${MADE_UP_NUMBER} TERM 2023`, { width: 320, margin: 2 })
+    const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    const text = decodeQrFromImageData({ data: new Uint8ClampedArray(data), width: info.width, height: info.height })
+    expect(text).toContain(MADE_UP_NUMBER)
+    const described = describeQr(text)
+    expect(described).toEqual({ url: null, host: null })
+    expect(JSON.stringify(described)).not.toContain(MADE_UP_NUMBER)
+  })
+  it('the review screen says a QR code is there without its text; a link shows only its host', () => {
+    for (const lang of ['ar', 'en']) {
+      const plain = renderToStaticMarkup(createElement(DocumentSignals, { lang, document: { kind: 'image', qr: [describeQr(`STUDENT ${MADE_UP_NUMBER}`)] } }))
+      expect(plain).not.toContain(MADE_UP_NUMBER)
+      expect(plain).toContain(lang === 'ar' ? 'لا نعرض نصه' : 'Its text is not shown')
+      const link = renderToStaticMarkup(createElement(DocumentSignals, { lang, document: { kind: 'image', qr: [describeQr(`https://verify.example-university.edu.sa/s/${MADE_UP_NUMBER}`)] } }))
+      expect(visible(link)).not.toContain(MADE_UP_NUMBER)
+      expect(visible(link)).toContain('verify.example-university.edu.sa')
+    }
+  })
+  it('the reader code keeps no QR text: only describeQr results leave scanQrFromPdf', () => {
+    const source = readFileSync(new URL('../src/utils/documentIntegrity.js', import.meta.url), 'utf8')
+    expect(source).not.toMatch(/text:\s*String\(text\)/)
+    expect(source).toMatch(/seen\.clear\(\)/)
   })
 })

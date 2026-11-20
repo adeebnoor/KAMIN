@@ -1,0 +1,22 @@
+{
+  "note": "Task 18: synthetic transcripts for the trial. Not a real student. Every participant uses the same record so results can be compared. Codes are real FCIT Catalog 2024-25 codes; grades are invented. CPIT-260 has no capability mapping on purpose (the 'not enough evidence' case).",
+  "default": "fcit-synthetic-a-v1",
+  "transcripts": [
+    {
+      "id": "fcit-synthetic-a-v1",
+      "college": "FCIT",
+      "collegeRaw": "COMPUTING & INFO. TECH.",
+      "label": { "ar": "سجل وهمي للدراسة: تقنية المعلومات", "en": "Synthetic study transcript: Information Technology" },
+      "courses": [
+        { "code": "CPIT-240", "name": { "ar": "قواعد البيانات (1)", "en": "Databases (I)" }, "grade": "B" },
+        { "code": "CPIT-250", "name": { "ar": "تحليل وتصميم النظم", "en": "System Analysis & Design" }, "grade": "A-" },
+        { "code": "CPIT-251", "name": { "ar": "هندسة البرمجيات (1)", "en": "Software Engineering (I)" }, "grade": "B+" },
+        { "code": "CPIT-340", "name": { "ar": "قواعد البيانات (2)", "en": "Database (II)" }, "grade": "B" },
+        { "code": "CPIT-425", "name": { "ar": "أمن المعلومات", "en": "Information Security" }, "grade": "A" },
+        { "code": "STAT-110", "name": { "ar": "الإحصاء العام (1)", "en": "General Statistics (1)" }, "grade": "C+" },
+        { "code": "CPIT-498", "name": { "ar": "مشروع التخرج (1)", "en": "Senior Project (I)" }, "grade": "A" },
+        { "code": "CPIT-260", "name": { "ar": "أنظمة التشغيل", "en": "Operating Systems" }, "grade": "B" }
+      ]
+    }
+  ]
+}

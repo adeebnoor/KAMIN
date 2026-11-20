@@ -1,0 +1,758 @@
+{
+  "harness": "kamin-eval-pathway-recall-v1",
+  "date": "2026-11-18",
+  "kaminCommit": "c0144e1",
+  "provenance": "Written by Claude, approved by the team and the supervisor (stated by Amjd, 2026-11-18)",
+  "set": {
+    "file": "eval/pathway-recall/testset.json",
+    "sha256": "273a966ce29fb59ce453b51c25d52ccf0b299d79de7f2629281c0d68087488a2",
+    "frozen": true,
+    "cases": 70,
+    "perLanguage": {
+      "ar": 35,
+      "en": 35
+    },
+    "dialect": 12,
+    "shouldFindNothing": 28
+  },
+  "devSet": {
+    "file": "eval/pathway-recall/dev-set.json",
+    "sha256": "1c08b07fcb692cbb66f9b2d18bb1af1d23225e910f1fdc5e07f51fa443c5d129",
+    "cases": 40
+  },
+  "model": {
+    "id": "Xenova/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+    "sha256": "66fc00f5f29afcaff34092e1bdd20008ca3918265a82fb9695a551e510cc4ebc",
+    "index": {
+      "texts": 38,
+      "catalogSha256": "9792c805076e66700cd02366a67260739005162d72f24611e7ecda055c73ec12",
+      "comparedWithShippedIndex": "identical"
+    }
+  },
+  "appValues": {
+    "minScore": 0.25,
+    "window": 0.12,
+    "limit": 3
+  },
+  "tunedValues": {
+    "minScore": 0.55,
+    "window": 0.12
+  },
+  "appValuesChanged": false,
+  "bootstrap": {
+    "draws": 2000,
+    "seed": 20261118,
+    "level": 0.95
+  },
+  "methods": {
+    "minilm-app": {
+      "label": "MiniLM, app values (minScore 0.25, window 0.12)",
+      "summary": {
+        "all": {
+          "cases": 70,
+          "positives": 42,
+          "nothing": 28,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.8095,
+              "ci": [
+                0.6905,
+                0.9286
+              ]
+            },
+            "hit3": {
+              "value": 0.8571,
+              "ci": [
+                0.7381,
+                0.9524
+              ]
+            },
+            "mrr": {
+              "value": 0.8254,
+              "ci": [
+                0.7063,
+                0.9286
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.3214,
+              "ci": [
+                0.1429,
+                0.5
+              ]
+            },
+            "accuracy": {
+              "value": 0.6429,
+              "ci": [
+                0.5286,
+                0.7571
+              ]
+            }
+          }
+        },
+        "ar": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.7143,
+              "ci": [
+                0.5238,
+                0.9048
+              ]
+            },
+            "hit3": {
+              "value": 0.8095,
+              "ci": [
+                0.619,
+                0.9524
+              ]
+            },
+            "mrr": {
+              "value": 0.746,
+              "ci": [
+                0.5556,
+                0.9048
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.2143,
+              "ci": [
+                0,
+                0.4286
+              ]
+            },
+            "accuracy": {
+              "value": 0.5714,
+              "ci": [
+                0.4,
+                0.7429
+              ]
+            }
+          }
+        },
+        "en": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "hit3": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "mrr": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.4286,
+              "ci": [
+                0.1429,
+                0.7143
+              ]
+            },
+            "accuracy": {
+              "value": 0.7143,
+              "ci": [
+                0.5714,
+                0.8571
+              ]
+            }
+          }
+        },
+        "dialect": {
+          "cases": 12,
+          "positives": 9,
+          "nothing": 3,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.6667,
+              "ci": [
+                0.3333,
+                0.8889
+              ]
+            },
+            "hit3": {
+              "value": 0.7778,
+              "ci": [
+                0.4444,
+                1
+              ]
+            },
+            "mrr": {
+              "value": 0.7037,
+              "ci": [
+                0.4074,
+                0.9259
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.3333,
+              "ci": [
+                0,
+                1
+              ]
+            },
+            "accuracy": {
+              "value": 0.6667,
+              "ci": [
+                0.4167,
+                0.9167
+              ]
+            }
+          }
+        }
+      }
+    },
+    "minilm-tuned": {
+      "label": "MiniLM, dev-tuned values (minScore 0.55, window 0.12); reported only",
+      "summary": {
+        "all": {
+          "cases": 70,
+          "positives": 42,
+          "nothing": 28,
+          "emptyOnPositive": 15,
+          "metrics": {
+            "hit1": {
+              "value": 0.5714,
+              "ci": [
+                0.4286,
+                0.7143
+              ]
+            },
+            "hit3": {
+              "value": 0.5714,
+              "ci": [
+                0.4286,
+                0.7143
+              ]
+            },
+            "mrr": {
+              "value": 0.5714,
+              "ci": [
+                0.4286,
+                0.7143
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.7857,
+              "ci": [
+                0.6071,
+                0.9286
+              ]
+            },
+            "accuracy": {
+              "value": 0.6571,
+              "ci": [
+                0.5429,
+                0.7714
+              ]
+            }
+          }
+        },
+        "ar": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 7,
+          "metrics": {
+            "hit1": {
+              "value": 0.5238,
+              "ci": [
+                0.2857,
+                0.7143
+              ]
+            },
+            "hit3": {
+              "value": 0.5238,
+              "ci": [
+                0.2857,
+                0.7143
+              ]
+            },
+            "mrr": {
+              "value": 0.5238,
+              "ci": [
+                0.2857,
+                0.7143
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.6429,
+              "ci": [
+                0.3571,
+                0.8571
+              ]
+            },
+            "accuracy": {
+              "value": 0.5714,
+              "ci": [
+                0.4,
+                0.7143
+              ]
+            }
+          }
+        },
+        "en": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 8,
+          "metrics": {
+            "hit1": {
+              "value": 0.619,
+              "ci": [
+                0.4286,
+                0.8095
+              ]
+            },
+            "hit3": {
+              "value": 0.619,
+              "ci": [
+                0.4286,
+                0.8095
+              ]
+            },
+            "mrr": {
+              "value": 0.619,
+              "ci": [
+                0.4286,
+                0.8095
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.9286,
+              "ci": [
+                0.7857,
+                1
+              ]
+            },
+            "accuracy": {
+              "value": 0.7429,
+              "ci": [
+                0.6,
+                0.8857
+              ]
+            }
+          }
+        },
+        "dialect": {
+          "cases": 12,
+          "positives": 9,
+          "nothing": 3,
+          "emptyOnPositive": 3,
+          "metrics": {
+            "hit1": {
+              "value": 0.4444,
+              "ci": [
+                0.1111,
+                0.7778
+              ]
+            },
+            "hit3": {
+              "value": 0.4444,
+              "ci": [
+                0.1111,
+                0.7778
+              ]
+            },
+            "mrr": {
+              "value": 0.4444,
+              "ci": [
+                0.1111,
+                0.7778
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.6667,
+              "ci": [
+                0,
+                1
+              ]
+            },
+            "accuracy": {
+              "value": 0.5,
+              "ci": [
+                0.25,
+                0.75
+              ]
+            }
+          }
+        }
+      }
+    },
+    "minilm-top3": {
+      "label": "MiniLM, top 3 with no cut-off (ranking only; never says \"nothing\")",
+      "summary": {
+        "all": {
+          "cases": 70,
+          "positives": 42,
+          "nothing": 28,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.8095,
+              "ci": [
+                0.6905,
+                0.9286
+              ]
+            },
+            "hit3": {
+              "value": 0.881,
+              "ci": [
+                0.7857,
+                0.9762
+              ]
+            },
+            "mrr": {
+              "value": 0.8373,
+              "ci": [
+                0.7302,
+                0.9365
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0,
+              "ci": [
+                0,
+                0
+              ]
+            },
+            "accuracy": {
+              "value": 0.5286,
+              "ci": [
+                0.4143,
+                0.6429
+              ]
+            }
+          }
+        },
+        "ar": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.7143,
+              "ci": [
+                0.5238,
+                0.9048
+              ]
+            },
+            "hit3": {
+              "value": 0.8571,
+              "ci": [
+                0.7143,
+                1
+              ]
+            },
+            "mrr": {
+              "value": 0.7698,
+              "ci": [
+                0.5952,
+                0.9206
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0,
+              "ci": [
+                0,
+                0
+              ]
+            },
+            "accuracy": {
+              "value": 0.5143,
+              "ci": [
+                0.3429,
+                0.6857
+              ]
+            }
+          }
+        },
+        "en": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "hit3": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "mrr": {
+              "value": 0.9048,
+              "ci": [
+                0.7619,
+                1
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0,
+              "ci": [
+                0,
+                0
+              ]
+            },
+            "accuracy": {
+              "value": 0.5429,
+              "ci": [
+                0.3714,
+                0.7143
+              ]
+            }
+          }
+        },
+        "dialect": {
+          "cases": 12,
+          "positives": 9,
+          "nothing": 3,
+          "emptyOnPositive": 0,
+          "metrics": {
+            "hit1": {
+              "value": 0.6667,
+              "ci": [
+                0.3333,
+                0.8889
+              ]
+            },
+            "hit3": {
+              "value": 0.8889,
+              "ci": [
+                0.6667,
+                1
+              ]
+            },
+            "mrr": {
+              "value": 0.7593,
+              "ci": [
+                0.5185,
+                0.9444
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0,
+              "ci": [
+                0,
+                0
+              ]
+            },
+            "accuracy": {
+              "value": 0.6667,
+              "ci": [
+                0.4167,
+                0.9167
+              ]
+            }
+          }
+        }
+      }
+    },
+    "lexicon": {
+      "label": "Lexicon baseline (words of the pathway title and skill labels)",
+      "summary": {
+        "all": {
+          "cases": 70,
+          "positives": 42,
+          "nothing": 28,
+          "emptyOnPositive": 11,
+          "metrics": {
+            "hit1": {
+              "value": 0.619,
+              "ci": [
+                0.4762,
+                0.7619
+              ]
+            },
+            "hit3": {
+              "value": 0.619,
+              "ci": [
+                0.4762,
+                0.7619
+              ]
+            },
+            "mrr": {
+              "value": 0.619,
+              "ci": [
+                0.4762,
+                0.7619
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.75,
+              "ci": [
+                0.5714,
+                0.8929
+              ]
+            },
+            "accuracy": {
+              "value": 0.6714,
+              "ci": [
+                0.5571,
+                0.7714
+              ]
+            }
+          }
+        },
+        "ar": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 6,
+          "metrics": {
+            "hit1": {
+              "value": 0.5714,
+              "ci": [
+                0.381,
+                0.7619
+              ]
+            },
+            "hit3": {
+              "value": 0.5714,
+              "ci": [
+                0.381,
+                0.7619
+              ]
+            },
+            "mrr": {
+              "value": 0.5714,
+              "ci": [
+                0.381,
+                0.7619
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.7143,
+              "ci": [
+                0.5,
+                0.9286
+              ]
+            },
+            "accuracy": {
+              "value": 0.6286,
+              "ci": [
+                0.4857,
+                0.7714
+              ]
+            }
+          }
+        },
+        "en": {
+          "cases": 35,
+          "positives": 21,
+          "nothing": 14,
+          "emptyOnPositive": 5,
+          "metrics": {
+            "hit1": {
+              "value": 0.6667,
+              "ci": [
+                0.4762,
+                0.8571
+              ]
+            },
+            "hit3": {
+              "value": 0.6667,
+              "ci": [
+                0.4762,
+                0.8571
+              ]
+            },
+            "mrr": {
+              "value": 0.6667,
+              "ci": [
+                0.4762,
+                0.8571
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.7857,
+              "ci": [
+                0.5714,
+                0.9286
+              ]
+            },
+            "accuracy": {
+              "value": 0.7143,
+              "ci": [
+                0.5714,
+                0.8571
+              ]
+            }
+          }
+        },
+        "dialect": {
+          "cases": 12,
+          "positives": 9,
+          "nothing": 3,
+          "emptyOnPositive": 4,
+          "metrics": {
+            "hit1": {
+              "value": 0.5556,
+              "ci": [
+                0.2222,
+                0.8889
+              ]
+            },
+            "hit3": {
+              "value": 0.5556,
+              "ci": [
+                0.2222,
+                0.8889
+              ]
+            },
+            "mrr": {
+              "value": 0.5556,
+              "ci": [
+                0.2222,
+                0.8889
+              ]
+            },
+            "nothingCorrect": {
+              "value": 0.6667,
+              "ci": [
+                0,
+                1
+              ]
+            },
+            "accuracy": {
+              "value": 0.5833,
+              "ci": [
+                0.3333,
+                0.8333
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

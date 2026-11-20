@@ -1,4 +1,5 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { settle } from './nav.js'
 
 // The product ships one audited light theme (index.html declares color-scheme: light).
 // An operating-system dark preference must not degrade readability anywhere in the
@@ -49,7 +50,7 @@ for(const scheme of ['light','dark'])for(const lang of ['ar','en']){
    expect(await page.evaluate(sweep,'.app-overlay'),'transcript review').toEqual([])
    await page.getByRole('checkbox',{name:ar?/أوافق صراحةً/:/I explicitly consent/}).check()
    await page.getByRole('button',{name:ar?/أعتمد السجل/:/Approve/}).last().click()
-   await expect(page.getByText(ar?/هذه قدراتك/:/This is how your capabilities look now/)).toBeVisible()
+   await expect(page.getByText(ar?/هذه قدراتك/:/Your capabilities as we see them/)).toBeVisible()
    expect(await page.evaluate(sweep,'.app-overlay'),'dashboard').toEqual([])
    const sections=page.locator('.app-overlay nav button, .app-overlay aside button').filter({visible:true})
    const count=await sections.count()
@@ -58,7 +59,7 @@ for(const scheme of ['light','dark'])for(const lang of ['ar','en']){
     if(!await button.isVisible())continue
     const name=(await button.innerText()).trim().split('\n')[0]
     await button.click()
-    await page.waitForTimeout(150)
+    await settle(page)
     expect(await page.evaluate(sweep,'.app-overlay'),`section: ${name}`).toEqual([])
    }
    expect(errors).toEqual([])

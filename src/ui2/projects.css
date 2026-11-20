@@ -1,0 +1,44 @@
+/* Task 63 · step 2 of the new interface: the rule line, the project cards, the Add/Edit form and its chips, the
+   "Why?" sheet. Loads with src/ui2/screens/Projects.jsx only (its own lazy chunk).
+   Tokens only, as in ui2.css: brand colours from public/brand.css (dark values in src/ui2/theme.css), spacing,
+   text sizes and radius from src/tokens.css. Cards and the form are --paper on the --soft page
+   (tests/themeContrast.test.js checks every pair in both themes). */
+
+/* ----- The page: one sentence with "Why?", the rule, the main actions ----- */
+.ui2-page p.ui2-projects-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2);margin-bottom:var(--space-2)}
+.ui2-page p.ui2-projects-rule{font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-projects-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3)}
+
+/* ----- Saved projects: compact cards ----- */
+.ui2-project-list{display:grid;gap:var(--space-3);margin:0 0 var(--space-4);padding:0;list-style:none}
+.ui2-project{display:grid;gap:var(--space-1);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-project-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2)}
+.ui2-project-title{margin:0;font-size:var(--text-base);line-height:1.4;color:var(--navy);overflow-wrap:anywhere}
+.ui2-project-badge{padding:var(--space-1) var(--space-2);border-radius:var(--radius-pill);background:var(--navy-3);color:var(--navy);font-size:var(--text-sm);font-weight:600;line-height:1.2}
+.ui2-project p.ui2-project-skills{margin:0;font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-project-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-4)}
+.ui2-project-actions a,.ui2-project-actions .ui2-text-btn{display:inline-flex;align-items:center;gap:var(--space-1);min-height:var(--control-h);color:var(--navy);font-weight:650;text-underline-offset:3px}
+
+/* ----- The form: title, description, link, "Suggest skills", the chips, Cancel and Save ----- */
+.ui2-project-form{display:grid;gap:var(--space-2);margin-bottom:var(--space-4);padding:var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-project-form-title{margin:0 0 var(--space-1);font-size:var(--text-lg);color:var(--navy)}
+.ui2-project-form label{font-weight:650;color:var(--ink)}
+.ui2-project-form input,.ui2-project-form textarea{width:100%;min-height:var(--control-h);padding:var(--space-2) var(--space-3);border:1px solid var(--muted);border-radius:var(--radius-small);background:var(--paper);color:var(--ink);font:inherit;line-height:1.5}
+.ui2-project-form textarea{resize:vertical}
+.ui2-project-form input+label,.ui2-project-form textarea+label{margin-top:var(--space-2)}
+.ui2-project-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin-top:var(--space-2)}
+.ui2-project-hint{font-size:var(--text-sm);color:var(--muted)}
+.ui2-project-form p.ui2-project-abstain{margin:0;padding:var(--space-2) var(--space-3);border-radius:var(--radius-small);background:var(--warn-bg);color:var(--warn);font-size:var(--text-sm);line-height:1.5}
+.ui2-project-chips{margin:0;padding:0;border:0;min-width:0}
+.ui2-project-chips legend{padding:0;margin-bottom:var(--space-2);font-weight:650;color:var(--ink)}
+.ui2-project-chips div{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.ui2-project-chips .ui2-chip{margin:0}
+.ui2-project-form-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:var(--space-2);margin-top:var(--space-2)}
+.ui2-project-form p.ui2-project-reason{flex-basis:100%;margin:0;font-size:var(--text-sm);font-weight:700;color:var(--warn)}
+.ui2-project-form .ui2-btn:disabled{background:var(--paper);border-color:var(--muted);color:var(--muted);cursor:default}
+
+/* ----- "Why?": how the skills are suggested (inside the sheet, on --paper) ----- */
+.ui2-project-why{display:grid;gap:var(--space-3)}
+.ui2-project-why p{margin:0;line-height:1.6}
+.ui2-project-why ul{display:grid;gap:var(--space-2);margin:0;padding-inline-start:var(--space-5)}
+.ui2-project-why summary{min-height:var(--control-h);display:flex;align-items:center;color:var(--navy);font-weight:650;cursor:pointer}

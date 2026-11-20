@@ -1,3 +1,5 @@
+import { courseIri } from '../ontology/registry.js'
+
 export const ICT_KG_VERSION='kamin-ict-kg-v1'
 export const ICT_KG_REVIEWED_AT='2026-09-27'
 
@@ -44,8 +46,9 @@ const E={
   trainingSql:'urn:kamin:learning:training-sql-analytics',
   trainingPython:'urn:kamin:learning:training-python-analytics',
   trainingBi:'urn:kamin:learning:training-bi-dashboard',
-  courseDb:'urn:kamin:course-template:CPIT-260',
-  courseStats:'urn:kamin:course-template:STAT-201',
+  // Same course IRIs as the personal and reference graphs (one identity per official code).
+  courseDb:courseIri('CPIT-240'),
+  courseStats:courseIri('STAT-110'),
 }
 
 export const ictKnowledgeGraph={
@@ -102,13 +105,13 @@ export const ictKnowledgeGraph={
       status:'illustrative-pilot',sourceId:KNOWLEDGE_SOURCES.kaminPilot.id,
     },
     {
-      '@id':E.courseDb,'@type':'Course',code:'CPIT-260',
-      label:{ar:'قواعد البيانات',en:'Database Systems'},status:'institution-pilot-context',
+      '@id':E.courseDb,'@type':'Course',code:'CPIT-240',
+      label:{ar:'قواعد البيانات (1)',en:'Databases (I)'},status:'institution-pilot-context',
       sourceId:KNOWLEDGE_SOURCES.kaminPilot.id,
     },
     {
-      '@id':E.courseStats,'@type':'Course',code:'STAT-201',
-      label:{ar:'الإحصاء التطبيقي',en:'Applied Statistics'},status:'institution-pilot-context',
+      '@id':E.courseStats,'@type':'Course',code:'STAT-110',
+      label:{ar:'الإحصاء العام (1)',en:'General Statistics (1)'},status:'institution-pilot-context',
       sourceId:KNOWLEDGE_SOURCES.kaminPilot.id,
     },
   ],

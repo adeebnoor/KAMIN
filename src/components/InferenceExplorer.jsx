@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react'
-import { Braces, Download, GitMerge, Link2, ListChecks, Sparkles } from 'lucide-react'
+import { Download, GitMerge, Link2, ListChecks, Sparkles } from 'lucide-react'
 import { INFERENCE_RULES } from '../matching/inference.js'
 import { buildInferenceDataset } from '../ontology/rdf.js'
 import { projectStateToPerson360 } from '../ontology/projector.js'
@@ -8,7 +8,8 @@ import { buildTargetSemanticGraph } from '../matching/graph.js'
 import { demoCourses, skills as skillCatalog } from '../data.js'
 import { inferSkills } from '../utils/engine.js'
 import { DECLARED_PREFERENCE_SCHEMES } from '../insight.js'
-import { copy } from '../i18n.js'
+import { copy, fill } from '../i18n.js'
+import TechDetails from './TechDetails.jsx'
 import { DIGITAL_TOPICS } from '../digitalInterests.js'
 
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
@@ -51,7 +52,8 @@ export function InferenceProof({match, graph, lang, demo=false}) {
     return relationLabels[predicate]?.[lang==='ar'?0:1] || predicate
   }
   const describe=t=>`${name(t.subject)} · ${relation(t.predicate)} · ${name(t.object)}`
-  const optionLabel=r=>`${r.ruleId} · ${r.topicId?DIGITAL_TOPICS.find(topic=>topic.id===r.topicId)?.label[lang]:r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}`
+  // Task 28: the rule id is in "Technical details", not in the picker.
+  const optionLabel=r=>`${r.topicId?DIGITAL_TOPICS.find(topic=>topic.id===r.topicId)?.label[lang]:r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}`
   const download=()=>{
     try {
       const blob=new Blob([JSON.stringify(buildInferenceDataset(graph,match),null,2)],{type:'application/ld+json'})
@@ -60,16 +62,17 @@ export function InferenceProof({match, graph, lang, demo=false}) {
       setTimeout(()=>URL.revokeObjectURL(url),1000);setError('')
     } catch {setError(tr(lang,'تعذر تصدير الشبكة. حاول مرة أخرى.','Could not export the graph. Please try again.'))}
   }
+  const S=copy[lang].screens.studio
   return <div className="inference-proof">
-    <div className="inference-proof-heading"><div><small><GitMerge size={16}/>{tr(lang,'استدلال دلالي قابل للتتبّع','TRACEABLE SEMANTIC INFERENCE')}</small><h3>{tr(lang,'ما الذي استنتجه كامن؟','What did Kamin infer?')}</h3></div><span>{tr(lang,demo?'مثال حي · بيانات وهمية':'محسوب من ملفك',demo?'Live example · synthetic data':'Computed from your profile')}</span></div>
+    <div className="inference-proof-heading"><div><small><GitMerge size={16}/>{S.linkKicker}</small><h3>{S.linkTitle}</h3></div><span>{tr(lang,demo?'مثال حي · بيانات وهمية':'محسوب من ملفك',demo?'Live example · synthetic data':'Computed from your profile')}</span></div>
     {!!results.length && <div className="inference-picker"><label htmlFor={id}>{tr(lang,'العلاقة التي تريد تفسيرها','Connection to explain')}</label><select id={id} value={result.id} onChange={e=>setSelected(e.target.value)}>{results.map(r=><option key={r.id} value={r.id}>{optionLabel(r)}</option>)}</select></div>}
     {result ? <div className="inference-chain" aria-live="polite">
       <article className="inference-input"><ListChecks size={22}/><small>{tr(lang,'١ · ما نعرفه','1 · WHAT WE KNOW')}</small><h4>{tr(lang,'معلومات لها مصدر','Sourced information')}</h4><ul>{result.premises.map((p,i)=><li key={i}>{describe(p)}</li>)}</ul><p>{result.ruleId==='R1'?tr(lang,'سجل راجعه الطالب + خريطة مقررات تجريبية + متطلبات مرجعية.','Student-reviewed record + pilot course map + reference requirements.'):tr(lang,'اختيار صرّح به الطالب + وصف المسار في الكتالوج المرجعي.','Student declaration + pathway description in the reference catalog.')}</p></article>
-      <article className="inference-rule"><GitMerge size={22}/><small>{tr(lang,'٢ · قاعدة الربط','2 · THE RULE')}</small><h4>{INFERENCE_RULES[result.ruleId][lang]}</h4><p>{tr(lang,'يجمع المحرك العلاقتين عبر المفهوم المشترك ليشتق علاقة بالشخص.','The engine joins the relationships through their shared concept to derive a person-to-pathway connection.')}</p><code dir="ltr">{result.ruleId} · {result.ruleVersion}</code></article>
-      <article className="inference-result"><Sparkles size={22}/><small>{tr(lang,'٣ · العلاقة المستنتجة','3 · INFERRED CONNECTION')}</small><h4>{describe(result.conclusion)}</h4><p>{result.ruleId==='R1'?tr(lang,'هذا دليل على متطلب محدد، وليس حكمًا باكتمال الجاهزية.','This supports a specific requirement; it does not establish overall readiness.'):tr(lang,'ارتباط سياقي من تفضيلاتك، لا يثبت مهارة ولا يلغي نقص الدليل.','This is declared context. It does not prove a skill or remove an evidence gap.')}</p><span>{tr(lang,'مستنتجة بالقواعد','Rule-derived')}</span></article>
-    </div> : <div className="inference-empty" role="status"><Link2 size={24}/><p>{tr(lang,'لا توجد علاقة داعمة مستنتجة لهذا المسار من المدخلات الحالية. أضف اهتمامًا أو هدفًا مناسبًا أو دليلًا قابلًا للمراجعة.','No supporting relationship can be inferred for this pathway from the current inputs. Add a relevant interest, goal or reviewable evidence.')}</p></div>}
+      <article className="inference-rule"><GitMerge size={22}/><small>{tr(lang,'٢ · قاعدة الربط','2 · THE RULE')}</small><h4>{INFERENCE_RULES[result.ruleId][lang]}</h4><p>{S.ruleJoin}</p></article>
+      <article className="inference-result"><Sparkles size={22}/><small>{S.linkStep}</small><h4>{describe(result.conclusion)}</h4><p>{result.ruleId==='R1'?tr(lang,'هذا دليل على متطلب محدد، وليس حكمًا باكتمال الجاهزية.','This supports a specific requirement; it does not establish overall readiness.'):tr(lang,'ارتباط سياقي من تفضيلاتك، لا يثبت مهارة ولا يلغي نقص الدليل.','This is declared context. It does not prove a skill or remove an evidence gap.')}</p><span>{tr(lang,'مستنتجة بالقواعد','Rule-derived')}</span></article>
+    </div> : <div className="inference-empty" role="status"><Link2 size={24}/><p>{S.noLink}</p></div>}
     <div className="inference-limits"><strong>{tr(lang,'حدود النتيجة','Result limits')}</strong><p>{match.missingSkills.length?tr(lang,`لا يوجد في هذا الملف دليل على: ${match.missingSkills.map(k=>capability(k,lang)).join('، ')}. هذا لا يعني غياب القدرة.`,`This profile has no evidence for: ${match.missingSkills.map(k=>capability(k,lang)).join(', ')}. This does not mean the ability is absent.`):tr(lang,'المتطلبات المحدودة لهذا المثال لها أدلة. صلاحية التوصيات تحتاج تحققًا مستقلًا.','This example’s limited requirements have evidence. Recommendation validity still needs independent evaluation.')}</p></div>
-    <details className="inference-technical"><summary><Braces size={18}/>{tr(lang,'افحص العلاقات بصيغة RDF / JSON-LD','Inspect RDF / JSON-LD relationships')}</summary><p>{tr(lang,'المدخلات، والمعرفة المرجعية، والاستنتاجات في رسوم منفصلة. ملف محلي غير مشفّر يحتوي بيانات الملف المعروض ومصادر العلاقات.','Inputs, reference knowledge and conclusions are separated into named graphs. This unencrypted local file contains the displayed profile and relationship sources.')}</p>{result&&<div className="inference-triples" dir="ltr"><table><caption>{tr(lang,'المقدمات والنتيجة المختارة','Selected premises and conclusion')}</caption><thead><tr><th>Subject</th><th>Predicate</th><th>Object</th></tr></thead><tbody>{[...result.premises,result.conclusion].map((p,i)=><tr key={i}><td>{p.subject}</td><td>{p.predicate}</td><td>{p.object}</td></tr>)}</tbody></table></div>}<button className="text-button" onClick={download}><Download size={17}/>{tr(lang,'تنزيل الشبكة بصيغة JSON-LD','Download graph as JSON-LD')}</button><p>{tr(lang,'المحرك الحالي قواعد JavaScript محددة. لا يشغّل استدلال OWL عامًا. استعلامات SPARQL متاحة في مستكشف المعرفة؛ مطابقة أشخاص حقيقيين غير مفعّلة.','The current engine runs bounded JavaScript rules. General OWL reasoning is not implemented. SPARQL queries are available in the knowledge explorer; real person-to-person matching is not enabled.')}</p>{error&&<p role="alert">{error}</p>}</details>
+    <TechDetails lang={lang} className="inference-technical">{result&&<p><code dir="ltr">{fill(S.technical.rule,{rule:result.ruleId,version:result.ruleVersion})}</code></p>}<p>{S.technical.graphs}</p>{result&&<div className="inference-triples" dir="ltr"><table><caption>{tr(lang,'المقدمات والنتيجة المختارة','Selected premises and conclusion')}</caption><thead><tr><th>Subject</th><th>Predicate</th><th>Object</th></tr></thead><tbody>{[...result.premises,result.conclusion].map((p,i)=><tr key={i}><td>{p.subject}</td><td>{p.predicate}</td><td>{p.object}</td></tr>)}</tbody></table></div>}<button className="text-button" onClick={download}><Download size={17}/>{S.technical.download}</button><p>{S.technical.engine}</p>{error&&<p role="alert">{error}</p>}</TechDetails>
   </div>
 }
 

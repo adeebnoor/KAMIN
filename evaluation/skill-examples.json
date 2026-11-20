@@ -1,0 +1,101 @@
+{
+  "_note": "Example sentences per capability, written 2026-11-10 by Claude (AI) for the browser embedding method. Fusha Arabic, English and Saudi dialect. Written without copying test-set sentences; needs human review.",
+  "testing": [
+    "كتبت حالات اختبار للنظام وشغلتها ووثقت الأخطاء",
+    "راجعت البرنامج خطوة بخطوة للتأكد أنه يعمل كما هو مطلوب وسجلت المشاكل",
+    "Wrote and ran test cases to find defects before release",
+    "Did manual QA before the release and reported the defects",
+    "Automated regression tests so each change is checked",
+    "جربت البرنامج كله وطلعت المشاكل اللي فيه وكتبتها",
+    "سويت تست للكود وتأكدت إن كل شي يشتغل صح"
+  ],
+  "db-operations": [
+    "أخذت نسخة احتياطية من قاعدة البيانات واستعدتها للتأكد من سلامتها",
+    "أدرت صلاحيات المستخدمين على قاعدة البيانات",
+    "Scheduled automatic database backups and tested restoring them",
+    "Recovered lost records from a backup after a server failure",
+    "Managed database user accounts and access rights",
+    "سويت باك اب للداتا ورجعتها لما خرب السيرفر",
+    "ضبطت مين يقدر يدخل على الداتابيس ومين لا"
+  ],
+  "web-development": [
+    "صممت صفحات موقع إلكتروني وبرمجت واجهته الأمامية",
+    "Built the front-end pages of a website",
+    "Created a responsive landing page that works on phones",
+    "Developed a web app interface with forms and navigation",
+    "سويت موقع للمشروع وصممت صفحاته",
+    "برمجت الواجهة حقت الموقع وخليتها تضبط على الجوال"
+  ],
+  "systems-analysis": [
+    "درست طريقة العمل الحالية في الجهة ورسمت مخطط تدفق العمليات",
+    "حللت الإجراءات اليومية للقسم واقترحت تحسينات",
+    "Studied how the department handles requests today and modelled the process",
+    "Documented the current business process and found bottlenecks",
+    "Drew activity and data-flow diagrams of the existing system",
+    "رحت للقسم وشفت كيف يشتغلون خطوة خطوة ورسمت لهم الطريقة",
+    "فهمت كيف تمشي المعاملات عندهم وطلعت وين التأخير"
+  ],
+  "requirements": [
+    "جمعت احتياجات المستخدمين وحولتها إلى متطلبات مكتوبة",
+    "حددت ما يجب أن يفعله النظام وشروط قبول كل خاصية",
+    "Collected what users need and wrote a requirements document",
+    "Defined the system's functional requirements with acceptance criteria",
+    "Ran workshops with end users to agree on the features",
+    "جلست مع العميل وكتبت وش يبي بالضبط من البرنامج",
+    "سألت المستخدمين وش يحتاجون وطلعت قائمة بالمطلوب"
+  ],
+  "software": [
+    "صممت وبرمجت نظامًا متكاملًا من الخلفية إلى الواجهة",
+    "طورت خدمة برمجية وكتبت الكود بلغة بايثون",
+    "Designed and implemented a backend service with an API",
+    "Programmed a desktop application in Java",
+    "Refactored the codebase and applied design patterns",
+    "برمجت سيستم كامل وكتبت الكود من الصفر",
+    "سويت برنامج يشتغل على السيرفر ويرد على الطلبات"
+  ],
+  "database": [
+    "صممت جداول قاعدة البيانات والعلاقات بينها",
+    "كتبت استعلامات لاستخراج البيانات وإعداد التقارير",
+    "Designed an entity-relationship model and the database tables",
+    "Wrote queries to pull and join data for reports",
+    "Normalised the database schema to remove duplication",
+    "سويت الداتابيس وربطت الجداول ببعض",
+    "كتبت كويري يجيب البيانات اللي نحتاجها للتقرير"
+  ],
+  "project": [
+    "خططت مراحل المشروع ووزعت المهام على الفريق وتابعت التسليم",
+    "أدرت الجدول الزمني والمخاطر للمشروع",
+    "Planned the project timeline and tracked progress against it",
+    "Coordinated the team, assigned tasks and managed deadlines",
+    "Led sprint planning and weekly progress meetings",
+    "قسمت الشغل على الشباب وتابعت مين خلص ومين متأخر",
+    "رتبت مواعيد التسليم ومشيت الفريق على الخطة"
+  ],
+  "statistics": [
+    "حللت البيانات إحصائيًا واستخرجت المتوسطات والنسب",
+    "أجريت اختبار فرضيات على نتائج الدراسة",
+    "Analysed data with statistics and summarised the results",
+    "Calculated averages, variance and correlations from measurements",
+    "Built charts and a statistical summary of the findings",
+    "حسبت المتوسط والنسب من الأرقام وطلعت رسومات بيانية",
+    "حللت نتايج الاستبيان بالأرقام"
+  ],
+  "cyber": [
+    "قيمت أمن النظام واكتشفت الثغرات وأغلقتها",
+    "طبقت التشفير والمصادقة لحماية بيانات المستخدمين",
+    "Performed a security assessment and fixed vulnerabilities",
+    "Secured the application with authentication, authorization and encryption",
+    "Configured firewalls and monitored the network for attacks",
+    "فحصت النظام من الاختراقات وسكرت الثغرات",
+    "حطيت تسجيل دخول آمن وتشفير للباسوردات"
+  ],
+  "ai-work": [
+    "استخدمت أدوات الذكاء الاصطناعي لإنجاز جزء من العمل وراجعت مخرجاتها",
+    "دربت نموذج تعلم آلي على بيانات وقيمت دقته",
+    "Trained a machine learning model and evaluated its accuracy",
+    "Used generative AI tools to speed up the work and checked the output",
+    "Applied a neural network to classify text",
+    "استخدمت أدوات ذكاء اصطناعي تساعدني في الشغل وراجعت كلامها",
+    "سويت موديل ذكاء اصطناعي يصنف البيانات"
+  ]
+}

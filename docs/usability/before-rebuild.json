@@ -1,0 +1,281 @@
+{
+  "commit": "rebuild/feature-inventory at 53112bf (Task 45), app code of local main 3766839 plus review tasks ae1ac39",
+  "measured": "2026-11-17",
+  "platform": "Windows 11, NOT Linux CI. The team works on one computer for now; re-measure on Linux CI at the end of the rebuild and replace this file. Page lengths can differ slightly from Linux (fonts).",
+  "browser": "Playwright 1.63.0 Chromium; desktop-chromium at 1366x768 in English, mobile-chromium (Pixel 7) at 390x844 in Arabic",
+  "note": "Task 45 baseline before the rebuild: for Home (landing) and the 11 app views, page length in screens (the app content area; for landing the whole document), visible controls, clicks from Home and the route taken (shortest route today; review, dashboard onwards with the approved synthetic example). Written by the last test of e2e/keep-features.spec.js; copied from test-results/usability.json.",
+  "desktop-chromium": {
+    "size": "1366x768",
+    "lang": "en",
+    "views": {
+      "landing": {
+        "screens": 5.5,
+        "scrollHeight": 4245,
+        "clientHeight": 768,
+        "controls": 50,
+        "clicks": 0,
+        "route": []
+      },
+      "start": {
+        "screens": 1,
+        "scrollHeight": 672,
+        "clientHeight": 672,
+        "controls": 11,
+        "clicks": 1,
+        "route": [
+          "open workspace"
+        ]
+      },
+      "review": {
+        "screens": 2.1,
+        "scrollHeight": 1404,
+        "clientHeight": 672,
+        "controls": 36,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "try the synthetic demo"
+        ]
+      },
+      "dashboard": {
+        "screens": 1.4,
+        "scrollHeight": 954,
+        "clientHeight": 672,
+        "controls": 25,
+        "clicks": 1,
+        "route": [
+          "open workspace"
+        ]
+      },
+      "matches": {
+        "screens": 1.8,
+        "scrollHeight": 1215,
+        "clientHeight": 672,
+        "controls": 24,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "section next"
+        ]
+      },
+      "courses": {
+        "screens": 1.2,
+        "scrollHeight": 819,
+        "clientHeight": 672,
+        "controls": 21,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab courses"
+        ]
+      },
+      "compare": {
+        "screens": 2.1,
+        "scrollHeight": 1419,
+        "clientHeight": 672,
+        "controls": 24,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab compare"
+        ]
+      },
+      "studio": {
+        "screens": 4.6,
+        "scrollHeight": 3119,
+        "clientHeight": 672,
+        "controls": 43,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab studio"
+        ]
+      },
+      "insight": {
+        "screens": 1,
+        "scrollHeight": 694,
+        "clientHeight": 672,
+        "controls": 10,
+        "clicks": 1,
+        "route": [
+          "build your capability profile"
+        ]
+      },
+      "mydata": {
+        "screens": 2.8,
+        "scrollHeight": 1896,
+        "clientHeight": 672,
+        "controls": 39,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "section my-data"
+        ]
+      },
+      "privacy": {
+        "screens": 1.8,
+        "scrollHeight": 1196,
+        "clientHeight": 672,
+        "controls": 24,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section my-data",
+          "tab privacy"
+        ]
+      },
+      "audit": {
+        "screens": 1.2,
+        "scrollHeight": 822,
+        "clientHeight": 672,
+        "controls": 12,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section my-data",
+          "tab audit"
+        ]
+      }
+    }
+  },
+  "mobile-chromium": {
+    "size": "390x844",
+    "lang": "ar",
+    "views": {
+      "landing": {
+        "screens": 6.8,
+        "scrollHeight": 5769,
+        "clientHeight": 844,
+        "controls": 45,
+        "clicks": 0,
+        "route": []
+      },
+      "start": {
+        "screens": 1,
+        "scrollHeight": 718,
+        "clientHeight": 718,
+        "controls": 10,
+        "clicks": 1,
+        "route": [
+          "open workspace"
+        ]
+      },
+      "review": {
+        "screens": 2.7,
+        "scrollHeight": 1929,
+        "clientHeight": 718,
+        "controls": 35,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "try the synthetic demo"
+        ]
+      },
+      "dashboard": {
+        "screens": 2,
+        "scrollHeight": 1465,
+        "clientHeight": 718,
+        "controls": 24,
+        "clicks": 1,
+        "route": [
+          "open workspace"
+        ]
+      },
+      "matches": {
+        "screens": 1.9,
+        "scrollHeight": 1372,
+        "clientHeight": 718,
+        "controls": 23,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "section next"
+        ]
+      },
+      "courses": {
+        "screens": 1.2,
+        "scrollHeight": 891,
+        "clientHeight": 718,
+        "controls": 20,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab courses"
+        ]
+      },
+      "compare": {
+        "screens": 2.4,
+        "scrollHeight": 1688,
+        "clientHeight": 718,
+        "controls": 23,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab compare"
+        ]
+      },
+      "studio": {
+        "screens": 5.4,
+        "scrollHeight": 3895,
+        "clientHeight": 718,
+        "controls": 42,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section next",
+          "tab studio"
+        ]
+      },
+      "insight": {
+        "screens": 1.4,
+        "scrollHeight": 1017,
+        "clientHeight": 718,
+        "controls": 9,
+        "clicks": 1,
+        "route": [
+          "build your capability profile"
+        ]
+      },
+      "mydata": {
+        "screens": 3.1,
+        "scrollHeight": 2260,
+        "clientHeight": 718,
+        "controls": 38,
+        "clicks": 2,
+        "route": [
+          "open workspace",
+          "section my-data"
+        ]
+      },
+      "privacy": {
+        "screens": 2.1,
+        "scrollHeight": 1540,
+        "clientHeight": 718,
+        "controls": 23,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section my-data",
+          "tab privacy"
+        ]
+      },
+      "audit": {
+        "screens": 1,
+        "scrollHeight": 753,
+        "clientHeight": 718,
+        "controls": 11,
+        "clicks": 3,
+        "route": [
+          "open workspace",
+          "section my-data",
+          "tab audit"
+        ]
+      }
+    }
+  }
+}

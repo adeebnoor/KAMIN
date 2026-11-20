@@ -1,0 +1,35 @@
+{
+  "fixture": "medicine-1p",
+  "madeUp": "Synthetic, made-up data from scripts/make-transcript-fixtures.mjs (Task 50). Do not edit by hand; run npm run fixtures:transcripts.",
+  "covers": "Faculty of Medicine student, 1 page",
+  "pages": 1,
+  "scanned": false,
+  "student": {
+    "collegeRaw": "FACULTY OF MEDICINE",
+    "collegeId": "MED",
+    "majorRaw": "MEDICINE AND SURGERY",
+    "degreeRaw": "BACHELOR",
+    "statusRaw": "ACTIVE",
+    "studyModeRaw": null
+  },
+  "checkGpa": "4.58",
+  "rows": [
+    {"code":"ELI-101","credits":{"ua":2,"ue":2},"marks":95,"letter":"A+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"BIOL-110","credits":{"ua":3,"ue":3},"marks":97,"letter":"A+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CHEM-110","credits":{"ua":3,"ue":3},"marks":93,"letter":"A","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"PHYS-110","credits":{"ua":3,"ue":3},"marks":89,"letter":"B+","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-101","credits":{"ua":2,"ue":2},"marks":90,"letter":"A","term":"FALL","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ELI-102","credits":{"ua":2,"ue":2},"marks":92,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"CHEM-281","credits":{"ua":3,"ue":3},"marks":86,"letter":"B+","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MATH-110","credits":{"ua":3,"ue":3},"marks":91,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"COMM-101","credits":{"ua":2,"ue":2},"marks":94,"letter":"A","term":"SPRING","year":"2021/2022","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ANAT-213","credits":{"ua":5,"ue":5},"marks":88,"letter":"B+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"PHSL-211","credits":{"ua":4,"ue":4},"marks":90,"letter":"A","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"BCHM-211","credits":{"ua":4,"ue":4},"marks":84,"letter":"B","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ARAB-101","credits":{"ua":2,"ue":2},"marks":96,"letter":"A+","term":"FALL","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ANAT-214","credits":{"ua":5,"ue":5},"marks":91,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"PHSL-212","credits":{"ua":4,"ue":4},"marks":87,"letter":"B+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"MICR-231","credits":{"ua":3,"ue":3},"marks":79,"letter":"C+","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false},
+    {"code":"ISLS-201","credits":{"ua":2,"ue":2},"marks":93,"letter":"A","term":"SPRING","year":"2022/2023","system":"semester","section":"term","retaken":false,"inCourseMap":false}
+  ]
+}

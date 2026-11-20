@@ -1,3 +1,13 @@
+// Task 18 · the trial with FCIT students, browser-only.
+// Nothing is sent anywhere: there is no endpoint and no network call in this file. A participant who
+// agreed to take part builds a small local queue (allowlisted events, times rounded to the minute,
+// the six task outcomes and the feedback form). At the end they review it and download it as
+// "my anonymous study file", which they hand to the team themselves. Withdrawing deletes the queue.
+// The consent text is in src/content/pilotConsent.js; it needs the supervisor's approval.
+// Task 44: this file is in the startup bundle, so it keeps only what every page needs (the record, pilot mode,
+// the funnel events, clearing). Joining, the end-of-session form, the study file and withdrawal moved to
+// src/pilot/studyFile.js, and the suggestion counts to src/pilot/studyCounts.js; both load with the screens.
+
 const EVENT_ALLOWLIST = new Set([
   'landing',
   'sample_report_viewed',
@@ -6,94 +16,67 @@ const EVENT_ALLOWLIST = new Set([
   'profile_returned_to',
   'profile_completed',
   'feedback_submitted',
+  'study_joined',
+  'synthetic_transcript_loaded',
 ])
 
-const EVENT_QUEUE_KEY='kamin-pilot-events-v1'
-const FEEDBACK_QUEUE_KEY='kamin-pilot-feedback-v1'
-const ANON_KEY='kamin-pilot-anon-v1'
+export const STUDY_KEY = 'kamin-pilot-study-v1'
+export const STUDY_SCHEMA = 'kamin-pilot-study-v1'
+// Keys from the earlier (server-based) pilot code. They are still removed so no old copy is left.
+export const LEGACY_PILOT_KEYS = Object.freeze(['kamin-pilot-events-v1', 'kamin-pilot-feedback-v1', 'kamin-pilot-anon-v1'])
+export const MAX_EVENTS = 200
 
-export const PILOT_ANALYTICS_ENABLED = String(import.meta.env.VITE_PILOT_ANALYTICS_ENABLED||'').toLowerCase()==='true'
-const analyticsEndpoint = () => import.meta.env.VITE_PILOT_ANALYTICS_ENDPOINT||''
-const feedbackEndpoint = () => import.meta.env.VITE_PILOT_FEEDBACK_ENDPOINT||''
+// Pilot mode is on with ?pilot=1, with the build flag VITE_PILOT_MODE=true, or while a participant is enrolled.
+export const PILOT_BUILD_ENABLED = String(import.meta.env?.VITE_PILOT_MODE || '').toLowerCase() === 'true'
+// Kept for older imports: true only when the pilot build flag is set. Off in the public build.
+export const PILOT_ANALYTICS_ENABLED = PILOT_BUILD_ENABLED
 
-const randomId = () => globalThis.crypto?.randomUUID?.() || `anon-${Date.now()}-${Math.random().toString(36).slice(2)}`
+export const defaultStorage = () => { try { return globalThis.localStorage || null } catch { return null } }
 
-const anonymousId = () => {
-  try{
-    const existing=localStorage.getItem(ANON_KEY)
-    if(existing) return existing
-    const id=randomId()
-    localStorage.setItem(ANON_KEY,id)
-    return id
-  }catch{return randomId()}
+export const roundToMinute = (date = new Date()) => { const d = new Date(date); d.setUTCSeconds(0, 0); return d.toISOString() }
+
+export function readStudy(storage = defaultStorage()) {
+  try {
+    const record = JSON.parse(storage?.getItem(STUDY_KEY) || 'null')
+    return record?.schema === STUDY_SCHEMA && record.consent === true ? record : null
+  } catch { return null }
+}
+export const writeStudy = (record, storage) => { storage?.setItem(STUDY_KEY, JSON.stringify(record)); return record }
+
+export const pilotRequested = (search = globalThis.location?.search || '') => new URLSearchParams(search).get('pilot') === '1'
+export const pilotModeOn = ({ search, storage = defaultStorage() } = {}) => PILOT_BUILD_ENABLED || pilotRequested(search) || readStudy(storage) !== null
+
+// Records an allowlisted event, only for an enrolled participant. Never throws on storage problems.
+export function trackPilotEvent(event, { now = new Date(), storage = defaultStorage() } = {}) {
+  if (!EVENT_ALLOWLIST.has(event)) throw new Error('PILOT_EVENT_NOT_ALLOWED')
+  const study = readStudy(storage)
+  if (!study) return { recorded: false, record: null }
+  const record = { event, at: roundToMinute(now) }
+  try { writeStudy({ ...study, events: [...study.events, record].slice(-MAX_EVENTS) }, storage) } catch { return { recorded: false, record: null } }
+  return { recorded: true, record }
 }
 
-const sameOriginUrl = raw => {
-  if(!raw) return null
-  const url=new URL(raw,globalThis.location?.origin||'http://localhost')
-  if(globalThis.location?.origin && url.origin!==globalThis.location.origin) throw new Error('PILOT_ENDPOINT_MUST_BE_SAME_ORIGIN')
-  return url.toString()
+export function noteSyntheticTranscript(id, { now, storage = defaultStorage() } = {}) {
+  const study = readStudy(storage)
+  if (!study) return false
+  if (!/^[a-z0-9-]{1,60}$/.test(String(id))) throw new Error('STUDY_TRANSCRIPT_ID_INVALID')
+  writeStudy({ ...study, transcript: id }, storage)
+  trackPilotEvent('synthetic_transcript_loaded', { now, storage })
+  return true
 }
 
-const appendLocal = (key,record) => {
-  try{
-    const rows=JSON.parse(localStorage.getItem(key)||'[]')
-    rows.push(record)
-    localStorage.setItem(key,JSON.stringify(rows.slice(-200)))
-  }catch{}
-}
-
-const post = async (rawEndpoint,record) => {
-  const endpoint=sameOriginUrl(rawEndpoint)
-  if(!endpoint || typeof fetch!=='function') return false
-  const response=await fetch(endpoint,{
-    method:'POST',
-    headers:{'content-type':'application/json'},
-    body:JSON.stringify(record),
-    keepalive:true,
-    credentials:'same-origin',
-  })
-  return response.ok
-}
-
-export function trackPilotEvent(event){
-  if(!EVENT_ALLOWLIST.has(event)) throw new Error('PILOT_EVENT_NOT_ALLOWED')
-  if(!PILOT_ANALYTICS_ENABLED) return {recorded:false,record:null}
-  const record={
-    event,
-    at:new Date().toISOString(),
-    anonymousId:anonymousId(),
-    schema:'kamin-pilot-funnel-v1',
-  }
-  appendLocal(EVENT_QUEUE_KEY,record)
-  void post(analyticsEndpoint(),record).catch(()=>{})
-  return {recorded:true,record}
-}
-
-export async function submitPilotFeedback({text,consent}={}){
-  if(consent!==true) throw new Error('FEEDBACK_CONSENT_REQUIRED')
-  const clean=String(text||'').trim().slice(0,1200)
-  if(!clean) throw new Error('FEEDBACK_TEXT_REQUIRED')
-  if(!PILOT_ANALYTICS_ENABLED) return {submitted:false,storedLocally:false,disabled:true}
-  const record={
-    feedback:clean,
-    consent:true,
-    at:new Date().toISOString(),
-    anonymousId:anonymousId(),
-    schema:'kamin-pilot-feedback-v1',
-  }
-  appendLocal(FEEDBACK_QUEUE_KEY,record)
-  if(!feedbackEndpoint()) return {submitted:false,storedLocally:true}
-  const submitted=await post(feedbackEndpoint(),record)
-  return {submitted,storedLocally:!submitted}
-}
-
-export function clearPilotLocalData(){
-  try{
-    localStorage.removeItem(EVENT_QUEUE_KEY)
-    localStorage.removeItem(FEEDBACK_QUEUE_KEY)
-    localStorage.removeItem(ANON_KEY)
-  }catch{}
+// Withdrawing (or ending the session after the file is handed over) deletes every pilot key
+// (withdrawFromStudy in src/pilot/studyFile.js checks that nothing is left).
+// "Delete everything" (Task 06) keeps the study record (keepStudy) until the session ends, but Task 44: it still
+// removes the suggestion and step counts (src/pilot/studyCounts.js), which describe the profile being deleted. Only
+// the funnel events stay.
+export function clearPilotLocalData({ keepStudy = false, storage = defaultStorage() } = {}) {
+  try {
+    for (const key of LEGACY_PILOT_KEYS) storage?.removeItem(key)
+    if (!keepStudy) { storage?.removeItem(STUDY_KEY); return }
+    const study = readStudy(storage)
+    if (study && study.events.some(e => !EVENT_ALLOWLIST.has(e?.event))) writeStudy({ ...study, events: study.events.filter(e => EVENT_ALLOWLIST.has(e?.event)) }, storage)
+  } catch {}
 }
 
 export const PILOT_EVENT_NAMES = Object.freeze([...EVENT_ALLOWLIST])

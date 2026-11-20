@@ -369,11 +369,19 @@ Students must not without architecture review:
 
 The repository publishes:
 
-- `ontology/kamin-core.ttl` — the thin Kamin RDF extension vocabulary.
-- `ontology/kamin-shapes.ttl` — SHACL constraints for claims and observations.
+- `ontology/kamin-core.ttl` — the thin Kamin RDF extension vocabulary (version **0.4.0**, `KAMIN_ONTOLOGY_VERSION` in `src/ontology/registry.js`).
+- `ontology/kamin-shapes.ttl` — SHACL constraints: `ClaimShape`, `ObservationShape`, `CourseMappingShape`, `EvidenceClaimShape`.
 - `public/ontology/kamin-context.jsonld` — JSON-LD context for exported Person 360 graphs.
 
 The JavaScript validator remains an application guardrail, while SHACL defines the interoperable graph contract for future graph stores and external integrations.
+
+### 16.1 Every written term is declared, and the shapes run (Task 33, 2026-11-18)
+
+- **Term check.** `node scripts/ontology-terms.mjs` builds the graphs the app writes (the demo knowledge-workspace graph; a made-up profile that runs every branch of `src/ontology/projector.js`, its inference datasets and its workspace graph; the ICT knowledge graph), loads them with Oxigraph as JSON-LD, and lists every `kamin:` predicate, class and claim relation that is **used but undeclared** and every term **declared but unused**. Because the JSON-LD context has `@vocab: urn:kamin:`, every plain JSON key the projector writes (for example `grade`, `hours`, `sourceDocument`) is a `kamin:` term and is declared too. Result on 2026-11-18: 116 used, 127 declared, **0 used but undeclared**. `tests/ontologyTerms.test.js` fails if a new undeclared term appears.
+- **Declarations.** Every term has `rdfs:label` in Arabic and English, an `rdfs:comment`, and a domain and a range. `rdfs:domain`/`rdfs:range` are used when a term is used on one kind of node only; `schema:domainIncludes`/`schema:rangeIncludes` when it is used on several, so no wrong class is inferred. Domains and ranges reuse the classes the registry names (`schema:Person`, `schema:Course`, `schema:Occupation`, `elm:LearningOpportunity`, `elm:LearningOutcome`, `ceasn:Competency`, `skos:Concept`, `prov:Entity`, `dpv:Purpose`). New classes: `kamin:Consent`, `kamin:WorkActivity`, `kamin:OpportunityKnowledgeGraph`, and `kamin:Record` (the untyped nested records: relation records, task outputs, local reviews, self-assessments). Per-scheme predicates are sub-properties: `kamin:prefers:<scheme>` of `kamin:prefers`, `kamin:compatiblePreference:<scheme>` of `kamin:compatiblePreference`. Three 0.3.0 properties used on more than claims (`kamin:subject`, `kamin:predicate`, `kamin:object`) and three used on more than `rdf:Statement` (`kamin:sourceId`, `kamin:decisionRole`, `kamin:reviewedAt`) moved from `rdfs:domain` to `schema:domainIncludes`. No 0.3.0 term was removed.
+- **Shapes.** `CourseMappingShape`: every course or learning outcome that maps to something has exactly one `kamin:mappingVersion`, one `kamin:reviewStatus` in {proposed, reviewed} and one `kamin:catalogSource`. `EvidenceClaimShape`: every `kamin:demonstrates` claim has exactly one `kamin:evidenceLevel` in {none, limited, moderate, strong}, one `kamin:evidenceBasis`, one `kamin:evidenceLevelsVersion` and a `prov:wasDerivedFrom` (SHACL Core: the shape targets every claim with "predicate is not `kamin:demonstrates`, or meets `kamin:DemonstratesClaimRules`", so a broken claim gives one violation, on the claim).
+- **Validation in `npm test`.** `tests/shacl.test.js` validates, with `rdf-validate-shacl` 0.6.5 (exact-pinned dev dependency, local, no network, not in the app bundle), the demo workspace graph, the frozen demo profile `tests/fixtures/shacl/demo-profile.jsonld`, and the workspace graph of every synthetic KAU transcript (Task 50) after approval: **0 violations**. A `kamin:demonstrates` claim without `evidenceLevel` gives exactly one violation, naming the claim.
+- **Published.** `/ontology/kamin-core.ttl` and `/ontology/kamin-shapes.ttl` (current, 0.4.0), `/ontology/0.4.0/…`, and the unchanged `/ontology/0.3.0/…`; `/ontology/kamin-context.jsonld` is unchanged. The ontology header carries `owl:versionIRI <urn:kamin:ontology:0.4.0>` and `owl:priorVersion <urn:kamin:ontology:0.3.0>`.
 
 ## 17. Implementation path
 

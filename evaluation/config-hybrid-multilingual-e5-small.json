@@ -1,0 +1,10 @@
+{
+  "method": "eval-lexicon+examples-v1",
+  "model": "multilingual-e5-small",
+  "prefix": "query: ",
+  "threshold": 0.93,
+  "tunedOn": "dev-set.json",
+  "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+  "tunedAt": "2026-11-19T17:08:18.999Z",
+  "devMacroF1": 0.9848
+}

@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
 import AxeBuilder from '@axe-core/playwright'
 test('multi-hop people and project connections are explicit synthetic examples',async({page})=>{
  await page.goto('/?lang=ar')

@@ -1,0 +1,13 @@
+{
+  "testing": {"ar": "كتابة وتنفيذ حالات اختبار للبرمجيات واكتشاف الأخطاء", "en": "Writing and running software test cases and finding defects"},
+  "db-operations": {"ar": "النسخ الاحتياطي واستعادة قواعد البيانات وإدارة الصلاحيات", "en": "Database backup, restore and access permissions"},
+  "web-development": {"ar": "بناء واجهات ومواقع ويب للمستخدم", "en": "Building web pages and front-end user interfaces"},
+  "systems-analysis": {"ar": "تحليل سير العمل والعمليات مع أصحاب المصلحة", "en": "Analysing workflows and business processes with stakeholders"},
+  "requirements": {"ar": "جمع المتطلبات وكتابة قصص المستخدم ومعايير القبول", "en": "Gathering requirements, user stories and acceptance criteria"},
+  "software": {"ar": "تصميم وبرمجة أنظمة وخدمات برمجية", "en": "Designing and programming software systems and services"},
+  "database": {"ar": "تصميم قواعد البيانات وكتابة الاستعلامات", "en": "Designing databases and writing queries"},
+  "project": {"ar": "تخطيط المشروع وجدولته ومتابعة المعالم والنطاق", "en": "Planning, scheduling and tracking a project's milestones and scope"},
+  "statistics": {"ar": "تحليل البيانات إحصائيًا وحساب المؤشرات الكمية", "en": "Statistical and quantitative data analysis"},
+  "cyber": {"ar": "حماية الأنظمة والشبكات من الثغرات والتهديدات", "en": "Protecting systems and networks from vulnerabilities and threats"},
+  "ai-work": {"ar": "استخدام نماذج الذكاء الاصطناعي والتعلم الآلي في العمل", "en": "Using AI models and machine learning at work"}
+}

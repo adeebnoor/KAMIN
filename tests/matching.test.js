@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { MATCH_GROUPS, groupOf, groupMatches, matchReason } from '../src/utils/matchReason.js'
 import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
 import { projectStateToPerson360 } from '../src/ontology/projector.js'
 import { emptyInsightState, setDeclaredPreference } from '../src/insight.js'
@@ -59,15 +60,15 @@ describe('Person360 graph-native matching', () => {
     insight=setDeclaredPreference(insight,'workStructure','structured')
     const state={
       courses:[
-        {code:'CPIT-260',name:'Database Systems',grade:'A',source:'pdf'},
-        {code:'STAT-201',name:'Applied Statistics',grade:'B+',source:'pdf'},
+        {code:'CPIT-240',name:'Database (I)',grade:'A',source:'pdf'},
+        {code:'STAT-110',name:'Statistics',grade:'B+',source:'pdf'},
       ],
       goal:'data',
       insight,
     }
     const skills=[
-      {id:'database',labels:{ar:'قواعد البيانات',en:'Databases'},confidenceLabel:'high',evidence:[{code:'CPIT-260'}]},
-      {id:'statistics',labels:{ar:'التحليل الكمي',en:'Quantitative analysis'},confidenceLabel:'medium',evidence:[{code:'STAT-201'}]},
+      {id:'database',labels:{ar:'قواعد البيانات',en:'Databases'},confidenceLabel:'high',evidence:[{code:'CPIT-240'}]},
+      {id:'statistics',labels:{ar:'التحليل الكمي',en:'Quantitative analysis'},confidenceLabel:'medium',evidence:[{code:'STAT-110'}]},
     ]
     const graph=projectStateToPerson360({state,skills,educationClassification:{primary:null}})
     const profile=buildMatchingProfile({graph})
@@ -79,7 +80,7 @@ describe('Person360 graph-native matching', () => {
     expect(data.ruleVersion).toBe('kamin-graph-fit-v1')
     expect(data.graphTrace.evidencePathCount).toBe(2)
     expect(data.semanticPaths.filter(path=>path.kind==='capability-match').map(path=>path.courseCode))
-      .toEqual(expect.arrayContaining(['CPIT-260','STAT-201']))
+      .toEqual(expect.arrayContaining(['CPIT-240','STAT-110']))
     expect(data.semanticPaths.some(path=>path.relationChain.some(edge=>edge.predicate==='kamin:requiresCapability'))).toBe(true)
     expect(data.knowledgeInsights.externalOccupations.map(x=>x.notation)).toEqual(expect.arrayContaining(['2511.3','15-2051.01']))
     expect(data.knowledgeInsights.developmentGaps.map(x=>x.capabilityKey)).toEqual(expect.arrayContaining(['sql','python','power-bi']))
@@ -89,7 +90,7 @@ describe('Person360 graph-native matching', () => {
 
   it('does not treat a competency entity as evidence unless a demonstrates claim reaches it', () => {
     const state={
-      courses:[{code:'CPIT-260',name:'Database Systems',grade:'A',source:'pdf'}],
+      courses:[{code:'CPIT-240',name:'Database (I)',grade:'A',source:'pdf'}],
       goal:'data',
       insight:emptyInsightState(),
     }
@@ -138,4 +139,32 @@ describe('Person360 graph-native matching', () => {
     expect(matches.every(item=>item.decisionBasis==='person360-semantic-graph')).toBe(true)
   })
 
+})
+
+// Task 23 · Matches as a short list: groups, order inside a group, one specific reason per row.
+describe('matches list: groups and reasons', () => {
+  const item = (over = {}) => ({ id: 'x', type: 'job', judgment: 'fits', missingSkills: [], hardGates: [], limitingMechanisms: [], supportingMechanisms: [], semanticPaths: [], requiredSkills: ['database'], ...over })
+  it('puts every judgment in one of three groups; outside-goal and not-yet go to "not for now"', () => {
+    expect(MATCH_GROUPS).toEqual(['fits', 'conditional', 'later'])
+    expect(['fits', 'conditional', 'exploratory', 'not-yet'].map(j => groupOf({ judgment: j }))).toEqual(['fits', 'conditional', 'later', 'later'])
+  })
+  it('orders jobs before training inside a group and keeps the engine order otherwise', () => {
+    const list = [item({ id: 't1', type: 'training' }), item({ id: 'j1' }), item({ id: 'c1', judgment: 'conditional' }), item({ id: 'j2' }), item({ id: 'n1', judgment: 'not-yet' }), item({ id: 'e1', judgment: 'exploratory', type: 'training' })]
+    const g = groupMatches(list)
+    expect(Object.fromEntries(Object.entries(g).map(([k, v]) => [k, v.map(m => m.id)]))).toEqual({ fits: ['j1', 'j2', 't1'], conditional: ['c1'], later: ['n1', 'e1'] })
+  })
+  it('prefers what is missing, then the supporting evidence, then the goal link; never a number', () => {
+    expect(matchReason(item({ judgment: 'conditional', missingSkills: ['cyber', 'database'] }), 'en')).toEqual({ kind: 'missing', text: 'Missing: Cybersecurity fundamentals' })
+    expect(matchReason(item({ judgment: 'conditional', missingSkills: ['cyber'] }), 'ar').text).toBe('ينقصك: أساسيات الأمن السيبراني')
+    expect(matchReason(item({ judgment: 'not-yet', hardGates: ['g'], limitingMechanisms: ['A hard gate sentence.'] }), 'en')).toEqual({ kind: 'gate', text: 'A hard gate sentence.' })
+    expect(matchReason(item({ judgment: 'exploratory' }), 'en')).toEqual({ kind: 'outside-goal', text: 'Outside your current goal' })
+    const evidence = item({ semanticPaths: [{ kind: 'capability-match', courseCode: 'CPIT-240', capabilityLabel: { ar: 'قواعد البيانات', en: 'Databases' } }, { kind: 'goal-alignment', status: 'supported' }] })
+    expect(matchReason(evidence, 'en')).toEqual({ kind: 'evidence', text: 'Your CPIT-240 course supports this (Databases)' })
+    expect(matchReason(evidence, 'ar').text).toBe('مقررك CPIT-240 يدعم هذا المسار (قواعد البيانات)')
+    expect(matchReason(item({ semanticPaths: [{ kind: 'goal-alignment', status: 'supported' }] }), 'en')).toEqual({ kind: 'goal', text: 'It connects to the goal you chose.' })
+    expect(matchReason(item({ semanticPaths: [{ kind: 'preference-alignment', status: 'supported' }] }), 'en').kind).toBe('preference')
+    expect(matchReason(item({ requiredSkills: [] }), 'en')).toEqual({ kind: 'no-prerequisite', text: 'No academic prerequisite' })
+    expect(matchReason(item(), 'en').kind).toBe('catalog')
+    for (const lang of ['ar', 'en']) for (const it of [item({ missingSkills: ['cyber'] }), item({ judgment: 'exploratory' }), item({ requiredSkills: [] })]) expect(matchReason(it, lang).text).not.toMatch(/\d+\s*%/)
+  })
 })

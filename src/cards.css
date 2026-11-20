@@ -1,0 +1,4 @@
+/* Task 13 · one card style for the app. .panel is the same card (kept as an alias so existing markup
+   and tests keep working). Kept out of tokens.css, which the public pages also load. */
+.card,.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-card);padding:var(--card-pad)}
+.card p,.panel p{max-width:var(--measure)}

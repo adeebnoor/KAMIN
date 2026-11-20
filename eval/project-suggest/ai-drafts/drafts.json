@@ -1,0 +1,348 @@
+{
+  "version": "ai-drafts-v1",
+  "status": "awaiting-human-review",
+  "writtenBy": "ai",
+  "generation": {
+    "model": "claude-opus-5-5",
+    "generatedAt": "2026-11-17",
+    "method": "Written by Claude (claude-opus-5-5) in one Claude Code session on 2026-11-17, from the capability descriptions (eval/project-suggest/skill-descriptions.json), the Task 38 categories and the coverage quota (3 positive cases per capability, 1 per language where possible). FCIT computing work only; non-computing, meetings-only, intention-only and course-name-only texts are should-abstain. Not opened while drafting: the lexicon term lists, the v1 and dev set texts. The same session had seen one ai-v2 case and the evaluation code. Each draft was then checked by code (language, exact and near copies of the dev, v1, ai-v2 and human v2 sets, duplicates inside the drafts) and reviewed by Claude (self-review, sealed below).",
+    "approval": "Claude writing, reviewing and evaluating test cases was approved by the supervisor (reported by the project owner, 2026-11-16 and 2026-11-17)."
+  },
+  "disclosure": "AI-written drafts. Not part of the human test set (testset-v2.json). Two human reviewers keep, edit or reject each draft and label it independently, without seeing Claude's proposed labels (claude/). The reviewed result is testset-ai-v3.json, reported separately.",
+  "sealed": {
+    "note": "Claude's proposed labels and self-review are sealed: not in the working tree, committed here by sha256. They are in git history at the commit below and are restored with \"eval.mjs unseal-proposed\", which refuses until both reviewers' sheets are imported. Sealing does not erase them from git history; reviewers confirm they did not open them.",
+    "sealedAt": "2026-11-17",
+    "proposedLabels": {
+      "path": "eval/project-suggest/ai-drafts/claude/proposed-labels.json",
+      "commit": "f3db779057e4c808ee81483bfb511f3b00482582",
+      "sha256": "6493493e3764e0d51e0d23e9e7913ecb4a546bb3335bfe08123849b4f150e135"
+    },
+    "selfReview": {
+      "path": "eval/project-suggest/ai-drafts/claude/self-review.md",
+      "commit": "f3db779057e4c808ee81483bfb511f3b00482582",
+      "sha256": "40de0ae49d677b69875ae40286f3e5b111a33cb718605d56094f7240bfd2909a"
+    }
+  },
+  "cases": [
+    {
+      "id": "aid-en-01",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "For our library system I designed the tables and the relationships between them in MySQL, and wrote the joins that list overdue books for each member."
+    },
+    {
+      "id": "aid-en-02",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I designed the classes of the inventory system in UML and implemented them in Java, keeping data access behind a repository layer."
+    },
+    {
+      "id": "aid-en-03",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "As team lead in CPIT-498 I kept the Gantt chart current, split the work into weekly milestones and reported slipped tasks to our supervisor."
+    },
+    {
+      "id": "aid-en-04",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "In the network security lab I scanned our test server for vulnerabilities, found two ports that should not have been exposed and closed them in the firewall."
+    },
+    {
+      "id": "aid-en-05",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I built the front end of our events website in HTML, CSS and JavaScript, including a menu that adapts to phone screens."
+    },
+    {
+      "id": "aid-en-06",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I analysed survey answers from 120 students, computed means and standard deviations, and ran a t-test to compare the two campuses."
+    },
+    {
+      "id": "aid-en-07",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I gathered the requirements for the parking app by interviewing four security officers and wrote them as user stories with acceptance criteria."
+    },
+    {
+      "id": "aid-en-08",
+      "lang": "en",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I sat with the registrar's staff for two mornings, followed a transfer request as it moved from desk to desk, and drew where it gets stuck."
+    },
+    {
+      "id": "aid-en-09",
+      "lang": "en",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "Every night a script copies our app's data to a second machine, and once we wiped the main server on purpose to practise bringing everything back."
+    },
+    {
+      "id": "aid-en-10",
+      "lang": "en",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "Before each demo I clicked through every screen with a list of what should happen, noted where the app misbehaved and checked again after the fixes."
+    },
+    {
+      "id": "aid-en-11",
+      "lang": "en",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I fed a few thousand labelled product reviews to a program so it could learn to tell pleased customers from unhappy ones, then checked how often it guessed right."
+    },
+    {
+      "id": "aid-en-12",
+      "lang": "en",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "Our app kept its data in Firebase Firestore, and I wrote the queries that filter orders by status and date."
+    },
+    {
+      "id": "aid-en-13",
+      "lang": "en",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I implemented the booking service with Spring Boot and a REST API, packaged it with Docker and kept it in Git."
+    },
+    {
+      "id": "aid-en-14",
+      "lang": "en",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I cleaned the attendance records in pandas and produced weekly summaries and a correlation matrix in Jupyter."
+    },
+    {
+      "id": "aid-en-15",
+      "lang": "en",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I coded the sign-up pages of our React app and wrote Cypress scripts that fill in the forms and check the error messages."
+    },
+    {
+      "id": "aid-en-16",
+      "lang": "en",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I ran the kickoff meeting with the client, wrote down what the system must do as a numbered list of requirements, and planned three sprints around them."
+    },
+    {
+      "id": "aid-en-17",
+      "lang": "en",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I turned on HTTPS and two-factor login for our admin portal, and set up weekly backups of its database that I restored once to be sure they worked."
+    },
+    {
+      "id": "aid-en-18",
+      "lang": "en",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I attended every weekly meeting of our graduation project and kept the attendance sheet."
+    },
+    {
+      "id": "aid-en-19",
+      "lang": "en",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "I volunteered at the university blood donation campaign and helped donors fill in their forms."
+    },
+    {
+      "id": "aid-en-20",
+      "lang": "en",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "Next summer I would like to learn Python and get into data science."
+    },
+    {
+      "id": "aid-ar-01",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "صممت مخطط الكيانات والعلاقات لنظام إدارة التدريب الميداني وحولته إلى جداول، ثم كتبت استعلامات تعرض الطلاب الذين لم يسلموا تقاريرهم."
+    },
+    {
+      "id": "aid-ar-02",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "جمعت متطلبات تطبيق النقل الجامعي من استبيان للطلاب ومقابلة مع مشرف الحافلات، ثم كتبتها قصص مستخدم مع معايير قبول لكل قصة."
+    },
+    {
+      "id": "aid-ar-03",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "راجعت حسابات المستخدمين على خادم المعمل فوجدت حسابات لطلاب تخرجوا ما زالت تعمل، فعطلتها وفعّلت قفل الحساب بعد محاولات الدخول الفاشلة."
+    },
+    {
+      "id": "aid-ar-04",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "أعددت خطة مشروع تطبيق المواعيد: قسمته إلى أربع مراحل بمواعيد تسليم، وكنت أحدّث لوحة المهام كل أسبوع وأنبه الفريق عند التأخر."
+    },
+    {
+      "id": "aid-ar-05",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "دربت نموذج تعلم آلي على صور أوراق نخيل مصابة وسليمة ليفرق بينها، وقست دقته على صور لم يرها من قبل."
+    },
+    {
+      "id": "aid-ar-06",
+      "lang": "ar",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "رافقت موظفي شؤون الطلاب يومين لأفهم كيف تنتقل معاملة الاعتذار عن الفصل من مكتب إلى آخر، ورسمت المراحل التي تتأخر عندها."
+    },
+    {
+      "id": "aid-ar-07",
+      "lang": "ar",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "كل يوم جمعة أحفظ بيانات نظام الحضور كاملة على قرص خارجي، ولما تعطل الخادم أرجعت البيانات منه خلال ساعة."
+    },
+    {
+      "id": "aid-ar-08",
+      "lang": "ar",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "طلبت من خمسة زملاء استخدام النظام بسيناريوهات كتبتها مسبقًا، وقارنت ما حدث فعلًا بما كان متوقعًا، وسلمت المبرمجين قائمة بالأعطال."
+    },
+    {
+      "id": "aid-ar-09",
+      "lang": "ar",
+      "category": "synonym",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "جمعت درجات الطلاب في مقررين على ثلاثة فصول، وحسبت متوسط كل فصل، ورسمت كيف تغيرت نسبة النجاح من فصل إلى آخر."
+    },
+    {
+      "id": "aid-ar-10",
+      "lang": "ar",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "بنيت واجهة الموقع بـ React وTailwind وربطتها بخدمة تعرض جدول المحاضرات."
+    },
+    {
+      "id": "aid-ar-11",
+      "lang": "ar",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "طورت خدمة الإشعارات بلغة Python وإطار FastAPI، واستخدمت Git للإصدارات وDocker لتشغيلها على الخادم."
+    },
+    {
+      "id": "aid-ar-12",
+      "lang": "ar",
+      "category": "tech-name",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "استخدمت TensorFlow وKeras لبناء نموذج يتوقع ازدحام مواقف الكلية من سجلات البوابات."
+    },
+    {
+      "id": "aid-ar-13",
+      "lang": "ar",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "صممت جداول قاعدة البيانات لمتجر إلكتروني صغير، وبرمجت صفحات عرض المنتجات وسلة الشراء بـ PHP وHTML."
+    },
+    {
+      "id": "aid-ar-14",
+      "lang": "ar",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "قابلت موظفي المستودع لأفهم طريقة استلام الشحنات الحالية ورسمت مخططًا لها، ثم كتبت قائمة بما يجب أن يحققه النظام الجديد."
+    },
+    {
+      "id": "aid-ar-15",
+      "lang": "ar",
+      "category": "multi",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "وضعت خطة الاختبار للفريق وحددت مواعيد كل جولة ضمن جدول المشروع، وكتبت حالات اختبار وحدة تسجيل الدخول ونفذتها."
+    },
+    {
+      "id": "aid-ar-16",
+      "lang": "ar",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "درست مقررات قواعد البيانات وهندسة البرمجيات وأمن المعلومات."
+    },
+    {
+      "id": "aid-ar-17",
+      "lang": "ar",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "شاركت في تنظيم معرض الكتاب في الكلية واستقبلت الزوار."
+    },
+    {
+      "id": "aid-ar-18",
+      "lang": "ar",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "أعرف برنامجي Excel وMATLAB بالاسم، لكني لم أستخدمهما في أي مشروع بعد."
+    },
+    {
+      "id": "aid-ar-19",
+      "lang": "ar",
+      "category": "dialect",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "سويت صفحة تسجيل للنادي الطلابي، رتبت شكلها بالـ CSS وخليتها تشتغل زين على الجوال."
+    },
+    {
+      "id": "aid-ar-20",
+      "lang": "ar",
+      "category": "dialect",
+      "writtenBy": "ai",
+      "model": "claude-opus-5-5",
+      "text": "أنا اللي أعطي الصلاحيات في قاعدة بيانات المشروع، كل واحد بالفريق ياخذ قراءة بس إلا اللي يحتاج يعدّل."
+    }
+  ]
+}

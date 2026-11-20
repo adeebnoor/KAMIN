@@ -1,9 +1,12 @@
+import {aboutIdea,servicesWhoFor,servicesProof,trustHonest} from './landing-moved.mjs'
 import {governanceSection,reviewMetricsSection,reviewHelpSection,reviewPrivacySection} from './review-governance.mjs'
 import {universityPage} from './university-page.mjs'
 import {validationRoadmap} from './validation-roadmap.mjs'
 import {catalogPage} from './catalog-page.mjs'
 import {pdplPage} from './pdpl-page.mjs'
+import {runsWherePage} from './runs-where-page.mjs'
 import {capstonePage} from './capstone-page.mjs'
+import {LEVEL_MEANINGS} from '../src/content/levelReasons.js'
 const card=(title,body)=>`<section class="k-doc-card"><h2>${title}</h2>${body}</section>`
 const p=s=>`<p>${s}</p>`
 const link=(file,label)=>`<a href="/${file}">${label}</a>`
@@ -11,6 +14,7 @@ export const pages = {
  'catalog.html':{ar:catalogPage('ar'),en:catalogPage('en')},
  'capstone.html':{ar:capstonePage('ar'),en:capstonePage('en')},
  'pdpl.html':{ar:pdplPage('ar'),en:pdplPage('en')},
+ 'runs-where.html':{ar:runsWherePage('ar'),en:runsWherePage('en')},
  'about.html': {
   ar:['عن كامن والفريق','نساعد الطالب على فهم قدراته، والروابط التي تقرّبه من خطوته القادمة.',
    card('الفكرة والإشراف',p('يقود فكرة كامن وتصميم شبكة القدرات أ.د. أديب نور، أستاذ علم البيانات والذكاء الاصطناعي بجامعة الملك عبدالعزيز. يعيد المشروع تطبيق نمط الشبكات الدلالية من بحث الدكتوراه على الاهتمامات والأهداف والأدلة الأكاديمية ومسارات التعلم والعمل.')+p('<a href="https://adeebnoor.github.io/">الملف المهني العام للمشرف</a>'))+
@@ -96,8 +100,10 @@ for(const lang of ['ar','en']){
 }
 
 // Product review governance: local human decisions stay outside capability evidence.
+// Task 29: what the evidence levels mean: the same sentences as the app's "What do the levels mean?".
+const levelMeanings=lang=>{const m=LEVEL_MEANINGS[lang];return card(m.title,`<ul>${['none','limited','moderate','strong'].map(level=>`<li>${m[level]}</li>`).join('')}</ul>`+p(m.rule))}
 for(const lang of ['ar','en']){
- additions['methodology.html'][lang]+=governanceSection(lang)
+ additions['methodology.html'][lang]+=levelMeanings(lang)+governanceSection(lang)
  additions['validation.html'][lang]+=reviewMetricsSection(lang)
  additions['guide.html'][lang]+=reviewHelpSection(lang)
  additions['privacy.html'][lang]+=reviewPrivacySection(lang)
@@ -157,3 +163,14 @@ for(const lang of ['ar','en']){
   `<li>${ar?'تصميم مراجعة المستشار القابلة للتشغيل منشور في المستودع مع اختبارات الفصل؛ ليست ميزة عاملة.':'The operable advisor-review design is published in the repository with separation tests; it is not a working feature.'}</li></ul>`)
   +pages['changelog.html'][lang][2]
 }
+
+// Task 14: content moved off the home page (11 sections → 5); the home page links here.
+for(const lang of ['ar','en']){
+ for(const file of ['about.html','services.html','trust.html'])additions[file]??={ar:'',en:''}
+ additions['about.html'][lang]+=aboutIdea(lang)
+ additions['services.html'][lang]+=servicesWhoFor(lang)+servicesProof(lang)
+ additions['trust.html'][lang]+=trustHonest(lang)
+}
+
+// Task 16: the privacy page links to "What runs where" (generated from src/content/runtimeManifest.js).
+for(const lang of ['ar','en'])additions['privacy.html'][lang]+=card(lang==='ar'?'ما الذي يعمل وأين؟':'What runs where?',p(lang==='ar'?'كل ميزة تلمس بياناتك تعمل في متصفحك، ولا يوجد خادم يستقبلها. القائمة الكاملة، مع ما لم يُبنَ بعد:':'Every feature that touches your data runs in your browser, and no server receives it. The full list, including what is not built:')+p(link('runs-where.html',lang==='ar'?'ما الذي يعمل وأين':'What runs where')))

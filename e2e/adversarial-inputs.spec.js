@@ -1,4 +1,5 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { openView, openDashboardMore, reloadLanding, openPrivacySection } from './nav.js'
 
 // Red-team inputs for the two places a student can feed the app arbitrary text:
 // transcript upload and the SPARQL lab. Each case states the behaviour a reviewer
@@ -10,7 +11,8 @@ async function openWorkspace(page){
  await expect(page.locator('#kamin-transcript-file')).toBeAttached()
 }
 const upload=(page,name,text)=>page.locator('#kamin-transcript-file').setInputFiles({name,mimeType:'text/plain',buffer:Buffer.from(text,'utf8')})
-const rowValues=page=>page.locator('.app-overlay table input').evaluateAll(inputs=>inputs.map(i=>i.value))
+// Task 22: the course name is a text area (it wraps instead of being cut), so read text areas too.
+const rowValues=page=>page.locator('.app-overlay table input, .app-overlay table textarea').evaluateAll(inputs=>inputs.map(i=>i.value))
 
 test.describe('transcript upload under hostile input',()=>{
  test('markup inside a course title is shown as text, never executed',async({page})=>{
@@ -30,7 +32,9 @@ test.describe('transcript upload under hostile input',()=>{
   await openWorkspace(page)
   await upload(page,'duplicates.txt','CPIT-260 Database Systems B\nCPIT-260 Database Systems A\nCPIT-250 Software Engineering B+')
   await expect(page.getByText(/3 مقررات مستخرجة/)).toBeVisible()
-  await expect(page.locator('.quality-review.has-issues')).toBeVisible()
+  // Task 22: the problem is named on the row itself, and the approve bar says what to fix.
+  await expect(page.getByTestId('course-reason').filter({hasText:'رمز مقرر مكرر'})).toBeVisible()
+  await expect(page.getByTestId('approve-reason')).toHaveText('أصلح مقررًا واحدًا أولًا')
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await expect(page.getByRole('button',{name:/أعتمد السجل/}).last()).toBeDisabled()
  })
@@ -105,24 +109,28 @@ test.describe('SPARQL lab under hostile queries',()=>{
 test.describe('field-level provenance',()=>{
  test('a grade raised by hand is named on review and travels with the capability',async({page})=>{
   await openWorkspace(page)
-  await upload(page,'honest.txt','CPIT-260 Database Systems B\nSTAT-201 Applied Statistics B+')
+  await upload(page,'honest.txt','CPIT-240 Database Systems B\nSTAT-110 General Statistics B+')
   await expect(page.getByText(/2 مقررات مستخرجة/)).toBeVisible()
   await expect(page.locator('.provenance-badge.document')).toHaveCount(2)
   const grade=page.getByLabel(/^الدرجة 1$/)
   await grade.fill('A+')
-  await expect(page.getByTestId('provenance-signals')).toContainText('رفعت درجة CPIT-260 من B إلى A+')
+  // Task 22: the sentence is on the course's own row (it was in a list above the table).
+  const raised=page.getByTestId('course-reason').filter({hasText:'رفعت درجة'})
+  await expect(raised).toContainText('رفعت درجة CPIT-240 من B إلى A+')
   await expect(page.locator('.provenance-badge.edited')).toHaveCount(1)
   await expect(page.locator('.provenance-badge.edited')).toContainText('درجة مرفوعة')
   // Restoring the extracted value clears the signal: provenance follows the value, not the click.
   await grade.fill('B')
-  await expect(page.getByTestId('provenance-signals')).toHaveCount(0)
+  await expect(raised).toHaveCount(0)
   await grade.fill('A')
+  // Task 04: the college is never assumed. Task 55: no dropdown; this plain list prints no college, so the
+  // note's Fix opens the one-tap list.
+  await page.getByTestId('college-note').getByRole('button',{name:'تصحيح'}).click()
+  await page.getByTestId('college-fix').getByRole('button',{name:'كلية الحاسبات وتقنية المعلومات'}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  const more=page.getByRole('button',{name:'المزيد',exact:true})
-  if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  await openView(page,'مهاراتي')
   const database=page.locator('.skill-card[data-provenance="edited"]')
   await expect(database).toHaveCount(1)
   await expect(database).toContainText('معدّل بعد الاستخراج')
@@ -156,8 +164,9 @@ test.describe('from gap to evidence',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  const judgmentBefore=await page.locator('.metrics article').nth(2).innerText()
-  await page.getByRole('button',{name:/شبكتي ومساعدي/}).first().click()
+  await openDashboardMore(page)
+  const judgmentBefore=await page.locator('.decision').first().innerText()
+  await openView(page,'شبكتي ومساعدي')
   await page.getByRole('tab',{name:'مساعد القرار',exact:true}).click()
   await page.getByLabel('اختر سؤالك').selectOption('missing')
   const panel=page.getByTestId('project-evidence')
@@ -173,12 +182,10 @@ test.describe('from gap to evidence',()=>{
   await expect(panel.locator('.project-evidence-list li')).toHaveCount(1)
   await expect(panel.locator('.project-evidence-list')).toContainText('بانتظار مراجعة')
   await expect(panel.locator('.project-evidence-list a')).toHaveAttribute('rel',/noopener/)
-  const more=page.getByRole('button',{name:'المزيد',exact:true})
-  if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:/لوحة قدراتي/}).first().click()
-  expect(await page.locator('.metrics article').nth(2).innerText()).toBe(judgmentBefore)
-  if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  await openView(page,'لوحة قدراتي')
+  await openDashboardMore(page)
+  expect(await page.locator('.decision').first().innerText()).toBe(judgmentBefore)
+  await openView(page,'مهاراتي')
   await expect(page.locator('.skill-projects')).toContainText('مختبر Python لتحليل البيانات')
   const session=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')||'{}'))
   expect(session.projects?.length).toBe(1)
@@ -193,7 +200,8 @@ test.describe('portable export',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  await openView(page,'الخصوصية')
+  await openPrivacySection(page,'backup') // Task 27: the capabilities file is in "Back up and restore"
   const download=page.waitForEvent('download')
   await page.getByTestId('export-clr').click()
   const file=await download
@@ -214,6 +222,7 @@ test.describe('task → evidence → review loop',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
+  await openDashboardMore(page)
   const strip=page.getByTestId('today-strip')
   await expect(strip).toContainText('هدفي الحالي')
   await expect(strip).toContainText('أهم دليل ناقص')
@@ -236,8 +245,9 @@ test.describe('task → evidence → review loop',()=>{
   await expect(card).toHaveAttribute('data-status','reviewed')
   await expect(card.getByTestId('task-proof')).toContainText('رأي مراجع محلي مصرح به')
   // Reload: progress is reopened, and the record still carries only the declared level.
-  await page.reload()
+  await reloadLanding(page)
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
+  await openDashboardMore(page)
   const again=page.getByTestId('task-loop').locator('[data-task="task-backup-restore"]')
   await expect(again).toHaveAttribute('data-status','reviewed')
   const session=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')||'{}'))
@@ -254,7 +264,8 @@ test.describe('pathway comparison',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  await page.getByRole('button',{name:/فرصي/}).first().click()
+  // Task 23: the pathway comparison moved from Matches to the Compare tab.
+  await openView(page,'المقارنة')
   const compare=page.getByTestId('pathway-compare')
   await expect(compare).toBeVisible()
   await expect(compare.locator('thead th')).toHaveCount(3)
@@ -279,9 +290,7 @@ test.describe('capability suggestion from a project description',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  const more=page.getByRole('button',{name:'المزيد',exact:true})
-  if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  await openView(page,'مهاراتي')
   const panel=page.getByTestId('project-evidence')
   const toggle=panel.getByRole('button',{name:/أضف دليل مشروع|إغلاق النموذج/})
   if((await toggle.innerText()).includes('أضف'))await toggle.click()
@@ -307,7 +316,8 @@ test.describe('verifiable credential import',()=>{
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  await openView(page,'الخصوصية')
+  await openPrivacySection(page,'backup') // Task 27: credential import is at the end of "Back up and restore"
   const panel=page.getByTestId('credential-import')
   const input=panel.locator('input[type=file]')
   await input.setInputFiles({name:'junk.json',mimeType:'application/json',buffer:Buffer.from('not json')})
@@ -321,9 +331,7 @@ test.describe('verifiable credential import',()=>{
   await result.getByRole('button',{name:/احفظ نتيجة التحقق/}).click()
   await expect(panel.locator('.credential-list li')).toHaveCount(1)
   await expect(panel.locator('.credential-list')).toContainText('غير موثّق')
-  const more=page.getByRole('button',{name:'المزيد',exact:true})
-  if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  await openView(page,'مهاراتي')
   await expect(page.getByTestId('verified-badge')).toHaveCount(0)
  })
 })

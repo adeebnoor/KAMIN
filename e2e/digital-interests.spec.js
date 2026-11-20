@@ -1,10 +1,11 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
+import { openView, reloadLanding, openPrivacySection, INSIGHT_CONSENT } from './nav.js'
 import AxeBuilder from '@axe-core/playwright'
 
 async function start(page,lang='ar'){
   await page.goto(`/?lang=${lang}`)
   await page.getByRole('button',{name:lang==='ar'?'ابدأ بناء ملفك':'Build your profile',exact:true}).first().click()
-  await page.getByRole('checkbox',{name:lang==='ar'?/أوافق على بناء ملف Person 360/:/I consent to building my Person 360/}).check()
+  await page.getByRole('checkbox',{name:INSIGHT_CONSENT[lang]}).check()
   await page.getByRole('button',{name:lang==='ar'?'ابدأ بصمتي':'Start my profile',exact:true}).click()
 }
 async function enable(page){
@@ -44,7 +45,7 @@ test('review and a separate purpose permission gate semantic inference without p
   expect(requests.some(request=>request.includes('SYNTHETIC-PRIVATE')||request.startsWith('POST'))).toBe(false)
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
   await expect(page.locator('.decision-studio .inference-proof')).not.toContainText('R4')
-  await page.getByRole('button',{name:'اهتماماتي وهدفي',exact:true}).first().click()
+  await openView(page,'اهتماماتي وهدفي')
   await page.getByRole('button',{name:'استكشف هذا المصدر',exact:true}).click()
   await page.getByRole('checkbox',{name:/أسمح باستخدام اهتماماتي المؤكدة/}).check()
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
@@ -58,8 +59,10 @@ test('privacy withdrawal removes confirmed topics from persistent storage and th
   await page.getByRole('button',{name:'اقترح اهتمامات لأراجعها',exact:true}).click()
   await page.getByRole('button',{name:'يمثلني — أضفه',exact:true}).click()
   await page.getByRole('checkbox',{name:/أسمح باستخدام اهتماماتي المؤكدة/}).check()
-  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  await openView(page,'الخصوصية')
+  await openPrivacySection(page,'save') // Task 27
   await page.getByRole('button',{name:'الاحتفاظ بملفي على هذا الجهاز',exact:true}).click()
+  await openPrivacySection(page,'permissions') // Task 27: the digital activity source is under Permissions
   await page.getByRole('button',{name:'اسحب الموافقة واحذف الاهتمامات الرقمية',exact:true}).click()
   await expect(page.locator('.digital-privacy-control')).toContainText('التحليل: غير مفعّل')
   const persisted=()=>page.evaluate(async()=>{
@@ -69,7 +72,7 @@ test('privacy withdrawal removes confirmed topics from persistent storage and th
   })
   await expect.poll(async()=>(await persisted())?.analysisConsent).toBe(false)
   expect((await persisted()).confirmed).toEqual([])
-  await page.reload()
+  await reloadLanding(page)
   await page.getByRole('button',{name:'ابدأ بناء ملفك',exact:true}).first().click()
   await page.getByRole('button',{name:'استكشف شبكتي',exact:true}).click()
   await expect(page.locator('.decision-studio .inference-proof')).not.toContainText('R4')

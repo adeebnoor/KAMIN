@@ -116,6 +116,8 @@ export function indexPersonGraph(graph){
         evidenceId:claim.source,
         evidenceType:evidence?.evidenceType||claim.sourceType||null,
         evidenceStrength:claim.evidenceStrength||null,
+        evidenceLevel:claim.evidenceLevel||null,
+        basis:claim.evidenceBasis||'academic',
         courseId:course?.['@id']||evidence?.course||null,
         courseCode:course?.code||null,
         courseName:course?.name||null,
@@ -125,6 +127,24 @@ export function indexPersonGraph(graph){
       const current=capabilities.get(key)||[]
       current.push(path)
       capabilities.set(key,current)
+    }else if(claim.predicate==='kamin:verifiedBy'){
+      // Tier T4: a credential verified against a trusted issuer is practical evidence. Anything
+      // short of a trusted, verified record stays out of matching.
+      const evidence=entities.get(claim.source)||null
+      if(claim.subject!==graph?.['@id'] || claim.status!=='active' || !object || evidence?.evidenceType!=='imported-credential-verification' || evidence.issuerTrusted!==true || evidence.outcome!=='verified' || claim.metadata?.issuerTrusted!==true) continue
+      const key=skillKey(object)
+      const path={
+        kind:'capability-evidence',status:'supported',
+        personId:graph?.['@id']||'urn:kamin:person:local',
+        claimId:claim['@id'],relation:'kamin:verifiedBy',
+        capabilityId:claim.object,capabilityKey:key,capabilityLabel:object?.label||object?.notation||key,
+        evidenceId:claim.source,evidenceType:evidence.evidenceType,
+        evidenceStrength:claim.evidenceStrength||null,evidenceLevel:'strong',basis:'practical',
+        courseId:null,courseCode:null,courseName:null,
+        credentialIssuer:evidence.issuer||null,
+        generatedBy:claim.generatedBy||null,sourceType:claim.sourceType||null,
+      }
+      capabilities.set(key,[...(capabilities.get(key)||[]),path])
     }else if(claim.predicate==='kamin:hasConfirmedInterest'){
       const consent=entities.get(claim.metadata?.consentId)
       const evidence=entities.get(claim.source)
@@ -171,9 +191,13 @@ export function indexPersonGraph(graph){
   }
 }
 
+// Ordinal evidence levels (Task 02) rank first; practical evidence beats academic at the same
+// level. Legacy strength labels remain for graphs built before evidence levels existed.
+const LEVEL_RANK={strong:8,moderate:6,limited:4,none:0}
+const LEGACY_RANK={high:5,medium:4,'document-derived':4,applied:4,low:3,preliminary:2,declared:1}
+const pathRank=path=>(LEVEL_RANK[path.evidenceLevel]??LEGACY_RANK[path.evidenceStrength]??0)*2+(path.basis==='practical'?1:0)
 export function strongestCapabilityPath(paths=[]){
-  const rank={high:5,medium:4,'document-derived':4,applied:4,low:3,preliminary:2,declared:1}
-  return [...paths].sort((a,b)=>(rank[b.evidenceStrength]||0)-(rank[a.evidenceStrength]||0))[0]||null
+  return [...paths].sort((a,b)=>pathRank(b)-pathRank(a))[0]||null
 }
 
 export function describeCapabilityPath(path,target,lang='ar'){

@@ -1,0 +1,4 @@
+PREFIX k: <urn:kamin:>
+ASK { GRAPH <urn:kamin:graph:profile-input> {
+  ?claim k:predicate k:demonstrates ; k:sourceType ?t .
+  FILTER(?t IN ("self-declared","student-selected-text")) } }

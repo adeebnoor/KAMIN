@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kamin-learning-opportunities-v3",
+  "title": "KAMIN learning opportunities (Task 19, extended in Tasks 57 and 36)",
+  "description": "Used only by tests (tests/nextSteps.test.js with tests/helpers/miniJsonSchema.js); never imported by the app. Rules the keywords here cannot say are checked in that test: supports equals teaches; improves lists exactly the targets that require one of the supported capabilities; a kau-catalog item is a university course whose ref names its course code and catalogue page; every non-KAU item is illustrative or retired; the review rules of src/path/review.js hold (two reviewer roles on a reviewed item, an invented source only on a retired item; checked in tests/pathReview.test.js).",
+  "type": "object",
+  "required": ["version", "note", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "pattern": "^kamin-learning-opportunities-v\\d+-\\d{4}-\\d{2}-\\d{2}$" },
+    "note": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "title", "provider", "providerUrl", "supports", "teaches", "requires", "improves", "level", "language", "status", "addedBy", "reviewers", "reviewedAt", "sourceNote", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64 },
+          "kind": { "enum": ["university-course", "course", "certificate"] },
+          "courseCode": { "type": "string", "pattern": "^[A-Z]{2,5}-\\d{3}$" },
+          "title": {
+            "type": "object",
+            "required": ["ar", "en"],
+            "additionalProperties": false,
+            "properties": { "ar": { "type": "string", "pattern": "\\S" }, "en": { "type": "string", "pattern": "\\S" } }
+          },
+          "provider": { "type": "string", "pattern": "\\S" },
+          "providerUrl": { "type": ["null", "string"], "pattern": "^https://" },
+          "supports": { "type": "array", "items": { "type": "string", "pattern": "^[a-z-]+$" } },
+          "teaches": { "type": "array", "items": { "type": "string", "pattern": "^[a-z-]+$" } },
+          "requires": { "type": "array", "items": { "type": "string", "pattern": "^[a-z-]+$" } },
+          "improves": { "type": "array", "items": { "type": "string", "pattern": "^(?:job|training)-[a-z0-9-]+$" } },
+          "level": { "enum": ["intro", "intermediate", "advanced"] },
+          "language": { "type": "array", "maxItems": 2, "items": { "enum": ["ar", "en"] } },
+          "status": { "enum": ["illustrative", "reviewed", "retired"] },
+          "retiredAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "addedBy": { "type": "string", "pattern": "\\S" },
+          "reviewers": { "type": ["null", "array"], "maxItems": 2, "items": { "type": "string", "pattern": "\\S", "maxLength": 80 } },
+          "reviewedAt": { "type": ["null", "string"], "pattern": "^\\d{4}-\\d{2}-\\d{2}" },
+          "sourceNote": { "type": "string", "pattern": "\\S", "maxLength": 300 },
+          "source": {
+            "type": "object",
+            "required": ["type", "ref", "note"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "enum": ["kau-catalog", "department-offer", "provider-page", "invented"] },
+              "ref": { "type": ["null", "string"], "pattern": "\\S" },
+              "note": { "type": "string", "pattern": "\\S", "maxLength": 120 }
+            }
+          },
+          "goals": { "type": "array", "items": { "type": "string", "pattern": "^[a-z-]+$" } },
+          "duration": { "type": "object", "required": ["ar", "en"], "additionalProperties": false, "properties": { "ar": { "type": "string" }, "en": { "type": "string" } } },
+          "cost": { "type": "object", "required": ["ar", "en"], "additionalProperties": false, "properties": { "ar": { "type": "string" }, "en": { "type": "string" } } },
+          "outcome": { "type": "object", "required": ["ar", "en"], "additionalProperties": false, "properties": { "ar": { "type": "string" }, "en": { "type": "string" } } },
+          "formalGate": { "type": "object" }
+        }
+      }
+    }
+  }
+}

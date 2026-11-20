@@ -1,0 +1,10 @@
+{
+  "method": "eval-lexicon+examples-v1+phrases",
+  "model": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+  "prefix": "",
+  "threshold": 0.79,
+  "tunedOn": "course-dev-set.json",
+  "tunedOnSha256": "58faad0815385f36306effeb8e7f7747900cbd178240410012fa7b625800fdca",
+  "tunedAt": "2026-11-19T17:06:50.971Z",
+  "devMacroF1": 0.5714
+}

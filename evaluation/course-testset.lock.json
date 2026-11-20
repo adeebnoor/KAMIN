@@ -1,0 +1,8 @@
+{
+  "file": "course-testset.json",
+  "sha256": "99a6783cd3de745d1b591f34dc38f255423ad8fecd9249a4badf901227aeb2e3",
+  "frozenAt": "2026-11-19T17:06:20.360Z",
+  "cases": 25,
+  "kaminCommit": "7291c06",
+  "note": "Frozen test set: no edits and no threshold tuning on it. Any change = a new version with a new date."
+}

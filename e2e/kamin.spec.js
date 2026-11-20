@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
+import { openView, openOtherOptions, openDashboardMore, reloadLanding, openPrivacySection, INSIGHT_CONSENT } from './nav.js'
 
-async function openMoreTools(page){const more=page.getByRole('button',{name:'المزيد',exact:true});if(await more.isVisible())await more.click()}
 import AxeBuilder from '@axe-core/playwright'
 
 test('Arabic core journey is usable and explainable', async ({ page }) => {
@@ -12,9 +12,10 @@ test('Arabic core journey is usable and explainable', async ({ page }) => {
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
-  await openMoreTools(page)
-  await page.getByRole('button', { name: /الدورات/ }).first().click()
-  await expect(page.getByText(/لا نرتب الدورات فقط/)).toBeVisible()
+  await openView(page,'الدورات')
+  // Task 24: the title asks the real question; courses that are not for now are behind one button.
+  await expect(page.getByRole('heading',{name:'دورات لخطوتك التالية'})).toBeVisible()
+  await page.getByRole('button',{name:/اعرض الدورات التي ليست لك الآن/}).click()
   await expect(page.getByText(/PMP/).first()).toBeVisible()
   await expect(page.getByText(/لا تناسبك الآن/).first()).toBeVisible()
 })
@@ -61,7 +62,10 @@ test('approved Kamin session gives explicit local-save confirmation', async ({ p
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
-  await expect(page.getByRole('status')).toContainText(/تم اعتماد السجل/)
+  // Task 25: no toast after approval. The dashboard's one alert says the profile lasts only for this
+  // session and offers to keep it on this device (the toast said the same).
+  await expect(page.getByTestId('dashboard-alert')).toContainText(/ملفك مؤقت في هذه الجلسة\. هل تريد الاحتفاظ به على هذا الجهاز؟/)
+  await expect(page.getByTestId('dashboard-alert').getByRole('button', { name: 'نعم، احتفظ بملفي', exact: true })).toBeVisible()
   const storage = await page.evaluate(() => ({
     session: sessionStorage.getItem('kamin-session-v3'),
     legacy: localStorage.getItem('kamin-pilot-v1')
@@ -71,15 +75,18 @@ test('approved Kamin session gives explicit local-save confirmation', async ({ p
 })
 
 test('proof-first landing exposes fictional evidence and transparent boundaries', async ({ page, request }) => {
+  // Task 14: the service overview moved to services.html; the home page links to it.
+  await page.goto('/ar/services.html')
+  await expect(page.locator('#services-proof')).toContainText('ملف واحد. علاقات تكشف أكثر.')
+  await expect(page.locator('#services-proof')).toContainText('المسارات أمثلة مرجعية')
   await page.goto('/')
-  await expect(page.locator('#proof')).toContainText('ملف واحد. علاقات تكشف أكثر.')
-  await expect(page.locator('#proof')).toContainText('المسارات أمثلة مرجعية')
   await page.locator('.quick-tour').scrollIntoViewIfNeeded()
   await expect(page.locator('.quick-tour')).toBeVisible()
   await expect(page.locator('.quick-tour')).toContainText('مثال توضيحي · دون بيانات شخصية')
   await expect(page.locator('.quick-tour')).toContainText('طالبة افتراضية')
-  await page.locator('.pilot-advanced > summary').click()
-  await expect(page.locator('#person360')).toContainText('صلاحية التوصيات هنا تحتاج تحققًا مستقلًا')
+  // Task 14: the idea behind Kamin moved to about.html#idea.
+  await page.goto('/ar/about.html')
+  await expect(page.locator('#idea')).toContainText('صلاحية التوصيات هنا تحتاج تحققًا مستقلًا')
 
   for (const path of ['/sample-report.html','/methodology.html','/trust.html','/interoperability.html']) {
     const response = await request.get(path)
@@ -98,7 +105,7 @@ test('analysis consent is off by default and gates approval', async ({ page }) =
   await expect(page.getByRole('button', { name: /أعتمد السجل/ })).toBeEnabled()
 })
 
-test('app dialog supports Escape and mobile usage log navigation', async ({ page }) => {
+test('app dialog supports Escape and mobile navigation reaches the usage log', async ({ page }) => {
   await page.setViewportSize({width:390,height:844})
   await page.goto('/')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
@@ -106,8 +113,10 @@ test('app dialog supports Escape and mobile usage log navigation', async ({ page
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toBeHidden()
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
-  await openMoreTools(page)
-  await expect(page.getByRole('button', { name: /سجل الاستخدام/ })).toBeVisible()
+  // Task 09: four sections in the bottom bar; the usage log is a tab inside "My data".
+  await expect(page.locator('.bottom-nav button')).toHaveCount(4)
+  await openView(page,'سجل الاستخدام')
+  await expect(page.getByRole('tab', { name: 'سجل الاستخدام' })).toHaveAttribute('aria-selected','true')
 })
 
 
@@ -145,10 +154,11 @@ test('Kamin does not present heuristic mastery or fit percentages as calibrated 
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await expect(page.locator('.skill-row').first()).toContainText(/مرتفعة|متوسطة|محدودة|مبدئية/)
-  await expect(page.locator('.metrics')).not.toContainText(/\d+%/)
-  await openMoreTools(page)
-  await page.getByRole('button', { name: /الدورات/ }).first().click()
-  await expect(page.locator('.fit-card').first()).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
+  await expect(page.locator('.capability-list')).not.toContainText(/\d+%/)
+  await openView(page,'الدورات')
+  // Task 24: the "no calibrated percentage" rule is said once, under the title (it was on every card).
+  await expect(page.getByTestId('course-rule')).toContainText(/النسبة مخفية حتى المعايرة البحثية/)
+  expect(((await page.locator('.app-content').textContent()).match(/النسبة مخفية/g)||[]).length).toBe(1)
   expect((await page.locator('.fit-card').allTextContents()).join('\n')).not.toMatch(/\d+%/)
 })
 
@@ -162,9 +172,14 @@ test('upload validation surfaces a non-binding SASCED academic context candidate
     mimeType:'text/plain',
     buffer:Buffer.from('بكالوريوس تقنية المعلومات\nCPIT 251 Systems Analysis and Design 3 A 15.00')
   })
-  await expect(page.getByText(/SASCED-20/)).toBeVisible()
-  await expect(page.getByText(/061303/).first()).toBeVisible()
-  await expect(page.getByText(/لا يصبح تصنيفًا معتمدًا/)).toBeVisible()
+  // Task 12: plain wording on screen; the SASCED-20 name is under "Technical details".
+  await expect(page.getByText('تخصصك الأكاديمي المقترح')).toBeVisible()
+  // Task 22: each course's national context is also listed, closed, under Technical details; read the suggestion itself.
+  await expect(page.locator('.sasced-candidate').getByText(/061303/).first()).toBeVisible()
+  await expect(page.getByText(/لا يؤثر في النتيجة حتى تؤكده/)).toBeVisible()
+  const technical=page.locator('.sasced-candidate .tech-details')
+  await technical.locator('summary').click()
+  await expect(technical).toContainText('SASCED-20')
 })
 
 
@@ -174,20 +189,22 @@ test('approved demo surfaces Saudi national classification context without turni
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
+  await openDashboardMore(page)
   await expect(page.getByText(/التصنيف السعودي الموحد/)).toBeVisible()
   await expect(page.getByText('061303').first()).toBeVisible()
-  await expect(page.getByText(/لا ينتج هذا التصنيف مهارة بحد ذاته/)).toBeVisible()
+  await expect(page.getByText(/لا ينتج هذا التصنيف قدرة/)).toBeVisible()
 })
 
 
 test('Person 360 is optional, structured, and available before transcript approval', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
-  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
-  await expect(page.getByText(/اهتماماتك بداية الشبكة/)).toBeVisible()
+  await openView(page,'اهتماماتي وهدفي')
+  // Task 28: plain title (was "اهتماماتك بداية الشبكة").
+  await expect(page.getByText(/اهتماماتك وهدفك/).first()).toBeVisible()
   await expect(page.getByText(/ليست اختبارًا أو تشخيصًا نفسيًا/)).toBeVisible()
 
-  const consent=page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ })
+  const consent=page.getByRole('checkbox', { name: INSIGHT_CONSENT.ar })
   await expect(consent).not.toBeChecked()
   await consent.check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
@@ -210,14 +227,14 @@ test('Person 360 is optional, structured, and available before transcript approv
 test('withdrawing Person 360 consent clears only the insight layer', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
-  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
-  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await openView(page,'اهتماماتي وهدفي')
+  await page.getByRole('checkbox', { name: INSIGHT_CONSENT.ar }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('درجة هيكلة العمل').selectOption('structured')
   await page.locator('input[type="radio"][name="goal"][value="data"]').check()
 
-  await page.getByRole('button', { name: /الخصوصية/ }).first().click()
+  await openView(page,'الخصوصية')
   const insightConsent=page.getByRole('checkbox', { name: /بناء بصمة الطالب الذاتية/ })
   await expect(insightConsent).toBeChecked()
   await insightConsent.uncheck()
@@ -242,24 +259,44 @@ test('canonical JSON-LD ontology context is published with verified namespaces',
   expect(context.Competency).toBe('ceasn:Competency')
 })
 
+// Task 33: the ontology and its shapes are published; the 0.3.0 files keep resolving next to 0.4.0.
+test('ontology 0.4.0 and its SHACL shapes are published, and the 0.3.0 files still resolve', async ({ request }) => {
+  for (const [path, version] of [['/ontology/kamin-core.ttl','0.4.0'],['/ontology/0.4.0/kamin-core.ttl','0.4.0'],['/ontology/0.3.0/kamin-core.ttl','0.3.0']]) {
+    const response=await request.get(path)
+    expect(response.ok(),path).toBeTruthy()
+    expect(await response.text(),path).toContain(`owl:versionInfo "${version}"`)
+  }
+  for (const path of ['/ontology/kamin-shapes.ttl','/ontology/0.4.0/kamin-shapes.ttl','/ontology/0.3.0/kamin-shapes.ttl']) {
+    const response=await request.get(path)
+    expect(response.ok(),path).toBeTruthy()
+    expect(await response.text(),path).toContain('kamin:ClaimShape')
+  }
+  expect(await (await request.get('/ontology/kamin-shapes.ttl')).text()).toContain('kamin:EvidenceClaimShape')
+})
+
 
 test('Person 360 drives explainable job and training matches without a magic score', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
-  await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
-  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await openView(page,'اهتماماتي وهدفي')
+  await page.getByRole('checkbox', { name: INSIGHT_CONSENT.ar }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.locator('input[type="radio"][name="careerInterest"][value="investigative"]').check()
   await page.locator('.optional-preferences > summary').click()
   await page.getByLabel('قيمة العمل الأهم بالنسبة لي').selectOption('achievement')
   await page.getByLabel('درجة هيكلة العمل').selectOption('balanced')
-  await page.getByRole('button', { name: /فرصي/ }).first().click()
-  await expect(page.getByText(/فرصك المفسّرة/)).toBeVisible()
+  await openView(page,'فرصي')
+  // Task 28: the title is in plain words ("المفسّرة" is a Task 12 developer term).
+  await expect(page.getByText(/فرصك وأسبابها/)).toBeVisible()
   await expect(page.getByRole('dialog').getByRole('heading',{name:'محلل بيانات',exact:true})).toBeVisible()
-  await page.locator('.match-card').first().locator('.match-evidence-details > summary').click()
-  await expect(page.getByText(/فجوات أو حدود/).first()).toBeVisible()
+  // Task 23: a row opens in place and shows the evidence, gaps and full explanation (was a <details>).
+  // The old page listed jobs first, so its first card was the first job; open the first job row.
+  await page.locator('.match-card').filter({has:page.locator('.match-type',{hasText:'وظيفة'})}).first().locator('.match-toggle').click()
+  const opened=page.locator('.match-row.is-open')
+  await expect(opened.getByText(/فجوات أو حدود/).first()).toBeVisible()
   await expect(page.locator('.match-explorer')).not.toContainText(/\d+%/)
-  await expect(page.getByText(/غير معاير رقميًا/).first()).toBeVisible()
+  // Task 28: "غير معاير رقميًا" (not numerically calibrated) now says it plainly: a count, not a score.
+  await expect(opened.getByText(/هذا عدّ وليس درجة|لا توجد درجة رقمية/).first()).toBeVisible()
 })
 
 test('academic evidence can move a reference job from conditional to fits while psychometrics never override gaps', async ({ page }) => {
@@ -269,11 +306,11 @@ test('academic evidence can move a reference job from conditional to fits while 
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name: /الإدارة والمشاريع/ }).click()
-  await page.getByRole('button', { name: /اهتماماتي وهدفي/ }).first().click()
-  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await openView(page,'اهتماماتي وهدفي')
+  await page.getByRole('checkbox', { name: INSIGHT_CONSENT.ar }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.locator('input[type="radio"][name="careerInterest"][value="enterprising"]').check()
-  await page.getByRole('button', { name: /فرصي/ }).first().click()
+  await openView(page,'فرصي')
   const card=page.locator('.match-card').filter({hasText:'منسق مشاريع تقنية'})
   await expect(card).toContainText(/تناسبك/)
   await expect(card).toContainText(/مسار دليل صالح|هدفك المصرح به/)
@@ -328,7 +365,8 @@ test('encrypted local backup survives session loss and restores source-of-truth 
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
-  await page.getByRole('button', { name: /الخصوصية/ }).first().click()
+  await openView(page,'الخصوصية')
+  await openPrivacySection(page,'backup') // Task 27
 
   const pass='correct horse battery staple'
   await page.getByLabel('عبارة المرور', { exact:true }).fill(pass)
@@ -340,10 +378,12 @@ test('encrypted local backup survives session loss and restores source-of-truth 
   expect(backupPath).toBeTruthy()
 
   await page.evaluate(()=>sessionStorage.clear())
-  await page.reload()
+  await reloadLanding(page)
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
+  await openOtherOptions(page)
   await page.getByRole('button', { name: /استعد ملفك/ }).click()
-  await page.getByLabel('عبارة المرور', { exact:true }).fill(pass)
+  // Task 05: restore uses its own passphrase field.
+  await page.getByLabel('عبارة مرور النسخة المستعادة', { exact:true }).fill(pass)
   await page.locator('input[type="file"][accept*=".kamin"]').setInputFiles(backupPath)
 
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
@@ -370,8 +410,8 @@ test('national positioning is complementary and makes no government integration 
 test('psychometric instruments are visibly research-only until Saudi validation', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
-  await page.getByRole('button', { name: 'اهتماماتي وهدفي' }).first().click()
-  await page.getByRole('checkbox', { name: /أوافق على بناء ملف Person 360/ }).check()
+  await openView(page,'اهتماماتي وهدفي')
+  await page.getByRole('checkbox', { name: INSIGHT_CONSENT.ar }).check()
   await page.getByRole('button', { name: /ابدأ بصمتي/ }).click()
   await page.getByText('المقاييس النفسية والبحثية وحدود استخدامها',{exact:true}).click()
   await expect(page.getByText(/لا تؤثر على الملاءمة/)).toBeVisible()
@@ -385,9 +425,11 @@ test('transcript entry preserves local OCR, inline trust, camera capture and an 
 
   await expect(page.locator('.onboarding-upload')).toHaveCount(1)
   await expect(page.locator('.onboarding-upload')).toContainText(/ارفع كشف الدرجات/)
-  await expect(page.locator('.inline-trust')).toContainText(/لا يغادر جهازك/)
-  await expect(page.getByRole('link', { name:/شاهد التقرير التوضيحي أولًا/ })).toHaveAttribute('href', /sample-report/)
-  await expect(page.getByRole('button', { name:/أو أدخل يدويًا/ })).toBeVisible()
+  // Task 10: one trust line under the primary action; the other paths are under "Other options".
+  await expect(page.locator('.inline-trust')).toContainText(/يُقرأ ملفك على جهازك فقط/)
+  await openOtherOptions(page)
+  await expect(page.getByRole('link', { name:/شاهد التقرير التوضيحي/ })).toHaveAttribute('href', /sample-report/)
+  await expect(page.getByRole('button', { name:'أدخل المقررات يدويًا' })).toBeVisible()
 
   const camera=page.locator('#kamin-transcript-camera')
   await expect(camera).toHaveAttribute('accept','image/*')
@@ -417,7 +459,7 @@ test('opt-in IndexedDB profile survives session loss and returns on the same dev
   expect(persisted.state.localPersistence).toBe(true)
 
   await page.evaluate(()=>sessionStorage.clear())
-  await page.reload()
+  await reloadLanding(page)
   await page.getByRole('button', { name: /افتح مساحة العمل/ }).first().click()
   await expect(page.getByText(/هذه قدراتك/)).toBeVisible()
   await expect(page.getByText(/أعدنا ملفك المحفوظ محليًا/)).toBeVisible()
@@ -431,8 +473,9 @@ test('clear my data removes session and IndexedDB profile residue', async ({ pag
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
   await page.getByRole('button', { name:/نعم، احتفظ بملفي/ }).click()
 
-  await page.getByRole('button', { name:/الخصوصية/ }).first().click()
+  await openView(page,'الخصوصية')
   await expect(page.getByText(/ما المخزن عنك الآن؟/)).toBeVisible()
+  await openPrivacySection(page,'delete') // Task 27
   await page.getByRole('button', { name:/حذف بياناتي/ }).click()
   await page.getByRole('button', { name:/نعم، احذف/ }).click()
   await expect(page.locator('.onboarding-upload')).toBeVisible()
@@ -460,13 +503,14 @@ test('Matches exposes Person360 semantic evidence paths', async ({ page }) => {
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
-  await page.getByRole('button', { name: /فرصي/ }).first().click()
+  await openView(page,'فرصي')
 
   const dataCard=page.locator('article.match-card').filter({hasText:'محلل بيانات'})
   await expect(dataCard).toBeVisible()
-  await expect(dataCard).toContainText('مسار الدليل في الشبكة')
-  await expect(dataCard).toContainText('CPIT-260')
-  await expect(dataCard).toContainText('STAT-201')
+  // Task 28: plain heading; the rule version below is inside the row's "Technical details".
+  await expect(dataCard).toContainText('كيف تقود مقرراتك إلى هنا')
+  await expect(dataCard).toContainText('CPIT-240')
+  await expect(dataCard).toContainText('STAT-110')
   await expect(dataCard).toContainText('kamin-graph-fit-v1')
 })
 
@@ -483,12 +527,12 @@ test('Data Analyst golden path exposes external knowledge and learning bridges',
   await page.getByRole('dialog').getByRole('button', { name: /جرّب المثال التوضيحي/ }).click()
   await page.getByRole('checkbox', { name: /أوافق صراحةً/ }).check()
   await page.getByRole('button', { name: /أعتمد السجل/ }).click()
-  await page.getByRole('button', { name: /فرصي/ }).first().click()
+  await openView(page,'فرصي')
 
   const card=page.locator('article.match-card').filter({hasText:'محلل بيانات'})
   await expect(card).toBeVisible()
-  await expect(card).toContainText('CPIT-260')
-  await expect(card).toContainText('STAT-201')
+  await expect(card).toContainText('CPIT-240')
+  await expect(card).toContainText('STAT-110')
   await expect(card).toContainText('ESCO 2511.3')
   await expect(card).toContainText('O*NET-SOC 15-2051.01')
   await expect(card).toContainText('إشارات تطويرية — لا تغيّر حكم الملاءمة')
@@ -555,7 +599,8 @@ test('closing the app fully tears down the overlay and the primary CTA immediate
 test('zero-evidence approved profile does not receive a next-decision judgment', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
-  await page.getByRole('button',{name:/أو أدخل يدويًا/}).click()
+  await openOtherOptions(page)
+  await page.getByRole('button',{name:'أدخل المقررات يدويًا'}).click()
   await page.getByRole('button',{name:/إضافة مقرر يدويًا/}).click()
   await page.getByLabel('رمز المقرر').fill('GEN-999')
   await page.getByLabel('اسم المقرر').fill('Unmapped Seminar')
@@ -564,19 +609,23 @@ test('zero-evidence approved profile does not receive a next-decision judgment',
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
 
+  await openDashboardMore(page)
   await expect(page.locator('.decision-locked')).toContainText(/أضف أو اعتمد مقررًا مرتبطًا بقدرة/)
   await expect(page.locator('.decision-locked')).not.toContainText(/تناسبك بشروط|لا تناسبك الآن/)
-  await expect(page.locator('.metrics')).toContainText(/أضف دليلًا معتمدًا أولًا/)
+  await expect(page.locator('.decision-locked')).toContainText(/أضف دليلًا معتمدًا أولًا/)
 })
 
-test('locked navigation explains how to unlock protected sections', async ({ page }) => {
+// Task 09: no menu item is disabled any more; a section that needs a record explains what is
+// missing and offers one action instead.
+test('sections that need a record explain how to add one instead of being locked', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
-  await openMoreTools(page)
-  const dashboard=page.locator('button[title*="اعتمد سجلًا أولًا"]:visible').first()
-  await expect(dashboard).toBeVisible()
-  await expect(dashboard).toBeDisabled()
-  await expect(dashboard).toHaveAttribute('title',/اعتمد سجلًا أولًا/)
+  await expect(page.locator('nav button:visible:disabled')).toHaveCount(0)
+  await openView(page,'الدورات')
+  const empty=page.getByTestId('needs-record')
+  await expect(empty).toContainText('يحتاج هذا القسم إلى سجلك الدراسي')
+  await empty.getByRole('button',{name:'أضف سجلك الدراسي'}).click()
+  await expect(page.locator('.onboarding-upload')).toBeVisible()
 })
 
 test('next decision excludes courses that only repeat already evidenced capability', async ({ page }) => {
@@ -586,6 +635,7 @@ test('next decision excludes courses that only repeat already evidenced capabili
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
   await page.getByRole('button',{name:/تحليل البيانات/}).click()
+  await openDashboardMore(page)
   const decision=page.locator('.decision').filter({hasText:'القرار التالي'})
   await expect(decision).toBeVisible()
   await expect(decision).not.toContainText('SQL للمحللين')
@@ -594,7 +644,7 @@ test('next decision excludes courses that only repeat already evidenced capabili
 test('gap copy uses human capability labels and never leaks the raw cyber token', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
-  await page.getByRole('button',{name:/فرصي/}).first().click()
+  await openView(page,'فرصي')
   const card=page.locator('.match-card').filter({hasText:'محلل أمن سيبراني مبتدئ'})
   await expect(card).toContainText('أساسيات الأمن السيبراني')
   await expect(card).not.toContainText(/إلى:\s*cyber\b/)
@@ -607,20 +657,19 @@ test('mapping coverage and governed adapter artefacts are public and consistent'
   expect(schemaResponse.ok()).toBeTruthy()
   const catalogue=await catalogueResponse.json()
   expect(catalogue.version).toBe('kamin-course-skill-map-v1')
-  expect(Object.keys(catalogue.mappings)).toEqual(expect.arrayContaining(['CPIT-251','CPIT-260','CPIT-499']))
+  expect(Object.keys(catalogue.mappings)).toEqual(expect.arrayContaining(['CPIT-251','CPIT-240','CPIT-499']))
 
   await page.goto('/')
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
-  await expect(page.locator('.mapping-coverage')).toContainText('6/6')
+  await expect(page.locator('.mapping-coverage')).toContainText('6/7')
   await expect(page.getByRole('link',{name:'منهجية الربط'})).toHaveAttribute('href',/\/ar\/mapping\.html/)
 })
 
 test('Arabic audit timestamps use Arabic locale formatting', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
-  await openMoreTools(page)
-  await page.getByRole('button',{name:/سجل الاستخدام/}).first().click()
+  await openView(page,'سجل الاستخدام')
   const timestamp=page.locator('.audit-item small').first()
   if(await timestamp.count()) await expect(timestamp).toContainText(/[٠-٩]/)
 })
@@ -673,7 +722,7 @@ test('FR-09 what-changed message appears after deposit and approval', async ({ p
   await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await expect(page.locator('.what-changed')).toContainText(/ما الذي تغيّر بعد الإيداع/)
-  await expect(page.locator('.what-changed')).toContainText(/6 مقرر/)
+  await expect(page.locator('.what-changed')).toContainText(/7 مقرر/)
 
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
@@ -687,12 +736,12 @@ test('FR-09 what-changed message appears after transcript consent withdrawal', a
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
-  await page.getByRole('button',{name:/الخصوصية/}).first().click()
+  await openView(page,'الخصوصية')
   const analyze=page.getByRole('checkbox',{name:/تحليل السجل وبناء ملف المهارات/})
   await expect(analyze).toBeChecked()
   await analyze.uncheck()
   await expect(page.locator('.what-changed')).toContainText(/ما الذي تغيّر بعد سحب موافقة السجل/)
-  await expect(page.locator('.what-changed')).toContainText(/6 مقرر/)
+  await expect(page.locator('.what-changed')).toContainText(/7 مقرر/)
   await expect(page.locator('.what-changed')).toContainText(/5 قدرة/)
 })
 
@@ -702,11 +751,11 @@ test('skill cards surface governed evidence level beside evidence strength', asy
   await page.getByRole('dialog').getByRole('button',{name:/جرّب المثال التوضيحي/}).click()
   await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
   await page.getByRole('button',{name:/أعتمد السجل/}).click()
-  await openMoreTools(page)
-  await page.getByRole('button',{name:/مهاراتي/}).first().click()
+  await openView(page,'مهاراتي')
   const card=page.locator('.skill-card').first()
-  await expect(card).toContainText('مستوى الإثبات')
-  await expect(card).toContainText('ربط محكوم')
+  // Task 02: the card names the ordinal evidence level and, in its reason, the mapping status.
+  await expect(card).toContainText('مستوى الدليل')
+  await expect(card).toContainText('ربط المقرر مقترح')
 })
 
 test('public sample makes three-course comparison capability discoverable', async ({ page }) => {

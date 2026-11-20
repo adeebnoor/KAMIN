@@ -10,11 +10,18 @@ const preferenceFields = [['careerInterest', 'preferredInterests'], ['workValue'
 
 // Compare two or three pathways on evidence present, evidence missing, work required and,
 // only if the student opts in, declared constraints. No readiness percentage: none is calibrated.
-export default function PathwayCompare({ lang, matches = [], profile }) {
+// Task 23: it lives in the Compare tab. `selected` / `onChange` share the choice with the Matches rows
+// ("Add to compare"); until the student chooses, it shows the first two jobs, as before.
+// Task 65: `initial` (optional) is the first choice instead of the first two jobs: the new interface's "Compare paths"
+// sheet starts from the student's goals. The old interface does not pass it, so nothing changes there.
+export default function PathwayCompare({ lang, matches = [], profile, selected: shared = null, onChange = null, title = null, initial = null }) {
   const jobs = matches.filter(m => m.type === 'job')
-  const [selected, setSelected] = useState(() => jobs.slice(0, 2).map(m => m.id))
+  const [own, setOwn] = useState(() => initial ?? jobs.slice(0, 2).map(m => m.id))
+  const selected = shared ?? own
+  const setSelected = update => { const next = typeof update === 'function' ? update(selected) : update; if (onChange) onChange(next); else setOwn(next) }
+  const pickable = [...jobs, ...matches.filter(m => m.type !== 'job' && selected.includes(m.id))]
   const [includePreferences, setIncludePreferences] = useState(false)
-  const chosen = selected.map(id => jobs.find(m => m.id === id)).filter(Boolean)
+  const chosen = selected.map(id => matches.find(m => m.id === id)).filter(Boolean)
   const toggle = id => setSelected(s => s.includes(id) ? s.filter(x => x !== id) : s.length >= 3 ? s : [...s, id])
   const have = new Set(profile?.skills || [])
   const preferences = profile?.preferences || {}
@@ -24,10 +31,10 @@ export default function PathwayCompare({ lang, matches = [], profile }) {
     return (match[field] || []).includes(mine) ? tr(lang, 'متوافق', 'aligned') : tr(lang, 'مختلف', 'differs')
   }
   return <section className="panel pathway-compare" data-testid="pathway-compare" aria-label={tr(lang, 'مقارنة المسارات', 'Pathway comparison')}>
-    <div className="panel-head"><div><small>{tr(lang, 'قارن قبل أن تختار', 'COMPARE BEFORE YOU CHOOSE')}</small><h3><Columns3 size={18}/> {tr(lang, 'مقارنة مسارين أو ثلاثة', 'Compare two or three pathways')}</h3></div></div>
-    <div className="compare-picker">{jobs.map(m => <label key={m.id} className={`choice-chip ${selected.includes(m.id) ? 'selected' : ''}`}><input type="checkbox" checked={selected.includes(m.id)} disabled={!selected.includes(m.id) && selected.length >= 3} onChange={() => toggle(m.id)}/><span>{m.title[lang]}</span></label>)}</div>
+    <div className="panel-head"><div>{!title && <small>{tr(lang, 'قارن قبل أن تختار', 'COMPARE BEFORE YOU CHOOSE')}</small>}<h3><Columns3 size={18}/> {title || tr(lang, 'مقارنة مسارين أو ثلاثة', 'Compare two or three pathways')}</h3></div></div>
+    <div className="compare-picker">{pickable.map(m => <label key={m.id} className={`choice-chip ${selected.includes(m.id) ? 'selected' : ''}`}><input type="checkbox" checked={selected.includes(m.id)} disabled={!selected.includes(m.id) && selected.length >= 3} onChange={() => toggle(m.id)}/><span>{m.title[lang]}</span></label>)}</div>
     <label className="choice-chip compare-preferences"><input type="checkbox" checked={includePreferences} onChange={e => setIncludePreferences(e.target.checked)}/><span>{tr(lang, 'أضف قيودي المصرّح بها (تفضيلاتي) إلى المقارنة', 'Include my declared constraints (preferences) in the comparison')}</span></label>
-    {chosen.length >= 2 ? <div className="table-scroll" role="region" aria-label={tr(lang,'جدول مقارنة المسارات — قابل للتمرير','Pathway comparison table — scrollable')} tabIndex={0}><table className="compare-table"><thead><tr><th>{tr(lang, 'البُعد', 'Dimension')}</th>{chosen.map(m => <th key={m.id}>{m.title[lang]}</th>)}</tr></thead><tbody>
+    {chosen.length >= 2 ? <div className="table-scroll" data-scroll-x role="region" aria-label={tr(lang,'جدول مقارنة المسارات — قابل للتمرير','Pathway comparison table — scrollable')} tabIndex={0}><table className="compare-table"><thead><tr><th>{tr(lang, 'البُعد', 'Dimension')}</th>{chosen.map(m => <th key={m.id}>{m.title[lang]}</th>)}</tr></thead><tbody>
       <tr><th>{tr(lang, 'الأدلة المتوفرة', 'Evidence present')}</th>{chosen.map(m => { const present = (m.requiredSkills || []).filter(id => have.has(id)); return <td key={m.id}>{present.length ? present.map(id => label(id, lang)).join(tr(lang, '، ', ', ')) : tr(lang, 'لا شيء بعد', 'none yet')}</td> })}</tr>
       <tr><th>{tr(lang, 'الأدلة الناقصة', 'Evidence missing')}</th>{chosen.map(m => <td key={m.id} className={m.missingSkills?.length ? 'compare-gap' : ''}>{m.missingSkills?.length ? m.missingSkills.map(id => label(id, lang)).join(tr(lang, '، ', ', ')) : tr(lang, 'لا فجوة في المتطلبات الأساسية', 'no core-requirement gap')}</td>)}</tr>
       <tr><th>{tr(lang, 'العمل المطلوب', 'Work required')}</th>{chosen.map(m => { const hours = taskWorkHours(m.missingSkills || []); const count = tasksForSkillCount(m.missingSkills || []); return <td key={m.id}>{count ? tr(lang, `${count} مهمة · نحو ${hours} ساعة`, `${count} task(s) · about ${hours} hours`) : m.missingSkills?.length ? tr(lang, 'لا مهمة جاهزة لهذه الفجوة بعد', 'no ready task for this gap yet') : tr(lang, 'لا عمل إضافي للمتطلبات الأساسية', 'no additional core work')}</td> })}</tr>

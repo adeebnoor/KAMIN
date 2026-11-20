@@ -2,7 +2,7 @@ import { TARGET_CATALOG_VERSION, targetProfiles } from '../matching/targets.js'
 import { opportunities } from '../data.js'
 import { emptyInsightState } from '../insight.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
-import { inferSkills } from '../utils/engine.js'
+import { profileSkills } from '../utils/engine.js'
 
 export const REVIEW_VERSION = 'kamin-human-review-v1'
 export const MAX_REVIEWS = 200
@@ -17,7 +17,7 @@ const stable = value => JSON.stringify(value, (_, v) => v && typeof v === 'objec
 export function describeRecommendation(item, kind, state) {
   const required = identifiers(kind === 'course' ? item.requires : item.requiredSkills)
   const supported = new Set(kind === 'course'
-    ? (state.approved ? inferSkills(state.courses).map(s => s.id) : [])
+    ? profileSkills(state).map(s => s.id)
     : (item.semanticPaths || []).filter(p => p.kind === 'capability-match').map(p => p.capabilityKey))
   return {
     key: `${kind}:${item.id}`, kind, targetId: item.id,

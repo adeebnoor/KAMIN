@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { COURSE_GROUPS, groupCourses, courseCloses, isIllustrative } from '../src/utils/courseCards.js'
 import { demoCourses } from '../src/data.js'
-import { inferSkills, judgeOpportunities } from '../src/utils/engine.js'
-import { parseTranscriptText, parseTranscriptTextDetailed } from '../src/utils/transcript.js'
+import { inferSkills, judgeOpportunities, profileSkills } from '../src/utils/engine.js'
+import { parseTranscriptText, parseTranscriptTextDetailed, extractTranscript, READING_STAGES } from '../src/utils/transcript.js'
+import { acceptsTranscriptFile, TRANSCRIPT_ACCEPT } from '../src/utils/transcriptAccept.js'
 import { inferTranscriptSsces, ssceForCourse, ssceIct, findSsceSpecializationCandidates, findSsceLevelCandidates, getSsceSpecialization, courseSsceContexts } from '../src/reference/ssce.js'
 
 describe('Kamin deterministic engine', () => {
@@ -14,9 +16,10 @@ describe('Kamin deterministic engine', () => {
   })
 
   it('never treats failed, withdrawn, incomplete, or unknown grades as skill evidence', () => {
-    const rows=['F','W','WF','I','IP','NP','DN','هـ','ح','م'].map(grade=>({code:'CPIT-251',name:'Systems Analysis',grade}))
+    // Task 02: rows need a document source; a row without one is declared and creates nothing anyway.
+    const rows=['F','W','WF','I','IP','NP','DN','هـ','ح','م'].map(grade=>({code:'CPIT-251',name:'Systems Analysis',grade,source:'pdf'}))
     for(const row of rows) expect(inferSkills([row]), row.grade).toHaveLength(0)
-    expect(inferSkills([{code:'CPIT-251',name:'Systems Analysis',grade:'A'}]).length).toBeGreaterThan(0)
+    expect(inferSkills([{code:'CPIT-251',name:'Systems Analysis',grade:'A',source:'pdf'}]).length).toBeGreaterThan(0)
   })
 
   it('keeps PMP as not-yet with its formal gate and source', () => {
@@ -159,5 +162,63 @@ describe('Saudi education classification context', () => {
     expect(result.primary.count).toBe(3)
     expect(result.mappedCourses).toBe(3)
     expect(result.totalCourses).toBe(4)
+  })
+})
+
+// Task 21 · reading stages for the start screen, and the file types a dropped file must match.
+describe('upload: reading stages and accepted files', () => {
+  it('reports named stages in order, and still returns the same result', async () => {
+    const calls = []
+    const text = 'CPIT-260 Database Systems B\nSTAT-201 Statistics B+'
+    const result = await extractTranscript(new File([text], 'record.txt', { type: 'text/plain' }), (percent, stage) => calls.push([percent, stage]))
+    expect(READING_STAGES).toEqual(['open', 'read', 'find'])
+    expect(calls.map(c => c[1])).toEqual(['open', 'find'])
+    expect(calls.at(-1)[0]).toBe(100)
+    for (const [percent, stage] of calls) { expect(READING_STAGES).toContain(stage); expect(percent).toBeGreaterThanOrEqual(0); expect(percent).toBeLessThanOrEqual(100) }
+    // Backward compatible: a callback that reads only the percentage gets the same numbers.
+    const percents = []
+    const again = await extractTranscript(new File([text], 'record.txt', { type: 'text/plain' }), percent => percents.push(percent))
+    expect(percents).toEqual(calls.map(c => c[0]))
+    expect(again.courses).toEqual(result.courses)
+    expect(result.courses.map(c => c.code)).toEqual(['CPIT-260', 'STAT-201'])
+  })
+  it('an unsupported file still fails with the same error; no file is NO_FILE', async () => {
+    await expect(extractTranscript(new File(['x'], 'notes.docx', { type: 'application/msword' }))).rejects.toThrow('UNSUPPORTED_FILE_TYPE')
+    await expect(extractTranscript(null)).rejects.toThrow('NO_FILE')
+  })
+  it('a dropped file is accepted only if the file picker would offer it', () => {
+    expect(TRANSCRIPT_ACCEPT).toBe('.pdf,image/png,image/jpeg,image/webp,.txt')
+    for (const [name, type] of [['t.pdf', 'application/pdf'], ['T.PDF', ''], ['scan.png', 'image/png'], ['photo.jpg', 'image/jpeg'], ['p.webp', 'image/webp'], ['notes.txt', 'text/plain']]) expect(acceptsTranscriptFile({ name, type }), name).toBe(true)
+    for (const [name, type] of [['anim.gif', 'image/gif'], ['doc.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'], ['data.json', 'application/json'], ['x', '']]) expect(acceptsTranscriptFile({ name, type }), name).toBe(false)
+    expect(acceptsTranscriptFile(null)).toBe(false)
+  })
+})
+
+// Task 24 · course cards: groups in order, what a course closes, illustrative examples.
+describe('course cards', () => {
+  const skills = profileSkills({ courses: demoCourses, approved: true, college: 'FCIT' })
+  it('groups courses fits → conditional → not yet, keeping the engine order', () => {
+    expect(COURSE_GROUPS).toEqual(['yes', 'conditional', 'no'])
+    const recs = judgeOpportunities(skills, null, 'en')
+    const g = groupCourses(recs)
+    expect(g.yes.length + g.conditional.length + g.no.length).toBe(recs.length)
+    expect([...g.yes, ...g.conditional, ...g.no].map(r => r.id)).toEqual(recs.map(r => r.id))
+    expect(g.conditional.map(r => r.id)).toEqual(['cyber-foundations'])
+    expect(g.no.map(r => r.id).sort()).toEqual(['ba', 'capm', 'pmp', 'sql'])
+  })
+  it('a course closes only the capabilities it teaches that the record does not show yet', () => {
+    const recs = judgeOpportunities(skills, null, 'en')
+    const byId = id => recs.find(r => r.id === id)
+    expect(courseCloses(byId('cyber-foundations'), skills, 'en')).toEqual(['Cybersecurity fundamentals'])
+    expect(courseCloses(byId('cyber-foundations'), skills, 'ar')).toEqual(['أساسيات الأمن السيبراني'])
+    expect(courseCloses(byId('sql'), skills, 'en')).toEqual([]) // the record already shows databases: repetition
+    expect(courseCloses(byId('pmp'), skills, 'en')).toEqual([])
+    expect(courseCloses({ teaches: ['cyber'] }, [], 'en')).toEqual(['Cybersecurity fundamentals'])
+  })
+  it('recognises the illustrative examples by their provider', () => {
+    const recs = judgeOpportunities(skills, null, 'en')
+    expect(recs.filter(isIllustrative).map(r => r.id).sort()).toEqual(['ba', 'cyber-foundations', 'sql'])
+    expect(isIllustrative({ provider: 'PMI' })).toBe(false)
+    expect(isIllustrative(null)).toBe(false)
   })
 })

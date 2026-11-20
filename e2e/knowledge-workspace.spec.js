@@ -1,4 +1,5 @@
-import {test,expect} from '@playwright/test'
+import {test,expect} from './fixtures.js'
+import { openView, INSIGHT_CONSENT } from './nav.js'
 import AxeBuilder from '@axe-core/playwright'
 async function openLab(page){
   await page.goto('/?lang=ar')
@@ -47,12 +48,11 @@ test('SERVICE and updates are blocked before any external request',async({page})
 test('personal queries require fresh local permission and clearing it removes the visible results',async({page})=>{
   await page.goto('/?lang=ar')
   await page.getByRole('button',{name:'ابدأ بناء ملفك',exact:true}).first().click()
-  await page.getByRole('checkbox',{name:/أوافق على بناء ملف Person 360/}).check()
+  await page.getByRole('checkbox',{name:INSIGHT_CONSENT.ar}).check()
   await page.getByRole('button',{name:'ابدأ بصمتي',exact:true}).click()
   await expect(page.getByLabel('درجة هيكلة العمل')).toBeHidden()
   await page.locator('input[type="radio"][name="goal"][value="data"]').check()
-  const more=page.getByRole('button',{name:'المزيد',exact:true});if(await more.isVisible())await more.click()
-  await page.getByRole('button',{name:'مستكشف المعرفة',exact:true}).click()
+  await openView(page,'مستكشف المعرفة')
   await page.getByRole('tab',{name:'مختبر SPARQL',exact:true}).click()
   await page.getByLabel('نطاق البيانات').selectOption('personal')
   await expect(page.getByRole('button',{name:'شغّل الاستعلام',exact:true})).toBeDisabled()

@@ -8,15 +8,29 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+# Task 47: onnxruntime-node (a dependency of @huggingface/transformers, used only by Node tools) would
+# download its CUDA 12 binaries from NuGet on linux/x64. KAMIN runs the model in the browser (WASM), so skip it.
+# This replaces the old .npmrc key, which npm reports as an unknown project config.
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Task 47: the same runner image and the same lockfile install as the quality gate (ci.yml).
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
+      # Task 17: the deployed tests.html shows the numbers of the deployed commit.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test
+      - run: npm run build
+      - run: npm run e2e
+      - run: npm run test:report
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
@@ -26,7 +40,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Deploy to GitHub Pages

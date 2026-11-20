@@ -1,0 +1,41 @@
+id,lang,expected,predicted,unsupported_ids,tp,fp,fn,unsupported,abstained,correct_abstention,wrong_abstention,false_alarm
+t-ar-01,ar,testing,,,0,0,1,0,true,false,true,false
+t-ar-02,ar,database,database,,1,0,0,0,false,false,false,false
+t-ar-03,ar,web-development,web-development,,1,0,0,0,false,false,false,false
+t-ar-04,ar,cyber,,,0,0,1,0,true,false,true,false
+t-ar-05,ar,statistics,statistics,,1,0,0,0,false,false,false,false
+t-ar-06,ar,project,project,,1,0,0,0,false,false,false,false
+t-ar-07,ar,systems-analysis,,,0,0,1,0,true,false,true,false
+t-ar-08,ar,requirements,,,0,0,1,0,true,false,true,false
+t-ar-09,ar,db-operations,,,0,0,1,0,true,false,true,false
+t-ar-10,ar,project,,,0,0,1,0,true,false,true,false
+t-ar-11,ar,testing,,,0,0,1,0,true,false,true,false
+t-ar-12,ar,statistics,,,0,0,1,0,true,false,true,false
+t-ar-13,ar,software cyber,,,0,0,2,0,true,false,true,false
+t-ar-14,ar,web-development,,,0,0,1,0,true,false,true,false
+t-ar-15,ar,ai-work,,,0,0,1,0,true,false,true,false
+t-ar-16,ar,requirements database testing,database requirements,,2,0,1,0,false,false,false,false
+t-ar-17,ar,systems-analysis web-development,,,0,0,2,0,true,false,true,false
+t-ar-18,ar,ai-work database,,,0,0,2,0,true,false,true,false
+t-ar-19,ar,,,,0,0,0,0,true,true,false,false
+t-ar-20,ar,,,,0,0,0,0,true,true,false,false
+t-en-01,en,testing,,,0,0,1,0,true,false,true,false
+t-en-02,en,database,database,,1,0,0,0,false,false,false,false
+t-en-03,en,web-development,web-development,,1,0,0,0,false,false,false,false
+t-en-04,en,cyber,,,0,0,1,0,true,false,true,false
+t-en-05,en,statistics,,,0,0,1,0,true,false,true,false
+t-en-06,en,project,project,,1,0,0,0,false,false,false,false
+t-en-07,en,systems-analysis,,,0,0,1,0,true,false,true,false
+t-en-08,en,requirements,,,0,0,1,0,true,false,true,false
+t-en-09,en,db-operations,,,0,0,1,0,true,false,true,false
+t-en-10,en,project,,,0,0,1,0,true,false,true,false
+t-en-11,en,testing,,,0,0,1,0,true,false,true,false
+t-en-12,en,statistics,statistics,,1,0,0,0,false,false,false,false
+t-en-13,en,software cyber,,,0,0,2,0,true,false,true,false
+t-en-14,en,web-development,,,0,0,1,0,true,false,true,false
+t-en-15,en,ai-work,,,0,0,1,0,true,false,true,false
+t-en-16,en,requirements database testing,database,,1,0,2,0,false,false,false,false
+t-en-17,en,systems-analysis web-development,,,0,0,2,0,true,false,true,false
+t-en-18,en,ai-work database,database,,1,0,1,0,false,false,false,false
+t-en-19,en,,,,0,0,0,0,true,true,false,false
+t-en-20,en,,,,0,0,0,0,true,true,false,false

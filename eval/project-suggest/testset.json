@@ -1,0 +1,404 @@
+[
+ {
+  "id": "t-ar-01",
+  "lang": "ar",
+  "type": "clear",
+  "text": "كتبت اختبارات وحدة لنظام الحجز وتأكدت من تغطية حالات الخطأ.",
+  "expected": [
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-02",
+  "lang": "ar",
+  "type": "clear",
+  "text": "صممت قاعدة بيانات لنظام المكتبة وكتبت استعلامات SQL لاستخراج الكتب المتأخرة.",
+  "expected": [
+   "database"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-03",
+  "lang": "ar",
+  "type": "clear",
+  "text": "طورت واجهة ويب متجاوبة لموقع النادي باستخدام HTML وCSS.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-04",
+  "lang": "ar",
+  "type": "clear",
+  "text": "اكتشفت ثغرات في شبكة المختبر واقترحت إعدادات جدار الحماية.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-05",
+  "lang": "ar",
+  "type": "clear",
+  "text": "حللت بيانات استبيان باستخدام الإحصاء الوصفي وحسبت المتوسط والانحراف المعياري.",
+  "expected": [
+   "statistics"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-06",
+  "lang": "ar",
+  "type": "clear",
+  "text": "أعددت خطة المشروع مع المعالم والجدول الزمني لمشروع التخرج.",
+  "expected": [
+   "project"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-07",
+  "lang": "ar",
+  "type": "synonym",
+  "text": "قابلت موظفي الاستقبال في العيادة لفهم خطوات تسجيل المريض الحالية ورسمت مخططًا لكل خطوة.",
+  "expected": [
+   "systems-analysis"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-08",
+  "lang": "ar",
+  "type": "synonym",
+  "text": "حوّلت طلبات العميل إلى قائمة ميزات مع شروط واضحة تحدد متى تعتبر كل ميزة مكتملة.",
+  "expected": [
+   "requirements"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-09",
+  "lang": "ar",
+  "type": "synonym",
+  "text": "جهزت نسخًا ليلية لبيانات الشركة وجربت إرجاعها بعد عطل مفتعل.",
+  "expected": [
+   "db-operations"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-10",
+  "lang": "ar",
+  "type": "synonym",
+  "text": "قسمت العمل على الفريق إلى مراحل، وحددت مسؤولًا لكل جزء، وتابعت المواعيد النهائية أسبوعيًا.",
+  "expected": [
+   "project"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-11",
+  "lang": "ar",
+  "type": "synonym",
+  "text": "جربت كل شاشة في التطبيق يدويًا مقابل السلوك المتوقع وسجلت الأعطال التي وجدتها.",
+  "expected": [
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-12",
+  "lang": "ar",
+  "type": "tech",
+  "text": "استخدمت Pandas لحساب متوسطات قراءات الحساسات وتشتتها ورسمت الاتجاهات.",
+  "expected": [
+   "statistics"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-13",
+  "lang": "ar",
+  "type": "tech",
+  "text": "بنيت خدمة REST بـ Spring Boot وأمّنتها بمصادقة OAuth2 ورموز JWT.",
+  "expected": [
+   "software",
+   "cyber"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-14",
+  "lang": "ar",
+  "type": "tech",
+  "text": "طورت لوحة المستخدم باستخدام Vue.js وTailwind.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-15",
+  "lang": "ar",
+  "type": "tech",
+  "text": "دربت مصنفًا بـ PyTorch لفرز رسائل العملاء حسب الموضوع.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-16",
+  "lang": "ar",
+  "type": "multi",
+  "text": "جمعت قصص المستخدم من موظفي المكتبة، وصممت جداول MySQL، وكتبت اختبارات للواجهة البرمجية.",
+  "expected": [
+   "requirements",
+   "database",
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-17",
+  "lang": "ar",
+  "type": "multi",
+  "text": "وثقت سير عمل الإحالات في المستشفى مع أصحاب المصلحة، ثم بنيت نموذج ويب متجاوب بدل الورق.",
+  "expected": [
+   "systems-analysis",
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-18",
+  "lang": "ar",
+  "type": "multi",
+  "text": "استخدمت ChatGPT لصياغة استعلامات SQL ثم تحققت من كل نتيجة يدويًا على قاعدة البيانات.",
+  "expected": [
+   "ai-work",
+   "database"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-19",
+  "lang": "ar",
+  "type": "none",
+  "text": "نظمت حفل استقبال الطلاب الجدد وأدرت قائمة المتطوعين.",
+  "expected": [],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-ar-20",
+  "lang": "ar",
+  "type": "none-science",
+  "text": "قست نمو البكتيريا في ثلاثة أوساط زراعية وسجلت النتائج في دفتر المختبر.",
+  "expected": [],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-01",
+  "lang": "en",
+  "type": "clear",
+  "text": "Wrote unit tests for the payment module and measured test coverage.",
+  "expected": [
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-02",
+  "lang": "en",
+  "type": "clear",
+  "text": "Designed a relational database schema for a library system and wrote SQL queries for overdue books.",
+  "expected": [
+   "database"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-03",
+  "lang": "en",
+  "type": "clear",
+  "text": "Built the front-end of a student portal with HTML, CSS and JavaScript.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-04",
+  "lang": "en",
+  "type": "clear",
+  "text": "Conducted a security assessment of the lab network, found two vulnerabilities and recommended firewall changes.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-05",
+  "lang": "en",
+  "type": "clear",
+  "text": "Analysed survey responses from 120 students using descriptive statistics and a chi-square test.",
+  "expected": [
+   "statistics"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-06",
+  "lang": "en",
+  "type": "clear",
+  "text": "Created the project plan for our capstone, including milestones, a Gantt chart and weekly status tracking.",
+  "expected": [
+   "project"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-07",
+  "lang": "en",
+  "type": "synonym",
+  "text": "Interviewed clinic staff to understand how patient check-in currently works and drew a diagram of each step.",
+  "expected": [
+   "systems-analysis"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-08",
+  "lang": "en",
+  "type": "synonym",
+  "text": "Turned the client's wishes into a list of features with clear conditions for when each one is considered done.",
+  "expected": [
+   "requirements"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-09",
+  "lang": "en",
+  "type": "synonym",
+  "text": "Set up nightly copies of the company's data store and practised bringing it back after a simulated crash.",
+  "expected": [
+   "db-operations"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-10",
+  "lang": "en",
+  "type": "synonym",
+  "text": "Kept the team on schedule by splitting the work into phases, assigning owners and tracking deadlines every week.",
+  "expected": [
+   "project"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-11",
+  "lang": "en",
+  "type": "synonym",
+  "text": "Checked every screen of the app by hand against a list of expected behaviours and logged the bugs I found.",
+  "expected": [
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-12",
+  "lang": "en",
+  "type": "tech",
+  "text": "Used Pandas and Matplotlib to compute averages and spread of sensor readings and plotted the trends.",
+  "expected": [
+   "statistics"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-13",
+  "lang": "en",
+  "type": "tech",
+  "text": "Built a REST service in Spring Boot and secured it with OAuth2 and JWT tokens.",
+  "expected": [
+   "software",
+   "cyber"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-14",
+  "lang": "en",
+  "type": "tech",
+  "text": "Developed the user dashboard in Vue.js with Tailwind.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-15",
+  "lang": "en",
+  "type": "tech",
+  "text": "Fine-tuned a BERT classifier with PyTorch to sort customer emails by topic.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-16",
+  "lang": "en",
+  "type": "multi",
+  "text": "Gathered user stories from the librarians, designed the MySQL tables, and wrote Jest tests for the API.",
+  "expected": [
+   "requirements",
+   "database",
+   "testing"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-17",
+  "lang": "en",
+  "type": "multi",
+  "text": "Mapped the hospital's referral workflow with stakeholders, then built a responsive web form to replace the paper process.",
+  "expected": [
+   "systems-analysis",
+   "web-development"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-18",
+  "lang": "en",
+  "type": "multi",
+  "text": "Used ChatGPT to draft SQL queries, then checked each result against the database by hand.",
+  "expected": [
+   "ai-work",
+   "database"
+  ],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-19",
+  "lang": "en",
+  "type": "none",
+  "text": "Organised the department's welcome event and managed the volunteer sign-up sheet.",
+  "expected": [],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ },
+ {
+  "id": "t-en-20",
+  "lang": "en",
+  "type": "none-science",
+  "text": "Measured bacterial growth in three culture media and recorded the results in a lab notebook.",
+  "expected": [],
+  "note": "كتبها Claude (AI) في 2026-10-25 قبل تشغيل أي أداة عليها؛ تحتاج مراجعة بشرية للوسوم"
+ }
+]

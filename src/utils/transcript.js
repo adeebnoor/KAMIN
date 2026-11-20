@@ -1,5 +1,8 @@
 import { findSsceSpecializationCandidates, findSsceLevelCandidates } from '../reference/ssce.js'
 import { analyzePdfBytes, metadataSignals, scanQrFromPdf, scanQrFromImageFile } from './documentIntegrity.js'
+import { readLayout, linesToText, textCharacterCount } from '../transcript/layout.js'
+import { isKauTranscript, parseKauLines, reviewRows, KAU_FORMAT } from '../transcript/kau.js'
+import { readStudentInfo, readStudentInfoFromText, isStudentInfoLine } from '../transcript/studentInfo.js'
 
 const ARABIC_DIGITS='٠١٢٣٤٥٦٧٨٩'
 const PERSIAN_DIGITS='۰۱۲۳۴۵۶۷۸۹'
@@ -164,26 +167,28 @@ export function parseTranscriptText(text) {
   return parseTranscriptTextDetailed(text).courses
 }
 
-function reconstructPdfLines(items) {
-  const groups=[]
-  const heights=(items||[]).map(item=>Math.abs(Number(item.transform?.[3]||0))).filter(Boolean)
-  const medianHeight=heights.length ? heights.sort((a,b)=>a-b)[Math.floor(heights.length/2)] : 2
-  const tolerance=Math.max(1.5,Math.min(4,medianHeight*.35))
-
-  for (const item of items) {
-    const str=normalize(item.str)
-    if (!str) continue
-    const y=Number(item.transform?.[5]||0), x=Number(item.transform?.[4]||0)
-    let group=groups.find(g=>Math.abs(g.y-y)<=tolerance)
-    if (!group) { group={y,parts:[]}; groups.push(group) }
-    group.parts.push({x,str})
-  }
-
-  return groups
-    .sort((a,b)=>b.y-a.y)
-    .map(g=>g.parts.sort((a,b)=>a.x-b.x).map(p=>p.str).join(' '))
-    .join('\n')
+// Task 51: the PDF text is read by position (src/transcript/layout.js): each column of each page in
+// reading order, the STUDENT INFORMATION block apart. A PDF that is not a KAU transcript (Task 52: no
+// STUDENT INFORMATION header) still goes to the generic parser above as text: the header block first,
+// then the course lines.
+export function pdfLayoutText(layout){
+  return [linesToText(layout.headerLines),linesToText(layout.lines)].filter(Boolean).join('\n')
 }
+
+// Task 52: a KAU transcript is read row by row by src/transcript/kau.js. The review list gets the row of
+// each course that is used (a retaken course's latest attempt, with every attempt in `attempts`); the
+// grade is the printed letter, the hours the attempted credits (0 kept).
+export function kauCourseRow(row){
+  return {...row, grade:row.letter, hours:row.credits.ua}
+}
+export function readKauLayout(layout){
+  const parsed=parseKauLines(layout)
+  return {...parsed, courses:reviewRows(parsed.rows).map(kauCourseRow)}
+}
+
+// Fewer characters than this in the whole text layer: a scanned picture, not a text PDF.
+export const SCANNED_TEXT_MIN_CHARS = 80
+export const isScannedPdf = pages => textCharacterCount(pages) < SCANNED_TEXT_MIN_CHARS
 
 async function createOcrWorker(onProgress){
   const {createWorker}=await import('tesseract.js')
@@ -229,18 +234,58 @@ async function ocrPdf(doc,onProgress){
   return text
 }
 
-function finalize(text,source,mode,extra={}){
-  const parsed=parseTranscriptTextDetailed(text)
+// Task 53: the result never carries the page text (`text` stays inside these functions, for the SSCE
+// candidates only). `student` holds only the college, major, degree, status and study mode
+// (src/transcript/studentInfo.js); the name, student number, nationality and NID are dropped there.
+// `validation.rejected` never holds a line of the STUDENT INFORMATION block.
+function finalizeKau(layout,mode,extra={}){
+  const text=pdfLayoutText(layout)
+  const parsed=readKauLayout(layout)
+  const lineCount=parsed.rows.length+parsed.rejected.length
   return {
-    text,
-    courses:parsed.courses.map(r=>({...r,source})),
+    student:readStudentInfo(layout.headerLines),
+    courses:parsed.courses.map(r=>({...r,source:'pdf'})),
     validation:{
       recognized:parsed.courses.length,
       rejected:parsed.rejected,
+      totalLines:layout.lines.length,
+      parsedLines:layout.lines.length,
+      extractionCoverage:lineCount ? parsed.rows.length/lineCount : 0,
+      usedOcr:false,
+      scanned:false,
+      pages:extra.pages||null,
+      mode,
+      format:KAU_FORMAT,
+      terms:parsed.terms,
+      checkGpa:parsed.checkGpa,
+      ignored:parsed.ignored,
+      ssceCandidates:findSsceSpecializationCandidates(text).slice(0,5),
+      ssceLevelCandidates:findSsceLevelCandidates(text).slice(0,3),
+      document:extra.document||null,
+    },
+    mode,
+  }
+}
+
+// A rejected line that is (part of) a header line, or that starts with a STUDENT INFORMATION label.
+function withoutHeaderLines(rejected,headerLines=[]){
+  const headers=headerLines.map(line=>normalize(line.text)).filter(Boolean)
+  return rejected.filter(r=>!isStudentInfoLine(r.line) && !headers.some(h=>h.includes(r.line)))
+}
+
+function finalize(text,source,mode,extra={}){
+  const parsed=parseTranscriptTextDetailed(text)
+  return {
+    student:extra.headerLines?readStudentInfo(extra.headerLines):readStudentInfoFromText(text),
+    courses:parsed.courses.map(r=>({...r,source})),
+    validation:{
+      recognized:parsed.courses.length,
+      rejected:withoutHeaderLines(parsed.rejected,extra.headerLines),
       totalLines:parsed.totalLines,
       parsedLines:parsed.parsedLines,
       extractionCoverage:parsed.coverage,
       usedOcr:!!extra.usedOcr,
+      scanned:!!extra.scanned,
       pages:extra.pages||null,
       mode,
       ssceCandidates:findSsceSpecializationCandidates(text).slice(0,5),
@@ -251,8 +296,28 @@ function finalize(text,source,mode,extra={}){
   }
 }
 
-export async function extractTranscript(file, onProgress = () => {}) {
+// The text pages of a PDF (pdf.js text items, page by page) → the result the app receives. Pure: no DOM,
+// no pdf.js, so tests read the Task 50 fixtures through exactly this path. OCR is not run here.
+export function readTranscriptPages(pages,{document=null}={}){
+  const count=(pages||[]).length
+  // No text layer (or almost none): a scanned picture. Say so; never an empty list without a reason.
+  if(isScannedPdf(pages)) return finalize('','pdf','pdf-scanned',{pages:count,usedOcr:false,scanned:true,document,headerLines:[]})
+  const layout=readLayout(pages)
+  return isKauTranscript(layout)
+    ? finalizeKau(layout,'pdf-text-local',{pages:count,document})
+    : finalize(pdfLayoutText(layout),'pdf','pdf-text-local',{pages:count,usedOcr:false,document,headerLines:layout.headerLines})
+}
+
+// Task 21: onProgress(percent, stage) names what is happening, so the start screen can show it. The
+// stage is one of READING_STAGES; callers that read only the percentage keep working as before.
+export const READING_STAGES = Object.freeze(['open', 'read', 'find'])
+
+// Task 51: a PDF without a text layer (a scan) is not read by OCR on its own: the result says
+// `validation.scanned` and the start screen asks. `{ readPicture: true }` (the "Try reading the picture"
+// button) reads the pages as images.
+export async function extractTranscript(file, onProgress = () => {}, { readPicture = false } = {}) {
   if(!file) throw new Error('NO_FILE')
+  onProgress(2,'open')
   const type=file.type||''
   const name=file.name?.toLowerCase()||''
 
@@ -266,41 +331,46 @@ export async function extractTranscript(file, onProgress = () => {}) {
     try{doc=await pdfjs.getDocument({data:buffer}).promise}catch{throw new Error('PDF_OPEN_FAILED')}
     const metadata=await doc.getMetadata().catch(()=>({info:{}}))
     const document={kind:'pdf',...structure,...metadataSignals(metadata?.info||{}),qr:await scanQrFromPdf(doc,2)}
-    let text=''
+    if(readPicture){
+      onProgress(5,'read')
+      const ocrText=await ocrPdf(doc,p=>onProgress(5+Math.round(p*0.9),'read'))
+      onProgress(100,'find')
+      return finalize(ocrText,'ocr','pdf-ocr-local',{pages:doc.numPages,usedOcr:true,document})
+    }
+    const pages=[]
     for(let i=1;i<=doc.numPages;i+=1){
-      onProgress(Math.round((i/doc.numPages)*45))
+      onProgress(Math.round((i/doc.numPages)*45),'read')
       const page=await doc.getPage(i)
-      const content=await page.getTextContent()
-      text += reconstructPdfLines(content.items)+'\n'
+      pages.push((await page.getTextContent()).items)
     }
 
-    const first=finalize(text,'pdf','pdf-text-local',{pages:doc.numPages,usedOcr:false,document})
-    const sparse=text.replace(/\s/g,'').length<80
+    onProgress(46,'find')
+    const first=readTranscriptPages(pages,{document})
+    if(first.validation.scanned){onProgress(100,'find');return first}
     const lowCoverage=first.validation.rejected.length>first.validation.recognized
+    if(!lowCoverage){onProgress(100,'find');return first}
 
-    // OCR scanned/sparse PDFs, and also rescue text PDFs whose reconstructed rows look unreliable.
-    if(first.courses.length && !lowCoverage){onProgress(100);return first}
-    if(!sparse && !lowCoverage){onProgress(100);return first}
-
-    onProgress(50)
-    const ocrText=await ocrPdf(doc,p=>onProgress(50+Math.round(p/2)))
-    onProgress(100)
+    // A text PDF whose rows look unreliable: also read the pages as images (slower) and compare.
+    onProgress(50,'read')
+    const ocrText=await ocrPdf(doc,p=>onProgress(50+Math.round(p/2),'read'))
+    onProgress(100,'find')
     const ocr=finalize(ocrText,'ocr','pdf-ocr-local',{pages:doc.numPages,usedOcr:true,document})
 
     // Keep whichever local extraction produced more recognized rows; never inject demo data.
-    return ocr.courses.length>first.courses.length ? ocr : first
+    // The STUDENT INFORMATION block is read from the text layer by position (more reliable than OCR text).
+    return ocr.courses.length>first.courses.length ? {...ocr,student:first.student} : first
   }
 
   if (type.startsWith('image/') || /\.(?:png|jpe?g|webp)$/i.test(name)) {
     const qr=await scanQrFromImageFile(file)
-    const text=await ocrImage(file,onProgress)
-    onProgress(100)
+    const text=await ocrImage(file,p=>onProgress(p,'read'))
+    onProgress(100,'find')
     return finalize(text,'ocr','image-ocr-local',{usedOcr:true,document:{kind:'image',qr}})
   }
 
   if (type.startsWith('text/') || name.endsWith('.txt')) {
     const text=await file.text()
-    onProgress(100)
+    onProgress(100,'find')
     return finalize(text,'text','text-local')
   }
 

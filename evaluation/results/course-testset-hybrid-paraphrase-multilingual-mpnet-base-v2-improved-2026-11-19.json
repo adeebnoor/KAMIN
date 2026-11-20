@@ -1,0 +1,55 @@
+{
+  "set": "course-testset.json",
+  "setSha256": "99a6783cd3de745d1b591f34dc38f255423ad8fecd9249a4badf901227aeb2e3",
+  "frozenAt": "2026-11-19T17:06:20.360Z",
+  "ranAt": "2026-11-19T17:16:16.082Z",
+  "kaminCommit": "7291c06",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-improved-v1",
+    "metrics": {
+      "en": {
+        "cases": 25,
+        "tp": 20,
+        "fp": 9,
+        "fn": 10,
+        "precision": 0.6896551724137931,
+        "recall": 0.6666666666666666,
+        "f1": 0.6779661016949153,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.2,
+        "negatives": 6,
+        "correctAbstentions": 2,
+        "medianMs": 0.1454999999999984
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1+improved",
+    "model": "paraphrase-multilingual-mpnet-base-v2",
+    "prefix": "",
+    "threshold": 0.65,
+    "tunedOn": "course-dev-set.json",
+    "tunedOnSha256": "f0c2cc61333784641cb3b550778af36cd46e947928d24653182cde284145e778",
+    "tunedAt": "2026-11-19T17:16:09.488Z",
+    "devMacroF1": 0.5806,
+    "modelDir": "paraphrase-multilingual-mpnet-base-v2",
+    "metrics": {
+      "en": {
+        "cases": 25,
+        "tp": 25,
+        "fp": 12,
+        "fn": 5,
+        "precision": 0.6756756756756757,
+        "recall": 0.8333333333333334,
+        "f1": 0.746268656716418,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.12,
+        "negatives": 6,
+        "correctAbstentions": 2,
+        "medianMs": 36.29670000000033
+      }
+    }
+  }
+}

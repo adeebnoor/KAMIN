@@ -1,0 +1,31 @@
+/* Task 68 · Help. Loads with src/ui2/screens/Help.jsx only (its own lazy chunk). Tokens only, as in ui2.css: brand
+   colours from public/brand.css (dark values in src/ui2/theme.css), spacing, text sizes and radius from src/tokens.css.
+   The two groups of links are --paper boxes on the --soft page; a reviewer tool's sub-page holds the old interface's
+   component inside .ui2-legacy (tests/themeContrast.test.js checks every pair in both themes). */
+
+.ui2-help-group{margin:0 0 var(--space-3);padding:var(--space-2) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-help h2{margin:var(--space-1) 0;font-size:var(--text-base);line-height:1.3;color:var(--navy)}
+.ui2-help p.ui2-help-note{margin:0 0 var(--space-1);font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.ui2-help-list{margin:0;padding:0;list-style:none}
+.ui2-help-list>li+li{border-top:1px solid var(--line)}
+
+/* ----- A row: icon, name, chevron (a real link) ----- */
+.ui2-help-row{display:flex;align-items:center;gap:var(--space-2);min-height:var(--control-h);padding:var(--space-1) 0;color:var(--navy);font-weight:650;text-decoration:none}
+.ui2-help-row:hover .ui2-help-row-label{text-decoration:underline;text-underline-offset:3px}
+.ui2-help-row svg{flex:none}
+.ui2-help-row-label{flex:1;min-width:0}
+.ui2-help-row-open{transform:rotate(-90deg)}
+[dir="rtl"] .ui2-help-row-open{transform:rotate(90deg)}
+
+/* ----- A reviewer tool: Back to Help, the title ("Reviewer tools", an h2 on the --soft page; the h1 "Help" is for
+   screen readers there), the one line, the tool ----- */
+.ui2-help-back{gap:var(--space-1);margin-bottom:var(--space-1)}
+.ui2-page h2.ui2-help-title{margin:0 0 var(--space-2);font-size:var(--text-xl);line-height:1.25;color:var(--navy)}
+.ui2-page h2.ui2-help-title:focus{outline:none}
+.ui2-help-section{min-width:0}
+.ui2-help-section p.ui2-help-note{margin-bottom:var(--space-3)}
+.ui2-help-legacy{margin:0 0 var(--space-3);border-radius:var(--radius-card);overflow-wrap:anywhere}
+
+/* The old interface's parts, unchanged: as in Profile and Settings, inside .ui2-legacy the brand tokens keep
+   public/brand.css's light values in both themes (src/ui2/theme.css). */
+.ui2-legacy{color-scheme:light;color:var(--ink);background:var(--paper)}

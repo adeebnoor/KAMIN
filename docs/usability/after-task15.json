@@ -1,0 +1,80 @@
+{
+  "commit": "ui/usability-guards (Task 15)",
+  "measured": "2026-11-11",
+  "browser": "Playwright Chromium; desktop-chromium = Desktop Chrome 1280x720, mobile-chromium = Pixel 7 412x839",
+  "note": "After Tasks 09-15. Spec: e2e/usability-journeys.spec.js",
+  "mobile-chromium": {
+    "correct-record": {
+      "clicks": 3,
+      "inputs": 1,
+      "screens": 3,
+      "choicesAtStart": 21,
+      "steps": [
+        "my data",
+        "type: new grade",
+        "save",
+        "confirm"
+      ]
+    },
+    "withdraw-transcript-consent": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 21,
+      "steps": [
+        "my data",
+        "consents",
+        "withdraw"
+      ]
+    },
+    "delete-all-data": {
+      "clicks": 4,
+      "inputs": 0,
+      "screens": 5,
+      "choicesAtStart": 21,
+      "steps": [
+        "EXTRA STEP",
+        "my data",
+        "delete all my data",
+        "confirm"
+      ]
+    }
+  },
+  "desktop-chromium": {
+    "correct-record": {
+      "clicks": 3,
+      "inputs": 1,
+      "screens": 3,
+      "choicesAtStart": 22,
+      "steps": [
+        "my data",
+        "type: new grade",
+        "save",
+        "confirm"
+      ]
+    },
+    "withdraw-transcript-consent": {
+      "clicks": 3,
+      "inputs": 0,
+      "screens": 3,
+      "choicesAtStart": 22,
+      "steps": [
+        "my data",
+        "consents",
+        "withdraw"
+      ]
+    },
+    "delete-all-data": {
+      "clicks": 4,
+      "inputs": 0,
+      "screens": 5,
+      "choicesAtStart": 22,
+      "steps": [
+        "EXTRA STEP",
+        "my data",
+        "delete all my data",
+        "confirm"
+      ]
+    }
+  }
+}

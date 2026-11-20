@@ -1,0 +1,216 @@
+[
+ {
+  "id": "cd-CPCS-241",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-241 Databases (I)",
+  "text": "This objective of this course is to introduce students to database management systems. Topics include Data, Information, File System, Database and Database Users, Database System Concepts and Architecture, Data Modeling using the Entity Relationship (ER) Model, The Relational Data Model and Relational Database Constraints, Functional Dependencies and Normalization for Relational Databases, The Relational Algebra and Relational Calculus, Relational Database Design by ER and EER to Relational Mapping, Disk Storage, Basic File Structure and Hashing, SQL-99 Schema Definition, Constraints, Queries and Views (DDL and DML).",
+  "expected": [
+   "database"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIT-305",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-305 Advanced Programming",
+  "text": "The objective of this course is to study advanced techniques in Java programming. Topics include how to build applications for different purposes, methods for Java programs to interact with other existing technologies, exception and error handling, streams and files operations, concurrent programming, network and socket programming, and Java Database Connectivity (JDBC).",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIT-370",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-370 Computer Networks",
+  "text": "The objective of this course is to provide a wide background of computer networks, giving students the basic knowledge of data communication, medium accessing protocols, local area networks, and an overview of the higher level protocols. Topics include principles of computer networks, network standard models, analog and digital signals, multiplexing schemes, transmission media, multiple access techniques, wired and wireless lans, network devices, IP addressing, domain name system, and laboratory experiments.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-361",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-361 Operating Systems (I)",
+  "text": "The objective of this course is to provide a general overview of operating systems concepts and recent methodologies and techniques used in the field and their trades-offs, with various examples from the contemporary used systems. Topics include the basic structure of an operating system, its interaction with the hardware, software, and users, and the services it provides. The course illustrates different algorithms and techniques used in controlling, managing, and allocating various computer resources, such as CPU, memory, storage and I/O devices. It demonstrates the tuning of the operating system for maximizing the utilization and increasing the performance of the computer system.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-432",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-432 Artificial Intelligence (II)",
+  "text": "The objective of this course is to explore advanced topics concerning Artificial Intelligence and to cover programming language related to AI.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-457",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-457 Software Engineering Theory",
+  "text": "The objective of this course is to study the methods, values, attitudes, and techniques in software systems. It provides an understanding of the need for rigour and enables students to select and apply a relevant methodological approach to the development of well-designed and documented systems.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-474",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-474 TCP/IP and Web Networking",
+  "text": "The objective of this course is to study the fundamentals of TCP/IP networks, technologies, and the Web. Topics include HTTP protocols, Web protocols, TCP/IP networks, Web services and standards.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIS-363",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIS-363 Intelligent Systems",
+  "text": "The objective of this course is to equip students with the required skills to be able to access information and be able to use it efficiently through using intelligent systems that lead to success and economic superiority. This course will cover the necessary concepts and techniques that facilitate developing intelligent systems used in business applications.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-202",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-202 Programming (I)",
+  "text": "The objective of this course is to cover the fundamental concepts of procedural programming. This course introduces the Java programming language and helps students develop basic problem-solving skills. Topics include algorithms, flowchart, API, IDE, and JDK, numerical data, primitive data type, short hand operators , cast value of one type to another type , selection statements, switch statements, break and continue statements, relational operators, logical operators, logical expressions, Boolean variable, Boolean expressions, repetition statements, nested loops, methods, pass arguments to a method, method overloading, method abstraction, use of methods in the math class, arrays, common array operations, methods with array arguments and return value, search and sort operations on array.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-405",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-405 Software Technology Topics",
+  "text": "The objective of this course is to explore recent topics related to Software Technology. Topics include Object-Oriented Programming fundamental concepts, advanced swing graphical user interface, advanced exception Handling Techniques, Streams and Files, multithreading programming, and networking programming. Moreover, the course also focuses on database programming (JDBC), servlets and java server pages (JSP), and Java Security.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-464",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-464 Dependable Computing",
+  "text": "The objective of this course is to acquaint students with the high-reliability computer systems used in fault intolerant critical applications. Topics include computing systems security, applications that require high-quality computer systems, mobile client system, various security protocols, multi-distribution system, breach discovery and prevention, wireless networks reliability measurement, and ensuring the quality of service.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-371",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-371 Computer Networks (I)",
+  "text": "The objective of this course is to provide an introduction to computer networks and the ISO7 layers reference model, which includes necessary protocols. Selected network layers, such as data link layer, transport layer, network layer, etc., will be focused on with detailed information. In addition to this, network security, web technologies and application layer will also be introduced.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIT-436",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-436 E-Business Technology",
+  "text": "The objective of this course is to explore ebusiness technology and the use of computer techniques in updating business processes, which are designed to improve performance and reduce costs.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-433",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-433 Artificial Intelligence Topics",
+  "text": "The objective of this course is to explore recent topics related to Artificial Intelligence and the latest advances in this field.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIT-221",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-221 Technical Writing",
+  "text": "The objective of this course is to study the fundamentals of technical communication. Topics include the concepts of technical communication and its differences with academic writing, processes in technical communication, tools and techniques to perform collaborative projects and writing, formatting the technical documents with modern tools and techniques, techniques to write official letters, memos and e-mails, writing definitions and descriptions, writing informal reports to address immediate and intermediate tasks accomplishment, writing formal reports to portray the complex nature of issues, writing informal proposals to cover projects with limited scope, writing formal proposals to submit a detailed document, normally applied to large projects, developing presentation skills, preparing effective CV’s and cover letters, developing skills for job interviews, learning styles in technical writing for effective revision, and practicing professional presentations in a seminar environment.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-372",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-372 Computer Networks (II)",
+  "text": "The objective of this course is to introduce students to the principles, design, implementation, and performance of computer networks. This course is based on the layering architecture and covers the routing protocols in detail. Topics include Internet routing protocols, local area networks, congestion control, TCP, wireless communications and networking, mobile IP, performance analysis, network address translation, multimedia over IP, switching and routing, peer-to-peer networking, network security, and other current research topics in the area of computer networks.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-462",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-462 Operating Systems (II)",
+  "text": "The objective of this course is to familiarize students with the modern alternative operating models such as distributed processing, parallel processing, and real-time processing. Topics include virtual memory, thread scheduling, security systems and their requirements, shared security systems, performance quality, system reliability, system failure, prefailure warning, and system recovery.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-301",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-301 Programming Languages",
+  "text": "The objective of this course is to provide a comprehensive coverage of the fundamental concepts of programming languages by discussing the design issues of the various languages constructs, examining the design choices for these constructs in some of the most common languages, and critically comparing design alternatives. It discusses the formal methods of describing the syntax and semantics of programming languages.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-413",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-413 Computer Architecture (II)",
+  "text": "The objective of this course is to explore modern computer architecture approaches, such as designing advanced computer instructions, parallelism, and the advanced methods of data processing.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPIT-499",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-499 Senior Project (II)",
+  "text": "This course is the second part of a sequence of two courses that constitute the graduation capstone project. This course aims to execute what was presented in CPIT-498 – the students present two reports and two presentations of the graduation project. The courses topics cover detail design, coding, testing, and project implementation.",
+  "expected": [
+   "software",
+   "testing"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "cd-CPCS-381",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-381 Human-Computer Interaction",
+  "text": "The objective of this course is to familiarize students with the skills and concepts of HumanComputer Interaction (HCI), including the understanding of user needs, interface design and prototyping, and interface evaluation. Topics include an introduction to HCI, HCI goals, cognitive and perceptual issues, HCI design, data gathering, data analysis, task description, task analysis, interaction styles, interaction frameworks, prototyping, and evaluation.",
+  "expected": [
+   "requirements"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ }
+]

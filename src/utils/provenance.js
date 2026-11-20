@@ -4,7 +4,7 @@
 // student changes them, so every later judgment can say whether a grade came from
 // the document or from the student's hand. Provenance never authenticates a
 // document; it only makes the trust level of each claim visible and non-inflatable.
-import { normalizeGrade } from './engine.js'
+import { normalizeGrade } from './grades.js'
 
 export const DOCUMENT_SOURCES = new Set(['pdf', 'ocr', 'text', 'image'])
 export const EDITABLE_FIELDS = ['code', 'name', 'grade']

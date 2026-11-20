@@ -1,0 +1,7 @@
+PREFIX k: <urn:kamin:>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?inference ?rule ?strength ?evidence WHERE { GRAPH <urn:kamin:graph:explanations> {
+  ?inference a k:Inference ; rdf:predicate k:hasCapabilityEvidenceFor ; rdf:object <urn:kamin:target:job-data-analyst> ;
+     prov:wasGeneratedBy ?rule ; k:evidenceStrength ?strength ; prov:wasDerivedFrom ?evidence .
+  FILTER(STRSTARTS(STR(?evidence),"urn:kamin:evidence:") || STRSTARTS(STR(?evidence),"urn:kamin:claim:")) } } ORDER BY ?inference

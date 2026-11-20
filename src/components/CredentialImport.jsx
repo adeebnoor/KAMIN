@@ -1,4 +1,6 @@
 import { useId, useRef, useState } from 'react'
+import TechDetails from './TechDetails.jsx'
+import { copy } from '../i18n.js'
 import { BadgeCheck, FileSearch, Trash2 } from 'lucide-react'
 import { verifyCredential } from '../credentials/verify.js'
 import { trustedIssuers } from '../credentials/issuers.js'
@@ -39,7 +41,7 @@ export default function CredentialImport({ lang, records = [], onSave, onRemove 
   }
   return <section className="panel credential-import" data-testid="credential-import" aria-label={tr(lang, 'استيراد اعتماد قابل للتحقق', 'Import a verifiable credential')}>
     <div className="panel-head"><div><small>{tr(lang, 'اعتماد محمول قابل للتحقق', 'VERIFIABLE PORTABLE CREDENTIAL')}</small><h3><BadgeCheck size={18}/> {tr(lang, 'استورد اعتمادًا موقّعًا وتحقق منه محليًا', 'Import a signed credential and verify it locally')}</h3></div></div>
-    <p>{tr(lang, 'يُفحص المستند محليًا: البنية، وجهة الإصدار مقابل سجل الجهات المعتمدة، والتوقيع الرقمي (eddsa-jcs-2022)، والصلاحية، وحالة الإلغاء. الاعتماد يصبح «موثّقًا» فقط إذا نجحت كلها؛ وجود JSON-LD أو رمز QR أو ختم بصري لا يكفي. سجل الجهات المعتمدة فارغ في هذه النسخة، فكل استيراد يبقى غير موثّق حتى تُعتمد جهة بموجب اتفاق.', 'The document is checked locally: structure, issuer against the trusted-issuer registry, digital proof (eddsa-jcs-2022), validity window and revocation status. It is “verified” only when all pass; JSON-LD, a QR code or a visual seal is not enough. The registry is empty in this release, so every import stays unverified until an issuer is admitted under an agreement.')}</p>
+    <p>{copy[lang].screens.myData.credential}</p><TechDetails lang={lang}>{copy[lang].screens.myData.technical.credential}</TechDetails>
     <label className="button secondary" htmlFor={`${id}-file`}><FileSearch size={16}/>{tr(lang, 'اختر ملف اعتماد (.json / .jsonld)', 'Choose a credential file (.json / .jsonld)')}</label>
     <input ref={fileRef} id={`${id}-file`} className="sr-only" type="file" accept=".json,.jsonld,application/json,application/ld+json" onChange={e => load(e.target.files?.[0])}/>
     {error && <p role="alert">{error}</p>}

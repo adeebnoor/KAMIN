@@ -4,12 +4,12 @@ import { inferSkills } from '../src/utils/engine.js'
 import { editCourseRow } from '../src/utils/provenance.js'
 import { createProjectEvidence } from '../src/utils/projectEvidence.js'
 
-const extracted = { code: 'CPIT-260', name: 'Database Systems', grade: 'B', source: 'pdf' }
+const extracted = { code: 'CPIT-240', name: 'Database (I)', grade: 'B', source: 'pdf' }
 const now = new Date('2026-09-30T12:00:00Z')
 
 describe('CLR 2.0-shaped portable export', () => {
   it('is an unsigned, self-asserted credential with one achievement per evidenced capability', () => {
-    const courses = [editCourseRow(extracted, 'grade', 'A'), { code: 'STAT-201', name: 'Statistics', grade: 'B+', source: 'pdf' }, { code: 'ZZZZ-999', name: 'Unmapped', grade: 'A', source: 'manual' }]
+    const courses = [editCourseRow(extracted, 'grade', 'A'), { code: 'STAT-110', name: 'Statistics', grade: 'B+', source: 'pdf' }, { code: 'ZZZZ-999', name: 'Unmapped', grade: 'A', source: 'manual' }]
     const project = createProjectEvidence({ title: 'SQL lab', kind: 'project', url: 'https://example.com/lab', description: '', skillIds: ['database'] }, now)
     const state = { courses, approved: true, goal: 'data', projects: [project] }
     const skills = inferSkills(courses)

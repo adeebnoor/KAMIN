@@ -1,0 +1,9 @@
+{
+  "file": "testset.json",
+  "sha256": "273a966ce29fb59ce453b51c25d52ccf0b299d79de7f2629281c0d68087488a2",
+  "frozenAt": "2026-11-18",
+  "cases": 70,
+  "kaminCommit": "c54ff0e",
+  "provenance": "Written by Claude, approved by the team and the supervisor (stated by Amjd, 2026-11-18)",
+  "note": "Frozen before any method was run on it. No edit and no tuning on this set; any change is a new version with a new date. Tune only on dev-set.json."
+}

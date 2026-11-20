@@ -1,0 +1,276 @@
+[
+ {
+  "id": "ct-CPIT-240",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-240 Databases (I)",
+  "text": "This course is the first in a series of courses on designing and implementing database information systems. The objective of this course is to prepare students to become able to implement a working database system using one of the popular commercial DBMSs. Topics include data and information, file system, database and database users, database system concepts and architecture, data modeling using the entity relationship (ER) model, the relational data model and relational database constraints, functional dependencies and normalization for relational databases, relational algebra and relational calculus, relational database design by ER and EER to relational mapping, disk storage, basic file structure and hashing, SQL-99 schema definition, constraints, queries, and views.",
+  "expected": [
+   "database"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-340",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-340 Database (II)",
+  "text": "The objective of this course is to study advanced topics in the domain of databases. Topics include distributed databases and clientserver architectures, concepts for object databases, enhanced data models for advanced applications, database tuning in relational database systems, concurrency control techniques, and database security.",
+  "expected": [
+   "database"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-345",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-345 Database Administration",
+  "text": "The objective of this course is to explore a variety of topics in Database Administration. Using hands-on training, students will learn about installation, configuration, administration, performance, security, backup and recovery, and enterprise services of databases. Additional topics include an introduction to DBMS, schemas objects, partitioned tables and indexes, built in data types, backup and recovery, enterprise tools, services and connectivity, locking, and concurrency.",
+  "expected": [
+   "db-operations",
+   "database"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-250",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-250 System Analysis and Design",
+  "text": "The objective of this course is to provide a methodical approach to developing computer systems, including systems planning, analysis, design, and implementation. The course approaches the development of information systems from a problem-solving perspective, placing emphasis on the strategies and techniques of systems analysis and design for producing logical methodologies for dealing with complexity in the development of information systems.",
+  "expected": [
+   "systems-analysis"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-251",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-251 Software Engineering (I)",
+  "text": "The objective of this course is to study software engineering principles and techniques used in the specification, design, and testing of software systems. Major software development methodologies are reviewed including requirements, analysis and specification, design, testing, and documentation.",
+  "expected": [
+   "software",
+   "testing",
+   "requirements"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-455",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-455 Software Engineering (II)",
+  "text": "The objective of this course is to explore software advanced engineering principles and techniques used in the specification, design, and testing of software systems Topics include software engineering confirmation and authentication, methods and ways of software testing building and managing software development teams, scientific and practical methods for calculating the costs of software development, quality management in software development, processes development in software production, and reconstruction management in software production.",
+  "expected": [
+   "software",
+   "testing",
+   "project"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-456",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-456 Software Economics",
+  "text": "The objective of this course is to explore concepts in software economics. Topics include important economic concepts in the process of software development, building and empowering software development teams, continuous improvement of procedures in building software process, production tasks in the process of applications development, economies of scale operations related to software development, optimizing restricted operations and cost estimation to build software, models of integrated operations, spiral model to build software, and risk management in building software.",
+  "expected": [
+   "project",
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-405",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-405 Internet Applications",
+  "text": "The objective of this course is to study internet programming and web-application development. Students will learn basic principles and techniques for building internet applications. It provides students with the basic web-page development technologies and an introduction to dynamic web-page development using client-side scripting. Topics include introduction to HTTP protocol and client side programming, XHTML, Cascading Style Sheets, JavaScript DOM, XML (Name space, DTD, Schema, XSLT, XPATH), RSS, and AJAX.",
+  "expected": [
+   "web-development"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-425",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-425 Information Security",
+  "text": "The objective of this course is to provide basic knowledge on the technical and operational issues of modern cryptosystems and the related standards. Topics include threats to network security and schemes for breaking security, classical encryption techniques, block ciphers and stream ciphers, DES and triple DES, AES, block cipher operation modes, asymmetric ciphers: RSA, Diffie-Hellman key exchange, ElGamal cryptosystem, hash functions, MAC functions, digital signature, key management and distribution, X.509 certificates, transport level security: SSL and TLS, Intrusion, and types and configurations of firewalls.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-440",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-440 Data Mining and Warehousing",
+  "text": "The objective of this course is to explore the different knowledge extraction methods and their representation techniques as well as knowledge engineering. It also introduces the different basic artificial intelligence theories that qualify the students to understand the course contents. Topics include an introduction to data mining and warehousing, data warehousing and OLAP technology, classification and prediction, mining frequent patterns, associations and correlations, review of probability and statistics, and data preprocessing.",
+  "expected": [
+   "statistics",
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-445",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-445 Knowledge Engineering",
+  "text": "The objective of this course is to explore the different knowledge extraction methods and their representation techniques as well as knowledge engineering. It also introduces the different basic artificial intelligence theories that qualify the students to understand the course contents.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-280",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-280 Human-Computer Interaction",
+  "text": "The objective of this course is to study the fundamentals and principles of human computer interaction. Also, it is intended to develop the student's ability to explore and implement a usable design, in addition to measure, analyze, and evaluate the human computer interaction systems",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-470",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-470 Networks Administration",
+  "text": "The objective of this course is to explore the principles of network administration. Topics include network OSI layers and CISCO IOS configuring devices, IP addressing and subnetting, introduction to routing, static routing, default routing, dynamic routing, RIP1 and RIP2, troubleshooting, routing table lookup process, OSPF, switching & switch configuration, switch security, VLANs, spanning tree protocol, VTP, inter VLAN routing, and network troubleshooting.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-252",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-252 Software Design Patterns",
+  "text": "The objective of this course is to study the principles behind the patterns of software and to then apply a number of basic patterns. This course covers fundamental aspects of large scale software architecture, defined frameworks, design patterns, and ways of developing and establishing systems based on components. The purpose of this course is: (1) to know the classical styles of software pattern and the need for a language to describe the architecture, (2) to understand how to express the qualities we want our architecture to provide to the system or systems we are building from it, and (3) to know how to achieve software qualities using TACTICS. Topics include envisioning architecture (architecture business cycle), architectural patterns, reference models, reference architectures, understanding quality attributes, achieving qualities using tactics, and how to document software architecture.",
+  "expected": [
+   "software"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-331",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-331 Artificial Intelligence (I)",
+  "text": "The objective of this course is to provide a broad overview of AI and building intelligent systems. Topics include intelligent agents, problem-solving as a search activity, knowledge representation, planning, reasoning and learning. Students will also be introduced to evolutionary computation (EC), natural language processing (NLP), and programming in Prolog.",
+  "expected": [
+   "ai-work"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-353",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-353 Software Engineering Practice",
+  "text": "The objective of this course is to further explore the design and thinking of object-oriented software engineering, from analysis through testing. Topics include practices of software project management, project estimation, distributed system architectures (client/ server), distributed object model, building client/server applications based-on Object-oriented technology, and Object-Oriented software engineering approach. The course will also teach students the principles and practices of software testing, validation, verification, maintenance, writing documentation, and evaluation of systems and tools.",
+  "expected": [
+   "software",
+   "testing",
+   "project"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-425",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-425 Information Security",
+  "text": "The objective of this course is to provide an introduction to information security in computer networks, with a focus on providing basic knowledge of the technical and operational issues of modern cryptosystems and their related standards. Topics include security threats and vulnerabilities, classical encryption techniques, block ciphers and stream ciphers, DES and triple DES, AES, Block cipher operation modes, asymmetric ciphers: RSA, Diffie-Hellman key exchange, hash functions, MAC functions, digital signature: digital Signature Standard DSS, key management and distribution, X.509 certificates, web security: SSL and TLS, email security (PGP), malicious software, and firewalls.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-463",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-463 Computing Systems Security",
+  "text": "The objective of this course is to introduce the fundamentals of Computer Security Systems and the potential risks and vulnerabilities in these therein. Topics include security management practices, access control systems and methodology, networks and Internet security, enterprise security architecture, operations security law, investigation, and ethics.",
+  "expected": [
+   "cyber"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-442",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-442 Databases (II)",
+  "text": "The objective of this course is to explore advanced topics in databases, with a focus on distributed and parallel database management systems followed by database design and implementation. Topics include performance optimization, database security, transaction processing, data warehouses, and data mining.",
+  "expected": [
+   "database"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-351",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-351 Software Engineering (I)",
+  "text": "The objective of this course to introduce students to the basic concepts of software engineering as they relate to the development of medium to large scale software systems. Topics include the software life cycle, requirements development, object orientation, software architecture & design, and software testing. Students are expected to learn how to apply such principles to a real world problem. A term project of a medium-size is required.",
+  "expected": [
+   "software",
+   "requirements",
+   "testing"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-330",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-330 IT Issues and Management",
+  "text": "The objective of this course is to study the concepts and application of Agile and Scrum techniques to manage software development projects. Topics include an introduction to agile project management, fundamentals of Scrum for dealing with uncertainty and risk, identifying the roles and their responsibilities, managing releases, tools for tracking and monitoring a project, planning an agile project, establishing the business reasons for the project, clarifying the business vision, identifying features for development in an iteration, fostering self-management within the development team, creating the optimal working environment, transitioning to selfmanagement, running iterations, managing change, reviewing the iteration through a sprint review, closing the project using a sprint retrospective, applying agile throughout your organization, dealing with the legacy organization, and scaling for large projects.",
+  "expected": [
+   "project"
+  ],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPIT-210",
+  "lang": "en",
+  "type": "course",
+  "course": "CPIT-210 Computer Architecture",
+  "text": "The objective of this course is to provide an introduction to basic computer organization. Topics include binary, hexadecimal, and decimal number conversions, binary number arithmetic, laws of Boolean algebra, basic computer logic, gates, combinational circuits, sequential circuits, adders, counters, registers, decoder, encoder, comparator, multiplexer, computer organization buses and computer architecture, cache memory, computer arithmetic, instruction sets, and addressing modes.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-222",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-222 Discrete Structures (I)",
+  "text": "The objective of this course is to study the logical and algebraic relationships between discrete objects. This course cultivates clear thinking and creative problem solving by developing students’ mathematical maturity in several core areas: logic and proofs, sets, functions, relations, and counting techniques.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-302",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-302 Compiler Construction",
+  "text": "The objective of this course is to acquaint students with the fundamentals of compilers and their construction. The course considers the principles that underlie compiler construction and focuses on the translation of programs written in conventional, higher level language into semantically equivalent programs written in assembly language. Students will learn how modern programming languages are implemented, how compilers interact with operating systems and machine architecture, and how to use compiler construction tools.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ },
+ {
+  "id": "ct-CPCS-211",
+  "lang": "en",
+  "type": "course",
+  "course": "CPCS-211 Digital Logic Design",
+  "text": "This objective of this course is to provide an introduction to the fundamental concepts of digital logic design. Topics include number systems, binary codes, Boolean algebra, canonical and fundamental forms of Boolean functions, functions applications to digital circuits design, minimization of Boolean functions by Boolean algebra and Karnaugh maps, two -level and multi-level digital circuits, decoders, encoders, multiplexers, demultiplexers, latches, flip-flops, registers, counters, analysis and synthesis of synchronous sequential circuits. Additionally, this course includes a laboratory component in which students apply the design principles learned in lectures to the design of combinational circuits and synchronous sequential circuits.",
+  "expected": [],
+  "note": "Course description copied verbatim from the official FCIT Undergraduate Catalog 2024-2025. Labels written by Claude (AI) on 2026-11-19 before running any method; need human review."
+ }
+]

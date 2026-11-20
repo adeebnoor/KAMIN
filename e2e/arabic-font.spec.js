@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 
 test('Arabic font asset and privacy page are available', async ({ page, request }) => {
   const fontResponse = await request.get('/fonts/noto-sans-arabic.woff2')

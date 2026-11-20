@@ -1,0 +1,4 @@
+PREFIX k: <urn:kamin:>
+# Which course → capability links has the department not reviewed yet? (Task 34)
+SELECT ?course ?cap WHERE { GRAPH <urn:kamin:graph:reference> {
+  ?course a <https://schema.org/Course> ; k:mapsToCapability ?cap ; k:reviewStatus "proposed" } } ORDER BY ?course ?cap

@@ -1,0 +1,6 @@
+PREFIX k: <urn:kamin:>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+# Is there a capability claim with no evidence behind it? (Task 34; expected false)
+ASK { GRAPH <urn:kamin:graph:profile-input> {
+  ?claim k:predicate k:demonstrates .
+  FILTER NOT EXISTS { ?claim prov:wasDerivedFrom ?evidence } } }

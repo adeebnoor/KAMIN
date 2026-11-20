@@ -1,0 +1,68 @@
+{
+  "set": "course-testset-v2.json",
+  "setSha256": "631619a520ce8ab6397708a3759b42255ef0072779ea26b99cdb9d350ac81903",
+  "frozenAt": "2026-11-19T17:12:32.006Z",
+  "ranAt": "2026-11-19T17:42:31.334Z",
+  "kaminCommit": "7291c06",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-improved-v2-exp",
+    "metrics": {
+      "en": {
+        "cases": 12,
+        "tp": 3,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.6666666666666666,
+        "negatives": 8,
+        "correctAbstentions": 7,
+        "medianMs": 0.18679999999999808
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1+improved-v2+percap",
+    "model": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+    "prefix": "",
+    "threshold": 0.6,
+    "thresholds": {
+      "testing": 0.6,
+      "db-operations": 0.6,
+      "web-development": 0.6,
+      "systems-analysis": 0.6,
+      "requirements": 0.6,
+      "software": 0.6,
+      "database": 0.6,
+      "project": 0.6,
+      "statistics": 0.6,
+      "cyber": 0.6,
+      "ai-work": 0.6
+    },
+    "tunedOn": "course-dev-set.json",
+    "tunedOnSha256": "f0c2cc61333784641cb3b550778af36cd46e947928d24653182cde284145e778",
+    "tunedAt": "2026-11-19T17:42:29.211Z",
+    "devMacroF1": 0.96,
+    "modelDir": "2c4055b12046f11709e9df2c122e59ffbdc2f900",
+    "metrics": {
+      "en": {
+        "cases": 12,
+        "tp": 4,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.8,
+        "recall": 1,
+        "f1": 0.888888888888889,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.5833333333333334,
+        "negatives": 8,
+        "correctAbstentions": 7,
+        "medianMs": 17.703899999999976
+      }
+    }
+  }
+}

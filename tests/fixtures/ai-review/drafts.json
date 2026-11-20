@@ -1,0 +1,73 @@
+{
+  "version": "ai-drafts-v1",
+  "status": "awaiting-human-review",
+  "writtenBy": "ai",
+  "generation": {
+    "model": "fixture-model",
+    "generatedAt": "2026-11-17",
+    "method": "Fixture: placeholder drafts for tests."
+  },
+  "sealed": {
+    "note": "Fixture commitment.",
+    "proposedLabels": {
+      "path": "tests/fixtures/ai-review/proposed-labels.json",
+      "commit": "ffffffffffffffffffffffffffffffffffffffff",
+      "sha256": "28256366e3d842b2af09e1b0d9f7ba029726c1e6da04c110132e1b2de819a138"
+    },
+    "selfReview": {
+      "path": "tests/fixtures/ai-review/self-review.md",
+      "commit": "ffffffffffffffffffffffffffffffffffffffff",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  },
+  "cases": [
+    {
+      "id": "aid-en-01",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "Fixture draft aid-en-01: placeholder text, not a real description."
+    },
+    {
+      "id": "aid-en-02",
+      "lang": "en",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "Fixture draft aid-en-02: placeholder text, not a real description."
+    },
+    {
+      "id": "aid-en-03",
+      "lang": "en",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "Fixture draft aid-en-03: placeholder text, not a real description."
+    },
+    {
+      "id": "aid-ar-01",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "مسودة تجريبية aid-ar-01: نص بديل وليس وصفًا حقيقيًا."
+    },
+    {
+      "id": "aid-ar-02",
+      "lang": "ar",
+      "category": "direct",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "مسودة تجريبية aid-ar-02: نص بديل وليس وصفًا حقيقيًا."
+    },
+    {
+      "id": "aid-ar-03",
+      "lang": "ar",
+      "category": "should-abstain",
+      "writtenBy": "ai",
+      "model": "fixture-model",
+      "text": "مسودة تجريبية aid-ar-03: نص بديل وليس وصفًا حقيقيًا."
+    }
+  ]
+}

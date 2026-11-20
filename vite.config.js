@@ -24,5 +24,8 @@ export default defineConfig({
   },
   test: {
     include: ['tests/**/*.test.js'],
+    // Task 17: every run also leaves reports/vitest.json for `npm run test:report` (public/tests.html).
+    reporters: ['default', 'json'],
+    outputFile: { json: 'reports/vitest.json' },
   },
 })

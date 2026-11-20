@@ -1,0 +1,12 @@
+/* Task 05: My data — review and correct (loaded with the lazy MyData chunk) */
+/* minmax(0,1fr): without it the one grid column grows to the course table's width (686px), so on a
+   phone the whole page scrolled sideways (702px in a 360px window). Now the column fits the screen
+   and the table scrolls inside its own .table-scroll box. */
+.my-data{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-4)}.my-data-hint,.my-data-empty{color:var(--muted);font-size:.84rem;line-height:1.6}
+.my-data tr.is-deleted input{text-decoration:line-through;opacity:.6}.my-data .icon-button{min-width:40px;min-height:40px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);display:inline-grid;place-items:center;cursor:pointer}
+.my-data-actions,.my-data-confirm div,.my-data-items li{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;justify-content:space-between}
+.my-data-actions,.my-data-confirm{margin-top:var(--space-3);padding:var(--space-3) var(--space-3);border:1px solid var(--line);border-radius:12px;background:var(--navy-3)}
+.my-data-confirm ul{margin:var(--space-2) 0;padding-inline-start:var(--space-4)}.my-data-items{list-style:none;margin:var(--space-1) 0 var(--space-3);padding:0;display:grid;gap:var(--space-1)}
+.my-data-list{display:grid;gap:var(--space-2);margin:var(--space-2) 0}.my-data-list div{display:grid;gap:2px}.my-data-list dt{font-weight:800;color:var(--navy)}.my-data-list dd{margin:0;overflow-wrap:anywhere}
+.my-data h4{display:flex;gap:var(--space-1);align-items:center;margin:var(--space-3) 0 var(--space-1)}
+.my-data-exit{display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-4);align-items:center}.danger-link{color:var(--danger)}

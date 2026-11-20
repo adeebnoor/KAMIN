@@ -1,0 +1,121 @@
+/* Task 65 · step 4 (the next-steps feed and the goal chips) and My plan. Loads with src/ui2/screens/NextSteps.jsx and
+   src/ui2/screens/Plan.jsx only (their own lazy chunks). Tokens only, as in ui2.css: brand colours from public/brand.css
+   (dark values in src/ui2/theme.css), spacing, text sizes and radius from src/tokens.css. The goals box, the cards, the
+   plan's lists and the save offer are --paper on the --soft page; the sheets are --paper
+   (tests/themeContrast.test.js checks every pair in both themes). */
+
+/* ----- The page's own lines (on --soft) ----- */
+.ui2-page p.ui2-next-line,.ui2-page p.ui2-plan-line{margin-bottom:var(--space-3)}
+.ui2-next-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-4)}
+.ui2-page .ui2-next-technical{margin-top:var(--space-4);font-size:var(--text-sm);color:var(--muted)}
+.ui2-page .ui2-next-technical summary{min-height:var(--control-h);display:flex;align-items:center;color:var(--navy);font-weight:650;cursor:pointer}
+.ui2-page .ui2-next-technical p{margin:0;font-size:var(--text-sm)}
+
+/* ----- Goals: the chosen ones, "Where do you want to go?" and "Why these paths?" ----- */
+.ui2-goals{display:grid;justify-items:start;gap:var(--space-2);margin:0 0 var(--space-4);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-goals h2{margin:0;font-size:var(--text-lg);color:var(--navy)}
+.ui2-goal-list{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:0;padding:0;list-style:none}
+.ui2-goals .ui2-chip{margin:0}
+.ui2-goal-chip svg{flex:none}
+.ui2-page .ui2-goals p.ui2-goal-words{margin:0;font-size:var(--text-sm);color:var(--muted)}
+.ui2-goal-picker{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:0;padding:0;border:0;min-width:0}
+.ui2-goal-picker legend{padding:0;margin-bottom:var(--space-1);font-weight:650;color:var(--ink)}
+.ui2-page .ui2-goals p.ui2-goal-hint{flex-basis:100%;margin:0;font-size:var(--text-sm);color:var(--muted)}
+.ui2-goal-picker div{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);flex-basis:100%}
+.ui2-goal-group{flex-basis:100%;font-size:var(--text-sm);font-weight:650;color:var(--ink)}
+.ui2-goal-picker .ui2-chip:disabled{background:var(--paper);border-color:var(--line);color:var(--muted);cursor:default}
+
+/* ----- "Why these paths?": the pathways and their reasons, in a sheet ----- */
+.ui2-paths section{margin-bottom:var(--space-4)}
+.ui2-paths h3{margin:0 0 var(--space-2);font-size:var(--text-base);color:var(--navy)}
+.ui2-paths ul{display:grid;gap:var(--space-2);margin:0;padding:0;list-style:none}
+.ui2-sheet-body li.ui2-path{display:block;padding:var(--space-2) 0;border-bottom:1px solid var(--line)}
+.ui2-path-title{margin:0;font-size:var(--text-base)}
+.ui2-path-toggle{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);width:100%;min-height:var(--control-h);padding:0;border:0;background:none;color:var(--navy);font:inherit;font-weight:700;text-align:start;cursor:pointer}
+.ui2-path-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.ui2-path-meta,.ui2-path-reason{margin:0;font-size:var(--text-sm);line-height:1.5;color:var(--ink)}
+.ui2-path-details{margin-top:var(--space-2);font-size:var(--text-sm);line-height:1.5;color:var(--ink)}
+.ui2-path-details p{margin:0 0 var(--space-2)}
+.ui2-path-details a{color:var(--navy)}
+.ui2-path-details ul{display:block;margin:0 0 var(--space-2);padding-inline-start:var(--space-4);list-style:disc}
+.ui2-sheet-body .ui2-path-details li{display:list-item}
+.ui2-path-head{font-weight:700;color:var(--navy)}
+.ui2-path-count{color:var(--muted)}
+.ui2-paths-note{margin:0;font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+
+/* ----- The feed: its heading and rule on the page, the cards on --paper ----- */
+.ui2-feed{margin-bottom:var(--space-4)}
+.ui2-feed h2{margin:0 0 var(--space-2);font-size:var(--text-lg);color:var(--navy)}
+.ui2-feed h2:focus{outline:none}
+.ui2-page p.ui2-feed-rule,.ui2-page p.ui2-feed-uncovered{margin:0 0 var(--space-3);font-size:var(--text-sm);color:var(--muted)}
+.ui2-feed-list{display:grid;gap:var(--space-3);margin:0 0 var(--space-3);padding:0;list-style:none}
+.ui2-feed-empty{margin-bottom:var(--space-3);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink)}
+.ui2-page .ui2-feed-empty p{margin:0 0 var(--space-2)}
+.ui2-page .ui2-feed-empty p:last-child{margin:0;color:var(--muted);font-size:var(--text-sm)}
+
+/* ----- One card: kind and title, Builds, Improves, Why, then the actions ----- */
+.ui2-step{display:grid;gap:var(--space-2);padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-step-top{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2)}
+.ui2-step-top h3{margin:0;font-size:var(--text-base);line-height:1.4;color:var(--navy)}
+.ui2-step-top h3:focus{outline:none}
+.ui2-step-kind{padding-inline:var(--space-2);border:1px solid var(--line);border-radius:var(--radius-pill);background:var(--paper);color:var(--muted);font-size:var(--text-sm);font-weight:700}
+.ui2-step-tag{display:inline-block;padding-inline:var(--space-2);border-radius:var(--radius-pill);background:var(--warn-bg);color:var(--warn);font-size:var(--text-sm);font-weight:700}
+.ui2-page p.ui2-step-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-1) var(--space-2);margin:0;font-size:var(--text-sm);line-height:1.5}
+.ui2-step-line .ui2-chip{margin:0;min-height:28px}
+.ui2-step-label{font-weight:700;color:var(--ink)}
+.ui2-page p.ui2-step-why{display:block}
+.ui2-step-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);margin-top:var(--space-1)}
+
+/* ----- Details (a sheet) ----- */
+.ui2-step-details{font-size:var(--text-sm);line-height:1.6;color:var(--ink)}
+.ui2-step-details h3{margin:var(--space-3) 0 var(--space-1);font-size:var(--text-base);color:var(--navy)}
+.ui2-step-details p{margin:0 0 var(--space-2)}
+.ui2-step-details ul{display:block;margin:0 0 var(--space-2);padding-inline-start:var(--space-4);list-style:disc}
+.ui2-sheet-body .ui2-step-details li{display:list-item}
+.ui2-step-meta,.ui2-step-sub{color:var(--muted)}
+.ui2-step-clue{padding-inline-start:var(--space-3);border-inline-start:3px solid var(--navy);color:var(--ink)}
+.ui2-step-source{overflow-wrap:anywhere;color:var(--ink)}
+
+/* ----- My plan: the steps, the "Not for me" list, Compare, where the plan is kept ----- */
+.ui2-plan-compare{margin-bottom:var(--space-4)}
+.ui2-plan-block{margin-bottom:var(--space-4)}
+.ui2-plan-block h2{margin:0 0 var(--space-2);font-size:var(--text-lg);color:var(--navy)}
+.ui2-plan-empty{padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink)}
+.ui2-page .ui2-plan-empty p{margin:0 0 var(--space-2)}
+.ui2-plan-list{display:grid;gap:var(--space-2);margin:0;padding:0;list-style:none}
+.ui2-plan-item{padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink);min-width:0}
+.ui2-page .ui2-plan-item p{margin:0 0 var(--space-1)}
+.ui2-page .ui2-plan-item p.ui2-plan-meta{font-size:var(--text-sm);color:var(--muted)}
+.ui2-plan-item[data-status="done"] .ui2-plan-title{text-decoration:line-through}
+.ui2-plan-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-4)}
+.ui2-plan-done{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--control-h);font-weight:650;color:var(--ink);cursor:pointer}
+.ui2-plan-done input{width:22px;height:22px;accent-color:var(--navy)}
+.ui2-plan-save{display:grid;gap:var(--space-2)}
+.ui2-page p.ui2-plan-saved{display:flex;align-items:flex-start;gap:var(--space-2);margin:0;font-size:var(--text-sm);color:var(--muted)}
+.ui2-plan-saved svg{flex:none;margin-top:var(--space-1)}
+.ui2-plan-offer{padding:var(--space-3) var(--space-4);border:1px solid var(--line);border-radius:var(--radius-card);background:var(--paper);color:var(--ink)}
+.ui2-page .ui2-plan-offer p{margin:0 0 var(--space-2)}
+
+/* ----- "Compare paths": the old interface's comparison (PathwayCompare.jsx) inside the sheet, in the theme's colours.
+   Its own CSS (src/styles.css) has fixed light backgrounds; here every surface and text takes the theme's tokens. ----- */
+.ui2-compare .pathway-compare{padding:0;border:0;background:var(--paper);color:var(--ink);box-shadow:none}
+.ui2-compare .pathway-compare h3{color:var(--navy)}
+.ui2-compare .pathway-compare small,.ui2-compare .compare-empty{color:var(--muted)}
+.ui2-compare .compare-picker .choice-chip,.ui2-compare .compare-preferences{background:var(--paper);border-color:var(--muted);color:var(--ink)}
+.ui2-compare .compare-picker .choice-chip.selected{background:var(--navy-3);border-color:var(--navy);color:var(--navy)}
+.ui2-compare .table-scroll{border-color:var(--line);background:var(--paper);color:var(--ink)}
+.ui2-compare .compare-table thead th{background:var(--navy);color:var(--paper)}
+.ui2-compare .compare-table tbody th{background:var(--navy-3);color:var(--navy)}
+.ui2-compare .compare-table td{background:var(--paper);color:var(--ink)}
+.ui2-compare .compare-table td.compare-gap{color:var(--warn)}
+
+/* Task 74 · the old interface's parts reused unchanged in the sheets: a pathway's development plan (My plan → "Why these
+   paths?" → "Open this pathway's plan", src/plan/developmentPlan.jsx) and the review of a next step (Details,
+   RecommendationReview.jsx). Inside .ui2-legacy (src/ui2/ui2.css) they keep brand.css's light values in both themes. The
+   sheet's own list layout is undone inside them, so the plan's four steps keep their numbers. */
+.ui2-path-plan,.ui2-step-review{margin-top:var(--space-2);padding:var(--space-2) var(--space-3);border:1px solid var(--line);border-radius:var(--radius-card)}
+.ui2-path-plan .studio-plan{margin:0;padding:0;border:0;box-shadow:none}
+.ui2-sheet-body .ui2-legacy ol{display:block;margin:0 0 var(--space-2);padding-inline-start:var(--space-5);list-style:decimal}
+.ui2-sheet-body .ui2-legacy li{display:list-item}
+.ui2-step-history{margin:var(--space-2) 0 0}
+.ui2-path-plan .panel-head{flex-wrap:wrap}

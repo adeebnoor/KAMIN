@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kamin-pilot-study-v1",
+  "title": "Kamin anonymous study file (Task 18)",
+  "description": "What a trial participant downloads and hands to the team. No name, student ID, grade, course or free personal field other than the optional comment. Times are rounded to the minute. Task 44: a count event carries only a whole number and the method version, never text.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "studyCode", "consentVersion", "language", "joinedAt", "exportedAt", "transcript", "events", "suggestions", "tasks", "clarity", "comment"],
+  "properties": {
+    "schema": { "const": "kamin-pilot-study-v1" },
+    "studyCode": { "type": "string", "pattern": "^K-[A-HJ-NP-Z2-9]{6}$" },
+    "consentVersion": { "type": "string", "pattern": "^pilot-consent-[a-z0-9-]{1,60}$" },
+    "language": { "enum": ["ar", "en"] },
+    "joinedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:00\\.000Z$" },
+    "exportedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:00\\.000Z$" },
+    "transcript": { "type": ["string", "null"], "pattern": "^[a-z0-9-]{1,60}$" },
+    "events": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event", "at"],
+        "properties": {
+          "event": { "enum": ["landing", "sample_report_viewed", "upload_started", "upload_completed", "profile_returned_to", "profile_completed", "feedback_submitted", "study_joined", "synthetic_transcript_loaded", "suggest_shown", "suggest_kept", "suggest_unticked", "suggest_added_by_hand", "step_taken", "step_not_for_me", "step_removed"] },
+          "at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:00\\.000Z$" },
+          "count": { "type": "integer", "minimum": 1, "maximum": 50 },
+          "engine": { "type": "string", "pattern": "^kamin-[a-z0-9-]{1,60}$" }
+        }
+      }
+    },
+    "suggestions": {
+      "description": "Task 44: how the suggestions were used, counts only. null when the participant's consent does not name these counts (pilot-consent-v1).",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["engines", "shown", "kept", "unticked", "addedByHand", "saved", "keptOfShown", "untickedOfShown", "addedByHandOfSaved", "stepsTaken", "stepsNotForMe", "stepsRemoved"],
+      "properties": {
+        "engines": { "type": "array", "maxItems": 10, "items": { "type": "string", "pattern": "^kamin-[a-z0-9-]{1,60}$" } },
+        "shown": { "type": "integer", "minimum": 0 },
+        "kept": { "type": "integer", "minimum": 0 },
+        "unticked": { "type": "integer", "minimum": 0 },
+        "addedByHand": { "type": "integer", "minimum": 0 },
+        "saved": { "type": "integer", "minimum": 0 },
+        "keptOfShown": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "untickedOfShown": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "addedByHandOfSaved": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "stepsTaken": { "type": "integer", "minimum": 0 },
+        "stepsNotForMe": { "type": "integer", "minimum": 0 },
+        "stepsRemoved": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["build-profile", "find-evidence", "understand-recommendation", "choose-learning-step", "save-and-restore", "correct-withdraw-delete"],
+      "properties": {
+        "build-profile": { "enum": ["success", "with-help", "failed", null] },
+        "find-evidence": { "enum": ["success", "with-help", "failed", null] },
+        "understand-recommendation": { "enum": ["success", "with-help", "failed", null] },
+        "choose-learning-step": { "enum": ["success", "with-help", "failed", null] },
+        "save-and-restore": { "enum": ["success", "with-help", "failed", null] },
+        "correct-withdraw-delete": { "enum": ["success", "with-help", "failed", null] }
+      }
+    },
+    "clarity": { "enum": [1, 2, 3, 4, 5, null] },
+    "comment": { "type": "string", "maxLength": 600 }
+  }
+}

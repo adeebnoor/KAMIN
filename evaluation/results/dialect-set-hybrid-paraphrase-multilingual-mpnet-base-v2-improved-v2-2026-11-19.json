@@ -1,0 +1,68 @@
+{
+  "set": "dialect-set.json",
+  "setSha256": "c000972c48c704dfd94b878d887ea7c02276b2f9cae6ebbe9b1c1cfefdc01019",
+  "frozenAt": "2026-11-11T03:21:16.963304Z",
+  "ranAt": "2026-11-19T17:23:59.239Z",
+  "kaminCommit": "7291c06",
+  "node": "v24.21.0",
+  "rule": "Any suggested capability without verbatim supporting text in the description counts as a false positive.",
+  "lexicon": {
+    "version": "kamin-project-suggest-improved-v2-exp",
+    "metrics": {
+      "ar": {
+        "cases": 22,
+        "tp": 6,
+        "fp": 2,
+        "fn": 16,
+        "precision": 0.75,
+        "recall": 0.2727272727272727,
+        "f1": 0.39999999999999997,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.6818181818181818,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 0.11510000000000531
+      }
+    }
+  },
+  "embedding": {
+    "method": "eval-lexicon+examples-v1+improved-v2+percap",
+    "model": "paraphrase-multilingual-mpnet-base-v2",
+    "prefix": "",
+    "threshold": 0.66,
+    "thresholds": {
+      "testing": 0.66,
+      "db-operations": 0.66,
+      "web-development": 0.66,
+      "systems-analysis": 0.66,
+      "requirements": 0.66,
+      "software": 0.66,
+      "database": 0.66,
+      "project": 0.66,
+      "statistics": 0.66,
+      "cyber": 0.66,
+      "ai-work": 0.66
+    },
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "tunedAt": "2026-11-19T17:23:53.189Z",
+    "devMacroF1": 1,
+    "modelDir": "paraphrase-multilingual-mpnet-base-v2",
+    "metrics": {
+      "ar": {
+        "cases": 22,
+        "tp": 9,
+        "fp": 7,
+        "fn": 13,
+        "precision": 0.5625,
+        "recall": 0.4090909090909091,
+        "f1": 0.47368421052631576,
+        "unsupportedClaims": 0,
+        "abstentionRate": 0.5,
+        "negatives": 2,
+        "correctAbstentions": 2,
+        "medianMs": 12.040199999999913
+      }
+    }
+  }
+}

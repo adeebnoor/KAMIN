@@ -1,0 +1,4 @@
+PREFIX k: <urn:kamin:>
+SELECT ?course ?cap WHERE {
+  GRAPH <urn:kamin:graph:profile-input> { <urn:kamin:person:local> k:studied ?course }
+  GRAPH <urn:kamin:graph:reference> { ?course k:mapsToCapability ?cap } }

@@ -1,0 +1,6 @@
+{
+  "changesSince": "89ec64f",
+  "repository": null,
+  "vitestJson": "reports/vitest.json",
+  "playwrightJson": "reports/playwright.json"
+}

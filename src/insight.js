@@ -1,5 +1,6 @@
 import { emptyPerson360 } from './person360.js'
 import { emptyDigitalInterests } from './digitalInterests.js'
+import { INTEREST_AREAS } from './content/plainTerms.js'
 
 export const INSIGHT_VERSION='kamin-insight-v2'
 
@@ -12,12 +13,8 @@ export const DECLARED_PREFERENCE_SCHEMES = {
   careerInterest:{
     label:{ar:'اهتمامي المهني الأقرب',en:'Primary career interest'},
     options:[
-      {id:'realistic',label:{ar:'عملي وتطبيقي',en:'Realistic / hands-on'}},
-      {id:'investigative',label:{ar:'تحليلي واستقصائي',en:'Investigative / analytical'}},
-      {id:'artistic',label:{ar:'إبداعي وتصميمي',en:'Artistic / creative'}},
-      {id:'social',label:{ar:'مساعدة وتطوير الآخرين',en:'Social / helping'}},
-      {id:'enterprising',label:{ar:'مبادرة وتأثير وقيادة',en:'Enterprising / influence'}},
-      {id:'conventional',label:{ar:'تنظيم ودقة وإجراءات',en:'Conventional / structured'}},
+      // Task 28: plain activity words; the ids stay the RIASEC names (stored data unchanged).
+      ...['realistic','investigative','artistic','social','enterprising','conventional'].map(id=>({id,label:{ar:INTEREST_AREAS[id].ar,en:INTEREST_AREAS[id].en}})),
     ],
     source:'O*NET RIASEC construct labels — self-declared, not Interest Profiler scores',
   },
@@ -84,6 +81,7 @@ export function emptyInsightState(){
     personGraph:emptyPerson360(),
     declaredPreferences:{},
     digitalInterests:emptyDigitalInterests(),
+    freeInterests:[], // Task 56: interests in the student's own words (src/interests/freeInterestState.js)
     assessments:{},
     completedInstruments:[],
     updatedAt:null,
