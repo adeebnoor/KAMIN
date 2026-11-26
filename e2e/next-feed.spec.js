@@ -26,6 +26,7 @@ const stored = page => page.evaluate(key => JSON.parse(sessionStorage.getItem(ke
 // university course; IT Project Coordinator → CAPM, a certificate; Junior Cybersecurity Analyst → Information Security.
 const DATA = 'job-data-analyst', COORDINATOR = 'job-project-coordinator', CYBER = 'job-cyber-analyst'
 const title = (id, lang) => catalogItem(id).title[lang]
+const DATA_NAME = { ar: 'محلل بيانات', en: 'Data Analyst' }
 
 // Counts the taps a student makes (set-up steps are not counted).
 function tapper() {
@@ -109,11 +110,89 @@ for (const lang of LANGS) test.describe(`Step 4 and My plan (${lang})`, () => {
     expect(taps).toHaveLength(2)
     expect((await stored(page)).plan.map(p => [p.itemId, p.action])).toEqual([['capm', 'get-certificate']])
     await expect(capm).toHaveCount(0)
-    // The feed is empty now and says why.
-    await expect(page.getByTestId('ui2-feed-empty')).toContainText(w.noGap)
+    // The feed is empty now and says why. Task 79: the real reason, every suggestion handled, never "No gap".
+    await expect(page.getByTestId('ui2-feed-empty')).toHaveAttribute('data-reason', 'handled')
+    await expect(page.getByTestId('ui2-feed-empty')).toContainText(w.handled)
+    await expect(page.getByTestId('ui2-feed-empty')).not.toContainText(w.noGap)
     await page.getByTestId('notice').getByRole('button', { name: w.undo, exact: true }).click()
     await expect(card(app, 'capm')).toBeVisible()
     expect((await stored(page)).plan).toEqual([])
+  })
+
+  // Task 79 · the roadmap: from step 4 in a sheet and in My plan; a tick is saved with the plan, can be unticked and is
+  // never evidence; the empty feed never says "No gap" when the list has nothing yet.
+  test('Task 79: no "No gap" when the list has nothing yet; the roadmap from step 4 and My plan; tick, untick, never evidence', async ({ page }) => {
+    const w = W(lang), r = NEXT_COPY[lang].roadmap
+    const app = await onStep(page, lang, 'next', ['job-business-analyst'])
+    const empty = page.getByTestId('ui2-feed-empty')
+    await expect(empty).toHaveAttribute('data-reason', 'list-empty')
+    await expect(empty).toContainText(w.listEmptyHint)
+    await expect(empty).not.toContainText(w.noGap)
+    // Data Analyst as well: its roadmap from step 4.
+    await app.goals().getByRole('button', { name: w.changeGoals, exact: true }).click()
+    await app.goalChip(DATA).click()
+    await expect(card(app, 'fcit-cpit-340')).toBeVisible()
+    const before = await stored(page)
+    await app.main().getByRole('button', { name: fillIn(w.seeRoadmap, { path: DATA_NAME[lang] }), exact: true }).click()
+    const sheet = page.getByRole('dialog')
+    await expect(sheet.getByRole('heading', { level: 2 })).toHaveText(fillIn(r.title, { path: DATA_NAME[lang] }))
+    await expect(sheet.getByTestId('ui2-roadmap-stage')).toHaveCount(5)
+    await expect(sheet.getByTestId('ui2-roadmap-cert').first()).toBeVisible()
+    for (const link of await sheet.locator('a').all()) {
+      await expect(link).toHaveAttribute('target', '_blank')
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    }
+    const first = sheet.getByTestId('ui2-roadmap-item').first()
+    const key = await first.getAttribute('data-key')
+    await first.getByRole('checkbox').check()
+    await expect(first).toHaveAttribute('data-done', 'true')
+    const after = await stored(page)
+    expect(after.roadmapDone).toEqual([key])
+    // Never evidence: the record, the approval and the consents are as they were.
+    for (const field of ['courses', 'approved', 'projects', 'credentials', 'consents']) expect(after[field], field).toEqual(before[field])
+    await page.keyboard.press('Escape')
+    await expect(sheet).toHaveCount(0)
+    // My plan: the same roadmap, the tick kept; untick it.
+    await app.tab('plan')
+    const box = app.main().locator(`[data-testid="ui2-plan-roadmap"][data-goal="${DATA}"]`)
+    await box.getByRole('button', { name: fillIn(r.show, { path: DATA_NAME[lang] }), exact: true }).click()
+    const ticked = box.locator(`[data-testid="ui2-roadmap-item"][data-key="${key}"]`).getByRole('checkbox')
+    await expect(ticked).toBeChecked()
+    await ticked.uncheck()
+    expect((await stored(page)).roadmapDone).toEqual([])
+    await noPercent(page, 'my plan with a roadmap')
+  })
+
+  test('Task 79: the roadmap at 360px has no sideways scroll, and axe finds nothing in either theme', async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.setViewportSize(NARROW)
+    const r = NEXT_COPY[lang].roadmap
+    const app = await onStep(page, lang, 'next', [CYBER])
+    const wide = [], found = {}
+    const check = async label => {
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+      if (overflow > 0) wide.push(`${label}: ${overflow}px`)
+      await page.waitForFunction(() => document.getAnimations().every(a => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity))
+      const report = await new AxeBuilder({ page }).analyze()
+      if (report.violations.length) found[label] = report.violations.map(v => `${v.id} (${v.impact}): ${v.nodes.map(node => node.target.join(' ')).join(', ')}`)
+    }
+    for (const theme of ['light', 'dark']) {
+      await page.emulateMedia({ colorScheme: theme })
+      await app.goToView('next')
+      await app.main().getByTestId('ui2-feed-roadmaps').getByRole('button').first().click()
+      await expect(page.getByRole('dialog').getByTestId('ui2-roadmap-stage')).toHaveCount(5)
+      await page.getByRole('dialog').getByRole('checkbox').first().check()
+      await check(`${theme}: step 4 roadmap sheet`)
+      await page.keyboard.press('Escape')
+      await app.tab('plan')
+      await app.main().getByTestId('ui2-plan-roadmap').getByRole('heading').getByRole('button').click()
+      await expect(app.main().getByTestId('ui2-roadmap')).toBeVisible()
+      await check(`${theme}: my plan roadmap`)
+      await app.main().getByTestId('ui2-roadmap').getByRole('checkbox').first().uncheck()
+    }
+    expect(wide).toEqual([])
+    expect(found).toEqual({})
+    expect(r.neverEvidence).toBeTruthy()
   })
 
   test('"Not for me" hides a card and Undo brings it back; hidden again, it is listed in My plan and "Show again" returns it', async ({ page }) => {

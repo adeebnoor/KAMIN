@@ -79,13 +79,23 @@ for (const lang of LANGS) test.describe(`Step 3: interests (${lang})`, () => {
     expect(taps, 'two chips and one sentence after consent').toBeLessThanOrEqual(5)
     await expect(app.interestChip('careerInterest', 'investigative')).toHaveAttribute('aria-pressed', 'true')
     await expect(app.interestChip('workValue', 'achievement')).toHaveAttribute('aria-pressed', 'true')
-    // A tap on another option of the same question moves the choice; a second tap on it removes it.
+    // Task 78: up to 3 choices per question. Two more taps add two more; a 4th does nothing and the hint says why;
+    // a second tap on a chosen chip removes it, and the hint says "up to 3" again.
+    const hint = page.getByTestId('ui2-interests-hint-careerInterest')
+    await expect(hint).toHaveText(w.pickUpTo)
     await app.interestChip('careerInterest', 'artistic').click()
-    await expect(app.interestChip('careerInterest', 'artistic')).toHaveAttribute('aria-pressed', 'true')
-    await expect(app.interestChip('careerInterest', 'investigative')).toHaveAttribute('aria-pressed', 'false')
+    await app.interestChip('careerInterest', 'social').click()
+    for (const id of ['investigative', 'artistic', 'social']) await expect(app.interestChip('careerInterest', id)).toHaveAttribute('aria-pressed', 'true')
+    await expect(hint).toHaveText(w.pickFull)
+    await app.interestChip('careerInterest', 'realistic').click()
+    await expect(app.interestChip('careerInterest', 'realistic'), 'a 4th choice is not added').toHaveAttribute('aria-pressed', 'false')
+    await expect.poll(async () => (await stored(page)).insight.declaredPreferences.careerInterest).toEqual(['investigative', 'artistic', 'social'])
     await app.interestChip('careerInterest', 'artistic').click()
     await expect(app.interestChip('careerInterest', 'artistic')).toHaveAttribute('aria-pressed', 'false')
-    await app.interestChip('careerInterest', 'investigative').click()
+    await expect(hint).toHaveText(w.pickUpTo)
+    await app.interestChip('careerInterest', 'social').click()
+    await expect(app.interestChip('careerInterest', 'social')).toHaveAttribute('aria-pressed', 'false')
+    await expect(app.interestChip('careerInterest', 'investigative')).toHaveAttribute('aria-pressed', 'true')
 
     // The other language's sentence gives chips too.
     const second = await addSentence(app, lang, lang === 'ar' ? ENGLISH : ARABIC)
@@ -104,7 +114,7 @@ for (const lang of LANGS) test.describe(`Step 3: interests (${lang})`, () => {
     await expect(removed).toHaveText(removedName)
     await expect(first.getByTestId('ui2-free-interest-text')).toHaveText(lang === 'ar' ? ARABIC : ENGLISH)
     const saved = await stored(page)
-    expect(saved.insight.declaredPreferences).toEqual({ careerInterest: 'investigative', workValue: 'achievement' })
+    expect(saved.insight.declaredPreferences).toEqual({ careerInterest: ['investigative'], workValue: ['achievement'] }) // Task 78: lists
     expect(saved.insight.freeInterests.map(e => e.text)).toEqual(lang === 'ar' ? [ARABIC, ENGLISH] : [ENGLISH, ARABIC])
     expect(saved.insight.freeInterests[0].understood.filter(c => c.removed)).toHaveLength(1)
     expect(await app.main().innerText(), 'no percentage').not.toMatch(PERCENT)

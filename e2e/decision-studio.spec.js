@@ -1,66 +1,55 @@
-import { test, expect } from './fixtures.js'
-import { openDashboardMore } from './nav.js'
+// "Show connections" (the old DecisionStudio): its graph, its plan and its review guard. Task 70: the old tab and the
+// landing page's demo graph are deleted; the same graph is My map (Profile → My map, src/components/ShowConnections.jsx),
+// the plan is in My plan (K08) and the full re-review is Settings → My courses → "Re-review the whole record" (step 1 in
+// edit mode). These are the checks that the next-map, next-parity and keep-tests do not already make (log/task-70.md).
+import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-async function openProfile(page) {
- await page.goto('/?lang=ar')
- // Task 14: the home page opens the workspace from its closing section.
- await page.getByRole('button',{name:'افتح مساحة العمل'}).first().click()
- await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي'}).click()
- await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
- await page.getByRole('button',{name:/أعتمد السجل/}).click()
-}
-test('network connections explain a source and layout fits mobile',async({page})=>{
- await page.goto('/?lang=ar')
- await page.locator('.pilot-advanced > summary').click()
- await page.locator('.relationship-map').getByRole('button',{name:/CPIT-240/}).click()
- await expect(page.locator('.relationship-node-info')).toContainText('لا تعني توثيقًا من الجامعة')
- expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true)
- const contained=await page.locator('.relationship-map .relationship-node').evaluateAll(nodes=>nodes.every(n=>{const r=n.getBoundingClientRect();return [...n.querySelectorAll('small,strong,svg')].every(c=>{const b=c.getBoundingClientRect();return b.left>=r.left&&b.right<=r.right&&b.top>=r.top&&b.bottom<=r.bottom})}))
- expect(contained).toBe(true)
- const rects=await page.locator('.relationship-map .relationship-node').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}))
- for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++)expect(rects[i].left<rects[j].right&&rects[i].right>rects[j].left&&rects[i].top<rects[j].bottom&&rects[i].bottom>rects[j].top).toBe(false)
+import { LANGS, kamin } from './roles.js'
+
+const tr = (lang, ar, en) => (lang === 'ar' ? ar : en)
+
+for (const lang of LANGS) test(`a course on the map explains its source, never institutional verification; the nodes do not overlap: ${lang}`, async ({ page }) => {
+  const app = kamin(page, { ui: 'new', lang })
+  await app.sample()
+  await app.home()
+  await app.openMap()
+  await app.mapNodes('evidence').filter({ hasText: 'CPIT-240' }).first().click()
+  await expect(app.myMap().locator('.relationship-node-info')).toContainText(tr(lang, 'لا تعني توثيقًا من الجامعة', 'not institutional verification'))
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  const nodes = app.myMap().locator('.relationship-map .relationship-node')
+  const contained = await nodes.evaluateAll(list => list.every(n => { const r = n.getBoundingClientRect(); return [...n.querySelectorAll('small,strong,svg')].every(c => { const b = c.getBoundingClientRect(); return b.left >= r.left - 1 && b.right <= r.right + 1 && b.top >= r.top - 1 && b.bottom <= r.bottom + 1 }) }))
+  expect(contained).toBe(true)
+  const rects = await nodes.evaluateAll(list => list.map(n => { const r = n.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom } }))
+  for (let i = 0; i < rects.length; i++) for (let j = i + 1; j < rects.length; j++) expect(rects[i].left < rects[j].right && rects[i].right > rects[j].left && rects[i].top < rects[j].bottom && rects[i].bottom > rects[j].top).toBe(false)
+  expect(await page.evaluate(() => document.documentElement.dir)).toBe(lang === 'ar' ? 'rtl' : 'ltr')
 })
-test('guide and plan use selected target without creating new evidence',async({page})=>{
- await openProfile(page)
- await openDashboardMore(page)
- await page.getByRole('button',{name:'افتح شبكتي ومساعدي'}).click()
- await page.getByLabel('المسار الذي أريد استكشافه').selectOption('job-cyber-analyst')
- await page.getByText('مسار الدليل الأكاديمي إلى الفرصة',{exact:true}).click()
- await expect(page.getByRole('dialog').locator('.network-explanation')).toBeVisible()
- await expect(page.getByRole('button',{name:'إغلاق',exact:true})).toBeInViewport()
- if(page.viewportSize().width>900){
-  const sidebar=await page.locator('.app-sidebar').boundingBox()
-  const main=await page.locator('.app-main').boundingBox()
-  expect(sidebar.x).toBeGreaterThan(main.x)
- }
- const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
- await page.getByRole('tab',{name:'مساعد القرار'}).click()
- await page.getByLabel('اختر سؤالك').selectOption('missing')
- await expect(page.locator('.guide-answer')).toContainText('لا يوجد حتى الآن مسار دليل')
- await page.getByRole('tab',{name:'خطة التطوير'}).click()
- await expect(page.locator('.studio-plan')).toContainText('أساسيات الأمن السيبراني')
- const download=page.waitForEvent('download')
- await page.getByRole('button',{name:'تنزيل الخطة'}).click()
- expect((await download).suggestedFilename()).toBe('kamin-development-plan.txt')
- expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
- const results=await new AxeBuilder({page}).analyze()
- expect(results.violations.filter(v=>['serious','critical'].includes(v.impact))).toEqual([])
+
+test('a pathway\'s plan opens and downloads without creating new evidence', async ({ page }) => {
+  const app = kamin(page, { ui: 'new', lang: 'ar' })
+  await app.sample()
+  await app.home()
+  const before = await page.evaluate(() => sessionStorage.getItem('kamin-session-v3'))
+  await app.openPlan()
+  await expect(app.plan().getByRole('listitem')).toHaveCount(4)
+  const download = await app.downloadPlan()
+  expect(download.suggestedFilename()).toBe('kamin-development-plan.txt')
+  expect(await page.evaluate(() => sessionStorage.getItem('kamin-session-v3')), 'the plan changes nothing stored').toBe(before)
+  const results = await new AxeBuilder({ page }).analyze()
+  expect(results.violations.filter(v => ['serious', 'critical'].includes(v.impact))).toEqual([])
 })
-test('invalid grades and repeated courses cannot be approved',async({page})=>{
- await openProfile(page)
- // Task 05: the dashboard opens "My data"; the full re-review is one more click inside it.
- await page.getByTestId('open-my-data').click()
- await page.getByRole('button',{name:'أعد مراجعة السجل كاملًا'}).click()
- await page.getByLabel('الدرجة 1',{exact:true}).fill('AAA')
- await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
- await expect(page.getByRole('button',{name:/أعتمد السجل/})).toBeDisabled()
- // Task 22: the problem is named on the course's row (it was in a box above the table).
- await expect(page.getByTestId('course-reason').filter({hasText:'صيغة درجة غير معروفة'})).toBeVisible()
-})
-test('English network and guide retain grounded explanations',async({page})=>{
- await page.goto('/?lang=en')
- await page.locator('.pilot-advanced > summary').click()
- await page.locator('.relationship-map').getByRole('button',{name:/CPIT-240/}).click()
- await expect(page.locator('.relationship-node-info')).toContainText('not institutional verification')
- await expect(page.locator('html')).toHaveAttribute('dir','ltr')
+
+test('invalid grades and repeated courses cannot be approved', async ({ page }) => {
+  const app = kamin(page, { ui: 'new', lang: 'ar' })
+  await app.sample()
+  await app.home()
+  await app.openMyData()
+  // My courses → the full re-review: step 1 in edit mode with the approved rows.
+  await page.getByRole('button', { name: 'أعد مراجعة السجل كاملًا', exact: true }).click()
+  await expect(app.heading('upload')).toBeVisible()
+  await app.showReadRows()
+  await app.readGrade(1).fill('AAA')
+  await expect(app.fixSheet().getByTestId('course-reason').filter({ hasText: 'صيغة درجة غير معروفة' })).toBeVisible()
+  await app.hideReadRows()
+  await app.reviewConsent().check()
+  await expect(app.approveButton()).toBeDisabled()
 })

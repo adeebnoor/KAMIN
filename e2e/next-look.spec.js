@@ -1,6 +1,6 @@
 // Task 75 · Amjd's feedback of 2026-11-19 after using the new interface. Desktop and phone projects, Arabic and English.
-// 1. Look: in the light theme the new interface wears the old interface's colours. Each value is read from ?ui=old with
-//    the same approved example, side by side: the working surface, the cards and their line, the top bar and its line,
+// 1. Look: in the light theme the new interface wears the old interface's colours. Until Task 70 each value was read from
+//    the old interface with the same approved example; it is deleted, so the values it gave (OLD_LOOK) are kept here: the working surface, the cards and their line, the top bar and its line,
 //    the sidebar and its current item (desktop) or the bottom bar and its current item (phone), the main button and the
 //    old 7px corners, and the "ك" brand.
 // 2. Home: the sentence, KAMIN's idea in three short lines, one button, nothing else in the page.
@@ -23,26 +23,25 @@ const tr = (lang, ar, en) => (lang === 'ar' ? ar : en)
 const SAMPLE = profileSkills({ approved: true, courses: demoCourses.map(row => ({ ...row })), college: 'FCIT', projects: [], tasks: [], credentials: [], insight: {}, consents: { analyze: true } })
 const style = (locator, props) => locator.first().evaluate((el, names) => Object.fromEntries(names.map(name => [name, getComputedStyle(el)[name]])), props)
 const isPhone = page => page.viewportSize().width < 760
+// The old interface's light colours, as Task 75's test read them from it (the same on both languages); Task 70 deleted
+// it, so they are kept as numbers. Phone: the bottom bar and its current item; desktop: the side bar and its current item.
+const OLD_LOOK = {
+  page: { backgroundColor: 'rgb(244, 240, 230)' },
+  card: { backgroundColor: 'rgb(255, 253, 248)', borderTopColor: 'rgb(217, 208, 189)' },
+  bar: { backgroundColor: 'rgb(255, 255, 255)', borderBottomColor: 'rgb(216, 208, 189)' },
+  button: { backgroundColor: 'rgb(8, 117, 110)', borderTopLeftRadius: '7px' },
+}
+const OLD_NAV = {
+  phone: { nav: { backgroundColor: 'rgb(255, 255, 255)' }, current: { backgroundColor: 'rgb(243, 247, 251)' } },
+  desktop: { nav: { backgroundColor: 'rgb(8, 45, 58)' }, current: { backgroundColor: 'rgb(22, 85, 101)', boxShadow: 'rgb(163, 226, 214) 3px 0px 0px 0px inset' } },
+}
 
 for (const lang of LANGS) test.describe(`Task 75 · look (${lang})`, () => {
   test.use({ colorScheme: 'light' })
 
-  test('light theme: the same colours, card, top bar, side bar or bottom bar, main button and corners as ?ui=old', async ({ page }) => {
-    // The old interface, with the approved example.
-    await page.goto(`/${lang}/?ui=old`)
-    const old = kamin(page, { ui: 'old', lang })
-    await old.sample()
+  test('light theme: the same colours, card, top bar, side bar or bottom bar, main button and corners as the old interface', async ({ page }) => {
     const phone = isPhone(page)
-    const before = {
-      page: await style(page.locator('.app-content-wrap'), ['backgroundColor']),
-      card: await style(page.locator('.app-content .panel:visible'), ['backgroundColor', 'borderTopColor']),
-      bar: await style(page.locator('.app-topbar'), ['backgroundColor', 'borderBottomColor']),
-      nav: phone ? await style(page.locator('.bottom-nav'), ['backgroundColor']) : await style(page.locator('.app-sidebar'), ['backgroundColor']),
-      current: phone ? await style(page.locator('.bottom-nav button.active'), ['backgroundColor']) : await style(page.locator('.app-sidebar nav button.active'), ['backgroundColor', 'boxShadow']),
-      button: await style(page.locator('.app-content .button.primary:visible'), ['backgroundColor', 'borderTopLeftRadius']),
-    }
-    // The new interface (?ui=next forgets ?ui=old), with the same example.
-    await page.goto(`/${lang}/?ui=next`)
+    const before = { ...OLD_LOOK, ...OLD_NAV[phone ? 'phone' : 'desktop'] }
     const app = kamin(page, { ui: 'new', lang })
     await app.sample()
     await app.goToView('profile')
@@ -54,7 +53,7 @@ for (const lang of LANGS) test.describe(`Task 75 · look (${lang})`, () => {
       current: await style(page.getByTestId('ui2-tabs').locator('[aria-current]'), phone ? ['backgroundColor'] : ['backgroundColor', 'boxShadow']),
       button: await style(app.topBar().getByTestId('ui2-main-action'), ['backgroundColor', 'borderTopLeftRadius']),
     }
-    expect(after).toEqual(before)
+    expect(after).toEqual({ page: before.page, card: before.card, bar: before.bar, nav: before.nav, current: before.current, button: before.button })
     expect(before.page.backgroundColor, 'the old cream working surface').toBe('rgb(244, 240, 230)')
     expect(before.button.backgroundColor, 'the old teal main button').toBe('rgb(8, 117, 110)')
     // The old brand: the "ك" mark (brand navy and gold), then the name and the tagline.

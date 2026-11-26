@@ -9,6 +9,7 @@ import { CourseList, issuesByRow } from './CourseReview.jsx'
 import WhatChanged from './WhatChanged.jsx'
 import './MyData.css'
 import { deleteItem } from '../utils/dataControl.js'
+import { preferenceCount } from '../insight.js'
 
 // Task 05 · "My data: review and correct". One place that lists everything the student entered
 // after approval and lets them correct it. Course edits go through editCourseRow, so the value
@@ -53,7 +54,7 @@ export default function MyData({ lang, state, change, canUndo, onSave, onUndo, o
   const issues = useMemo(() => { const liveIndex = rows.flatMap((r, i) => r.deleted ? [] : [i]); const byLive = issuesByRow(live.map(({ key, deleted, ...row }) => row)); return Object.fromEntries(Object.entries(byLive).map(([k, v]) => [liveIndex[k], v])) }, [rows])
   const blocked = live.length > 0 && !quality.canApprove
   const digital = normalizeDigitalInterests(state.insight?.digitalInterests)
-  const preferences = Object.keys(state.insight?.declaredPreferences || {}).length
+  const preferences = preferenceCount(state.insight?.declaredPreferences) // Task 78: each chosen chip counts
   const update = (index, key, value) => { setConfirming(false); setRows(list => list.map((row, i) => i === index ? editCourseRow(row, key, value) : row)) }
   // Task 06: deleting a saved item asks for confirmation, then goes through dataControl.deleteItem
   // (recompute, named summary). A row added here but not saved yet is simply dropped.

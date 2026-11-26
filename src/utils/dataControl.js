@@ -10,7 +10,7 @@ import { recomputeProfile, describeDiff } from '../evidence/recompute.js'
 import { mergeNeedsReview } from '../evidence/needsReview.js'
 import { profileSkills } from './engine.js'
 import { canonicalCourseCode } from '../ontology/registry.js'
-import { emptyInsightState } from '../insight.js'
+import { emptyInsightState, preferenceCount } from '../insight.js'
 import { normalizeFreeInterests } from '../interests/freeInterestState.js'
 import { DIGITAL_TOPICS, emptyDigitalInterests, normalizeDigitalInterests, removeDigitalInterest } from '../digitalInterests.js'
 import { projectStateToPerson360 } from '../ontology/projector.js'
@@ -206,23 +206,24 @@ export function withdrawConsent(state, purpose, { lang = 'ar' } = {}) {
     })
   }
   if (purpose === 'insight') {
-    const preferences = Object.keys(prev.insight?.declaredPreferences || {}).length
+    const preferences = preferenceCount(prev.insight?.declaredPreferences) // Task 78: each chosen chip counts
     const interests = normalizeDigitalInterests(prev.insight?.digitalInterests).confirmed.map(i => DIGITAL_TOPICS.find(t => t.id === i.topicId)?.label).filter(Boolean)
     const free = normalizeFreeInterests(prev.insight?.freeInterests).length // Task 56: emptyInsightState() removes them too
     const reviews = (prev.recommendationReviews || []).length
     const goal = !!prev.goal
     // Task 58: the goals, the saved steps of My plan and the "not for me" marks go with this consent.
-    const { goals, plan, notForMe: marks } = normalizePlan(prev)
-    const next = { ...prev, goal: null, goals: [], plan: [], notForMe: [], planDropped: 0, insight: emptyInsightState(), recommendationReviews: [], consents: { ...prev.consents, insight: false } }
+    const { goals, plan, notForMe: marks, roadmapDone } = normalizePlan(prev)
+    // Task 79: the ticked roadmap items go with the plan.
+    const next = { ...prev, goal: null, goals: [], plan: [], notForMe: [], planDropped: 0, roadmapDone: [], insight: emptyInsightState(), recommendationReviews: [], consents: { ...prev.consents, insight: false } }
     return finish(prev, next, {
       operation: 'withdraw-insight',
       removedLines: {
-        ar: [`أزيلت ${preferences} تفضيلات مصرح بها${goal ? ' وأُلغي الهدف المختار' : ''} من ملفك.`, ...(interests.length ? [`الاهتمامات الرقمية المحذوفة: ${list(interests.map(t => quote(t.ar, 'ar')), 'ar')}.`] : []), ...(free ? [`حُذف ${free} اهتمام كتبته بكلماتك مع كل ما فهمه كامن منه.`] : []), ...(goals.length > 1 ? [`أُلغيت ${goals.length} أهداف مختارة.`] : []), ...(plan.length ? [`حُذفت ${plan.length} خطوة محفوظة من خطتي.`] : []), ...(marks.length ? [`أُزيلت ${marks.length} علامة «ليس لي».`] : []), ...(reviews ? [`حُذفت ${reviews} مراجعة توصيات مبنية على هذا السياق.`] : [])],
-        en: [`${preferences} declared preference(s)${goal ? ' and the selected goal' : ''} were removed from your profile.`, ...(interests.length ? [`Deleted digital interests: ${list(interests.map(t => quote(t.en, 'en')), 'en')}.`] : []), ...(free ? [`${free} interest(s) in your own words were deleted, with everything KAMIN understood from them.`] : []), ...(goals.length > 1 ? [`${goals.length} selected goals were removed.`] : []), ...(plan.length ? [`${plan.length} saved step(s) in My plan were deleted.`] : []), ...(marks.length ? [`${marks.length} “not for me” mark(s) were removed.`] : []), ...(reviews ? [`${reviews} recommendation review(s) built on this context were deleted.`] : [])],
+        ar: [`أزيلت ${preferences} تفضيلات مصرح بها${goal ? ' وأُلغي الهدف المختار' : ''} من ملفك.`, ...(interests.length ? [`الاهتمامات الرقمية المحذوفة: ${list(interests.map(t => quote(t.ar, 'ar')), 'ar')}.`] : []), ...(free ? [`حُذف ${free} اهتمام كتبته بكلماتك مع كل ما فهمه كامن منه.`] : []), ...(goals.length > 1 ? [`أُلغيت ${goals.length} أهداف مختارة.`] : []), ...(plan.length ? [`حُذفت ${plan.length} خطوة محفوظة من خطتي.`] : []), ...(marks.length ? [`أُزيلت ${marks.length} علامة «ليس لي».`] : []), ...(roadmapDone.length ? [`أُزيلت ${roadmapDone.length} علامة إنجاز من خرائط الطريق.`] : []), ...(reviews ? [`حُذفت ${reviews} مراجعة توصيات مبنية على هذا السياق.`] : [])],
+        en: [`${preferences} declared preference(s)${goal ? ' and the selected goal' : ''} were removed from your profile.`, ...(interests.length ? [`Deleted digital interests: ${list(interests.map(t => quote(t.en, 'en')), 'en')}.`] : []), ...(free ? [`${free} interest(s) in your own words were deleted, with everything KAMIN understood from them.`] : []), ...(goals.length > 1 ? [`${goals.length} selected goals were removed.`] : []), ...(plan.length ? [`${plan.length} saved step(s) in My plan were deleted.`] : []), ...(marks.length ? [`${marks.length} “not for me” mark(s) were removed.`] : []), ...(roadmapDone.length ? [`${roadmapDone.length} roadmap tick(s) were removed.`] : []), ...(reviews ? [`${reviews} recommendation review(s) built on this context were deleted.`] : [])],
       },
       keptLines: { ar: ['الأدلة الأكاديمية بقيت كما هي؛ الذي تغير هو سياق التخصيص فقط.', REGRANT.ar], en: ['Academic evidence remains unchanged; only personalization context changed.', REGRANT.en] },
       lang,
-      audit: both(`سحب موافقة ملف القدرات 360°: حُذف ${preferences} تفضيل، ${interests.length} اهتمام، ${free} اهتمام بكلماتك، ${goals.length} هدف، ${plan.length} خطوة محفوظة، ${marks.length} علامة «ليس لي»، ${reviews} مراجعة`, `Capability Profile 360° consent withdrawn: ${preferences} preference(s), ${interests.length} interest(s), ${free} free-text interest(s), ${goals.length} goal(s), ${plan.length} saved step(s), ${marks.length} not-for-me mark(s), ${reviews} review(s) deleted`),
+      audit: both(`سحب موافقة ملف القدرات 360°: حُذف ${preferences} تفضيل، ${interests.length} اهتمام، ${free} اهتمام بكلماتك، ${goals.length} هدف، ${plan.length} خطوة محفوظة، ${marks.length} علامة «ليس لي»، ${roadmapDone.length ? `${roadmapDone.length} علامة إنجاز في خرائط الطريق، ` : ''}${reviews} مراجعة`, `Capability Profile 360° consent withdrawn: ${preferences} preference(s), ${interests.length} interest(s), ${free} free-text interest(s), ${goals.length} goal(s), ${plan.length} saved step(s), ${marks.length} not-for-me mark(s), ${roadmapDone.length ? `${roadmapDone.length} roadmap tick(s), ` : ''}${reviews} review(s) deleted`),
     })
   }
   if (purpose === 'digital') {
@@ -267,18 +268,22 @@ export function deleteEverythingPreview(state, lang = 'ar', { studyKept = false 
     [both('سجلات مهام', 'task records'), (s.tasks || []).length],
     [both('اعتمادات مستوردة', 'imported credentials'), (s.credentials || []).length],
     [both('مراجعات توصيات', 'recommendation reviews'), (s.recommendationReviews || []).length],
-    [both('تفضيلات مصرح بها', 'declared preferences'), Object.keys(s.insight?.declaredPreferences || {}).length],
+    [both('تفضيلات مصرح بها', 'declared preferences'), preferenceCount(s.insight?.declaredPreferences)],
     [both('اهتمامات رقمية مؤكدة', 'confirmed digital interests'), digital.confirmed.length],
     [both('اهتمامات بكلماتك', 'interests in your own words'), normalizeFreeInterests(s.insight?.freeInterests).length],
     // Task 58: every chosen goal (goals; goal is goals[0]), the saved steps and the "not for me" marks.
     [both('أهداف مختارة', 'selected goals'), plan.goals.length],
     [both('خطوات محفوظة في خطتي', 'saved steps in My plan'), plan.plan.length],
     [both('عناصر عُلّمت «ليس لي»', 'items marked “not for me”'), plan.notForMe.length],
+    // Task 79
+    [both('علامات إنجاز في خرائط الطريق', 'ticked roadmap items'), plan.roadmapDone.length],
     [both('أحداث في سجل الاستخدام', 'usage-log events'), (s.audit || []).length],
   ]
   return {
     items: rows.map(([name, count]) => ({ label: name[lang], count })),
-    stores: lang === 'ar' ? ['تخزين الجلسة في هذا المتصفح', 'النسخة المحفوظة على هذا الجهاز (IndexedDB)', 'بيانات التجربة المحلية (التخزين المحلي)'] : ['this browser session’s storage', 'the copy saved on this device (IndexedDB)', 'local pilot data (localStorage)'],
+    stores: lang === 'ar' ? ['تخزين الجلسة في هذا المتصفح', 'النسخة المحفوظة على هذا الجهاز في تخزين هذا المتصفح', 'بيانات التجربة المحلية (التخزين المحلي)'] : ['this browser session’s storage', 'the copy saved on this device, in this browser’s storage', 'local pilot data in this browser’s storage'],
+    // Task 76: the list above is in plain words; the browser's technical names are kept for "Technical details" only.
+    storesTechnical: lang === 'ar' ? 'الأسماء التقنية: sessionStorage (تخزين الجلسة)، IndexedDB (النسخة المحفوظة على هذا الجهاز)، localStorage (بيانات التجربة المحلية).' : 'Technical names: sessionStorage (this session’s storage), IndexedDB (the copy saved on this device), localStorage (local pilot data).',
     // Task 18: a trial participant's anonymous study file stays until they finish or withdraw.
     kept: studyKept ? (lang === 'ar' ? 'يبقى ملف الدراسة المجهول حتى تُنهي الجلسة أو تنسحب من الدراسة.' : 'Your anonymous study file stays until you finish the session or withdraw from the study.') : null,
     outside: lang === 'ar' ? 'خارج سيطرة كامن: النسخ المشفّرة التي نزّلتها سابقًا، وروابط المشاركة التي أرسلتها؛ احذفها بنفسك إن أردت.' : 'Outside KAMIN’s control: encrypted backups you downloaded earlier and share links you already sent; delete those yourself if you want.',
@@ -287,10 +292,11 @@ export function deleteEverythingPreview(state, lang = 'ar', { studyKept = false 
 
 const PROFILE_KEYS = { session: ['kamin-session-v3', 'kamin-pilot-session-v2'], local: ['kamin-pilot-v1', 'kamin-pilot-events-v1', 'kamin-pilot-feedback-v1', 'kamin-pilot-anon-v1', 'kamin-pilot-study-v1'] }
 // After "delete everything": check in code that nothing personal remains on this device. Only the
-// interface choices are not personal data and are kept: the language ('kamin-lang'), from Task 60 which
-// interface opens ('kamin-ui', src/uiSwitch.js) and, from Task 61, the new interface's theme ('kamin-theme':
-// System, Light or Dark, src/themeChoice.js).
-export const KEPT_INTERFACE_KEYS = Object.freeze(['kamin-lang', 'kamin-ui', 'kamin-theme'])
+// interface choices are not personal data and are kept: the language ('kamin-lang') and, from Task 61, the theme
+// ('kamin-theme': System, Light or Dark, src/themeChoice.js). Task 70: 'kamin-ui' (which interface opened)
+// is gone with the old interface; "delete everything" removes a leftover one (RETIRED_UI_KEY).
+export const KEPT_INTERFACE_KEYS = Object.freeze(['kamin-lang', 'kamin-theme'])
+export const RETIRED_UI_KEY = 'kamin-ui'
 // Task 18: `keep` names keys that were kept on purpose (a trial participant's anonymous study queue,
 // which is deleted when they finish the session or withdraw). They are reported as kept, not as leftovers.
 export async function verifyDeviceCleared({ keep = [] } = {}) {

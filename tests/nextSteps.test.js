@@ -116,7 +116,7 @@ describe('Task 57: the next-steps feed', () => {
     })
     // Task 36 retired cyber-foundations (invented provider); the KAU course remains.
     expect(feed).toEqual({
-      version: NEXT_STEPS_VERSION, goals: ['job-cyber-analyst'], uncovered: [], reason: null,
+      version: NEXT_STEPS_VERSION, goals: ['job-cyber-analyst'], uncovered: [], handled: 0, reason: null,
       cards: [card('fcit-cpit-425', 'university-course', kau('CPIT-425', 62))],
     })
     console.log(`\nFeed, synthetic example, goal job-cyber-analyst:\n${feed.cards.map(c => `  ${c.itemId}${c.illustrative ? ' (illustrative example)' : ` (${c.source.ref})`}: ${c.why.en}`).join('\n')}`)
@@ -145,7 +145,7 @@ describe('Task 57: the next-steps feed', () => {
 
   it('without a goal the feed is empty with the reason "Choose a goal first"; unknown goals are ignored', () => {
     for (const goalIds of [[], undefined, ['no-such-target'], 'job-cyber-analyst']) {
-      expect(nextStepFeed({ skills: demoSkills, goalIds })).toEqual({ version: NEXT_STEPS_VERSION, goals: [], cards: [], uncovered: [], reason: NO_GOAL_REASON })
+      expect(nextStepFeed({ skills: demoSkills, goalIds })).toEqual({ version: NEXT_STEPS_VERSION, goals: [], cards: [], uncovered: [], handled: 0, reason: NO_GOAL_REASON })
     }
     expect(NO_GOAL_REASON).toEqual({ ar: 'اختر هدفًا أولًا.', en: 'Choose a goal first.' })
     expect(nextStepFeed()).toMatchObject({ cards: [], reason: NO_GOAL_REASON })
@@ -246,9 +246,10 @@ describe('Task 57: the next-steps feed', () => {
   })
 })
 
-describe('Task 57: the old Courses tab keeps working with the extended items', () => {
-  it('LearningPath still reads suggestPath, and suggestPath gives the same suggestions from "supports" as from "teaches"', () => {
-    expect(readFileSync('src/components/LearningPath.jsx', 'utf8')).toMatch(/suggestPath\(gap, undefined, \{ skills, takenCourses \}\)/)
+describe('Task 57: the extended items keep the learning list working (the old Courses tab until Task 70, now step 4)', () => {
+  // Task 70: the old Courses tab (src/components/LearningPath.jsx) is deleted; step 4's feed is the one reader.
+  it('the step 4 feed reads suggestPath, and suggestPath gives the same suggestions from "supports" as from "teaches"', () => {
+    expect(readFileSync('src/path/nextSteps.js', 'utf8')).toMatch(/suggestPath\(gap, catalog, \{ skills, takenCourses \}\)/)
     const teachesOnly = items.map(({ supports, ...rest }) => rest)
     for (const target of PATH_FIELDS) {
       const gap = computeGap(demoSkills, target.id)

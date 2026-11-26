@@ -88,6 +88,52 @@ export function emptyInsightState(){
   }
 }
 
+// Task 78 (Amjd, 2026-11-21): step 3's two chip questions take up to 3 choices each. They are stored as lists of option
+// ids, in the order chosen; the other schemes keep one value. A profile, backup or session saved with a single value
+// (a string) reads as a one-item list. Unknown ids and repeats are dropped; an empty list is not stored.
+export const MULTI_CHOICE_SCHEMES=Object.freeze(['careerInterest','workValue'])
+export const PREFERENCE_CHOICES_MAX=3
+const knownOption=(schemeId,optionId)=>DECLARED_PREFERENCE_SCHEMES[schemeId]?.options.some(option=>option.id===optionId)
+
+/** Every chosen option id of one scheme, as a list (a single stored value gives a one-item list). */
+export function preferenceValues(preferences,schemeId){
+  const raw=preferences?.[schemeId]
+  const list=(Array.isArray(raw)?raw:[raw]).filter(id=>typeof id==='string'&&knownOption(schemeId,id))
+  return [...new Set(list)].slice(0,MULTI_CHOICE_SCHEMES.includes(schemeId)?PREFERENCE_CHOICES_MAX:1)
+}
+
+/** The stored shape: lists for the multi-choice schemes, one id for the others; unknown schemes and empty choices are dropped. */
+export function normalizeDeclaredPreferences(preferences){
+  if(!preferences||typeof preferences!=='object'||Array.isArray(preferences)) return {}
+  const out={}
+  for(const schemeId of Object.keys(DECLARED_PREFERENCE_SCHEMES)){
+    const values=preferenceValues(preferences,schemeId)
+    if(!values.length) continue
+    out[schemeId]=MULTI_CHOICE_SCHEMES.includes(schemeId)?values:values[0]
+  }
+  return out
+}
+
+/** How many choices are stored (a list counts each item; one stored value counts 1, as before): the data summary and the withdrawal count. */
+export const preferenceCount=preferences=>Object.values(preferences&&typeof preferences==='object'?preferences:{})
+  .reduce((n,value)=>n+(Array.isArray(value)?new Set(value.filter(id=>typeof id==='string')).size:1),0)
+
+/**
+ * Task 78: a tap on a chip of a multi-choice scheme. Not chosen → added at the end (a full list of 3 is returned
+ * unchanged); chosen → removed. Throws like setDeclaredPreference for an unknown scheme or option.
+ */
+export function togglePreferenceChoice(insight,schemeId,optionId){
+  if(!MULTI_CHOICE_SCHEMES.includes(schemeId)) throw new Error('UNKNOWN_PREFERENCE_SCHEME')
+  if(!knownOption(schemeId,optionId)) throw new Error('UNKNOWN_PREFERENCE_OPTION')
+  const declaredPreferences=normalizeDeclaredPreferences(insight?.declaredPreferences)
+  const current=preferenceValues(declaredPreferences,schemeId)
+  const next=current.includes(optionId)?current.filter(id=>id!==optionId):[...current,optionId]
+  if(next.length>PREFERENCE_CHOICES_MAX) return insight
+  if(next.length) declaredPreferences[schemeId]=next
+  else delete declaredPreferences[schemeId]
+  return {...insight,version:INSIGHT_VERSION,declaredPreferences,updatedAt:new Date().toISOString()}
+}
+
 export function setDeclaredPreference(insight,schemeId,optionId){
   const scheme=DECLARED_PREFERENCE_SCHEMES[schemeId]
   if(!scheme) throw new Error('UNKNOWN_PREFERENCE_SCHEME')

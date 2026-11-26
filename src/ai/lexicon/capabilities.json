@@ -1,6 +1,6 @@
 {
- "version": "kamin-capability-lexicon-v1",
- "builtOn": "dev-set.json only (eval/project-suggest); general domain vocabulary, no test-set text consulted",
+ "version": "kamin-capability-lexicon-v2",
+ "builtOn": "dev-set.json only (eval/project-suggest); general domain vocabulary, no test-set text consulted. Task 77 workflow vocabulary: dev-set-workflow.json and dev-set.json only, never testset-workflow.json, testset.json or testset-ai-v2.json.",
  "rule": "A strong term is enough on its own in a sentence. A weak term counts only together with another term (strong or weak) of the same capability in the same sentence.",
  "capabilities": {
   "database": {
@@ -1104,5 +1104,537 @@
     }
    ]
   }
+ },
+ "workflow": {
+  "rule": "Task 77. Cues are counted per concept (k), so two forms of one word count once, inside a window of 1 to 3 consecutive sentences; the smallest window that meets a rule is quoted word for word. Systems analysis and workflow: at least one system cue, two action concepts and two role or work-item concepts, with a hand-off (an action marked handoff) or two roles that are people or units (not work items marked item). Requirements analysis: the same, or a system cue, a can/must cue and three action concepts (a list of what the system does). A person's own errands without a system never qualify.",
+  "system": [
+   {
+    "k": "system",
+    "why": "the thing being described is a system",
+    "t": [
+     "system",
+     "نظام",
+     "سيستم"
+    ]
+   },
+   {
+    "k": "app",
+    "why": "an application",
+    "t": [
+     "app",
+     "application",
+     "تطبيق"
+    ]
+   },
+   {
+    "k": "platform",
+    "why": "a platform",
+    "t": [
+     "platform",
+     "منصة"
+    ]
+   },
+   {
+    "k": "program",
+    "why": "a program the student built",
+    "t": [
+     "program",
+     "software",
+     "برنامج"
+    ]
+   },
+   {
+    "k": "website",
+    "why": "a website",
+    "t": [
+     "website",
+     "web app",
+     "موقع إلكتروني"
+    ]
+   },
+   {
+    "k": "database",
+    "why": "data kept by a system",
+    "t": [
+     "database",
+     "قاعدة بيانات",
+     "قواعد بيانات"
+    ]
+   }
+  ],
+  "actions": [
+   {
+    "k": "receive",
+    "why": "the system or a role receives something",
+    "handoff": true,
+    "t": [
+     "receive",
+     "come in",
+     "comes in",
+     "يستقبل",
+     "تستقبل",
+     "استقبال",
+     "استقبل",
+     "يستلم",
+     "تستلم",
+     "استلام",
+     "يتلقى",
+     "تتلقى",
+     "تلقي",
+     "يجي",
+     "يصل",
+     "يوصل",
+     "توصل"
+    ]
+   },
+   {
+    "k": "send",
+    "why": "something is sent or passed on",
+    "handoff": true,
+    "t": [
+     "send",
+     "forward",
+     "dispatch",
+     "route",
+     "transfer",
+     "go to",
+     "goes to",
+     "go from",
+     "goes from",
+     "moves to",
+     "moves from",
+     "passes to",
+     "يرسل",
+     "ترسل",
+     "إرسال",
+     "أرسل",
+     "يبعث",
+     "تبعث",
+     "يروح",
+     "تروح"
+    ]
+   },
+   {
+    "k": "assign",
+    "why": "work is assigned or referred",
+    "handoff": true,
+    "t": [
+     "assign",
+     "allocate",
+     "refer",
+     "escalate",
+     "يسند",
+     "تسند",
+     "إسناد",
+     "يوزع",
+     "توزع",
+     "توزيع",
+     "يحول",
+     "تحول",
+     "تحويل",
+     "يحيل",
+     "تحيل",
+     "إحالة",
+     "يوجه",
+     "توجيه",
+     "يمر",
+     "ينتقل"
+    ]
+   },
+   {
+    "k": "track",
+    "why": "progress is tracked or followed up",
+    "t": [
+     "track",
+     "follow up",
+     "monitor",
+     "يتابع",
+     "تتابع",
+     "متابعة",
+     "يتتبع",
+     "تتبع"
+    ]
+   },
+   {
+    "k": "report",
+    "why": "a report is produced",
+    "handoff": true,
+    "t": [
+     "report",
+     "summary",
+     "تقرير",
+     "تقارير"
+    ]
+   },
+   {
+    "k": "notify",
+    "why": "someone is notified",
+    "handoff": true,
+    "t": [
+     "notify",
+     "notification",
+     "alert",
+     "remind",
+     "reminder",
+     "يبلغ",
+     "تبلغ",
+     "إبلاغ",
+     "إشعار",
+     "ينبه",
+     "تنبه",
+     "تنبيه",
+     "تذكير"
+    ]
+   },
+   {
+    "k": "respond",
+    "why": "a role responds",
+    "handoff": true,
+    "t": [
+     "respond",
+     "response",
+     "reply",
+     "answer",
+     "يرد",
+     "ترد",
+     "استجابة",
+     "يستجيب",
+     "تستجيب"
+    ]
+   },
+   {
+    "k": "enter",
+    "why": "data is entered, recorded or submitted",
+    "t": [
+     "enter",
+     "register",
+     "log",
+     "record",
+     "submit",
+     "store",
+     "save",
+     "يدخل",
+     "تدخل",
+     "إدخال",
+     "يسجل",
+     "تسجل",
+     "تسجيل",
+     "يرفع",
+     "ترفع",
+     "يحفظ",
+     "يخزن",
+     "خزنت"
+    ]
+   },
+   {
+    "k": "decide",
+    "why": "a request is approved, rejected or confirmed",
+    "t": [
+     "approve",
+     "reject",
+     "accept",
+     "decline",
+     "confirm",
+     "يوافق",
+     "توافق",
+     "موافقة",
+     "يعتمد",
+     "اعتماد",
+     "يرفض",
+     "ترفض",
+     "يقبل",
+     "تقبل",
+     "يؤكد",
+     "يأكد",
+     "تأكيد"
+    ]
+   },
+   {
+    "k": "close",
+    "why": "work is closed, solved or its status updated",
+    "t": [
+     "close",
+     "update",
+     "resolve",
+     "solve",
+     "يقفل",
+     "تقفل",
+     "يغلق",
+     "إغلاق",
+     "يحدث",
+     "تحدث",
+     "تحديث"
+    ]
+   },
+   {
+    "k": "show",
+    "why": "the system shows information",
+    "t": [
+     "show",
+     "display",
+     "يعرض",
+     "تعرض",
+     "يبين",
+     "تبين",
+     "يظهر",
+     "يشوف",
+     "تشوف"
+    ]
+   },
+   {
+    "k": "book",
+    "why": "something is booked or requested",
+    "t": [
+     "book",
+     "يحجز",
+     "تحجز",
+     "حجز",
+     "يطلب"
+    ]
+   },
+   {
+    "k": "add",
+    "why": "a record is added",
+    "t": [
+     "add",
+     "يضيف",
+     "تضيف",
+     "إضافة"
+    ]
+   },
+   {
+    "k": "edit",
+    "why": "a record is edited",
+    "t": [
+     "edit",
+     "يعدل",
+     "تعدل",
+     "تعديل"
+    ]
+   }
+  ],
+  "roles": [
+   {
+    "k": "supervisor",
+    "why": "a role",
+    "t": [
+     "supervisor",
+     "مشرف"
+    ]
+   },
+   {
+    "k": "manager",
+    "why": "a role",
+    "t": [
+     "manager",
+     "admin",
+     "administrator",
+     "مدير",
+     "مسؤول",
+     "مسئول",
+     "مسول",
+     "إدارة"
+    ]
+   },
+   {
+    "k": "staff",
+    "why": "a role",
+    "t": [
+     "staff",
+     "employee",
+     "موظف"
+    ]
+   },
+   {
+    "k": "user",
+    "why": "a role",
+    "t": [
+     "user",
+     "customer",
+     "client",
+     "citizen",
+     "مستخدم",
+     "عميل",
+     "زبون",
+     "مواطن"
+    ]
+   },
+   {
+    "k": "patient",
+    "why": "a role",
+    "t": [
+     "patient",
+     "مريض"
+    ]
+   },
+   {
+    "k": "doctor",
+    "why": "a role",
+    "t": [
+     "doctor",
+     "nurse",
+     "طبيب",
+     "دكتور",
+     "ممرض"
+    ]
+   },
+   {
+    "k": "student",
+    "why": "a role",
+    "t": [
+     "student",
+     "teacher",
+     "طالب",
+     "معلم"
+    ]
+   },
+   {
+    "k": "technician",
+    "why": "a role",
+    "t": [
+     "technician",
+     "engineer",
+     "contractor",
+     "فني",
+     "مهندس",
+     "مقاول"
+    ]
+   },
+   {
+    "k": "driver",
+    "why": "a role",
+    "t": [
+     "driver",
+     "agent",
+     "operator",
+     "dispatcher",
+     "caseworker",
+     "receptionist",
+     "guard",
+     "سائق",
+     "مندوب",
+     "حارس",
+     "سكرتير"
+    ]
+   },
+   {
+    "k": "unit",
+    "why": "a unit or team",
+    "t": [
+     "unit",
+     "team",
+     "department",
+     "وحدة",
+     "فريق",
+     "قسم"
+    ]
+   },
+   {
+    "k": "place",
+    "why": "an organisational unit",
+    "t": [
+     "warehouse",
+     "finance",
+     "hr",
+     "supplier",
+     "vendor",
+     "مستودع",
+     "مالية",
+     "مورد"
+    ]
+   },
+   {
+    "k": "request",
+    "why": "a work item",
+    "item": true,
+    "t": [
+     "request",
+     "order",
+     "طلب"
+    ]
+   },
+   {
+    "k": "case",
+    "why": "a work item",
+    "item": true,
+    "t": [
+     "case",
+     "incident",
+     "حالة",
+     "بلاغ"
+    ]
+   },
+   {
+    "k": "ticket",
+    "why": "a work item",
+    "item": true,
+    "t": [
+     "ticket",
+     "complaint",
+     "تذكرة",
+     "شكوى"
+    ]
+   },
+   {
+    "k": "appointment",
+    "why": "a work item",
+    "item": true,
+    "t": [
+     "appointment",
+     "booking",
+     "موعد",
+     "مواعيد"
+    ]
+   },
+   {
+    "k": "call",
+    "why": "a work item",
+    "item": true,
+    "t": [
+     "call",
+     "اتصال"
+    ]
+   },
+   {
+    "k": "status",
+    "why": "the state of a work item",
+    "item": true,
+    "t": [
+     "status"
+    ]
+   }
+  ],
+  "modal": [
+   {
+    "k": "can",
+    "why": "what the system or its users can do",
+    "t": [
+     "can",
+     "lets",
+     "allows",
+     "able to",
+     "يقدر",
+     "تقدر",
+     "يمكن",
+     "يسمح",
+     "تسمح",
+     "يتيح",
+     "تتيح"
+    ]
+   },
+   {
+    "k": "must",
+    "why": "what the system must do",
+    "t": [
+     "must",
+     "should",
+     "has to",
+     "needs to",
+     "يجب",
+     "لازم",
+     "المفروض"
+    ]
+   }
+  ]
  }
 }

@@ -145,11 +145,15 @@ describe('the local list (src/catalog/learning-opportunities.json)', () => {
     expect(items.filter(i => i.status !== 'retired').every(i => i.status === 'illustrative')).toBe(true)
     expect(items.filter(i => i.status === 'retired').map(i => i.id)).toEqual(['ba', 'sql', 'cyber-foundations', 'illustrative-testing-basics', 'illustrative-web-basics', 'illustrative-db-operations'])
     // Task 65: the component's words moved unchanged to src/content/learningPathCopy.js, which it imports.
-    const component = readFileSync('src/components/LearningPath.jsx', 'utf8')
-    expect(component).toMatch(/^import \{ LEARNING_PATH_COPY \} from '\.\.\/content\/learningPathCopy\.js'$/m)
+    // Task 70: the old Courses tab (src/components/LearningPath.jsx) is deleted; step 4's card (StepCard.jsx) labels each
+    // illustrative item and its Details say the list is an early version of a planned feature (intro) until reviewed.
+    const component = readFileSync('src/ui2/components/StepCard.jsx', 'utf8')
+    expect(component).toMatch(/^import \{ LEARNING_PATH_COPY \} from '\.\.\/\.\.\/content\/learningPathCopy\.js'$/m)
+    expect(component).toContain('{card.illustrative && <span className="ui2-step-tag" data-testid="ui2-step-illustrative">{T.illustrative}</span>}')
+    expect(component).toContain('{reviewed ? T.introReviewed : T.intro}')
     const ui = component + readFileSync('src/content/learningPathCopy.js', 'utf8')
     expect(ui).toContain("'Illustrative example'")
-    expect(ui).toContain("'Planned feature'")
+    expect(ui).toContain('an early version of a feature planned for the next phase')
   })
   it('the course-fit cards keep exactly the five items and fields they had', () => {
     expect(opportunities.map(o => o.id)).toEqual(['ba', 'sql', 'capm', 'pmp', 'cyber-foundations'])
@@ -160,7 +164,7 @@ describe('the local list (src/catalog/learning-opportunities.json)', () => {
 describe('no network', () => {
   const files = dir => readdirSync(dir).flatMap(name => { const p = path.join(dir, name); return statSync(p).isDirectory() ? files(p) : [p] })
   it('no fetch or other network call in src/path/ or src/catalog/', () => {
-    for (const file of [...files('src/path'), ...files('src/catalog'), 'src/components/LearningPath.jsx']) {
+    for (const file of [...files('src/path'), ...files('src/catalog'), 'src/ui2/screens/NextSteps.jsx', 'src/ui2/components/StepCard.jsx', 'src/ui2/stepsEngine.js']) { // Task 70: step 4 replaces LearningPath.jsx
       const source = readFileSync(file, 'utf8')
       expect(source, file).not.toMatch(/\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|\bimport\s*\(\s*['"`]https?:/)
     }

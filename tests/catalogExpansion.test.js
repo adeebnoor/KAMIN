@@ -5,7 +5,7 @@ import {demoCourses,courseSkillMap} from '../src/data.js'
 import {inferSkills} from '../src/utils/engine.js'
 import {buildMatchingProfile,matchTargets} from '../src/matching/engine.js'
 import {buildSyntheticGraph} from '../src/knowledge/workspace.js'
-import {buildDevelopmentPlan} from '../src/components/DecisionStudio.jsx'
+import {buildDevelopmentPlan} from '../src/plan/developmentPlan.jsx' // Task 70: was re-exported by the deleted DecisionStudio.jsx
 describe('catalog expansion preserves evidence boundaries',()=>{
  it.each(['ar','en'])('explains specialist gaps and development steps with readable %s names',lang=>{
   const expected=[

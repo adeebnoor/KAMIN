@@ -99,7 +99,7 @@ for (const lang of LANGS) test.describe(`Settings (${lang})`, () => {
     expect(after.approved).toBe(false)
     expect(after.collegeRaw).toBeNull()
     expect(after.major).toBeNull()
-    expect(after.insight.declaredPreferences.careerInterest, 'the interest stays').toBe(INTEREST.id)
+    expect(after.insight.declaredPreferences.careerInterest, 'the interest stays (Task 78: stored as a list)').toEqual([INTEREST.id])
     expect(after.consents.insight).toBe(true)
     await app.goToView('profile')
     await expect(app.capabilityRows()).toHaveCount(0)

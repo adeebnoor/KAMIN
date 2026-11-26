@@ -63,7 +63,7 @@ function classNames(files) {
 }
 
 // ----- 3. the old CSS rules -----
-const OLD_CSS = ['public/brand.css', 'src/cards.css', 'src/styles.css', 'src/experience.css', 'src/digital-interests.css', 'src/knowledge-workspace.css', 'src/relationship-network.css', 'src/semantic-tools.css', 'public/site-layout.css', 'src/redesign.css', 'src/path.css', 'src/pilot.css']
+const OLD_CSS = ['public/brand.css', 'src/cards.css', 'src/styles.css', 'src/experience.css', 'src/digital-interests.css', 'src/knowledge-workspace.css', 'src/relationship-network.css', 'src/semantic-tools.css', 'public/site-layout.css', 'src/redesign.css', 'src/pilot.css'] // Task 70: src/path.css (the old Courses tab's) is deleted
 function cssOf(files) {
   const own = files.flatMap(file => [...read(file).matchAll(/import\s+['"](\.[^'"]+\.css)['"]/g)].map(m => normalize(join(dirname(file), m[1])).replace(/\\/g, '/')))
   return [...new Set([...OLD_CSS, ...own])].filter(file => existsSync(join(ROOT, file)))

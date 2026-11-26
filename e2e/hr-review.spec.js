@@ -1,30 +1,8 @@
-import {test,expect} from './fixtures.js'
-import AxeBuilder from '@axe-core/playwright'
+// Task 70: the old landing tour and its 'Try a live example' test is deleted with the old interface (inventory D01, D02);
+// the sample keeps consent off on step 1 (e2e/next-upload.spec.js, keep-test K02). The public pages' test stays.
+import {test,expect} from '@playwright/test'
 for(const lang of ['ar','en']){
  const ar=lang==='ar'
- test(`short landing tour and direct sample preserve consent: ${lang}`,async({page})=>{
-  const errors=[];page.on('pageerror',e=>errors.push(e.message))
-  await page.goto(`/${lang}/`)
-  await expect(page.locator('.pilot-advanced')).not.toHaveAttribute('open','')
-  const tour=page.locator('.quick-tour')
-  await expect(tour.getByRole('button',{name:ar?'السابق':'Back',exact:true})).toBeDisabled()
-  await tour.getByRole('button',{name:ar?'التالي':'Next',exact:true}).click()
-  await expect(tour.locator('[aria-current="step"]')).toHaveText('2')
-  await tour.getByRole('button',{name:ar?'التالي':'Next',exact:true}).click()
-  await expect(tour.locator('[aria-current="step"]')).toHaveText('3')
-  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBeNull()
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
-  const axe=await new AxeBuilder({page}).analyze()
-  expect(axe.violations.filter(v=>['serious','critical'].includes(v.impact))).toEqual([])
-  await page.getByRole('button',{name:ar?'جرّب مثالًا حيًا':'Try a live example',exact:true}).click()
-  await expect(page.locator('.pilot-sample-note')).toBeVisible()
-  await expect(page.getByRole('checkbox',{name:ar?/أوافق صراحةً/:/I explicitly consent/})).not.toBeChecked()
-  await expect(page.getByRole('button',{name:ar?/أعتمد السجل/:/Approve/}).last()).toBeDisabled()
-  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBeNull()
-  await page.getByRole('button',{name:ar?'إغلاق':'Close',exact:true}).click()
-  await expect(page.getByRole('button',{name:ar?'جرّب مثالًا حيًا':'Try a live example',exact:true})).toBeFocused()
-  expect(errors).toEqual([])
- })
  test(`university roadmap and catalog distinguish targets from results: ${lang}`,async({page})=>{
   await page.goto(`/${lang}/business-model.html`)
   await expect(page.locator('main')).toContainText(ar?'ترخيص سنوي':'Annual license')

@@ -64,9 +64,11 @@ describe('Task 03 · wording guard: a course grade is a clue, not a guarantee', 
 
   it('the principle is shown on the review screen, on course capability cards and on the methodology page', () => {
     // Task 11 moved the capability card into src/components/Dashboard.jsx; Task 22 moved the review
-    // screen into src/components/CourseReview.jsx.
-    const app = readFileSync('src/App.jsx', 'utf8') + readFileSync('src/components/Dashboard.jsx', 'utf8') + readFileSync('src/components/CourseReview.jsx', 'utf8')
+    // screen into src/components/CourseReview.jsx. Task 70: src/App.jsx (which held neither) is deleted; the
+    // interface's step 1 result card (src/ui2/components/ResultCard.jsx) shows it as well.
+    const app = readFileSync('src/components/Dashboard.jsx', 'utf8') + readFileSync('src/components/CourseReview.jsx', 'utf8')
     expect(app.match(/data-testid="course-evidence-principle"/g)?.length).toBe(2)
+    expect(readFileSync('src/ui2/components/ResultCard.jsx', 'utf8')).toContain('data-testid="course-evidence-principle"')
     expect(app).toContain('courseEvidencePrinciple(lang)')
     const methodology = readFileSync('public/methodology.html', 'utf8')
     expect(methodology).toContain(COURSE_EVIDENCE_PRINCIPLE.ar)

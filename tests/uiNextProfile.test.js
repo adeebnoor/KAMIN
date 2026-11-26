@@ -8,7 +8,7 @@
 // Edit show "Back to Profile" instead of the step chip and Next. The old parts keep brand.css's light values in both
 // themes. Profile, its row and its CSS load on their own; nothing new enters the startup modules.
 import { describe, it, expect } from 'vitest'
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -259,10 +259,11 @@ describe('Task 66 · the old parts keep brand.css\'s light values; everything lo
     expect(read('src/main.jsx')).not.toMatch(/Profile/)
   })
 
-  it('the old interface is unchanged: the components Profile reuses keep their files as they were used', () => {
-    expect(read('src/App.jsx')).toMatch(/const CredentialImport = lazy\(\(\)=>import\('\.\/components\/CredentialImport\.jsx'\)\)/)
+  // Task 70: the old interface (src/App.jsx, StudentInsight.jsx) is deleted; the reused components stay as they were.
+  it('the components Profile reuses keep their files as they were used', () => {
+    for (const gone of ['src/App.jsx', 'src/components/StudentInsight.jsx']) expect(existsSync(gone), gone).toBe(false)
     expect(read('src/components/DashboardMore.jsx')).toMatch(/import TaskLoop, \{ TodayStrip \} from '\.\/TaskLoop\.jsx'/)
-    expect(read('src/components/StudentInsight.jsx')).toMatch(/import DigitalInterests from '\.\/DigitalInterests\.jsx'/)
+    for (const name of ['CredentialImport', 'TaskLoop', 'DigitalInterests']) expect(existsSync(`src/components/${name}.jsx`), name).toBe(true)
   })
 
   it('the new words: the same keys in both languages, no percentage', () => {
@@ -298,20 +299,16 @@ describe('Task 75 · My map is the old "Show connections" graph, shared with the
     expect(W('en').map).toBe('My map')
   })
 
-  it('one copy of the old tab: DecisionStudio.jsx and My map both import ShowConnections.jsx, which holds the old words', () => {
+  // Task 70: the old "Show connections" tab (src/components/DecisionStudio.jsx) is deleted; My map is the one user of
+  // ShowConnections.jsx, which still holds the old words (one copy).
+  it('one copy of the old tab: My map imports ShowConnections.jsx, which holds the old words', () => {
     const shared = read('src/components/ShowConnections.jsx')
-    const studio = read('src/components/DecisionStudio.jsx')
-    expect(studio).toMatch(/^import ShowConnections, \{ PathwayControls \} from '\.\/ShowConnections\.jsx'$/m)
-    expect(studio).toMatch(/\{active === 'network' && <ShowConnections lang=\{lang\} state=\{state\} match=\{match\} graph=\{graph\} onGoal=\{onGoal\}\/>\}/)
-    expect(studio).toMatch(/<PathwayControls lang=\{lang\} matches=\{matches\} match=\{match\} status=\{status\} onChange=\{setTargetId\}\/>/)
+    expect(existsSync('src/components/DecisionStudio.jsx')).toBe(false)
     for (const words of ['Pathway to explore', 'My profile dimensions', 'Edit my interests & goal', 'Academic evidence path to the opportunity', 'This is your personal information network.']) {
       expect(shared, words).toContain(words)
-      expect(studio, `"${words}" is not copied into DecisionStudio.jsx`).not.toContain(words)
+      expect(read('src/ui2/components/ConnectionsMap.jsx').replace(/^\s*\/\/.*$/gm, ''), `"${words}" is not copied into ConnectionsMap.jsx`).not.toContain(words)
     }
-    expect(importers("ShowConnections\\.jsx'").sort()).toEqual(['src/components/DecisionStudio.jsx', 'src/ui2/components/ConnectionsMap.jsx'])
-    // The old interface never passes onCapability: its graph behaves as before.
-    expect(studio).not.toMatch(/onCapability/)
-    expect(read('src/App.jsx')).not.toMatch(/onCapability/)
+    expect(importers("ShowConnections\\.jsx'").sort()).toEqual(['src/ui2/components/ConnectionsMap.jsx'])
   })
 
   it('Profile lazy-loads the map; only Profile loads it; nothing new enters the startup modules', () => {
@@ -319,7 +316,7 @@ describe('Task 75 · My map is the old "Show connections" graph, shared with the
     expect(profile).toMatch(/const ConnectionsMap = lazy\(\(\) => import\('\.\.\/components\/ConnectionsMap\.jsx'\)\)/)
     expect(profile).toMatch(/<ConnectionsMap lang=\{lang\} state=\{state\} matches=\{derived\.matches\} graph=\{derived\.personGraph\} skills=\{skills\} onCapability=\{skillId => setOpened\(skillId\)\} onGoal=\{\(\) => onEdit\('interests'\)\}\/>/)
     expect(importers("ConnectionsMap\\.jsx'")).toEqual([])
-    for (const file of ['src/main.jsx', 'src/App.jsx']) expect(read(file)).not.toMatch(/ConnectionsMap/)
+    expect(read('src/main.jsx')).not.toMatch(/ConnectionsMap/) // Task 70: src/App.jsx is deleted
   })
 
   it('the rendered map is the old graph: "Pathway to explore", the heading, the questions, the nodes, the legend and the two details', () => {
@@ -359,5 +356,79 @@ describe('Task 75 · My map is the old "Show connections" graph, shared with the
     const before = JSON.stringify(SAMPLE)
     render('en', SAMPLE)
     expect(JSON.stringify(SAMPLE)).toBe(before)
+  })
+})
+
+// Task 70 · the old dashboard's note for hand-typed courses ("evidence awaiting a document"), found missing while the
+// browser tests were rewritten: Profile shows it under My capabilities, and only for courses typed by hand.
+describe('Task 70 · courses awaiting a document', () => {
+  it('Profile lists a hand-typed linked course as awaiting a document; a transcript course is not listed', () => {
+    for (const lang of ['ar', 'en']) {
+      const typed = { ...SAMPLE, courses: [...SAMPLE.courses.map(row => ({ ...row, source: 'pdf' })), { code: 'CPIT-240', name: 'Databases', grade: 'A', source: 'manual' }] }
+      const html = page(lang, typed)
+      expect(html).toContain('data-testid="awaiting-evidence"')
+      expect(textOf(html.slice(html.indexOf('data-testid="awaiting-evidence"')))).toContain('CPIT-240')
+      expect(page(lang, { ...SAMPLE, courses: SAMPLE.courses.map(row => ({ ...row, source: 'pdf' })) })).not.toContain('data-testid="awaiting-evidence"')
+    }
+  })
+})
+
+// Task 78: up to 3 interest areas and 3 work values. Profile's line, My map's interest node and the profile network read
+// every chosen value; one value reads as before.
+describe('Task 78 · Profile and My map show every chosen interest area and work value', () => {
+  const prefs = { careerInterest: ['social', 'artistic', 'investigative'], workValue: ['support', 'achievement'] }
+  const stateWith = declaredPreferences => ({ approved: true, courses: [], consents: { insight: true }, insight: { ...emptyInsightState(), declaredPreferences } })
+  const name = (scheme, id, lang) => DECLARED_PREFERENCE_SCHEMES[scheme].options.find(o => o.id === id).label[lang]
+
+  for (const lang of ['ar', 'en']) it(`${lang}: Profile's interests line names all 5 chips in the order chosen; one old value still reads`, () => {
+    const line = sectionSummaries(stateWith(prefs), lang).interests
+    const names = [...prefs.careerInterest.map(id => name('careerInterest', id, lang)), ...prefs.workValue.map(id => name('workValue', id, lang))]
+    let at = -1
+    for (const n of names) { const next = line.indexOf(n); expect(next, n).toBeGreaterThan(at); at = next }
+    expect(sectionSummaries(stateWith({ careerInterest: 'social' }), lang).interests).toBe(sectionSummaries(stateWith({ careerInterest: ['social'] }), lang).interests)
+  })
+
+  it('the profile network lists every value; one value reads as before', async () => {
+    const { preferenceLabel } = await import('../src/components/ProfileNetwork.jsx')
+    expect(preferenceLabel(prefs, 'careerInterest', 'en')).toBe(prefs.careerInterest.map(id => name('careerInterest', id, 'en')).join(', '))
+    expect(preferenceLabel({ careerInterest: 'social' }, 'careerInterest', 'en')).toBe(name('careerInterest', 'social', 'en'))
+    expect(preferenceLabel(prefs, 'workValue', 'ar')).toBe(prefs.workValue.map(id => name('workValue', id, 'ar')).join('، '))
+  })
+
+  it('My map\'s interest node shows the area the pathway fits (its R3), or every chosen area when none fits', async () => {
+    const { buildRelationshipNetwork } = await import('../src/network/relationships.js')
+    const { buildMatchingProfile, matchTargets } = await import('../src/matching/engine.js')
+    const { projectStateToPerson360 } = await import('../src/ontology/projector.js')
+    const state = stateWith(prefs)
+    const matches = matchTargets(buildMatchingProfile({ graph: projectStateToPerson360({ state, skills: [] }) }), { lang: 'en' })
+    const fits = buildRelationshipNetwork({ state, match: matches.find(m => m.id === 'job-data-analyst') })
+    const interest = fits.nodes.find(n => n.id === 'interest')
+    expect(interest.title.en).toBe(name('careerInterest', 'investigative', 'en'))
+    expect(interest.iri).toBe('urn:kamin:preference:careerinterest:investigative')
+    expect(fits.routes.interests.supported).toBe(true)
+    // Creating and building fit none of the project coordinator's areas (leading, organising, helping).
+    const other = stateWith({ careerInterest: ['artistic', 'realistic'] })
+    const otherMatches = matchTargets(buildMatchingProfile({ graph: projectStateToPerson360({ state: other, skills: [] }) }), { lang: 'en' })
+    const none = buildRelationshipNetwork({ state: other, match: otherMatches.find(m => m.id === 'job-project-coordinator') })
+    expect(none.nodes.find(n => n.id === 'interest').title.en).toBe(['artistic', 'realistic'].map(id => name('careerInterest', id, 'en')).join(', '))
+    expect(none.routes.interests.supported).toBe(false)
+    const goal = buildRelationshipNetwork({ state: { ...state, goal: 'job-data-analyst' }, match: matches[0] }).nodes.find(n => n.id === 'goal')
+    expect(goal.title.en, 'a pathway goal is named by its title').toBe('Data Analyst')
+  })
+
+  it('the connection picker names each chosen value when a scheme has several connections, and a pathway goal by its title', async () => {
+    const { InferenceProof } = await import('../src/components/InferenceExplorer.jsx')
+    const { buildMatchingProfile, matchTargets } = await import('../src/matching/engine.js')
+    const { projectStateToPerson360 } = await import('../src/ontology/projector.js')
+    const state = { ...stateWith({ careerInterest: ['social', 'investigative', 'conventional'] }), goal: 'job-data-analyst', goals: ['job-data-analyst'] }
+    const graph = projectStateToPerson360({ state, skills: [] })
+    const match = matchTargets(buildMatchingProfile({ graph, goals: state.goals }), { lang: 'en' }).find(m => m.id === 'job-data-analyst')
+    const options = [...renderToStaticMarkup(createElement(InferenceProof, { match, graph, lang: 'en' })).matchAll(/<option[^>]*>([^<]*)<\/option>/g)].map(m => m[1])
+    const scheme = DECLARED_PREFERENCE_SCHEMES.careerInterest.label.en
+    expect(options).toContain(`${scheme} · ${name('careerInterest', 'investigative', 'en')}`)
+    expect(options).toContain(`${scheme} · ${name('careerInterest', 'conventional', 'en')}`)
+    const html = renderToStaticMarkup(createElement(InferenceProof, { match: { ...match, inferences: match.inferences.filter(i => i.ruleId === 'R2') }, graph, lang: 'en' }))
+    expect(html).toContain('declares goal · Data Analyst')
+    expect(html).not.toContain('declares goal · job-data-analyst')
   })
 })

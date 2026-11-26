@@ -11,6 +11,8 @@
 //   state.notForMe  [itemId], at most 100 (the oldest mark goes first when full)
 //   state.planDropped  how many saved steps were dropped because the item left the list; shown once,
 //                      as one line, the next time the plan opens (openPlan), then reset to 0
+//   state.roadmapDone  Task 79: the roadmap items the student ticked, as keys '<pathway>:<stage>:<resource>'
+//                      (src/catalog/roadmaps.json), at most 300; the student's own record, never evidence
 //
 // Small and dependency-free apart from the copy: App.jsx needs normalizePlan at startup. The check
 // against the learning list (which is not in the startup bundle) lives in src/plan/catalogCheck.js.
@@ -25,6 +27,8 @@ export const NOT_FOR_ME_MAX = 100
 export const GOALS_MAX = 3
 export const PLAN_ACTIONS = Object.freeze(['take-course', 'get-certificate'])
 export const PLAN_STATUSES = Object.freeze(['planned', 'done'])
+export const ROADMAP_DONE_MAX = 300
+const ROADMAP_KEY = /^[\w-]{1,64}:[\w-]{1,32}:[\w-]{1,64}$/
 
 export const isId = value => typeof value === 'string' && /^[\w-]{1,64}$/.test(value)
 const isDate = value => typeof value === 'string' && Number.isFinite(Date.parse(value))
@@ -54,19 +58,22 @@ function cleanNotForMe(list, plan) {
   return [...new Set((Array.isArray(list) ? list : []).filter(isId))].filter(id => !planned.has(id)).slice(-NOT_FOR_ME_MAX)
 }
 
-/** The state with goal, goals, plan, notForMe and planDropped in their stored shape (anything else is dropped). */
+// Task 79: ticked roadmap items; an old profile without the field has none.
+const cleanRoadmapDone = list => [...new Set((Array.isArray(list) ? list : []).filter(key => typeof key === 'string' && ROADMAP_KEY.test(key)))].slice(0, ROADMAP_DONE_MAX)
+
+/** The state with goal, goals, plan, notForMe, planDropped and roadmapDone in their stored shape (anything else is dropped). */
 export function normalizePlan(state) {
   const s = state && typeof state === 'object' ? state : {}
   const goals = cleanGoals(s.goals, s.goal)
   const plan = cleanPlan(s.plan)
   const dropped = Number.isInteger(s.planDropped) && s.planDropped > 0 ? Math.min(s.planDropped, PLAN_MAX) : 0
-  return { ...s, goal: goals[0] ?? null, goals, plan, notForMe: cleanNotForMe(s.notForMe, plan), planDropped: dropped }
+  return { ...s, goal: goals[0] ?? null, goals, plan, notForMe: cleanNotForMe(s.notForMe, plan), planDropped: dropped, roadmapDone: cleanRoadmapDone(s.roadmapDone) }
 }
 
 /** Only the plan fields, normalised (for the backup). */
 export function planFields(state) {
-  const { goal, goals, plan, notForMe } = normalizePlan(state)
-  return { goal, goals, plan, notForMe }
+  const { goal, goals, plan, notForMe, roadmapDone } = normalizePlan(state)
+  return { goal, goals, plan, notForMe, roadmapDone }
 }
 
 

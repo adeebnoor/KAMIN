@@ -1,4 +1,4 @@
-/* Task 60 · the new interface's frame (src/ui2, behind ?ui=next; loads with its lazy chunk only).
+/* Task 60 · the new interface's frame (src/ui2; loads with its lazy chunk only).
    Tokens only: brand colours, fonts, radius and shadow come from public/brand.css (unchanged), spacing,
    text sizes and control heights from src/tokens.css. Every class starts with ui2- so the old interface's
    styles and these never meet. Task 61 adds the dark values for the same token names (theme.css), and makes
@@ -6,6 +6,8 @@
    buttons --muted (--line on white is 1.3:1), so focus and control edges reach 3:1 in both themes. */
 .ui2{--ui2-bar-h:56px;--ui2-tabs-h:64px;--ui2-rail-w:96px;min-height:100vh;min-height:100dvh;background:var(--soft);color:var(--ink);font-family:var(--font-en)}
 :root[lang="ar"] .ui2,:root[lang="ar"] .ui2-sheet-layer{font-family:var(--font-ar)}
+/* Task 70: an Arabic word inside the English interface (the top bar's "ع") keeps the Arabic font, as the old header did. */
+.ui2 [lang="ar"]{font-family:var(--font-ar)}
 .ui2 *,.ui2 *::before,.ui2 *::after,.ui2-sheet-layer *{box-sizing:border-box}
 .ui2 :focus-visible,.ui2-sheet-layer :focus-visible{outline:3px solid var(--ui2-focus,var(--navy-2));outline-offset:2px}
 .ui2-vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}

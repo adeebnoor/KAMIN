@@ -3,7 +3,8 @@ import oxigraph from 'oxigraph'
 import {resultsToCsv,exportDataset} from '../src/knowledge/exports.js'
 import {buildWorkspaceDataset} from '../src/knowledge/workspace.js'
 import {prepareReadOnlyQuery} from '../src/knowledge/queryPolicy.js'
-import {buildCapabilitySnapshot,encryptSnapshot,decryptSnapshot,snapshotFragment,parseSnapshotFragment,validateSnapshot} from '../src/utils/capabilitySnapshot.js'
+import {buildCapabilitySnapshot,encryptSnapshot,decryptSnapshot,snapshotFragment,parseSnapshotFragment,validateSnapshot,snapshotGoalName} from '../src/utils/capabilitySnapshot.js'
+import {parseSnapshotFragment as parseLinkFragment} from '../src/utils/snapshotLink.js'
 import {pageHref} from '../public/site-content.js'
 import {rankSemanticCandidates} from '../src/semantic/catalog.js'
 describe('SPARQL diagnostics and interoperability',()=>{
@@ -51,6 +52,29 @@ describe('minimal encrypted sharing',()=>{
   expect(hash).not.toContain('database')
   expect(await decryptSnapshot(parseSnapshotFragment(hash))).toEqual(value)
   const second=await encryptSnapshot(value);expect(second.payload).not.toBe(packet.payload);expect(second.key).not.toBe(packet.key)
+ })
+ // Task 76: step 4 and My plan store a goal as a pathway id; "Include my goal" carries it and shows its plain name.
+ it('carries a pathway goal (id checked against the catalog) and names it in plain words, never the id',async()=>{
+  const value=buildCapabilitySnapshot({skillIds:[],goal:'job-data-analyst'})
+  expect(value.goal).toBe('job-data-analyst')
+  expect(await decryptSnapshot(parseSnapshotFragment(snapshotFragment(await encryptSnapshot(value))))).toEqual(value)
+  expect(snapshotGoalName('job-data-analyst','en')).toBe('Data Analyst')
+  expect(snapshotGoalName('job-data-analyst','ar')).toMatch(/[\u0600-\u06FF]/)
+  expect(snapshotGoalName('job-data-analyst','ar')).not.toContain('job-')
+  expect(()=>buildCapabilitySnapshot({skillIds:[],goal:'job-not-in-catalog'})).toThrow('INVALID_SNAPSHOT')
+  expect(()=>validateSnapshot({...value,goal:'Data Analyst'})).toThrow('INVALID_SNAPSHOT')
+  expect(()=>validateSnapshot({...value,goal:'toString'})).toThrow('INVALID_SNAPSHOT')
+  expect(snapshotGoalName('toString','en')).toBeNull()
+ })
+ it('keeps the four old directions working and named as before',()=>{
+  for(const goal of ['data','cyber','management','product']){
+   expect(buildCapabilitySnapshot({skillIds:[],goal}).goal).toBe(goal)
+   expect(snapshotGoalName(goal,'en')).toBeTruthy()
+  }
+  expect(snapshotGoalName('data','en')).toMatch(/Data/)
+ })
+ it('reads the link fragment from the small startup module the same way',()=>{
+  expect(parseLinkFragment).toBe(parseSnapshotFragment)
  })
  it('rejects tampering, another key, unsupported schemas, truncation and oversized fragments',async()=>{
   const packet=await encryptSnapshot(snapshot()),other=await encryptSnapshot(snapshot())

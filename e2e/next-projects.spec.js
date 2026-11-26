@@ -171,9 +171,9 @@ for (const lang of LANGS) test.describe(`Step 2: projects (${lang})`, () => {
     await expect(sheet.getByText(P(lang).suggestNote, { exact: true })).toBeVisible()
     await expect(sheet.getByText(STUDY_ROOMS(lang).description, { exact: true }).first(), 'each skill names the sentence it comes from').toBeVisible()
     // The engine's id is a technical detail: hidden until "Technical details" is opened.
-    await expect(sheet.getByText(/kamin-project-suggest-improved-v1/)).toBeHidden()
+    await expect(sheet.getByText(/kamin-project-suggest-improved-v3/)).toBeHidden()
     await sheet.getByText(w.technical, { exact: true }).click()
-    await expect(sheet.getByText(/kamin-project-suggest-improved-v1/)).toBeVisible()
+    await expect(sheet.getByText(/kamin-project-suggest-improved-v3/)).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(sheet).toHaveCount(0)
     // The form kept what was typed.
@@ -185,6 +185,8 @@ for (const lang of LANGS) test.describe(`Step 2: projects (${lang})`, () => {
     // No cue: the old panel's "Unresolved" sentence, no chip, Save waits and says why; then choose a skill yourself.
     await startProject(app, lang, { title: tr(lang, 'رحلة الفصل (مثال مختلق)', 'End-of-term trip (made up)'), description: NO_CUE(lang) })
     await expect(app.projectForm().getByText(P(lang).abstain, { exact: true })).toBeVisible()
+    // Task 80b: "Look deeper" is not offered by default (only behind ?suggest=hybrid, e2e/next-look-deeper.spec.js).
+    await expect(app.projectForm().getByTestId('look-deeper')).toHaveCount(0)
     await expect(app.projectForm().getByRole('group')).toHaveCount(0)
     await expect(app.projectForm().getByRole('button', { name: w.save, exact: true })).toBeDisabled()
     await expect(page.getByTestId('project-save-reason')).toHaveText(w.needSkill)
@@ -202,6 +204,9 @@ for (const lang of LANGS) test.describe(`Step 2: projects (${lang})`, () => {
     const app = await onStep2(page, lang)
     await startProject(app, lang, STUDY_ROOMS(lang))
     await expect(app.projectChips().first()).toBeVisible()
+    // Task 77: the line under the field says KAMIN does not open links; the field points to it.
+    await expect(app.projectForm().getByLabel(w.link, { exact: true })).toHaveAccessibleDescription(w.linkNote)
+    await expect(app.projectForm().getByTestId('project-link-note')).toHaveText(w.linkNote)
     await app.projectForm().getByLabel(w.link, { exact: true }).fill('http://example.org/made-up')
     await app.projectForm().getByRole('button', { name: w.save, exact: true }).click()
     await expect(app.projectForm().getByRole('alert')).toHaveText(P(lang).urlError)

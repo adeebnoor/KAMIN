@@ -49,3 +49,23 @@ describe('design tokens', () => {
     expect(all).not.toMatch(/\.button\{[^}]*transition:\.\d+s/)
   })
 })
+
+// Task 76 · the rules only the deleted old interface used are removed from the shared stylesheets (Task 70 left about
+// 600). scripts/find-unused-css.mjs proves a selector dead when a class or id it requires is named nowhere in src/
+// (scripts, components, data; not the stylesheets). These tests keep it so: a component deleted later takes its rules with it.
+describe('no dead rules in the shared old stylesheets (Task 76)', async () => {
+  const { OLD_SHARED_CSS, deadSelectors, namedIn, readCorpus, requiredTokens } = await import('../scripts/find-unused-css.mjs')
+  it('the finder: required tokens skip :not()/:is()/:has() and [attributes]; prefixes and suffixes built at run time count as named', () => {
+    expect(requiredTokens('.a .b:not(.c)>#d[data-x=".e"]:is(.f, .g)::before')).toEqual(['a', 'b', 'd'])
+    const named = namedIn('className="kept ui2-chip"; const tone = `tone-${kind}`; const card = `${kind}-card`; const pill = "pill-" + x')
+    expect(['kept', 'ui2-chip', 'tone-warn', 'warn-card', 'pill-blue', 'lucide', 'lucide-x'].every(named)).toBe(true)
+    expect(['gone', 'ui2-chip-row', 'ui2'].some(named)).toBe(false)
+    const { dead, css } = deadSelectors('.kept{color:red}.gone,.kept b{color:blue}.kept:not(.gone){margin:0}@media(max-width:9px){.gone{top:0}}@keyframes gone{to{opacity:1}}', named, { write: true })
+    expect(dead.map(d => d.selector)).toEqual(['.gone', '.gone'])
+    expect(css).toBe('.kept{color:red}.kept b{color:blue}.kept:not(.gone){margin:0}@keyframes gone{to{opacity:1}}')
+  })
+  it('every selector left in styles.css, redesign.css, experience.css and knowledge-workspace.css can match something', () => {
+    const named = namedIn(readCorpus())
+    for (const file of OLD_SHARED_CSS) expect(deadSelectors(readFileSync(file, 'utf8'), named).dead, file).toEqual([])
+  })
+})

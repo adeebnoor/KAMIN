@@ -1,6 +1,7 @@
 import { copy } from '../../i18n.js'
 import { permissionsOn, storedCounts } from '../../utils/privacySections.js'
 import { normalizeDigitalInterests } from '../../digitalInterests.js'
+import { preferenceCount } from '../../insight.js'
 
 // The labels of the old count tiles (Tasks 05/06), unchanged; only counts above zero are listed now.
 const LABELS = {
@@ -14,6 +15,8 @@ const LABELS = {
   // Task 58
   plan: ['خطوات محفوظة في خطتي', 'saved steps in My plan'],
   notForMe: ['عناصر عُلّمت «ليس لي»', 'items marked “not for me”'],
+  // Task 79
+  roadmap: ['علامات إنجاز في خرائط الطريق', 'ticked roadmap items'],
 }
 
 // Task 27 · the status card at the top: where the profile is saved, how many permissions are on,
@@ -27,9 +30,10 @@ export default function StatusSummary({ lang, state }) {
   const { listed, rest } = storedCounts({
     courses: state.courses?.length || 0, projects: state.projects?.length || 0, tasks: state.tasks?.length || 0,
     credentials: state.credentials?.length || 0, digital: digital.confirmed.length,
-    preferences: Object.keys(state.insight?.declaredPreferences || {}).length,
+    preferences: preferenceCount(state.insight?.declaredPreferences), // Task 78: each chosen chip counts
     // Task 58: every chosen goal (goal is goals[0]), the saved steps and the "not for me" marks.
     goal: state.goals?.length || (state.goal ? 1 : 0), plan: state.plan?.length || 0, notForMe: state.notForMe?.length || 0,
+    roadmap: state.roadmapDone?.length || 0,
   })
   const sep = lang === 'ar' ? '، ' : ', '
   const stored = listed.length

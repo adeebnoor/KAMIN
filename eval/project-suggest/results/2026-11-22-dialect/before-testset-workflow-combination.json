@@ -1,0 +1,1146 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "setup": "combination",
+    "method": "hybrid",
+    "methodVersion": "kamin-project-suggest-hybrid-v1+2c4055b",
+    "thresholds": 0.53,
+    "label": "before",
+    "commit": "8a674d2-dirty",
+    "engine": "as committed at `8a674d2`",
+    "set": "testset-workflow.json",
+    "setSha256": "7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e",
+    "frozen": true,
+    "frozenAt": "2026-11-21",
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 20,
+      "tp": 23,
+      "fp": 1,
+      "fn": 6,
+      "unsupported": 0,
+      "abstained": 7,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 2,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 0.9583333333333334,
+      "recall": 0.7931034482758621,
+      "f1": 0.8679245283018867
+    },
+    "en": {
+      "cases": 20,
+      "tp": 25,
+      "fp": 1,
+      "fn": 4,
+      "unsupported": 0,
+      "abstained": 7,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 2,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 0.9615384615384616,
+      "recall": 0.8620689655172413,
+      "f1": 0.9090909090909091
+    },
+    "all": {
+      "cases": 40,
+      "tp": 48,
+      "fp": 2,
+      "fn": 10,
+      "unsupported": 0,
+      "abstained": 14,
+      "correctAbstentions": 10,
+      "wrongAbstentions": 4,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 10,
+      "precision": 0.96,
+      "recall": 0.8275862068965517,
+      "f1": 0.888888888888889
+    }
+  },
+  "rows": [
+    {
+      "id": "wf-ar-01",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "سويت نظام لطلبات الصيانه في السكن: الطالب يرفع طلب، المشرف يشوفه ويحوله للفني المتاح، والفني يحدث حالة الطلب لين يخلص.",
+        "requirements": "سويت نظام لطلبات الصيانه في السكن: الطالب يرفع طلب، المشرف يشوفه ويحوله للفني المتاح، والفني يحدث حالة الطلب لين يخلص."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-02",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام بلاغات للبلديه، المواطن يرسل بلاغ مع الموقع والصوره، النظام يوزع البلاغ علي القسم المختص، وبعد المعالجه يوصل اشعار للمواطن.",
+        "requirements": "نظام بلاغات للبلديه، المواطن يرسل بلاغ مع الموقع والصوره، النظام يوزع البلاغ علي القسم المختص، وبعد المعالجه يوصل اشعار للمواطن."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-03",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "صممت نظام حجز الكتب في المكتبه. الطالب يحجز الكتاب واذا صار متاح يوصله تنبيه. الموظف يتابع الكتب المتاخره ويطلع تقرير شهري للاداره.",
+        "requirements": "صممت نظام حجز الكتب في المكتبه. الطالب يحجز الكتاب واذا صار متاح يوصله تنبيه. الموظف يتابع الكتب المتاخره ويطلع تقرير شهري للاداره."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-04",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "تطبيق توصيل: العميل يطلب، المطعم يستقبل الطلب ويجهزه، النظام يسند الطلب لاقرب مندوب، والمندوب يحدث حالة التوصيل لين يوصل.",
+        "requirements": "تطبيق توصيل: العميل يطلب، المطعم يستقبل الطلب ويجهزه، النظام يسند الطلب لاقرب مندوب، والمندوب يحدث حالة التوصيل لين يوصل."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-05",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام تذاكر للدعم الفني، الموظف يفتح تذكره، النظام يعطيها رقم ويحولها للفني حسب نوع المشكله، الفني يرد ويقفلها، وكل اسبوع يطلع للمدير تقرير بعدد التذاكر.",
+        "requirements": "نظام تذاكر للدعم الفني، الموظف يفتح تذكره، النظام يعطيها رقم ويحولها للفني حسب نوع المشكله، الفني يرد ويقفلها، وكل اسبوع يطلع للمدير تقرير بعدد التذاكر."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-06",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-07",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-08",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-09",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-10",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-11",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "بنيت قاعدة بيانات للشكاوى فيها جدول للشكاوى وجدول للاقسام وجدول لتاريخ كل شكوى."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-12",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": false
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "كتبت وش المفروض يسوي التطبيق: يسجل دخول المستخدم، يعرض المواعيد المتاحه، يحجز الموعد، ويرسل تذكير قبل الموعد بيوم.",
+        "requirements": "كتبت وش المفروض يسوي التطبيق: يسجل دخول المستخدم، يعرض المواعيد المتاحه، يحجز الموعد، ويرسل تذكير قبل الموعد بيوم."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-13",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام استدعا الطبيب المناوب: الممرضه تدخل حالة المريض، النظام يبلغ الطبيب المناوب، واذا ما رد خلال خمس دقايق يحول البلاغ للطبيب الثاني.",
+        "requirements": "نظام استدعا الطبيب المناوب: الممرضه تدخل حالة المريض، النظام يبلغ الطبيب المناوب، واذا ما رد خلال خمس دقايق يحول البلاغ للطبيب الثاني."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-14",
+      "lang": "ar",
+      "expected": [
+        "web-development",
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "سويت موقع الكتروني لحجز القاعات، المستخدم يختار القاعه والوقت، والنظام يتاكد انها فاضيه ويرسل تاكيد بالايميل، والمسؤول يشوف كل الحجوزات.",
+        "systems-analysis": "سويت موقع الكتروني لحجز القاعات، المستخدم يختار القاعه والوقت، والنظام يتاكد انها فاضيه ويرسل تاكيد بالايميل، والمسؤول يشوف كل الحجوزات.",
+        "requirements": "سويت موقع الكتروني لحجز القاعات، المستخدم يختار القاعه والوقت، والنظام يتاكد انها فاضيه ويرسل تاكيد بالايميل، والمسؤول يشوف كل الحجوزات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-15",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "يستقبل النظام طلبات الإجازة من الموظفين، ثم يحيلها إلى المدير المباشر للموافقة، وبعد الموافقة تُرسل إلى شؤون الموظفين ويُحدَّث رصيد الإجازات.",
+        "requirements": "يستقبل النظام طلبات الإجازة من الموظفين، ثم يحيلها إلى المدير المباشر للموافقة، وبعد الموافقة تُرسل إلى شؤون الموظفين ويُحدَّث رصيد الإجازات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-16",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-17",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "جمعت متطلبات نظام الزيارات من اداره المستشفي وكتبتها علي شكل قائمه."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-18",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "وكتبت حالات اختبار لكل خطوه."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-19",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "التطبيق حقي للحلاق: الزبون يحجز موعد، الحلاق يقبل او يرفض، واذا قبل يوصل للزبون تاكيد وتذكير قبل الموعد بساعه.",
+        "requirements": "التطبيق حقي للحلاق: الزبون يحجز موعد، الحلاق يقبل او يرفض، واذا قبل يوصل للزبون تاكيد وتذكير قبل الموعد بساعه."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-ar-20",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-01",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Built a system for dorm repair requests: a student submits a request, the supervisor reviews it and assigns it to an available technician, and the technician updates the status until it is closed.",
+        "requirements": "Built a system for dorm repair requests: a student submits a request, the supervisor reviews it and assigns it to an available technician, and the technician updates the status until it is closed."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-02",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Our app lets citizens report a pothole with a photo and location; the system routes each report to the right department and notifies the citizen when it is fixed.",
+        "requirements": "Our app lets citizens report a pothole with a photo and location; the system routes each report to the right department and notifies the citizen when it is fixed."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-03",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "When a customer places an order, the restaurant accepts it, the system assigns the nearest driver, and the driver marks it delivered.",
+        "requirements": "When a customer places an order, the restaurant accepts it, the system assigns the nearest driver, and the driver marks it delivered."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-04",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-05",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-06",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-07",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-08",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-09",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": false
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Wrote what the app must do: sign users in, show free appointment slots, book a slot and send a reminder the day before.",
+        "requirements": "Wrote what the app must do: sign users in, show free appointment slots, book a slot and send a reminder the day before."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-10",
+      "lang": "en",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Designed the database tables for a complaints system: complaints, departments and status history."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-11",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Leave requests: the employee submits a request, the system forwards it to the line manager, and once approved HR is notified and the balance is updated.",
+        "requirements": "Leave requests: the employee submits a request, the system forwards it to the line manager, and once approved HR is notified and the balance is updated."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-12",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "the system recieves the case from the call center, sends it to the avalable unit, and the unit replys with its location; after that a report goes to the supervisor",
+        "requirements": "the system recieves the case from the call center, sends it to the avalable unit, and the unit replys with its location; after that a report goes to the supervisor"
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-13",
+      "lang": "en",
+      "expected": [
+        "web-development",
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "Built a website where students book study rooms; it checks the room is free, confirms by email and lets the admin see all bookings.",
+        "systems-analysis": "Built a website where students book study rooms; it checks the room is free, confirms by email and lets the admin see all bookings.",
+        "requirements": "Built a website where students book study rooms; it checks the room is free, confirms by email and lets the admin see all bookings."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-14",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "I also wrote test cases for each step.",
+        "systems-analysis": "Shipment tracking: the supplier registers a shipment, the warehouse receives it and confirms the quantity, and the system alerts purchasing about shortages. I also wrote test cases for each step.",
+        "requirements": "Shipment tracking: the supplier registers a shipment, the warehouse receives it and confirms the quantity, and the system alerts purchasing about shortages. I also wrote test cases for each step."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-15",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-16",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Interviewed the clinic staff about how a patient moves from booking to check-in to the doctor and wrote down the steps that the new system should support.",
+        "requirements": "Interviewed the clinic staff about how a patient moves from booking to check-in to the doctor and wrote down the steps that the new system should support."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-17",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "wf-en-18",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "A barber booking app: the customer picks a time, the barber accepts or declines, and if accepted the customer gets a confirmation and a reminder one hour before.",
+        "requirements": "A barber booking app: the customer picks a time, the barber accepts or declines, and if accepted the customer gets a confirmation and a reminder one hour before."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-19",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "On-call paging: a nurse enters the patient's condition, the system pages the on-call doctor, and if there is no answer in five minutes it escalates to the next doctor.",
+        "requirements": "On-call paging: a nurse enters the patient's condition, the system pages the on-call doctor, and if there is no answer in five minutes it escalates to the next doctor."
+      },
+      "fallback": []
+    },
+    {
+      "id": "wf-en-20",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "Analysed response times of the emergency calls with descriptive statistics and a regression on time of day."
+      },
+      "fallback": []
+    }
+  ]
+}

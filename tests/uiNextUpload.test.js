@@ -10,6 +10,7 @@ import { copy } from '../src/i18n.js'
 import { COURSE_EVIDENCE_PRINCIPLE } from '../src/content/trustCopy.js'
 import CourseReview, { approvalBlock } from '../src/components/CourseReview.jsx'
 import ResultCard from '../src/ui2/components/ResultCard.jsx'
+import StorageAlert from '../src/ui2/StorageAlert.jsx'
 import { homeSummary } from '../src/ui2/screens/Home.jsx'
 import { NEXT_COPY, nextCopy, fillIn } from '../src/ui2/copy.js'
 import { VIEW_TEXT, mainAction } from '../src/ui2/views.js'
@@ -106,11 +107,11 @@ describe('Task 62 · Home: one sentence and one button', () => {
 })
 
 describe('Task 62 · step 1 words', () => {
+  // Task 70: the old start screen (src/components/StartScreen.jsx) is deleted; its sentence, read from the file at
+  // b443bad (line 61), stays word for word.
   it('the privacy promise is the old start screen\'s sentence, word for word', () => {
-    const start = read('src/components/StartScreen.jsx')
-    const [, ar, en] = start.match(/tr\(lang, '([^']*يُرفع إلى أي خادم\.)', '([^']*uploaded to any server\.)'\)/)
-    expect(NEXT_COPY.ar.upload.privacy).toBe(ar)
-    expect(NEXT_COPY.en.upload.privacy).toBe(en)
+    expect(NEXT_COPY.ar.upload.privacy).toBe('يُقرأ ملفك على جهازك فقط ولا يُرفع إلى أي خادم.')
+    expect(NEXT_COPY.en.upload.privacy).toBe('Your file is read on your device only and is not uploaded to any server.')
   })
 
   it('no percentage anywhere in the new words, and Arabic and English have the same keys', () => {
@@ -242,5 +243,32 @@ describe('Task 62 · step 1 loads on its own; the startup bundle never carries i
     const app = read('src/ui2/AppNext.jsx')
     expect(app).toMatch(/searchParams\.get\('start'\) === 'sample'/)
     expect(app).toMatch(/entry: sample \? 'sample' : 'default'/)
+  })
+})
+
+// Task 70 · two parts of the old interface the interface did not show yet, found while its browser tests were rewritten:
+// the storage alert (src/App.jsx until Task 70, word for word) and step 1's "N courses, M lines need a look" line.
+describe('Task 70 · the storage alert and the lines that need a look', () => {
+  const alert = (lang, code) => renderToStaticMarkup(createElement(StorageAlert, { lang, code, onBackup: noop }))
+  it('the storage alert shows only when a write or a delete failed, with the old words, the backup button and the recovery link', () => {
+    for (const lang of LANGS) {
+      const w = NEXT_COPY[lang].storage
+      expect(alert(lang, null)).toBe('')
+      const write = alert(lang, 'write')
+      expect(write).toContain('role="alert"')
+      expect(textOf(write)).toContain(`${w.title} ${w.line}`)
+      expect(textOf(write)).toContain(w.open)
+      expect(write).toMatch(new RegExp(`href="[^"]*/${lang}/guide\.html#recovery"`))
+      expect(textOf(alert(lang, 'delete'))).toContain(`${w.deleteTitle} ${w.line}`)
+    }
+    expect(NEXT_COPY.en.storage).toMatchObject({ title: 'Storage is unavailable or recent changes could not be saved', open: 'Open saving & backup options', recovery: 'Recovery steps' })
+    expect(read('src/ui2/AppNext.jsx')).toMatch(/<StorageAlert lang=\{lang\} code=\{status\.storageError\} onBackup=\{\(\) => openSettings\('backup'\)\}\/>/)
+  })
+  it('step 1 says how many courses were read and how many lines need a look, only when a line was set aside', () => {
+    for (const lang of LANGS) {
+      expect(newCard(lang, { validation: { mode: 'document', recognized: 3, rejected: [] } })).not.toContain('data-testid="review-found"')
+      const html = newCard(lang, { validation: { mode: 'document', recognized: 3, rejected: [{ line: 'XYZ 999 ??' }, { line: '???' }] } })
+      expect(textOf(html)).toContain(copy[lang].screens.start.found.replace('{n}', '3').replace('{m}', '2'))
+    }
   })
 })

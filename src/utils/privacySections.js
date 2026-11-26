@@ -40,8 +40,9 @@ export function permissionsOn(consents) {
 // What the status card lists after "Stored:", in the order of the old count tiles. Only counts above
 // zero are listed; `rest` says whether some kinds hold nothing ("Nothing else").
 // Task 58: plan (saved steps of My plan) and notForMe ("not for me" marks); goal counts every chosen goal.
-export function storedCounts({ courses = 0, projects = 0, tasks = 0, credentials = 0, digital = 0, preferences = 0, goal = 0, plan = 0, notForMe = 0 }) {
-  const all = [['courses', courses], ['projects', projects], ['tasks', tasks], ['credentials', credentials], ['digital', digital], ['preferences', preferences], ['goal', goal], ['plan', plan], ['notForMe', notForMe]]
+// Task 79: roadmap (ticked roadmap items).
+export function storedCounts({ courses = 0, projects = 0, tasks = 0, credentials = 0, digital = 0, preferences = 0, goal = 0, plan = 0, notForMe = 0, roadmap = 0 }) {
+  const all = [['courses', courses], ['projects', projects], ['tasks', tasks], ['credentials', credentials], ['digital', digital], ['preferences', preferences], ['goal', goal], ['plan', plan], ['notForMe', notForMe], ['roadmap', roadmap]]
   const listed = all.filter(([, count]) => count > 0).map(([key, count]) => ({ key, count }))
   return { listed, rest: listed.length < all.length }
 }

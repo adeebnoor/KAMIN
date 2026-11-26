@@ -1,0 +1,11 @@
+{
+  "file": "testset-workflow.json",
+  "sha256": "7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e",
+  "frozenAt": "2026-11-21",
+  "cases": 40,
+  "byLanguage": {
+    "ar": 20,
+    "en": 20
+  },
+  "harness": "kamin-eval-project-suggest-v1"
+}

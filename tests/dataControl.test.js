@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { deleteItem, withdrawConsent, deleteEverythingPreview, orphanCheck, regrantNotice } from '../src/utils/dataControl.js'
+import { normalizeState } from '../src/state/profileState.js'
 import { profileSkills } from '../src/utils/engine.js'
 import { projectStateToPerson360 } from '../src/ontology/projector.js'
 import { emptyInsightState } from '../src/insight.js'
@@ -164,6 +165,18 @@ describe('audit and copy', () => {
     expect(preview.outside).toContain('encrypted backups you downloaded earlier')
     expect(preview.outside).toContain('share links')
   })
+  // Task 76: the stores are named in plain words; IndexedDB, sessionStorage and localStorage only in "Technical details".
+  it('names the stores in plain words and keeps the technical names for "Technical details"', () => {
+    for (const lang of ['ar', 'en']) {
+      const preview = deleteEverythingPreview(base(), lang)
+      expect(preview.stores).toHaveLength(3)
+      for (const store of preview.stores) for (const term of ['IndexedDB', 'sessionStorage', 'localStorage']) expect(store).not.toContain(term)
+      for (const term of ['IndexedDB', 'sessionStorage', 'localStorage']) expect(preview.storesTechnical).toContain(term)
+    }
+    expect(deleteEverythingPreview(base(), 'en').stores).toContain('the copy saved on this device, in this browser’s storage')
+    expect(deleteEverythingPreview(base(), 'ar').stores).toContain('النسخة المحفوظة على هذا الجهاز في تخزين هذا المتصفح')
+    expect(readFileSync('src/components/privacy/DeleteSection.jsx', 'utf8')).toContain('<TechDetails lang={lang}>{preview.storesTechnical}</TechDetails>')
+  })
 })
 
 // Task 27 · "Consent, saving & deletion" moved its blocks into sections; no consent or deletion
@@ -229,7 +242,9 @@ const PRIVACY_SENTENCES = [
   'اسحب الموافقة واحذف الاهتمامات الرقمية',
   'Withdraw consent and delete digital interests',
   'جمع الصحة والمخالفات والتفاصيل المالية وتحليل الشخصية من الحسابات غير مفعّل. الحذف من المتصفح لا يمحو نسخًا احتياطية سبق تنزيلها.',
-  'Health, violations, financial details and personality inference from accounts are not enabled. Browser deletion cannot erase backups you previously downloaded.',
+  // Task 76 (team decision 2026-11-21): "personality inference" → "guessing your personality", plain words, same meaning;
+  // the Arabic sentence already said "تحليل الشخصية" and is unchanged (log/task-76.md).
+  'Health, violations, financial details and guessing your personality from accounts are not enabled. Browser deletion cannot erase backups you previously downloaded.',
   'مراجعات التوصيات تحت سيطرتك',
   'You control recommendation reviews',
   'لديك ${state.recommendationReviews.length} حدث مراجعة محلي. يتضمن الاسم أو الاسم المستعار والسبب والملاحظة والوقت إن اخترت قياسه. يتبع الحفظ اختيار الجلسة أو هذا الجهاز، وتشمله النسخة المشفرة. لا يُرسل ولا يدخل الرسم المعرفي أو رابط مشاركة القدرات.',
@@ -407,7 +422,9 @@ describe('Task 27: sections of "Consent, saving & deletion"', () => {
     expect(storedCounts({ courses: 7 })).toEqual({ listed: [{ key: 'courses', count: 7 }], rest: true })
     expect(storedCounts({})).toEqual({ listed: [], rest: true })
     // Task 58 added two kinds (saved steps, "not for me" marks): every kind must hold something for "nothing else" to go.
-    expect(storedCounts({ courses: 1, projects: 1, tasks: 1, credentials: 1, digital: 1, preferences: 1, goal: 1, plan: 1, notForMe: 1 }).rest).toBe(false)
+    // Task 79 adds roadmap (ticked roadmap items).
+    expect(storedCounts({ courses: 1, projects: 1, tasks: 1, credentials: 1, digital: 1, preferences: 1, goal: 1, plan: 1, notForMe: 1, roadmap: 1 }).rest).toBe(false)
+    expect(storedCounts({ courses: 1, projects: 1, tasks: 1, credentials: 1, digital: 1, preferences: 1, goal: 1, plan: 1, notForMe: 1 }).rest).toBe(true)
     expect(storedCounts({ courses: 1, projects: 1, tasks: 1, credentials: 1, digital: 1, preferences: 1, goal: 1 }).rest).toBe(true)
   })
 })
@@ -504,5 +521,46 @@ describe('Task 58 · goals, My plan and "not for me"', () => {
     const card = readFileSync('src/components/privacy/StatusSummary.jsx', 'utf8')
     expect(card).toContain('goal: state.goals?.length || (state.goal ? 1 : 0), plan: state.plan?.length || 0, notForMe: state.notForMe?.length || 0')
     expect(card).toContain("plan: ['خطوات محفوظة في خطتي', 'saved steps in My plan']")
+  })
+})
+
+// Task 78: up to 3 interest areas, 3 work values and 3 goals. Withdrawing the interests consent and "Delete everything"
+// remove every one of them, and the person graph keeps no preference and no goal claim.
+describe('Task 78 · withdrawal and "Delete everything" remove every chosen value', () => {
+  const chosen = () => ({
+    ...base(),
+    goal: 'data', goals: ['data', 'job-cyber-analyst', 'management'],
+    consents: { analyze: true, insight: true },
+    insight: { ...emptyInsightState(), declaredPreferences: { careerInterest: ['social', 'artistic', 'investigative'], workValue: ['support', 'achievement', 'recognition'], workStructure: 'balanced' } },
+  })
+  const graphClaims = state => projectStateToPerson360({ state, skills: profileSkills(state) }).claims.filter(c => c.predicate === 'kamin:pursuesGoal' || c.predicate.startsWith('kamin:prefers:'))
+
+  it('the counts name every chosen value: 7 preferences, 3 goals', () => {
+    const preview = deleteEverythingPreview(chosen(), 'en')
+    expect(preview.items.find(i => i.label === 'declared preferences').count).toBe(7)
+    expect(preview.items.find(i => i.label === 'selected goals').count).toBe(3)
+    expect(graphClaims(chosen())).toHaveLength(10)
+  })
+
+  it('withdrawing the interests consent removes all of them; courses and capabilities stay', () => {
+    const before = chosen()
+    const { state, summary } = withdrawConsent(before, 'insight', { lang: 'en' })
+    expect(state.insight.declaredPreferences).toEqual({})
+    expect(state).toMatchObject({ goal: null, goals: [] })
+    expect(graphClaims(state)).toEqual([])
+    expect(state.audit[0].label).toMatch(/: 7 preference\(s\), .* 3 goal\(s\)/)
+    expect(summary.droppedCapabilities).toEqual([])
+    expect(profileSkills(state)).toEqual(profileSkills(before))
+  })
+
+  it('"Delete everything" leaves a blank profile: no value, no goal, no graph claim for them', () => {
+    // useKaminProfile's deleteAll sets normalizeState(blankState) after clearing the device.
+    const cleared = normalizeState(appBlankState)
+    expect(cleared.insight.declaredPreferences).toEqual({})
+    expect(cleared).toMatchObject({ goal: null, goals: [] })
+    expect(graphClaims(cleared)).toEqual([])
+    const preview = deleteEverythingPreview(cleared, 'en')
+    expect(preview.items.find(i => i.label === 'declared preferences').count).toBe(0)
+    expect(preview.items.find(i => i.label === 'selected goals').count).toBe(0)
   })
 })

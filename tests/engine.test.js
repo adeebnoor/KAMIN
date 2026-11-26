@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { COURSE_GROUPS, groupCourses, courseCloses, isIllustrative } from '../src/utils/courseCards.js'
 import { demoCourses } from '../src/data.js'
 import { inferSkills, judgeOpportunities, profileSkills } from '../src/utils/engine.js'
 import { parseTranscriptText, parseTranscriptTextDetailed, extractTranscript, READING_STAGES } from '../src/utils/transcript.js'
@@ -194,31 +193,6 @@ describe('upload: reading stages and accepted files', () => {
   })
 })
 
-// Task 24 · course cards: groups in order, what a course closes, illustrative examples.
-describe('course cards', () => {
-  const skills = profileSkills({ courses: demoCourses, approved: true, college: 'FCIT' })
-  it('groups courses fits → conditional → not yet, keeping the engine order', () => {
-    expect(COURSE_GROUPS).toEqual(['yes', 'conditional', 'no'])
-    const recs = judgeOpportunities(skills, null, 'en')
-    const g = groupCourses(recs)
-    expect(g.yes.length + g.conditional.length + g.no.length).toBe(recs.length)
-    expect([...g.yes, ...g.conditional, ...g.no].map(r => r.id)).toEqual(recs.map(r => r.id))
-    expect(g.conditional.map(r => r.id)).toEqual(['cyber-foundations'])
-    expect(g.no.map(r => r.id).sort()).toEqual(['ba', 'capm', 'pmp', 'sql'])
-  })
-  it('a course closes only the capabilities it teaches that the record does not show yet', () => {
-    const recs = judgeOpportunities(skills, null, 'en')
-    const byId = id => recs.find(r => r.id === id)
-    expect(courseCloses(byId('cyber-foundations'), skills, 'en')).toEqual(['Cybersecurity fundamentals'])
-    expect(courseCloses(byId('cyber-foundations'), skills, 'ar')).toEqual(['أساسيات الأمن السيبراني'])
-    expect(courseCloses(byId('sql'), skills, 'en')).toEqual([]) // the record already shows databases: repetition
-    expect(courseCloses(byId('pmp'), skills, 'en')).toEqual([])
-    expect(courseCloses({ teaches: ['cyber'] }, [], 'en')).toEqual(['Cybersecurity fundamentals'])
-  })
-  it('recognises the illustrative examples by their provider', () => {
-    const recs = judgeOpportunities(skills, null, 'en')
-    expect(recs.filter(isIllustrative).map(r => r.id).sort()).toEqual(['ba', 'cyber-foundations', 'sql'])
-    expect(isIllustrative({ provider: 'PMI' })).toBe(false)
-    expect(isIllustrative(null)).toBe(false)
-  })
-})
+// Task 24 · course cards: retired in Task 70 with the old Courses tab (src/components/CourseCards.jsx) and its helper
+// src/utils/courseCards.js. Step 4 replaces the tab (inventory K06): its feed is tested in tests/nextSteps.test.js and
+// e2e/next-feed.spec.js, the "Illustrative example" tag in tests/pathReview.test.js (Task 36 labels).

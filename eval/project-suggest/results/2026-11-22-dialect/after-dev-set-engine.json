@@ -1,0 +1,791 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "setup": "engine",
+    "method": "improved",
+    "methodVersion": "kamin-project-suggest-improved-v3",
+    "thresholds": null,
+    "label": "after",
+    "commit": "1aef481",
+    "engine": "as committed at `1aef481`",
+    "set": "dev-set.json",
+    "setSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "frozen": false,
+    "frozenAt": null,
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 14,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 3,
+      "correctAbstentions": 3,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "en": {
+      "cases": 13,
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 1,
+      "correctAbstentions": 1,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 1,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "all": {
+      "cases": 27,
+      "tp": 32,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 4,
+      "correctAbstentions": 4,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 4,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "en-01",
+      "lang": "en",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Wrote SQL queries joining orders and customers tables in PostgreSQL."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-02",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "Ran a regression on survey data and reported confidence intervals for the mean."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-03",
+      "lang": "en",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "Implemented a settings parser module with unit tests in pytest covering error cases.",
+        "software": "Implemented a settings parser module with unit tests in pytest covering error cases."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-04",
+      "lang": "en",
+      "expected": [
+        "db-operations",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "Took a full backup of a training database, restored it after deleting a table, and reviewed user permissions.",
+        "database": "Took a full backup of a training database, restored it after deleting a table, and reviewed user permissions."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-05",
+      "lang": "en",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "Designed a responsive web interface in React with HTML and CSS for the club site."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-06",
+      "lang": "en",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Mapped the as-is workflow with stakeholders and documented three use cases."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-07",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "Wrote user stories and acceptance criteria for the booking feature."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-08",
+      "lang": "en",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "Prepared the project plan with milestones and a Gantt schedule for the capstone."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-09",
+      "lang": "en",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "Scanned a lab network for vulnerabilities and configured the firewall rules."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-10",
+      "lang": "en",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "Used an LLM with careful prompting to draft test data, then verified it by hand."
+      },
+      "fallback": []
+    },
+    {
+      "id": "en-11",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "en-12",
+      "lang": "en",
+      "expected": [
+        "database",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Wrote SQL queries for the report and unit tests for the export function.",
+        "testing": "Wrote SQL queries for the report and unit tests for the export function."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-01",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "بنيت لوحة مبيعات وكتبت استعلامات على قواعد البيانات تربط جدول الطلبات بجدول العملاء."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-02",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "أجريت تحليلًا إحصائيًا لبيانات استبيان وحسبت فاصل الثقة للمتوسط."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-03",
+      "lang": "ar",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "نفذت وحدة برمجية لتحليل ملف الإعدادات مع اختبارات آلية تغطي حالات الخطأ.",
+        "testing": "نفذت وحدة برمجية لتحليل ملف الإعدادات مع اختبارات آلية تغطي حالات الخطأ."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-04",
+      "lang": "ar",
+      "expected": [
+        "db-operations",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "أخذت نسخة احتياطية من قاعدة تدريبية ثم أجريت الاستعادة وراجعت الصلاحيات.",
+        "database": "أخذت نسخة احتياطية من قاعدة تدريبية ثم أجريت الاستعادة وراجعت الصلاحيات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-05",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "صممت واجهة ويب متجاوبة للنادي الطلابي."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-06",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "وثقت سير العمل الحالي مع أصحاب المصلحة وكتبت حالات الاستخدام."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-07",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "كتبت قصص المستخدم ومعايير القبول لميزة الحجز."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-08",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "أعددت خطة المشروع بمعالمه وجدوله الزمني."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-09",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "فحصت ثغرات شبكة المختبر وضبطت جدار الحماية."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-10",
+      "lang": "ar",
+      "expected": [
+        "ai-work",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "استخدمت نموذجًا لغويًا لصياغة بيانات اختبار ثم تحققت منها يدويًا.",
+        "ai-work": "استخدمت نموذجًا لغويًا لصياغة بيانات اختبار ثم تحققت منها يدويًا."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ar-11",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ar-12",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "nz-ar-01",
+      "lang": "ar",
+      "expected": [
+        "web-development",
+        "software",
+        "database",
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "قمت بتطوير نظام لإدارة المواعيد الطبية باستخدام React وNode.js، حيث قمت بتصميم قاعدة بيانات علائقية على PostgreSQL لربط المرضى بالأطباء، وتأمين نقاط النهاية للـ API باستخدام مصادقة JWT.",
+        "database": "قمت بتطوير نظام لإدارة المواعيد الطبية باستخدام React وNode.js، حيث قمت بتصميم قاعدة بيانات علائقية على PostgreSQL لربط المرضى بالأطباء، وتأمين نقاط النهاية للـ API باستخدام مصادقة JWT.",
+        "software": "قمت بتطوير نظام لإدارة المواعيد الطبية باستخدام React وNode.js، حيث قمت بتصميم قاعدة بيانات علائقية على PostgreSQL لربط المرضى بالأطباء، وتأمين نقاط النهاية للـ API باستخدام مصادقة JWT.",
+        "web-development": "قمت بتطوير نظام لإدارة المواعيد الطبية باستخدام React وNode.js، حيث قمت بتصميم قاعدة بيانات علائقية على PostgreSQL لربط المرضى بالأطباء، وتأمين نقاط النهاية للـ API باستخدام مصادقة JWT."
+      },
+      "fallback": []
+    },
+    {
+      "id": "nz-en-01",
+      "lang": "en",
+      "expected": [
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "Implemented an automated data processing pipeline using Python and Pandas to clean and aggregate messy CSV logs, then deployed the backend service as a Docker container on AWS EC2."
+      },
+      "fallback": []
+    },
+    {
+      "id": "nz-ar-02",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    }
+  ]
+}

@@ -64,20 +64,21 @@ export const pageLength = page => page.evaluate(() => {
 // cut their content. `data-scroll-x` marks sideways scroll that was chosen on purpose. Form
 // fields are left to cutOffInputs. Inline, hidden and screen-reader-only elements have no box
 // to overflow.
-export const sidewaysScroll = page => page.evaluate(() => {
-  const wrap = document.querySelector('.app-content-wrap')
+// Task 70: `root` is the page's content box: the old app's .app-content-wrap by default, the interface's .ui2-main.
+export const sidewaysScroll = (page, root = '.app-content-wrap') => page.evaluate(root => {
+  const wrap = document.querySelector(root)
   if (!wrap) return null
   const name = el => el.tagName.toLowerCase() + (el.dataset.testid ? `[data-testid="${el.dataset.testid}"]` : [...el.classList].map(c => '.' + c).join(''))
   return [wrap, ...wrap.querySelectorAll('*')]
     .filter(el => el instanceof HTMLElement && !el.matches('input, textarea, select') && !el.closest('[data-scroll-x]')
       && el.getClientRects().length > 0 && el.clientWidth > 1 && el.scrollWidth > el.clientWidth + 1)
     .map(el => `${name(el)} ${el.scrollWidth}>${el.clientWidth}`)
-})
+}, root)
 
 // Text fields that show only part of what is in them (a long course name in a narrow box).
-export const cutOffInputs = page => page.evaluate(() => [...document.querySelectorAll('.app-content-wrap input, .app-content-wrap textarea')]
+export const cutOffInputs = (page, root = '.app-content-wrap') => page.evaluate(root => [...document.querySelectorAll(`${root} input, ${root} textarea`)]
   .filter(el => el.getClientRects().length > 0 && ['text', 'search', 'email', 'url', 'tel', 'number', 'textarea'].includes(el.type) && el.scrollWidth > el.clientWidth)
-  .map(el => `${el.getAttribute('aria-label') || el.name || el.type} ${el.scrollWidth}>${el.clientWidth}`))
+  .map(el => `${el.getAttribute('aria-label') || el.name || el.type} ${el.scrollWidth}>${el.clientWidth}`), root)
 
 // Visible messages (role=status / role=alert) in the app window that lie on top of the page
 // heading. An empty list means nothing covers it.

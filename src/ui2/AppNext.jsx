@@ -1,5 +1,5 @@
-// Task 60 · the new interface (behind ?ui=next, src/uiSwitch.js). One lazy chunk: src/main.jsx loads it with
-// import() only when the switch says so, so the startup bundle does not carry it.
+// Task 60 · the interface (src/ui2; Task 70: the only one). One lazy chunk: src/main.jsx loads it with
+// import(), so the startup bundle does not carry it.
 // A full page, not a window over the landing page: a slim top bar, three tabs (bottom bar on phones, side
 // rail on desktop), the page, and sheets for details. The profile engine is the one the old interface uses
 // (src/state/useKaminProfile.js, Task 59); the address follows Task 20's rule (?app=<view>).
@@ -21,7 +21,7 @@
 // Task 68: Help (its own lazy chunk), reached from Profile and from the footer: the public pages in the interface's
 // language and the reviewer tools, each tool a sub-page at ?app=help#<tool> (the same fragment rule). The footer
 // (Footer.jsx) is on Home and Help only, never in the four steps.
-// Task 69: this interface is the default (src/uiSwitch.js); the old interface's addresses and entry links open the
+// Task 69: this interface is the default (Task 70: the only one); the old interface's addresses and entry links open the
 // nearest view here (views.js, translateOldAddress).
 // Task 74: a shared snapshot link (#payload=…&key=…) opens here too. src/main.jsx reads it once and takes it out of the
 // address; this page shows the old interface's reader (CapabilitySnapshot.jsx SnapshotReceiver, unchanged, loaded only
@@ -33,11 +33,12 @@ import { hasMeaningfulProfileState } from '../state/profileState.js'
 import { appParamInUrl, replaceUrl, useAppHistory } from '../utils/useAppHistory.js'
 import { pilotModeOn, readStudy, trackPilotEvent } from '../utils/pilotAnalytics.js'
 import { pageHref } from '../../public/site-content.js'
-import { parseSnapshotFragment } from '../utils/capabilitySnapshot.js'
+import { parseSnapshotFragment } from '../utils/snapshotLink.js'
 import { HELP_SECTIONS, SETTINGS_SECTIONS, mainAction, nextViewToParam, paramToNextView, sectionFromHash, translateOldAddress, VIEW_TEXT } from './views.js'
 import TopBar from './TopBar.jsx'
 import NavTabs from './NavTabs.jsx'
 import Notice, { useNotice } from './Notice.jsx'
+import StorageAlert from './StorageAlert.jsx'
 import Skeleton from './Skeleton.jsx'
 import Footer from './Footer.jsx'
 import Home from './screens/Home.jsx'
@@ -128,7 +129,7 @@ export default function AppNext({ incomingSnapshot = null }) {
   const { state, actions, status } = profile
   const stateRef = useRef(state)
   stateRef.current = state
-  useAppHistory({ view, setView, getState: () => stateRef.current, toParam: nextViewToParam, fromParam: paramToNextView, firstEntry: 'replace' })
+  useAppHistory({ view, setView, getState: () => stateRef.current, toParam: nextViewToParam, fromParam: paramToNextView })
   // The heading takes focus after the student moves, never on the first load.
   const [moved, setMoved] = useState(false)
   // Task 66: the step Profile's Edit opened (edit mode lasts while that step is open; any other move ends it).
@@ -226,6 +227,8 @@ export default function AppNext({ incomingSnapshot = null }) {
         <div className={footed ? 'ui2-col ui2-footed' : 'ui2-col'}>
         <main id="main" className="ui2-main" tabIndex={-1}>
           <Notice notice={notice} onClose={hide} lang={lang}/>
+          {/* Task 70: the old interface's storage alert; it stays until saving works again. */}
+          <StorageAlert lang={lang} code={status.storageError} onBackup={() => openSettings('backup')}/>
           {/* Screens that load on their own (Tasks 62–68) show the skeleton while they load. */}
           <Suspense fallback={<Skeleton lang={lang}/>}>
             {snapshot ? <div className="ui2-legacy ui2-snapshot" data-testid="ui2-snapshot">

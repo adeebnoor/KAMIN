@@ -6,7 +6,7 @@
 // outcome, the level, the prerequisites, the gap it closes, where the student's evidence comes from, the item's
 // source, the learning list's sentence and the "clue, not a guarantee" sentence). No score, no percentage, no rank.
 import { forwardRef, useId } from 'react'
-import { skills as catalog } from '../../data.js'
+import { capabilityName } from '../capabilityName.js'
 import { levelLabel } from '../../evidence/levels.js'
 import { COURSE_EVIDENCE_PRINCIPLE } from '../../content/trustCopy.js'
 import { LEARNING_PATH_COPY } from '../../content/learningPathCopy.js'
@@ -14,8 +14,7 @@ import { fillIn, nextCopy } from '../copy.js'
 import { actionFor, firstSentence, pathwayTitle } from '../nextState.js'
 import Chip from '../Chip.jsx'
 
-const SKILLS = Object.values(catalog)
-export const capabilityName = (id, lang) => SKILLS.find(skill => skill.id === id)?.labels[lang] || (id === 'cyber' ? { ar: 'الأمن السيبراني', en: 'Cybersecurity' }[lang] : id)
+export { capabilityName }
 export const CHIPS_PER_LINE = 2
 const join = (list, lang) => list.join(lang === 'ar' ? '، ' : ', ')
 

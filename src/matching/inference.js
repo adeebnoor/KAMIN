@@ -33,8 +33,12 @@ export function inferRelations(personId, paths = []) {
       ruleId = 'R4'; predicate = 'kamin:hasInterestContextFor'
       premises = [edge(personId, 'kamin:hasConfirmedInterest', p.personTopicId), edge(target, 'kamin:relatesToTopic', p.personTopicId)]
     } else return []
+    // Task 76: a conclusion stands only on whole premises. A premise without a subject or an object (as R2 had for a
+    // pathway-id goal before the engine named its goal node) is never exported as {"@id": null}; the conclusion is dropped.
+    if (premises.some(e => !e.subject || !e.object)) return []
     return [{
-      id:`urn:kamin:inference:${p.targetId}:${ruleId}:${p.capabilityKey || p.scheme || p.goal || p.topicId}`,
+      // Task 78: a 2nd or 3rd chosen value of a scheme has its own id (…:R3:<scheme>:<option>); the first keeps …:R3:<scheme>.
+      id:`urn:kamin:inference:${p.targetId}:${ruleId}:${p.capabilityKey || p.choiceKey || p.scheme || p.goal || p.topicId}`,
       ruleId, ruleVersion:INFERENCE_VERSION, kind:p.kind,
       conclusion:edge(personId, predicate, target), premises,
       claimId:p.claimId || p.personClaimId,

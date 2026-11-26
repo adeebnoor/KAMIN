@@ -128,3 +128,28 @@ describe('Task 58 · goals and My plan in the backup', () => {
     expect(payload.state.plan.map(p => Object.keys(p).sort().join(','))).toEqual(['action,addedAt,itemId,status', 'action,addedAt,itemId,status'])
   })
 })
+
+// Task 78: up to 3 interest areas and 3 work values, stored as lists.
+describe('Task 78 · several interest areas and work values in the backup', () => {
+  const PASS = 'correct horse battery staple'
+  const chosen = { careerInterest: ['social', 'artistic', 'investigative'], workValue: ['support', 'achievement'], workStructure: 'balanced' }
+
+  it('round trip keeps the lists in their order', async () => {
+    const s = { ...state, goals: ['data', 'job-cyber-analyst', 'management'], insight: { ...state.insight, declaredPreferences: chosen } }
+    const restored = normalizePortableState(await decryptPortableProfile(await encryptPortableProfile(buildPortableProfile({ state: s }), PASS), PASS))
+    expect(restored.insight.declaredPreferences).toEqual(chosen)
+    expect(restored.goals).toEqual(['data', 'job-cyber-analyst', 'management'])
+  })
+
+  it('an older backup with one value per question restores it as a one-item list', () => {
+    const payload = buildPortableProfile({ state })
+    const old = { ...payload, state: { ...payload.state, insight: { ...payload.state.insight, declaredPreferences: { careerInterest: 'social', workValue: 'support', workStructure: 'balanced' } } } }
+    expect(normalizePortableState(old).insight.declaredPreferences).toEqual({ careerInterest: ['social'], workValue: ['support'], workStructure: 'balanced' })
+  })
+
+  it('a malformed list keeps known ids only, without repeats, at most 3', () => {
+    const payload = buildPortableProfile({ state })
+    const odd = { ...payload, state: { ...payload.state, insight: { ...payload.state.insight, declaredPreferences: { careerInterest: ['social', 'social', '<script>', 'artistic', 'realistic', 'enterprising'], workValue: [{ evil: true }], pace: ['stable'] } } } }
+    expect(normalizePortableState(odd).insight.declaredPreferences).toEqual({ careerInterest: ['social', 'artistic', 'realistic'], pace: 'stable' })
+  })
+})

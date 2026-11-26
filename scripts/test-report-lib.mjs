@@ -82,10 +82,10 @@ export const COVERAGE_AREAS = [
   { id: 'deletion', ar: 'الحذف وسحب الموافقة', en: 'Deletion and consent withdrawal', unit: ['tests/dataControl.test.js'], e2e: ['e2e/data-control.spec.js'] },
   { id: 'network-guard', ar: 'لا اتصال بخدمات خارجية', en: 'No calls to outside services', unit: ['tests/networkGuard.test.js', 'tests/hostingConfig.test.js'], e2e: ['e2e/no-external-requests.spec.js'] },
   { id: 'pilot-mode', ar: 'تجربة الطلاب: الموافقة وملف الدراسة والانسحاب', en: 'Student trial: consent, study file and withdrawal', unit: ['tests/pilotStudy.test.js', 'tests/pilotAnalytics.test.js'], e2e: ['e2e/pilot-mode.spec.js'] },
-  { id: 'learning-path', ar: 'مسار التعلم المقترح: الفجوة أولًا وسبب كل اقتراح', en: 'Suggested learning path: gap first, a reason for each suggestion', unit: ['tests/learningPath.test.js'], e2e: ['e2e/learning-path.spec.js'] },
-  { id: 'usability-budget', ar: 'حدود النقرات والخيارات وطول الصفحة', en: 'Click, choice and page-length budgets', unit: [], e2e: ['e2e/usability-journeys.spec.js', 'e2e/page-length.spec.js'] },
+  { id: 'learning-path', ar: 'مسار التعلم المقترح: الفجوة أولًا وسبب كل اقتراح', en: 'Suggested learning path: gap first, a reason for each suggestion', unit: ['tests/learningPath.test.js'], e2e: ['e2e/keep-features.spec.js', 'e2e/next-feed.spec.js'] },
+  { id: 'usability-budget', ar: 'حدود النقرات والخيارات وطول الصفحة', en: 'Click, choice and page-length budgets', unit: [], e2e: ['e2e/keep-features.spec.js', 'e2e/page-length.spec.js'] },
   { id: 'plain-language', ar: 'لغة واضحة للطالب', en: 'Plain student language', unit: ['tests/plainCopy.test.js', 'tests/wordingGuard.test.js'], e2e: ['e2e/plain-copy.spec.js'] },
-  { id: 'accessibility', ar: 'الوصول واللغتان والجوال', en: 'Accessibility, both languages and mobile', unit: [], e2e: ['e2e/audit-remediation.spec.js', 'e2e/color-scheme.spec.js', 'e2e/a11y-all-views.spec.js'] },
+  { id: 'accessibility', ar: 'الوصول واللغتان والجوال', en: 'Accessibility, both languages and mobile', unit: [], e2e: ['e2e/audit-remediation.spec.js', 'e2e/next-shell.spec.js', 'e2e/next-look.spec.js'] },
   { id: 'evaluation-harness', ar: 'أداة تقييم اقتراح القدرات', en: 'Capability-suggestion evaluation harness', unit: ['tests/evalHarness.test.js'], e2e: [] },
 ]
 export function coverage(unit, e2e) {

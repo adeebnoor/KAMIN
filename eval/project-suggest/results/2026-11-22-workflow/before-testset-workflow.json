@@ -1,0 +1,760 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "method": "improved",
+    "methodVersion": "kamin-project-suggest-improved-v1",
+    "label": "before",
+    "commit": "3115175-dirty",
+    "engine": "as committed at `3115175`",
+    "set": "testset-workflow.json",
+    "setSha256": "7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e",
+    "frozen": true,
+    "frozenAt": "2026-11-21",
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 20,
+      "tp": 4,
+      "fp": 0,
+      "fn": 25,
+      "unsupported": 0,
+      "abstained": 16,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 11,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 0.13793103448275862,
+      "f1": 0.2424242424242424
+    },
+    "en": {
+      "cases": 20,
+      "tp": 4,
+      "fp": 0,
+      "fn": 25,
+      "unsupported": 0,
+      "abstained": 16,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 11,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 0.13793103448275862,
+      "f1": 0.2424242424242424
+    },
+    "all": {
+      "cases": 40,
+      "tp": 8,
+      "fp": 0,
+      "fn": 50,
+      "unsupported": 0,
+      "abstained": 32,
+      "correctAbstentions": 10,
+      "wrongAbstentions": 22,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 10,
+      "precision": 1,
+      "recall": 0.13793103448275862,
+      "f1": 0.2424242424242424
+    }
+  },
+  "rows": [
+    {
+      "id": "wf-ar-01",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-02",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-03",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-04",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-05",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-06",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-07",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-08",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-09",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-10",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-11",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-12",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-13",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-14",
+      "lang": "ar",
+      "expected": [
+        "web-development",
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-15",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-16",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-17",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-18",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-19",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-ar-20",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-01",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-02",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-03",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-04",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-05",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-06",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-07",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-08",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-09",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-10",
+      "lang": "en",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-11",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-12",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-13",
+      "lang": "en",
+      "expected": [
+        "web-development",
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-14",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-15",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-16",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-17",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-18",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-19",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "wf-en-20",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    }
+  ]
+}

@@ -318,9 +318,15 @@ describe('Task 56: the module is lazy', () => {
 
   it('src/interests/freeText.js, its state module and the improved engine are not in the initial bundle', () => {
     const graph = initialGraph()
-    expect(graph.size).toBeGreaterThan(20) // the walk really follows the app's imports
-    expect(graph.has(resolve('src/App.jsx'))).toBe(true)
-    expect(graph.has(resolve('src/insight.js'))).toBe(true)
+    // Task 70: the startup graph is src/main.jsx and its few static imports (the old src/App.jsx and the 20+ modules
+    // it pulled in are deleted); the interface is one lazy chunk. The walk still follows imports:
+    // Task 76: only the snapshot link's fragment reader is in startup; the snapshot's checks and the catalogs they use
+    // (capabilities, goals, pathways) moved out with src/utils/capabilitySnapshot.js.
+    expect(graph.has(resolve('src/utils/snapshotLink.js'))).toBe(true)
+    expect(graph.has(resolve('src/utils/capabilitySnapshot.js'))).toBe(false)
+    expect(graph.has(resolve('src/matching/targets.js'))).toBe(false)
+    expect(graph.has(resolve('src/themeChoice.js'))).toBe(true)
+    expect(graph.has(resolve('src/insight.js'))).toBe(false)
     expect(graph.has(resolve('src/interests/freeText.js'))).toBe(false)
     expect(graph.has(resolve('src/interests/freeInterestState.js'))).toBe(false)
     expect(graph.has(resolve('src/interests/vocabulary.js'))).toBe(false) // Task 57 follow-up: the interest vocabulary

@@ -7,6 +7,7 @@ import path from 'node:path'
 import { suggestCapabilities, PROJECT_SUGGEST_VERSION } from '../../src/ai/projectSuggest.js'
 import { suggestCapabilities as suggestImproved, PROJECT_SUGGEST_IMPROVED_VERSION } from '../../src/ai/projectSuggestImproved.js'
 import { EMBEDDING_MODEL } from '../../src/semantic/config.js'
+import { HYBRID_FALLBACK_V1, HYBRID_FALLBACK_V2, createFallback } from '../../src/ai/hybridFallback.js'
 import { skills } from '../../src/data.js'
 import { sha256 } from './lib.mjs'
 
@@ -92,4 +93,27 @@ export const improved = {
     const result = suggestImproved(text)
     return { suggestions: result.suggestions.map(s => ({ skillId: s.skillId, support: s.snippet })) }
   },
+}
+
+// Task 43 · hybrid: `improved` first; only if it abstains, the MiniLM fallback of src/ai/hybridFallback.js (the
+// module the browser runs) with a stricter threshold tuned on dev-set.json only, at most 1 suggestion, quoting
+// the student's original sentence. `fallback: true` marks the suggestions the fallback added.
+// Task 80: fallback v2 (dialect and mixed examples, one threshold per variety: `thresholds`); v1 with `threshold`.
+const fallbackModels = {}
+export const fallback = (version = 'v2') => (fallbackModels[version] ||= createFallback(embed, { version }))
+export function hybrid({ threshold, thresholds }) {
+  const version = thresholds ? 'v2' : 'v1'
+  if (version === 'v1' ? typeof threshold !== 'number' : Object.values(thresholds).some(t => typeof t !== 'number')) throw new Error('HYBRID_THRESHOLD_REQUIRED: run "tune --method hybrid" on the development set first')
+  return {
+    name: 'hybrid',
+    version: `${version === 'v2' ? HYBRID_FALLBACK_V2 : HYBRID_FALLBACK_V1}+${EMBEDDING_MODEL.revision.slice(0, 7)}`,
+    threshold: version === 'v1' ? threshold : undefined,
+    thresholds,
+    async predict(text) {
+      const first = await improved.predict(text)
+      if (first.suggestions.length) return first
+      const result = await fallback(version).suggest(text, version === 'v1' ? { threshold } : { thresholds })
+      return { suggestions: result.suggestions.map(s => ({ skillId: s.skillId, support: s.snippet, score: Number(s.score.toFixed(4)), fallback: true })) }
+    },
+  }
 }

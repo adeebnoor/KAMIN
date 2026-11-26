@@ -10,10 +10,13 @@ import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import Interests from '../src/ui2/screens/Interests.jsx'
 import FreeInterestCard, { chipName } from '../src/ui2/components/FreeInterestCard.jsx'
-import StudentInsight from '../src/components/StudentInsight.jsx'
-import { appendFreeInterest, grantInterests, hasInterests, replaceFreeInterest, restoreFreeInterest, tapPreference, toggleFreeChip } from '../src/ui2/interestsState.js'
+// Task 70: the old interests screen (src/components/StudentInsight.jsx) is deleted.
+import { appendFreeInterest, chosenOf, grantInterests, hasInterests, questionFull, replaceFreeInterest, restoreFreeInterest, tapPreference, toggleFreeChip } from '../src/ui2/interestsState.js'
 import { addFreeInterest, freeInterestGoalPathways, setChipRemoved, understandInterest } from '../src/interests/freeText.js'
-import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, setDeclaredPreference } from '../src/insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, emptyInsightState, normalizeDeclaredPreferences, preferenceCount } from '../src/insight.js'
+import { normalizeState } from '../src/state/profileState.js'
+import { projectStateToPerson360 } from '../src/ontology/projector.js'
+import { EVIDENCE_PREDICATES } from '../src/person360.js'
 import { withdrawConsent } from '../src/utils/dataControl.js'
 import { NEXT_COPY } from '../src/ui2/copy.js'
 import { VIEW_TEXT } from '../src/ui2/views.js'
@@ -41,8 +44,8 @@ describe('Task 64 · the interests consent: the approved sentence, shown once, n
   for (const lang of LANGS) it(`${lang}: step 3 shows the consent from src/i18n.js word for word, as the old screen does`, () => {
     const consent = copy[lang].screens.insight.consent
     const now = page(lang, SAMPLE)
-    const old = renderToStaticMarkup(createElement(StudentInsight, { lang, state: SAMPLE, setState: noop, log: noop, onGoal: noop, onExplore: noop, onRecord: noop, onSave: noop, matches: [], onInspect: noop }))
-    expect(textOf(old)).toContain(consent)
+    // Task 70: the old interests screen (StudentInsight.jsx), which showed the same sentence, is deleted.
+    expect(consent.length).toBeGreaterThan(40)
     // The checkbox's label is exactly the sentence, and the box is not ticked.
     const label = now.match(/<label[^>]*ui2-interests-consent[^>]*>[\s\S]*?<\/label>/)[0]
     expect(textOf(label)).toBe(consent)
@@ -101,17 +104,51 @@ describe('Task 64 · the chips: today\'s options and ids, tap to choose, tap aga
     expect(textOf(html)).toContain(VIEW_TEXT.interests.title[lang])
   })
 
-  it('the stored shape is the old screen\'s: one choice per question; a second tap removes it', () => {
+  // Task 78 (Amjd, 2026-11-21): up to 3 choices per question, stored as lists. This replaces Task 64's check that a
+  // tap replaced the other choice of the question ("one choice per question"), which the decision changes.
+  it('Task 78: up to 3 choices per question, stored as lists in the order chosen; a second tap removes one; a 4th does nothing', () => {
     const start = consented(SAMPLE)
     const one = tapPreference(start, 'careerInterest', 'investigative')
-    expect(one.insight.declaredPreferences).toEqual(setDeclaredPreference(start.insight, 'careerInterest', 'investigative').declaredPreferences)
-    const two = tapPreference(one, 'workValue', 'achievement')
-    expect(two.insight.declaredPreferences).toEqual({ careerInterest: 'investigative', workValue: 'achievement' })
-    expect(tapPreference(two, 'careerInterest', 'artistic').insight.declaredPreferences).toEqual({ careerInterest: 'artistic', workValue: 'achievement' })
-    expect(tapPreference(two, 'careerInterest', 'investigative').insight.declaredPreferences).toEqual({ workValue: 'achievement' })
+    expect(one.insight.declaredPreferences).toEqual({ careerInterest: ['investigative'] })
+    const three = ['artistic', 'social'].reduce((s, id) => tapPreference(s, 'careerInterest', id), one)
+    expect(three.insight.declaredPreferences.careerInterest).toEqual(['investigative', 'artistic', 'social'])
+    expect(questionFull(three, 'careerInterest')).toBe(true)
+    expect(questionFull(three, 'workValue')).toBe(false)
+    expect(tapPreference(three, 'careerInterest', 'realistic'), 'a 4th choice changes nothing').toBe(three)
+    const both = ['achievement', 'support', 'independence'].reduce((s, id) => tapPreference(s, 'workValue', id), three)
+    expect(both.insight.declaredPreferences).toEqual({ careerInterest: ['investigative', 'artistic', 'social'], workValue: ['achievement', 'support', 'independence'] })
+    expect(tapPreference(both, 'careerInterest', 'artistic').insight.declaredPreferences.careerInterest, 'tap again removes it').toEqual(['investigative', 'social'])
+    const none = ['investigative', 'artistic', 'social'].reduce((s, id) => tapPreference(s, 'careerInterest', id), both)
+    expect(none.insight.declaredPreferences, 'an empty question is not stored').toEqual({ workValue: ['achievement', 'support', 'independence'] })
     expect(() => tapPreference(start, 'careerInterest', 'not-an-option')).toThrow('UNKNOWN_PREFERENCE_OPTION')
+    expect(tapPreference(SAMPLE, 'careerInterest', 'investigative'), 'nothing is saved without the consent').toBe(SAMPLE)
     expect(hasInterests(start)).toBe(false)
-    expect(hasInterests(two)).toBe(true)
+    expect(hasInterests(one)).toBe(true)
+  })
+
+  it('Task 78: a profile saved with one value per question loads as a one-item list; a tap adds to it', () => {
+    const saved = { insight: { declaredPreferences: { careerInterest: 'investigative', workValue: 'achievement', workStructure: 'balanced' } } }
+    expect(normalizeState(saved).insight.declaredPreferences).toEqual({ careerInterest: ['investigative'], workValue: ['achievement'], workStructure: 'balanced' })
+    const old = { ...consented(SAMPLE), insight: { ...emptyInsightState(), ...saved.insight } }
+    expect(chosenOf(old, 'careerInterest')).toEqual(['investigative'])
+    expect(tapPreference(old, 'careerInterest', 'artistic').insight.declaredPreferences).toEqual({ careerInterest: ['investigative', 'artistic'], workValue: ['achievement'], workStructure: 'balanced' })
+    // Repeats, unknown ids and a 4th value are dropped; an empty list and a non-string are not stored.
+    expect(normalizeDeclaredPreferences({ careerInterest: ['social', 'social', 'nope', 'artistic', 'realistic', 'enterprising'], workValue: [], pace: 7 })).toEqual({ careerInterest: ['social', 'artistic', 'realistic'] })
+    expect(normalizeDeclaredPreferences(null)).toEqual({})
+    expect(preferenceCount({ careerInterest: ['social', 'artistic'], workValue: 'achievement' })).toBe(3)
+  })
+
+  for (const lang of LANGS) it(`${lang} · Task 78: the hint says "choose up to 3"; with 3 chosen it says how to change; every chosen chip is pressed`, () => {
+    const w = NEXT_COPY[lang].interests
+    expect(w.pickUpTo).toMatch(lang === 'ar' ? /حتى 3/ : /up to 3/)
+    expect(w).not.toHaveProperty('pickOne')
+    expect(textOf(page(lang, consented(SAMPLE))).split(w.pickUpTo).length - 1, 'both questions').toBe(2)
+    const full = ['investigative', 'artistic', 'social'].reduce((s, id) => tapPreference(s, 'careerInterest', id), consented(SAMPLE))
+    const html = page(lang, tapPreference(full, 'workValue', 'support'))
+    expect(textOf(html)).toContain(w.pickFull)
+    expect(textOf(html).split(w.pickUpTo).length - 1, 'the other question still says up to 3').toBe(1)
+    expect(html.match(/<button[^>]*aria-pressed="true"[^>]*data-option="[^"]+"|<button[^>]*data-option="[^"]+"[^>]*aria-pressed="true"/g)).toHaveLength(4)
+    expect(html).toMatch(/aria-live="polite"[^>]*data-testid="ui2-interests-hint-careerInterest"|data-testid="ui2-interests-hint-careerInterest"[^>]*aria-live="polite"/)
   })
 
   for (const lang of LANGS) it(`${lang}: a choice makes "Next" the one main button; the chosen chips are pressed`, () => {
@@ -196,6 +233,8 @@ describe('Task 64 · interests in the student\'s own words (Task 56\'s functions
   it('withdrawing the interests consent removes the chips, the sentences and what was understood from them', () => {
     let state = consented(SAMPLE)
     state = tapPreference(tapPreference(state, 'careerInterest', 'investigative'), 'workValue', 'achievement')
+    // Task 78: every chosen value goes (3 areas and 2 values here).
+    state = tapPreference(tapPreference(tapPreference(state, 'careerInterest', 'artistic'), 'careerInterest', 'social'), 'workValue', 'support')
     for (const lang of LANGS) state = appendFreeInterest(state, addFreeInterest(state, SENTENCE(lang), { lang }).insight.freeInterests.at(-1))
     expect(state.insight.freeInterests).toHaveLength(2)
     const { state: after, summary } = withdrawConsent(state, 'insight', { lang: 'en' })
@@ -204,6 +243,7 @@ describe('Task 64 · interests in the student\'s own words (Task 56\'s functions
     expect(after.insight.declaredPreferences).toEqual({})
     expect(freeInterestGoalPathways(after)).toEqual([])
     expect(summary.sentences.en.join(' ')).toContain('2 interest(s) in your own words were deleted')
+    expect(after.audit[0].label).toMatch(/: 5 preference\(s\)/)
     expect(hasInterests(after)).toBe(false)
   })
 })
@@ -218,6 +258,20 @@ describe('Task 64 · no interest changes any capability or its level', () => {
     for (const text of ['I like building databases and analysing data with statistics', SENTENCE('ar'), DATA('ar')]) state = appendFreeInterest(state, addFreeInterest(state, text, { lang: 'en' }).insight.freeInterests.at(-1))
     expect(state.insight.freeInterests.flatMap(e => e.understood).some(c => c.kind === 'capability'), 'a capability chip was understood').toBe(true)
     expect(levels(state)).toEqual(before)
+  })
+
+  it('Task 78: 3 areas and 3 values change no capability, no level and no evidence claim of the graph', () => {
+    const graphOf = state => projectStateToPerson360({ state, skills: profileSkills(state) })
+    const evidence = graph => JSON.parse(JSON.stringify(graph.claims.filter(c => EVIDENCE_PREDICATES.includes(c.predicate)).map(({ generatedAtTime, ...c }) => c)))
+    let state = consented(SAMPLE)
+    for (const id of ['investigative', 'realistic', 'conventional']) state = tapPreference(state, 'careerInterest', id)
+    for (const id of ['achievement', 'independence', 'support']) state = tapPreference(state, 'workValue', id)
+    expect(levels(state)).toEqual(levels(SAMPLE))
+    expect(evidence(graphOf(state))).toEqual(evidence(graphOf(SAMPLE)))
+    expect(evidence(graphOf(state)).length).toBeGreaterThan(0)
+    const prefers = graphOf(state).claims.filter(c => c.predicate.startsWith('kamin:prefers:'))
+    expect(prefers).toHaveLength(6)
+    expect(prefers.every(c => c.evidenceStrength === 'self-reported' && c.sourceType === 'self-declared')).toBe(true)
   })
 })
 

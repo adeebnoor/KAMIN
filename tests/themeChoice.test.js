@@ -85,20 +85,22 @@ describe('Task 61 · "delete everything" keeps the theme, like the language', ()
 
   it('kamin-theme is a kept interface key, and the comment says so', async () => {
     expect(KEPT_INTERFACE_KEYS).toContain('kamin-theme')
-    Object.assign(globalThis, { sessionStorage: memoryStorage(), localStorage: memoryStorage({ 'kamin-lang': 'en', 'kamin-ui': 'next', 'kamin-theme': 'dark' }) })
+    // Task 70: 'kamin-ui' (the old interface switch) is no longer kept; "delete everything" removes it (tests/uiNext.test.js).
+    Object.assign(globalThis, { sessionStorage: memoryStorage(), localStorage: memoryStorage({ 'kamin-lang': 'en', 'kamin-theme': 'dark' }) })
     expect((await verifyDeviceCleared()).leftovers).toEqual([])
     Object.assign(globalThis, { localStorage: memoryStorage({ 'kamin-theme': 'dark', 'kamin-pilot-v1': '{}' }) })
     expect((await verifyDeviceCleared()).leftovers).toEqual(['local:kamin-pilot-v1'])
-    expect(read('src/utils/dataControl.js')).toMatch(/Task 61, the new interface's theme \('kamin-theme'/)
+    expect(read('src/utils/dataControl.js')).toMatch(/Task 61, the theme\n\/\/ \('kamin-theme'/)
   })
 })
 
 describe('Task 61 · applied early, new interface only, theme code stays lazy', () => {
-  it('src/main.jsx applies the saved theme before the first render, and only for the new interface', () => {
+  // Task 70: the interface is the only one, so the theme is applied unconditionally (no interface switch any more).
+  it('src/main.jsx applies the saved theme before the first render', () => {
     const main = read('src/main.jsx')
     expect(main).toMatch(/^import \{ applyTheme, readTheme \} from '\.\/themeChoice\.js'$/m)
-    const apply = main.indexOf("if(ui==='next')applyTheme(readTheme())")
-    expect(apply).toBeGreaterThan(main.indexOf("const ui=chooseUi()"))
+    const apply = main.indexOf("applyTheme(readTheme())")
+    expect(apply).toBeGreaterThan(main.indexOf("const incomingSnapshot="))
     expect(apply).toBeLessThan(main.indexOf('createRoot('))
     expect(main.match(/applyTheme\(/g)).toHaveLength(1)
   })
@@ -123,7 +125,6 @@ describe('Task 61 · applied early, new interface only, theme code stays lazy', 
     expect(styles).toMatch(/^:root\[data-theme\]\{color-scheme:light dark;background:Canvas\}$/m)
     expect(styles).toMatch(/^:root\[data-theme="light"\]\{color-scheme:light\}$/m)
     expect(styles).toMatch(/^:root\[data-theme="dark"\]\{color-scheme:dark\}$/m)
-    // The old interface's code never sets a theme.
-    expect(read('src/App.jsx')).not.toMatch(/data-theme|applyTheme|kamin-theme/)
+    // Task 70: the old interface's code (src/App.jsx, which never set a theme) is deleted.
   })
 })

@@ -102,11 +102,16 @@ describe('Task 67 · Save on this device: the dashboard\'s sentence, the status,
     expect(textOf(on)).toContain(W(lang).stopSaving)
     expect(textOf(on)).not.toContain(saveOffer('keep', lang))
   })
-  it('the sentences the page writes itself are the old interface\'s own, word for word, in their old files', () => {
-    const privacy = read('src/components/Privacy.jsx'), app = read('src/App.jsx')
+  // Task 70: src/App.jsx is deleted. Its four sentences (read from the file at b443bad, word for word) stay as they were.
+  const OLD_APP_SENTENCES = {
+    ar: { savingOff: 'أُوقف الحفظ الدائم؛ بقيت الجلسة الحالية.', restored: 'تمت استعادة ملفك محليًا. أُعيد حساب النتائج من الأدلة، ولم تُفعّل موافقات المشاركة الخارجية.', noEvents: 'لا توجد أحداث بعد.', studyKept: 'بقي ملف الدراسة المجهول فقط؛ يُحذف عند إنهاء الجلسة أو الانسحاب من الدراسة.' },
+    en: { savingOff: 'Persistent saving is off; the current session remains.', restored: 'Your profile was restored locally. Derived results were recomputed from evidence; external sharing consents remain off.', noEvents: 'No events yet.', studyKept: 'Only the anonymous study file is kept; it is deleted when you finish the session or withdraw from the study.' },
+  }
+  it('the sentences the page writes itself are the old interface\'s own, word for word', () => {
+    const privacy = read('src/components/Privacy.jsx')
     for (const lang of LANGS) {
       expect(privacy, `stopSaving (${lang})`).toContain(`'${W(lang).stopSaving}'`)
-      for (const key of ['savingOff', 'restored', 'noEvents', 'studyKept']) expect(app, `${key} (${lang})`).toContain(`'${W(lang)[key]}'`)
+      for (const key of ['savingOff', 'restored', 'noEvents', 'studyKept']) expect(W(lang)[key], `${key} (${lang})`).toBe(OLD_APP_SENTENCES[lang][key])
     }
   })
 })
@@ -219,20 +224,24 @@ describe('Task 67 · where Settings is, and what loads when', () => {
       expect(source, `${file}: no data control`).not.toMatch(/deleteAll|withdrawConsent|changePersistence|exportProfile|importProfile|exportClr|saveMyData|undoMyData|clearRecommendationReviews|dataControl/)
     }
   })
-  it('Settings is lazy(import()) in AppNext; only Settings imports its row and its CSS; the old interface still lazy-loads Privacy', () => {
+  it('Settings is lazy(import()) in AppNext; only Settings imports its row and its CSS; Privacy is loaded lazily only', () => {
     const app = read('src/ui2/AppNext.jsx')
     expect(app).toContain("const Settings = lazy(() => import('./screens/Settings.jsx'))")
     expect(app).not.toMatch(/^import[^\n]*screens\/Settings/m)
     const importers = needle => sourceFiles('src').filter(file => read(file).includes(needle)).map(file => file.split(path.sep).join('/'))
     expect(importers("components/SettingsRow.jsx'")).toEqual(['src/ui2/screens/Settings.jsx'])
     expect(importers("settings.css'")).toEqual(['src/ui2/screens/Settings.jsx'])
-    expect(read('src/App.jsx')).toContain("const Privacy = lazy(()=>import('./components/Privacy.jsx'))")
+    // Task 70: the old interface (src/App.jsx) is deleted; nothing imports Privacy.jsx statically.
+    for (const file of sourceFiles('src')) expect(read(file), file).not.toMatch(/^import[^\n]*components\/Privacy\.jsx'/m)
     expect(read('src/components/Privacy.jsx')).toMatch(/^export \{ StatusSummary, PermissionsSection, BackupSection, DeleteSection \}$/m)
   })
   it('the new words: the same keys in both languages, no percentage, the brief\'s row names', () => {
     const keys = value => (value && typeof value === 'object' ? Object.entries(value).flatMap(([k, v]) => [k, ...keys(v).map(sub => `${k}.${sub}`)]) : [])
     expect(keys(W('ar'))).toEqual(keys(W('en')))
     expect(JSON.stringify(W('ar')) + JSON.stringify(W('en'))).not.toMatch(/[%٪]/)
-    expect(W('en').rows).toEqual({ courses: 'My courses', log: 'Usage log', save: 'Save on this device', backup: 'Backup and restore', share: 'Share a snapshot link', export: 'Export (CLR JSON)', consents: 'Consents', delete: 'Delete everything' })
+    expect(W('en').rows).toEqual({ courses: 'My courses', log: 'Usage log', save: 'Save on this device', backup: 'Backup and restore', share: 'Share a snapshot link', export: 'Download my capabilities file', consents: 'Consents', delete: 'Delete everything' })
+    // Task 76 (team decision 2026-11-21): the brief's "Export (CLR JSON)" row is now plain words in both languages.
+    expect(W('ar').rows.export).toBe('نزّل ملف قدراتي')
+    expect(JSON.stringify(W('ar').rows) + JSON.stringify(W('en').rows)).not.toMatch(/CLR|JSON/)
   })
 })

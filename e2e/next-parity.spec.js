@@ -4,7 +4,7 @@
 // K37: a next step's Details sheet holds the old review (contest with a reason and an alias, recorded on this device,
 // no capability changes), and "See my review history" opens Settings → Usage log with the decision listed.
 // K34: a shared snapshot link opens in the new interface (the payload and key leave the address, nothing is added to
-// the profile, Close shows the view), also when the link is opened while the page is open; ?ui=old keeps the old reader.
+// the profile, Close shows the view), also when the link is opened while the page is open; with the retired old-interface address too (Task 70).
 // No sideways scroll at 360px and axe 0 violations in both themes on all three. Arabic and English, desktop and phone.
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
@@ -110,11 +110,14 @@ for (const lang of LANGS) test.describe(`Task 74 · parity (${lang})`, () => {
     expect(new URL(page.url()).searchParams.get('app')).toBe('plan')
   })
 
-  test('K34: with ?ui=old a snapshot link still opens the old reader', async ({ page }) => {
+  // Task 70: the old reader is deleted with the old interface; its address opens this interface's reader.
+  test('K34: with the retired old-interface address a snapshot link opens the interface reader', async ({ page }) => {
+    const app = kamin(page, { ui: 'new', lang })
     const fragment = await fragmentFor(SAMPLE[0])
-    await page.goto(`/${lang}/?ui=old${fragment}`)
-    await expect(page.getByRole('heading', { name: tr(lang, 'لقطة قدرات مشتركة', 'Shared capability snapshot'), level: 1 })).toBeVisible()
-    await expect(page.getByTestId('ui2-topbar'), 'the old interface').toHaveCount(0)
+    await page.goto(`/${lang}/?${new URLSearchParams({ ui: 'old' })}${fragment}`)
+    await expect(app.snapshotHeading()).toBeVisible()
+    await expect(page.getByTestId('ui2-topbar'), 'the interface').toBeVisible()
+    await expect.poll(() => page.url(), { message: 'the payload and key leave the address bar' }).not.toContain('payload=')
   })
 
   test('no sideways scroll at 360px: the plan, the review form and the snapshot', async ({ page }) => {

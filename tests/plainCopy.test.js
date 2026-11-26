@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { copy, fill } from '../src/i18n.js'
 import { PLAIN_TERMS, TECHNICAL_TERMS, plain, INTEREST_AREAS, SCREEN_JARGON, jargonIn } from '../src/content/plainTerms.js'
 import { COURSE_EVIDENCE_PRINCIPLE } from '../src/content/trustCopy.js'
@@ -72,8 +72,10 @@ describe('plain copy on the four student screens', () => {
     expect(copy.en.screens.review.consent).toBe('I explicitly consent to analyzing this record to build my skills profile after reviewing it.')
   })
 
-  it('App.jsx no longer holds the moved review-screen strings', () => {
-    const app = readFileSync('src/App.jsx', 'utf8')
+  // Task 70: src/App.jsx is deleted; the strings must not come back anywhere in the app's code.
+  it('the app no longer holds the moved review-screen strings', () => {
+    const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(`${dir}/${e.name}`) : /\.(jsx?)$/.test(e.name) ? [`${dir}/${e.name}`] : [])
+    const app = files('src').map(f => readFileSync(f, 'utf8')).join('\n')
     for (const gone of ['courses currently have governed capability mappings', 'Current governed skill mapping', 'Unsigned CLR 2.0-shaped portable export created', 'Technology extracts; you approve']) expect(app).not.toContain(gone)
   })
 })

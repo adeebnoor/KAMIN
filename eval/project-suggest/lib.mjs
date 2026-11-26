@@ -44,6 +44,33 @@ export function isSupported(description, support) {
 }
 
 const ratio = (a, b) => b ? a / b : null
+
+// Task 43 · uncertainty for the hybrid report, by Task 39's rule: resample the cases with replacement,
+// 2,000 draws, a fixed seed, 95% percentile interval. Same seed and same case order → same draws, so two
+// methods scored on one set are resampled identically (paired) and two runs give identical numbers.
+export const BOOTSTRAP = Object.freeze({ draws: 2000, seed: 43, level: 0.95 })
+export function seededRandom(seed) {
+  let a = seed >>> 0
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
+}
+const prf = ({ tp, fp, fn }) => { const precision = ratio(tp, tp + fp), recall = ratio(tp, tp + fn); return { precision, recall, f1: precision != null && recall != null && precision + recall ? 2 * precision * recall / (precision + recall) : null } }
+/** Bootstrap interval for precision, recall and F1 from score() rows of one language ('all' = every row). */
+export function bootstrapInterval(rows, { lang = 'all', draws = BOOTSTRAP.draws, seed = BOOTSTRAP.seed, level = BOOTSTRAP.level } = {}) {
+  const sample = rows.filter(r => lang === 'all' || r.lang === lang)
+  const sum = list => list.reduce((s, r) => ({ tp: s.tp + r.tp, fp: s.fp + r.fp, fn: s.fn + r.fn }), { tp: 0, fp: 0, fn: 0 })
+  const point = prf(sum(sample))
+  const random = seededRandom(seed), drawn = { precision: [], recall: [], f1: [] }
+  for (let d = 0; d < draws && sample.length; d++) {
+    const totals = { tp: 0, fp: 0, fn: 0 }
+    for (let i = 0; i < sample.length; i++) { const r = sample[Math.floor(random() * sample.length)]; totals.tp += r.tp; totals.fp += r.fp; totals.fn += r.fn }
+    const m = prf(totals)
+    for (const key of Object.keys(drawn)) if (m[key] != null) drawn[key].push(m[key])
+  }
+  const tail = (1 - level) / 2
+  const interval = values => { if (!values.length) return { low: null, high: null }; const v = [...values].sort((a, b) => a - b); return { low: v[Math.floor(tail * v.length)], high: v[Math.min(v.length - 1, Math.ceil((1 - tail) * v.length) - 1)] } }
+  return Object.fromEntries(Object.keys(drawn).map(key => [key, { value: point[key], ...interval(drawn[key]) }]))
+}
+export const withInterval = m => m.value == null ? 'n/a' : `${(m.value * 100).toFixed(1)}% (95% CI ${(m.low * 100).toFixed(1)}–${(m.high * 100).toFixed(1)})`
 const emptyBucket = () => ({ cases: 0, tp: 0, fp: 0, fn: 0, unsupported: 0, abstained: 0, correctAbstentions: 0, wrongAbstentions: 0, falseAlarmCases: 0, shouldAbstainCases: 0 })
 
 /**

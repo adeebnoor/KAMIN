@@ -108,8 +108,8 @@
 :root[data-scheme="dark"] .ui2-legacy .profile-network-legend span+span i{border-top-color:var(--teal)}
 :root[data-scheme="dark"] .ui2-legacy .studio-context-note p{color:var(--muted)}
 :root[data-scheme="dark"] .ui2-legacy .studio-evidence-details{background:var(--paper);border-color:var(--line)}
-:root[data-scheme="dark"] .ui2-legacy .inference-demo-controls label,:root[data-scheme="dark"] .ui2-legacy .inference-picker{color:var(--navy)}
-:root[data-scheme="dark"] .ui2-legacy .inference-demo-controls select,:root[data-scheme="dark"] .ui2-legacy .inference-picker select{background:var(--paper);color:var(--navy);border-color:var(--line)}
+:root[data-scheme="dark"] .ui2-legacy .inference-picker{color:var(--navy)}
+:root[data-scheme="dark"] .ui2-legacy .inference-picker select{background:var(--paper);color:var(--navy);border-color:var(--line)}
 :root[data-scheme="dark"] .ui2-legacy .inference-proof{background:var(--paper);border-color:var(--line)}
 :root[data-scheme="dark"] .ui2-legacy .inference-proof-heading small{color:var(--teal)}
 :root[data-scheme="dark"] .ui2-legacy .inference-proof-heading h3{color:var(--navy)}
@@ -217,7 +217,6 @@
 :root[data-scheme="dark"] .ui2-legacy .recall-results small{color:var(--muted)}
 :root[data-scheme="dark"] .ui2-legacy .semantic-status{background:var(--mist)}
 :root[data-scheme="dark"] .ui2-legacy .semantic-error{color:var(--danger)}
-:root[data-scheme="dark"] .ui2-legacy .k-audiences article>.text-button{color:var(--teal);border-bottom-color:var(--teal)}
 :root[data-scheme="dark"] .ui2-legacy .app-title{border-bottom-color:var(--line)}
 :root[data-scheme="dark"] .ui2-legacy .panel,:root[data-scheme="dark"] .ui2-legacy .skill-card{background:var(--paper);border-color:var(--line)}
 :root[data-scheme="dark"] .ui2-legacy .today-strip>div{background:var(--warn-bg)}

@@ -87,6 +87,10 @@ const SURFACE = [
   // (.ui2-page p.ui2-next-*, p.ui2-plan-*, p.ui2-feed-*) sit on --soft through the .ui2-page rule above; the feed's and
   // the plan's headings sit on --soft too.
   [/^\.ui2-(goals?|goal-[\w-]+|paths?|path-[\w-]+|step|step-[\w-]+|feed-empty|compare|plan-(empty|item|done|offer))\b/, ['paper']],
+  // Task 79 · the empty feed's "Make it my goal" chips sit inside the --paper empty state; a roadmap and its stages,
+  // items and certifications sit in a --paper sheet or in My plan's --paper roadmap box. The feed's roadmap buttons'
+  // title (.ui2-page p.ui2-feed-roadmaps-title) sits on --soft through the .ui2-page rule.
+  [/^\.ui2-(feed-words[\w-]*|feed-roadmaps[\w-]*|plan-roadmap[\w-]*|roadmap|roadmap-[\w-]+)\b|^\.ui2-sheet-body li\.ui2-roadmap/, ['paper']],
   [/^\.ui2-(feed|plan-block)\b/, ['soft']],
   // Task 66 · Profile: the header, My capabilities (rows, the "because" line, the level meanings), the three sections,
   // More and the links are --paper boxes; the reasons sheet is --paper too.
@@ -233,10 +237,23 @@ describe('Task 61 · contrast of every text and control pair in src/ui2, in both
 describe('Task 75 · the look is the old interface\'s own values, not new ones', () => {
   const OLD = read('src/redesign.css') + read('src/styles.css')
   it('the light values of the new interface are copied from the old CSS (working surface, card, top bar, sidebar, main button, hero)', () => {
-    for (const rule of ['.app-content-wrap{background:#f4f0e6}', '.panel,.match-card,.skill-card{background:#fffdf8;border-color:#d9d0bd}', '.app-topbar{background:#fff}', '.app-topbar{border-bottom-color:#d8d0bd}', '.app-sidebar{background:#082d3a}', '.app-sidebar nav button.active{background:#165565;box-shadow:inset 3px 0 0 #a3e2d6}', '.app-content .button.primary{background:#08756e}', '.app-content .button.primary:hover{background:#065d58}', '.button,.text-button,.icon-button{border-radius:7px}', 'background:linear-gradient(135deg,#fbf8f0 0%,#f4efe2 55%,#edf4ef 100%)', 'radial-gradient(circle at 1px 1px,#b4a77f 1px,transparent 0)', 'color:#215d5a', '.bottom-nav button.active{color:var(--navy);background:#f3f7fb}']) expect(OLD, rule).toContain(rule)
+    // The card and the buttons' radius are still rules of the old CSS (the reused old parts use them):
+    for (const rule of ['.panel,.skill-card{background:#fffdf8;border-color:#d9d0bd}', '.button,.text-button,.icon-button{border-radius:7px}']) expect(OLD, rule).toContain(rule)
+    // Task 76: the old interface's own frame (working surface, top bar, sidebar, main button, landing hero, bottom bar)
+    // matched nothing after Task 70, so its rules are removed from the old CSS (scripts/find-unused-css.mjs). They are kept
+    // here as they stood in src/redesign.css and src/styles.css at 57d1266, so the tokens below still prove the copy, and
+    // none of them is back in the old CSS. (The card rule above then also named .match-card, the old Matches card.)
+    const REMOVED_IN_TASK_76 = ['.app-content-wrap{background:#f4f0e6}', '.app-topbar{background:#fff}', '.app-topbar{border-bottom-color:#d8d0bd}', '.app-sidebar{background:#082d3a}', '.app-sidebar nav button.active{background:#165565;box-shadow:inset 3px 0 0 #a3e2d6}', '.app-content .button.primary{background:#08756e}', '.app-content .button.primary:hover{background:#065d58}', 'background:linear-gradient(135deg,#fbf8f0 0%,#f4efe2 55%,#edf4ef 100%)', 'radial-gradient(circle at 1px 1px,#b4a77f 1px,transparent 0)', 'color:#215d5a', '.bottom-nav button.active{color:var(--navy);background:#f3f7fb}']
+    for (const rule of REMOVED_IN_TASK_76) expect(OLD, rule).not.toContain(rule)
+    const value = (rule, re) => rule.match(re)?.[1]
+    expect(value(REMOVED_IN_TASK_76[0], /background:(#\w+)/)).toBe(themeShared['--soft'])
+    expect(value(REMOVED_IN_TASK_76[3], /background:(#\w+)/)).toBe(themeShared['--ui2-rail'])
+    expect(value(REMOVED_IN_TASK_76[5], /background:(#\w+)/)).toBe(themeShared['--ui2-primary'])
     expect(themeShared).toMatchObject({ '--soft': '#f4f0e6', '--paper': '#fffdf8', '--line': '#d9d0bd', '--radius-card': '10px', '--ui2-bar': '#fff', '--ui2-bar-line': '#d8d0bd', '--ui2-rail': '#082d3a', '--ui2-rail-current': '#165565', '--ui2-rail-mark': '#a3e2d6', '--ui2-tab-current': '#f3f7fb', '--ui2-primary': '#08756e', '--ui2-primary-hover': '#065d58', '--ui2-hero-1': '#fbf8f0', '--ui2-hero-2': '#f4efe2', '--ui2-hero-3': '#edf4ef', '--ui2-hero-dot': '#b4a77f', '--ui2-hero-ink': '#215d5a' })
     // The "ك" mark: the old .brand-mark's brand navy and gold.
-    expect(STYLES).toMatch(/\.brand-mark\{[^}]*background:var\(--navy\);color:var\(--gold-2\)/)
+    // Task 76: .brand-mark (the old top bar's) matched nothing after Task 70 and is removed from src/styles.css; at 57d1266 it
+    // read .brand-mark{…background:var(--navy);color:var(--gold-2)…}.
+    expect(STYLES).not.toMatch(/\.brand-mark(?![\w-])/)
     expect([themeShared['--ui2-mark'], themeShared['--ui2-mark-ink']]).toEqual([brandTokens['--navy'], brandTokens['--gold-2']])
     expect(read('src/ui2/TopBar.jsx')).toMatch(/<span className="ui2-mark" aria-hidden="true">ك<\/span>/)
     expect(read('src/ui2/TopBar.jsx')).not.toMatch(/<img/)
@@ -245,7 +262,9 @@ describe('Task 75 · the look is the old interface\'s own values, not new ones',
   it('the tabs use the old sidebar\'s icons where the old interface had the same place', () => {
     const nav = read('src/ui2/NavTabs.jsx')
     expect(nav).toMatch(/const ICONS = \{ home: House, plan: SearchCheck, profile: LayoutDashboard \}/)
-    expect(read('src/components/AppNav.jsx')).toMatch(/import \{[^}]*LayoutDashboard[^}]*SearchCheck[^}]*\} from 'lucide-react'/)
+    // Task 70: the old sidebar (src/components/AppNav.jsx) is deleted; it imported exactly these icons:
+    // import { Fingerprint, LayoutDashboard, LockKeyhole, UploadCloud, SearchCheck } from 'lucide-react'
+    expect(nav).toMatch(/import \{[^}]*LayoutDashboard[^}]*SearchCheck[^}]*\} from 'lucide-react'/)
   })
 })
 
@@ -281,6 +300,6 @@ describe('Task 75 · dark mode for the reused old parts (src/ui2/legacy-dark.css
   it('it loads with the new interface only, after the old CSS, and the old interface never gets data-scheme', () => {
     expect(read('src/ui2/AppNext.jsx')).toMatch(/^import '\.\/look\.css'\nimport '\.\/legacy-dark\.css'$/m)
     expect(read('src/main.jsx')).not.toMatch(/legacy-dark|look\.css|data-scheme/)
-    expect(read('src/App.jsx')).not.toMatch(/data-scheme|markScheme/)
+    // Task 70: the old interface (src/App.jsx) is deleted, so nothing else can set data-scheme.
   })
 })

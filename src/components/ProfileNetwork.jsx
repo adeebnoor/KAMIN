@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Compass, Target, Users, Heart, BookOpen, GraduationCap, Fingerprint, Sparkles } from 'lucide-react'
-import { DECLARED_PREFERENCE_SCHEMES } from '../insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, preferenceValues } from '../insight.js'
 import { copy } from '../i18n.js'
 import { DIGITAL_TOPICS, normalizeDigitalInterests } from '../digitalInterests.js'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
-export const preferenceLabel = (preferences, key, lang) => DECLARED_PREFERENCE_SCHEMES[key]?.options.find(option => option.id === preferences?.[key])?.label[lang] || ''
+// Task 78: every chosen value (interest areas and work values take up to 3), joined; one value reads as before.
+export const preferenceLabel = (preferences, key, lang) => preferenceValues(preferences, key).map(id => DECLARED_PREFERENCE_SCHEMES[key]?.options.find(option => option.id === id)?.label[lang]).filter(Boolean).join(lang === 'ar' ? '، ' : ', ')
 
 export default function ProfileNetwork({ lang, state = {}, demo = false }) {
   const [selected, setSelected] = useState('interest')

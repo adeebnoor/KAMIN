@@ -1,0 +1,173 @@
+{
+  "version": "kamin-dialect-v1",
+  "builtOn": "Task 80: dev-set-dialect.json, dev-set.json and dev-set-workflow.json only, plus a general list of Saudi/Gulf function words and English tech words as students write them in Arabic letters. Never testset-dialect.json, testset-workflow.json, testset.json or testset-ai-v2.json.",
+  "rule": "Before matching, every word or phrase in `map` (compared after the engine's normalisation; attached و/ف/ب/ك/ل/ال/لل in front and a plural or possessive ending are allowed) is read as its standard form `to` (empty = ignored). The quote is still the student's original sentence. `capabilities` adds dialect phrases per capability with the same strong/weak rule as capabilities.json; `workflow` adds cue forms to Task 77's concepts. A sentence that only states a wish or plan (`wish`) is not evidence for a project.",
+  "map": [
+    { "from": ["أبغى", "ابغى", "ابغا", "أبغا", "ابغي", "نبغى", "أبي", "ابي", "نبي", "ودي", "بودي", "حاب", "حابه", "حابة"], "to": "أريد", "why": "want / would like" },
+    { "from": ["يبي", "تبي", "يبون", "تبون", "يبغى", "تبغى", "يبغون"], "to": "يريد", "why": "he/they want" },
+    { "from": ["سويت", "سوينا", "سوى", "سوا", "سووا", "يسوي", "تسوي", "نسوي", "أسوي", "اسوي", "يسوون", "مسوي", "مسويه", "سويته", "سويتها", "سويناه", "سويناها"], "to": "عملت", "why": "made / did" },
+    { "from": ["زي"], "to": "مثل", "why": "like" },
+    { "from": ["كذا"], "to": "عدة", "why": "several / like this" },
+    { "from": ["حق", "حقي", "حقت", "حقتي", "حقنا", "حقتنا", "حقه", "حقها", "حقهم", "حقك", "حقين"], "to": "", "why": "possessive 'of', ignored (الكود حقي = my code)" },
+    { "from": ["يشتغل", "تشتغل", "يشتغلون", "اشتغل", "اشتغلت", "اشتغلنا", "أشتغل"], "to": "يعمل", "why": "works" },
+    { "from": ["وش", "ايش", "إيش", "شنو"], "to": "ماذا", "why": "what" },
+    { "from": ["عشان", "علشان", "عشانه"], "to": "لكي", "why": "so that" },
+    { "from": ["لين"], "to": "حتى", "why": "until" },
+    { "from": ["بعدين"], "to": "ثم", "why": "then" },
+    { "from": ["حطيت", "حطينا", "يحط", "تحط", "أحط", "احط"], "to": "وضعت", "why": "put / added" },
+    { "from": ["خليت", "خلينا", "خليته", "خليتها", "خليناه", "خليناها"], "to": "جعلت", "why": "made it (do something)" },
+    { "from": ["دز", "يدز", "تدز", "دزيت", "يدزه", "يدزها", "تدزه", "تدزها", "أدز", "ادز"], "to": "يرسل", "why": "send (Gulf)" },
+    { "from": ["لقيت", "لقينا"], "to": "وجدت", "why": "found" },
+    { "from": ["محد"], "to": "لا أحد", "why": "nobody" },
+
+    { "from": ["أبلكيشن", "ابلكيشن", "أبليكيشن", "ابليكيشن", "ابلكشن", "أبلكشن", "ابلكيشين", "أبلكيشين", "ابليكشن"], "to": "تطبيق", "why": "application" },
+    { "from": ["سستم", "سيستم", "سيستيم", "سستيم"], "to": "نظام", "why": "system" },
+    { "from": ["داتابيس", "داتابيز", "داتا بيس", "داتا بيز", "دتابيس", "داتابيسات"], "to": "قاعدة بيانات", "why": "database" },
+    { "from": ["داتا", "الداتا"], "to": "بيانات", "why": "data" },
+    { "from": ["كويري", "كويريز", "كويريات", "كوري", "كويرى"], "to": "استعلام", "why": "query" },
+    { "from": ["سيكول", "سيكوال", "اس كيو ال", "إس كيو إل", "اس كيو إل"], "to": "sql", "why": "SQL" },
+    { "from": ["ماي سيكول", "ماي اس كيو ال", "ماي إس كيو إل"], "to": "mysql", "why": "MySQL" },
+    { "from": ["بوستقرس", "بوستجرس", "بوستقريس"], "to": "postgresql", "why": "PostgreSQL" },
+    { "from": ["مونقو", "مونجو", "مونقو دي بي", "مونجو دي بي"], "to": "mongodb", "why": "MongoDB" },
+    { "from": ["تيبل", "تيبلز", "تيبلات"], "to": "جدول", "why": "table" },
+    { "from": ["باك اب", "باك أب", "باكب", "باكاب", "باك آب"], "to": "نسخ احتياطي", "why": "backup" },
+    { "from": ["ريستور", "رستور"], "to": "استعادة", "why": "restore" },
+    { "from": ["سيرفر", "سيرفرات", "سرفر"], "to": "خادم", "why": "server" },
+    { "from": ["برمشن", "برمشنز", "بيرمشن", "بيرمشنز"], "to": "صلاحيات", "why": "permissions" },
+    { "from": ["فرونت اند", "فرونت إند", "فرونتند", "فرونت"], "to": "front end", "why": "front end" },
+    { "from": ["باك اند", "باك إند", "باكند", "باك"], "to": "backend", "why": "back end (after باك اب)" },
+    { "from": ["ويب سايت", "ويبسايت", "ويب سايتات"], "to": "website", "why": "website" },
+    { "from": ["ريسبونسف", "ريسبونسيف", "رسبونسف", "ريسبونسڤ"], "to": "responsive", "why": "responsive" },
+    { "from": ["رياكت", "ريأكت", "رياكت جي اس"], "to": "react", "why": "React" },
+    { "from": ["انجولار", "أنجولار", "انقولار", "أنقولار"], "to": "angular", "why": "Angular" },
+    { "from": ["جافاسكربت", "جافا سكربت", "جافاسكريبت", "جافا سكريبت", "جافاسكبريت"], "to": "javascript", "why": "JavaScript" },
+    { "from": ["سي اس اس", "سي إس إس"], "to": "css", "why": "CSS" },
+    { "from": ["اتش تي ام ال", "إتش تي إم إل", "اتش تي إم إل"], "to": "html", "why": "HTML" },
+    { "from": ["بايثون", "بايثن"], "to": "python", "why": "Python" },
+    { "from": ["جافا"], "to": "java", "why": "Java" },
+    { "from": ["نود جي اس", "نود جيه اس"], "to": "node", "why": "Node.js" },
+    { "from": ["دوكر", "دوكير"], "to": "docker", "why": "Docker" },
+    { "from": ["كلاس", "كلاسات", "كلاسز"], "to": "class", "why": "class" },
+    { "from": ["فنكشن", "فنكشنز", "فنكشنات", "فانكشن", "فانكشنز"], "to": "function", "why": "function" },
+    { "from": ["سيرفس", "سيرفسز", "سيرفيس", "سيرفيسز", "سيرفسات"], "to": "service", "why": "service" },
+    { "from": ["مايكروسيرفس", "مايكرو سيرفس", "مايكروسيرفسز"], "to": "microservice", "why": "microservice" },
+    { "from": ["ريفاكتور", "ريفكتر", "ريفاكتر"], "to": "refactor", "why": "refactor" },
+    { "from": ["ماديول", "ماديولز"], "to": "module", "why": "module" },
+    { "from": ["تست", "تستات", "تيست", "تيستات", "تستنق", "تيستنق", "تستينق", "تستز"], "to": "اختبار", "why": "test" },
+    { "from": ["يونت تست", "يونت تستات", "يونت تيست"], "to": "unit test", "why": "unit test" },
+    { "from": ["تست كيس", "تيست كيس", "تست كيسز"], "to": "test case", "why": "test case" },
+    { "from": ["بق", "بقات", "بقز"], "to": "bug", "why": "bug" },
+    { "from": ["كفرج", "كوفرج", "كفريج"], "to": "coverage", "why": "test coverage" },
+    { "from": ["سيلينيوم", "سيلينيم"], "to": "selenium", "why": "Selenium" },
+    { "from": ["ووركفلو", "وركفلو", "ورك فلو", "ووركفلوز"], "to": "workflow", "why": "workflow" },
+    { "from": ["ستيك هولدر", "ستيك هولدرز", "ستيكهولدرز", "ستيكهولدر"], "to": "stakeholder", "why": "stakeholder" },
+    { "from": ["يوز كيس", "يوزكيس", "يوز كيسز", "يوز كيسات"], "to": "use case", "why": "use case" },
+    { "from": ["فلو تشارت", "فلوتشارت"], "to": "مخطط تدفق", "why": "flow chart" },
+    { "from": ["ريكوايرمنتس", "ريكوايرمنت", "ركوايرمنت", "ركوايرمنتس", "ريكويرمنتس", "ريكويرمنت"], "to": "متطلبات", "why": "requirements" },
+    { "from": ["يوزر ستوري", "يوزر ستوريز", "يوزر ستوريات"], "to": "user story", "why": "user story" },
+    { "from": ["يوزر", "يوزرز", "يوزرات"], "to": "مستخدم", "why": "user" },
+    { "from": ["سبرنت", "سبرنتات", "سبرنتس"], "to": "sprint", "why": "sprint" },
+    { "from": ["سكرم"], "to": "scrum", "why": "Scrum" },
+    { "from": ["كانبان"], "to": "kanban", "why": "Kanban" },
+    { "from": ["جانت", "قانت", "جانت تشارت", "قانت تشارت"], "to": "gantt", "why": "Gantt chart" },
+    { "from": ["مايلستون", "ميلستون", "مايلستونز", "ميلستونز"], "to": "milestone", "why": "milestone" },
+    { "from": ["ديدلاين", "ديد لاين", "ديدلاينز"], "to": "deadline", "why": "deadline" },
+    { "from": ["تيم"], "to": "فريق", "why": "team" },
+    { "from": ["كلاينت"], "to": "عميل", "why": "client" },
+    { "from": ["ادمن", "أدمن"], "to": "مدير", "why": "admin" },
+    { "from": ["سوبرفايزر"], "to": "مشرف", "why": "supervisor" },
+    { "from": ["تكت", "تيكت", "تكتات", "تيكتات"], "to": "تذكرة", "why": "ticket" },
+    { "from": ["نوتفكيشن", "نوتيفيكيشن", "نوتفيكيشن", "نوتفكيشنز"], "to": "إشعار", "why": "notification" },
+    { "from": ["ريبورت", "ريبورتات"], "to": "تقرير", "why": "report" },
+    { "from": ["ريقريشن", "ريغريشن", "رقريشن", "ريجريشن"], "to": "regression", "why": "regression" },
+    { "from": ["كوريليشن", "كورليشن", "كوريلشن"], "to": "correlation", "why": "correlation" },
+    { "from": ["ستاتستكس", "ستاتيستكس", "ستاتستك"], "to": "statistic", "why": "statistics" },
+    { "from": ["تي تست"], "to": "t test", "why": "t-test" },
+    { "from": ["انوفا", "أنوفا"], "to": "anova", "why": "ANOVA" },
+    { "from": ["سيرفي", "سيرفيات"], "to": "survey", "why": "survey" },
+    { "from": ["فايروول", "فايرول", "فاير وول", "فايروال", "فايروولز"], "to": "firewall", "why": "firewall" },
+    { "from": ["انكربشن", "إنكربشن", "انكريبشن", "إنكريبشن"], "to": "encrypt", "why": "encryption" },
+    { "from": ["باسوورد", "باسورد", "باسووردات", "باسوردات", "باسووردز"], "to": "password", "why": "password" },
+    { "from": ["توكن", "توكنات"], "to": "token", "why": "token" },
+    { "from": ["لوقن", "لوق ان", "لوقين", "لوق إن"], "to": "login", "why": "login" },
+    { "from": ["اس اس ال", "إس إس إل"], "to": "ssl", "why": "SSL" },
+    { "from": ["تي ال اس", "تي إل إس"], "to": "tls", "why": "TLS" },
+    { "from": ["سكيوريتي", "سيكيورتي", "سيكيوريتي"], "to": "security", "why": "security" },
+    { "from": ["بنتست", "بن تست", "بنتستنق"], "to": "penetration", "why": "penetration test" },
+    { "from": ["إنجكشن", "انجكشن", "انجيكشن", "إنجيكشن"], "to": "injection", "why": "injection (SQL injection)" },
+    { "from": ["شات جي بي تي", "تشات جي بي تي", "شات جبت", "شات جي بي تى"], "to": "chatgpt", "why": "ChatGPT" },
+    { "from": ["شات بوت", "شاتبوت", "تشات بوت", "شات بوتات"], "to": "chatbot", "why": "chatbot" },
+    { "from": ["برومبت", "برومبتات", "برومبتس", "بروميت"], "to": "prompt", "why": "prompt" },
+    { "from": ["موديل", "موديلات", "مودل"], "to": "نموذج", "why": "model" },
+    { "from": ["ماشين ليرننق", "ماشين ليرنينق", "مشين لرننق", "ماشين ليرنينج"], "to": "machine learning", "why": "machine learning" },
+    { "from": ["ديب ليرننق", "ديب ليرنينق"], "to": "deep learning", "why": "deep learning" },
+    { "from": ["ذكاء صناعي"], "to": "ذكاء اصطناعي", "why": "AI (common variant)" },
+    { "from": ["ال ال ام", "إل إل إم"], "to": "llm", "why": "LLM" },
+    { "from": ["اي آي", "إي آي", "ايه آي", "ايه اي"], "to": "ai", "why": "AI" },
+    { "from": ["فاين تيون", "فاين تيونق", "فاين تيونينق"], "to": "fine tune", "why": "fine-tuning" },
+    { "from": ["تنسرفلو", "تنسر فلو"], "to": "tensorflow", "why": "TensorFlow" },
+    { "from": ["باي تورش", "بايتورش"], "to": "pytorch", "why": "PyTorch" }
+  ],
+  "markers": {
+    "why": "Task 80: words that show Saudi/Gulf dialect without being in the map (the map's words show it too). Used only to choose the fallback's threshold per variety.",
+    "words": ["اللي", "الحين", "للحين", "مره", "وايد", "زين", "شي", "ابد", "بس", "هذي", "ذي", "هذولا", "ليش", "ليه", "عاد", "يمدي", "يمديك", "جبت", "صار", "صارت", "طاح", "خرب", "ماشي", "دحين", "ابغاه", "يعني"]
+  },
+  "wish": {
+    "why": "A wish or plan to learn or work in something is an interest, not evidence of a skill (rule: projects and interests are never evidence). Projects only; interests keep these sentences.",
+    "cues": ["اريد", "ارغب", "اطمح", "اتمني", "نفسي", "اود", "want to", "like to", "love to", "hope to", "wish to", "plan to", "planning to", "aim to"],
+    "verbs": ["اتعلم", "تعلم", "ادرس", "دراسه", "اشتغل", "يعمل", "اعمل", "العمل", "عمل", "اتخصص", "تخصص", "اصير", "اكون", "learn", "study", "work", "become", "specialise", "specialize", "pursue", "get into"],
+    "window": 3
+  },
+  "capabilities": {
+    "database": {
+      "strong": [{ "t": "الجداول والعلاقات", "why": "tables and relations (dev-dl-dia-13)" }, { "t": "علاقات الجداول", "why": "relations between tables" }, { "t": "مخطط الكيانات", "why": "entity diagram (MSA)" }],
+      "weak": [{ "t": "علاقات", "why": "only with another database term" }, { "t": "مفاتيح", "why": "keys; also physical keys" }]
+    },
+    "db-operations": {
+      "strong": [{ "t": "نسخه احتياطيه للسيرفر", "why": "backup of the server" }],
+      "weak": [{ "t": "ارجعه", "why": "restore (dialect 'bring it back'), with another db-operations term" }, { "t": "ارجعها", "why": "restore (dialect), with another term" }, { "t": "رجعت", "why": "restored (dialect), with another term" }]
+    },
+    "web-development": {
+      "strong": [{ "t": "واجهات الموقع", "why": "the site's pages" }, { "t": "صفحات الموقع", "why": "the site's pages" }],
+      "weak": [{ "t": "موقع", "why": "also a location" }, { "t": "صفحات", "why": "also book pages" }, { "t": "الجوال", "why": "the phone; with another web term (responsive)" }]
+    },
+    "software": {
+      "strong": [{ "t": "قسمت الكود", "why": "split the code (design)" }, { "t": "رتبت الكود", "why": "reorganised the code (refactor)" }, { "t": "نظفت الكود", "why": "cleaned the code (refactor)" }],
+      "weak": [{ "t": "function", "why": "listed so the map's فنكشن counts" }, { "t": "برمجت", "why": "programmed" }]
+    },
+    "testing": {
+      "strong": [{ "t": "تستات اوتوماتيكيه", "why": "automated tests (dev-dl-dia-15)" }, { "t": "اختبار اوتوماتيكي", "why": "automated test" }, { "t": "اختبارات اوتوماتيكيه", "why": "automated tests" }],
+      "weak": [{ "t": "bug", "why": "with another testing term" }, { "t": "اوتوماتيكي", "why": "automatic" }, { "t": "اوتوماتيكيه", "why": "automatic" }]
+    },
+    "systems-analysis": {
+      "strong": [{ "t": "سير الشغل", "why": "workflow (dialect of سير العمل)" }, { "t": "خطوات الشغل", "why": "the work's steps" }],
+      "weak": [{ "t": "خطوه خطوه", "why": "step by step" }, { "t": "mapped", "why": "mapped (a process), with another term" }, { "t": "الموظفين", "why": "the staff, with another term" }]
+    },
+    "requirements": {
+      "strong": [{ "t": "شروط القبول", "why": "acceptance criteria (common wording)" }, { "t": "ماذا لازم يعمل", "why": "what it must do (وش لازم يسوي after the map)" }, { "t": "ماذا يجب ان يعمل", "why": "what it must do" }],
+      "weak": []
+    },
+    "project": {
+      "strong": [{ "t": "ادارة المشروع", "why": "project management (with the article)" }],
+      "weak": [{ "t": "موعد تسليم", "why": "a deadline" }, { "t": "مواعيد التسليم", "why": "deadlines" }, { "t": "وزعت المهام", "why": "assigned the tasks" }, { "t": "توزيع المهام", "why": "assigning tasks" }, { "t": "مرحله", "why": "a phase" }]
+    },
+    "statistics": {
+      "strong": [{ "t": "المتوسط والانحراف", "why": "mean and deviation" }],
+      "weak": [{ "t": "النسب", "why": "percentages" }, { "t": "اكسل", "why": "Excel, with another statistics term" }]
+    },
+    "cyber": {
+      "strong": [{ "t": "شفرت", "why": "encrypted (verb)" }, { "t": "يشفر", "why": "encrypts" }, { "t": "مشفره", "why": "encrypted" }, { "t": "التحقق الثنائي", "why": "two-factor authentication" }, { "t": "المصادقه الثنائيه", "why": "two-factor authentication" }, { "t": "two factor", "why": "2FA" }, { "t": "2fa", "why": "2FA" }],
+      "weak": [{ "t": "token", "why": "also a counter" }, { "t": "يخترق", "why": "hack (verb), with another term" }, { "t": "تسجيل دخول", "why": "login, with another term" }]
+    },
+    "ai-work": {
+      "strong": [{ "t": "دربت نموذج", "why": "trained a model (after the map: دربت موديل)" }],
+      "weak": [{ "t": "يصنف", "why": "classifies, with another term" }]
+    }
+  },
+  "workflow": {
+    "system": {},
+    "actions": { "enter": ["يعبي", "تعبي", "يعبى"], "receive": ["يجيه", "يجيها", "يوصله", "يوصلها"], "send": ["يرسله", "يرسلها"] },
+    "roles": {},
+    "modal": { "must": ["لازم يقدر"] }
+  }
+}

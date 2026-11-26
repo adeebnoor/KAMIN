@@ -1,4 +1,4 @@
-// Task 60 · the new interface's frame (the default since Task 69): the switch, the slim top bar (exactly five controls),
+// Task 60 · the new interface's frame (the only interface since Task 70): one interface, the slim top bar (exactly five controls),
 // three tabs (bottom bar on phones, side rail on desktop), the sheet by keyboard, Back/refresh/links, no
 // sideways scroll at 360px and axe clean, in Arabic and English. Elements are found through e2e/roles.js.
 import { test, expect } from '@playwright/test'
@@ -13,42 +13,39 @@ const words = (lang, ar, en) => (lang === 'ar' ? ar : en)
 // A made-up approved record (no personal data), as the profile hook keeps it in this tab's session.
 const APPROVED = JSON.stringify({ approved: true, courses: [{ code: 'CPIT-110', grade: 'A', source: 'manual' }], consents: { analyze: true } })
 
-// Task 69: the new interface is the default; the old one opens with ?ui=old for one release (Task 70 deletes it).
-test.describe('the switch', () => {
-  test('?ui=old opens the old interface, and the new one is never loaded there', async ({ page }) => {
-    const chunks = []
-    page.on('request', request => { if (/AppNext|ui2/.test(request.url())) chunks.push(request.url()) })
-    await page.goto('/en/?ui=old')
-    await expect(page.getByRole('button', { name: 'Open workspace', exact: true }).first()).toBeVisible()
-    await expect(page.getByTestId('ui2-topbar')).toHaveCount(0)
-    expect(chunks).toEqual([])
-  })
-
-  test('/ar/ and /en/ open the new interface; ?ui=old is remembered; ?ui=next goes back and forgets it', async ({ page }) => {
+// Task 70: the old interface and its address switch are deleted. The retired addresses (old or next) and a device that
+// still holds the old interface's setting all open this interface; nothing is stored for it.
+const retired = value => `?${new URLSearchParams({ ui: value })}`
+test.describe('one interface', () => {
+  test('the retired switch addresses open this interface, and the old one is never loaded', async ({ page }) => {
+    const requests = []
+    page.on('request', request => requests.push(request.url()))
     for (const lang of LANGS) {
       const app = kamin(page, { ui: 'new', lang })
       await page.goto(`/${lang}/`)
       await expect(app.heading('home')).toBeVisible()
       await expect(app.topBar()).toBeVisible()
-      // The old window is not there: the new interface is a full page, not a dialog.
+      // There is no old window: the interface is a full page, not a dialog.
       await expect(page.getByRole('dialog')).toHaveCount(0)
       await expect.poll(() => new URL(page.url()).search, 'only the view goes into the address').toBe('?app=home')
+      for (const value of ['old', 'next']) {
+        await page.goto(`/${lang}/${retired(value)}`)
+        await expect(app.heading('home')).toBeVisible()
+        await expect(page.getByRole('button', { name: words(lang, 'افتح مساحة العمل', 'Open workspace'), exact: true })).toHaveCount(0)
+        await expect.poll(() => new URL(page.url()).searchParams.get('app'), 'the parameter is ignored; the view is in the address').toBe('home')
+      }
     }
-    expect(await page.evaluate(() => localStorage.getItem('kamin-ui')), 'nothing is stored for the default').toBe(null)
-    await page.goto('/en/?ui=old')
-    await expect(page.getByRole('button', { name: 'Open workspace', exact: true }).first()).toBeVisible()
-    expect(await page.evaluate(() => localStorage.getItem('kamin-ui'))).toBe('old')
-    // Later visits without the parameter keep the old interface, in both languages.
+    expect(await page.evaluate(() => localStorage.getItem('kamin-ui')), 'nothing is stored').toBe(null)
+    expect(requests.filter(url => /\/(App|LandingExperience|StartScreen)-[\w-]+\.js/.test(url)), 'no old-interface chunk').toEqual([])
+  })
+
+  test("a device that kept the old interface's setting opens this interface", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('kamin-ui', 'old'))
     for (const lang of LANGS) {
       await page.goto(`/${lang}/`)
-      await expect(page.getByRole('button', { name: words(lang, 'افتح مساحة العمل', 'Open workspace'), exact: true }).first()).toBeVisible()
-      await expect(page.getByTestId('ui2-topbar')).toHaveCount(0)
+      await expect(kamin(page, { ui: 'new', lang }).heading('home')).toBeVisible()
+      await expect(page.getByRole('button', { name: words(lang, 'افتح مساحة العمل', 'Open workspace'), exact: true })).toHaveCount(0)
     }
-    await page.goto('/en/?ui=next')
-    await expect(kamin(page, { ui: 'new', lang: 'en' }).heading('home')).toBeVisible()
-    expect(await page.evaluate(() => localStorage.getItem('kamin-ui'))).toBe(null)
-    await page.goto('/en/')
-    await expect(kamin(page, { ui: 'new', lang: 'en' }).heading('home')).toBeVisible()
   })
 })
 
@@ -349,16 +346,13 @@ for (const lang of LANGS) test.describe(`theme (${lang})`, () => {
       expect(await pageColours(page)).toMatchObject({ page: SOFT.dark })
     })
 
-    test('the old interface stays light only, even with Dark saved', async ({ page }) => {
+    // Task 70: the old interface (light only) is deleted; its retired address opens this one, in the saved theme.
+    test('the retired old-interface address opens this interface in the saved dark theme', async ({ page }) => {
       await page.addInitScript(() => localStorage.setItem('kamin-theme', 'dark'))
-      await page.goto(`/${lang}/?ui=old`)
-      await expect(page.getByRole('button', { name: words(lang, 'افتح مساحة العمل', 'Open workspace'), exact: true }).first()).toBeVisible()
-      expect(await page.evaluate(() => ({
-        theme: document.documentElement.getAttribute('data-theme'),
-        scheme: getComputedStyle(document.documentElement).colorScheme,
-        html: getComputedStyle(document.documentElement).backgroundColor,
-        body: getComputedStyle(document.body).backgroundColor,
-      }))).toEqual({ theme: null, scheme: 'light', html: 'rgb(255, 255, 255)', body: 'rgb(255, 255, 255)' })
+      await page.goto(`/${lang}/${retired('old')}`)
+      await expect(kamin(page, { ui: 'new', lang }).heading('home')).toBeVisible()
+      expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('dark')
+      expect(await pageColours(page)).toMatchObject({ page: SOFT.dark })
     })
 
     for (const [name, size] of [['phone', PHONE], ['desktop', DESKTOP]]) test(`axe in the dark theme (colour contrast included): 0 violations on every view and with the sheet open (${name})`, async ({ page }) => {

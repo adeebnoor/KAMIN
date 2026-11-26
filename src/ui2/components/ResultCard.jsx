@@ -77,6 +77,9 @@ export default function ResultCard({ lang, draft, focusOnMount = false, onApprov
       </h2>
       <CollegeNote lang={lang} college={college} collegeRaw={student?.collegeRaw} manual={manual} onChoose={setCollege}/>
       {validation?.mode === 'demo' && <p className="ui2-result-note" role="note" data-testid="ui2-synthetic">{w.synthetic}</p>}
+      {/* Task 70: lines the reader could not turn into a course are said, as the old review screen said them
+          (screens.start.found, word for word); otherwise they would vanish without a word. */}
+      {validation?.rejected?.length > 0 && <p className="ui2-result-look" data-testid="review-found">{fill(copy[lang].screens.start.found, { n: validation.recognized ?? rows.length, m: validation.rejected.length })}</p>}
       <div className="ui2-result-fix">
         {needLook > 0 && <p className="ui2-result-look" data-testid="review-attention">{needLook === 1 ? R.needsLookOne : fill(R.needsLook, { n: needLook })}</p>}
         <button type="button" className="ui2-btn" aria-haspopup="dialog" data-testid="ui2-fix-open" onClick={() => setFixOpen(true)}>{rows.length || !manual ? w.fix : w.addCourses}</button>

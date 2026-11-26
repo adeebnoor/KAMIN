@@ -1,20 +1,22 @@
-import { useId, useMemo, useState } from 'react'
+// Task 70: the old landing page's synthetic demo (InferenceDemo, the default export) is deleted with it; the proof
+// (InferenceProof) stays, shown in My map (src/components/ShowConnections.jsx).
+import { useId, useState } from 'react'
 import { Download, GitMerge, Link2, ListChecks, Sparkles } from 'lucide-react'
 import { INFERENCE_RULES } from '../matching/inference.js'
 import { buildInferenceDataset } from '../ontology/rdf.js'
-import { projectStateToPerson360 } from '../ontology/projector.js'
-import { buildMatchingProfile, matchTargets } from '../matching/engine.js'
 import { buildTargetSemanticGraph } from '../matching/graph.js'
-import { demoCourses, skills as skillCatalog } from '../data.js'
-import { inferSkills } from '../utils/engine.js'
+import { skills as skillCatalog } from '../data.js'
 import { DECLARED_PREFERENCE_SCHEMES } from '../insight.js'
 import { copy, fill } from '../i18n.js'
 import TechDetails from './TechDetails.jsx'
 import { DIGITAL_TOPICS } from '../digitalInterests.js'
+import { targetProfiles } from '../matching/targets.js'
 
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
 const localize = (value,lang) => typeof value === 'string' ? value : value?.[lang] || ''
 const capability = (id,lang) => skillCatalog[id]?.labels?.[lang] || id
+// Task 78: a goal that is a pathway id (step 4, My plan) is named by the pathway's title, never by its id.
+const pathwayTitle = (id,lang) => targetProfiles.find(t=>t.id===id)?.title?.[lang]
 const relationLabels = {
   'kamin:demonstrates':['لديه دليل على','has evidence for'],
   'kamin:courseContext':['مرتبط بالمقرر','comes from course'],
@@ -38,7 +40,7 @@ export function InferenceProof({match, graph, lang, demo=false}) {
   const name=iri=>{
     if(iri===graph['@id'])return tr(lang,demo?'الطالب في المثال':'أنت',demo?'Sample student':'You')
     const entity=entities.get(iri)
-    if(iri?.startsWith('urn:kamin:goal:')) return copy[lang].app.goals[entity?.notation] || entity?.notation
+    if(iri?.startsWith('urn:kamin:goal:')) { const goal=entity?.notation||iri.slice('urn:kamin:goal:'.length); return copy[lang].app.goals[goal] || pathwayTitle(goal,lang) || goal }
     if(entity?.scheme?.startsWith('urn:kamin:preference-scheme:')) {
       const scheme=entity.scheme.slice('urn:kamin:preference-scheme:'.length)
       return DECLARED_PREFERENCE_SCHEMES[scheme]?.options.find(o=>o.id===entity.notation)?.label[lang] || entity.notation
@@ -53,7 +55,9 @@ export function InferenceProof({match, graph, lang, demo=false}) {
   }
   const describe=t=>`${name(t.subject)} · ${relation(t.predicate)} · ${name(t.object)}`
   // Task 28: the rule id is in "Technical details", not in the picker.
-  const optionLabel=r=>`${r.topicId?DIGITAL_TOPICS.find(topic=>topic.id===r.topicId)?.label[lang]:r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}`
+  // Task 78: with several chosen values of one scheme (up to 3 interest areas or work values), each connection also names its value.
+  const sameScheme=r=>r.ruleId==='R3'&&results.filter(x=>x.ruleId==='R3'&&x.scheme===r.scheme).length>1
+  const optionLabel=r=>`${r.topicId?DIGITAL_TOPICS.find(topic=>topic.id===r.topicId)?.label[lang]:r.capabilityKey?capability(r.capabilityKey,lang):r.scheme?DECLARED_PREFERENCE_SCHEMES[r.scheme]?.label[lang]:tr(lang,'هدفك','Your goal')}${sameScheme(r)?` · ${name(r.premises[0].object)}`:''}`
   const download=()=>{
     try {
       const blob=new Blob([JSON.stringify(buildInferenceDataset(graph,match),null,2)],{type:'application/ld+json'})
@@ -72,18 +76,6 @@ export function InferenceProof({match, graph, lang, demo=false}) {
       <article className="inference-result"><Sparkles size={22}/><small>{S.linkStep}</small><h4>{describe(result.conclusion)}</h4><p>{result.ruleId==='R1'?tr(lang,'هذا دليل على متطلب محدد، وليس حكمًا باكتمال الجاهزية.','This supports a specific requirement; it does not establish overall readiness.'):tr(lang,'ارتباط سياقي من تفضيلاتك، لا يثبت مهارة ولا يلغي نقص الدليل.','This is declared context. It does not prove a skill or remove an evidence gap.')}</p><span>{tr(lang,'مستنتجة بالقواعد','Rule-derived')}</span></article>
     </div> : <div className="inference-empty" role="status"><Link2 size={24}/><p>{S.noLink}</p></div>}
     <div className="inference-limits"><strong>{tr(lang,'حدود النتيجة','Result limits')}</strong><p>{match.missingSkills.length?tr(lang,`لا يوجد في هذا الملف دليل على: ${match.missingSkills.map(k=>capability(k,lang)).join('، ')}. هذا لا يعني غياب القدرة.`,`This profile has no evidence for: ${match.missingSkills.map(k=>capability(k,lang)).join(', ')}. This does not mean the ability is absent.`):tr(lang,'المتطلبات المحدودة لهذا المثال لها أدلة. صلاحية التوصيات تحتاج تحققًا مستقلًا.','This example’s limited requirements have evidence. Recommendation validity still needs independent evaluation.')}</p></div>
-    <TechDetails lang={lang} className="inference-technical">{result&&<p><code dir="ltr">{fill(S.technical.rule,{rule:result.ruleId,version:result.ruleVersion})}</code></p>}<p>{S.technical.graphs}</p>{result&&<div className="inference-triples" dir="ltr"><table><caption>{tr(lang,'المقدمات والنتيجة المختارة','Selected premises and conclusion')}</caption><thead><tr><th>Subject</th><th>Predicate</th><th>Object</th></tr></thead><tbody>{[...result.premises,result.conclusion].map((p,i)=><tr key={i}><td>{p.subject}</td><td>{p.predicate}</td><td>{p.object}</td></tr>)}</tbody></table></div>}<button className="text-button" onClick={download}><Download size={17}/>{S.technical.download}</button><p>{S.technical.engine}</p>{error&&<p role="alert">{error}</p>}</TechDetails>
+    <TechDetails lang={lang} className="inference-technical">{result&&<p><code dir="ltr">{fill(S.technical.rule,{rule:result.ruleId,version:result.ruleVersion})}</code></p>}<p>{S.technical.graphs}</p>{result&&<div className="inference-triples" dir="ltr" tabIndex={0} role="region" aria-label={tr(lang,"ثلاثيات الاستنتاج — قابلة للتمرير","Inference triples — scrollable")}><table><caption>{tr(lang,'المقدمات والنتيجة المختارة','Selected premises and conclusion')}</caption><thead><tr><th>Subject</th><th>Predicate</th><th>Object</th></tr></thead><tbody>{[...result.premises,result.conclusion].map((p,i)=><tr key={i}><td>{p.subject}</td><td>{p.predicate}</td><td>{p.object}</td></tr>)}</tbody></table></div>}<button className="text-button" onClick={download}><Download size={17}/>{S.technical.download}</button><p>{S.technical.engine}</p>{error&&<p role="alert">{error}</p>}</TechDetails>
   </div>
-}
-
-export default function InferenceDemo({lang}) {
-  const [interest,setInterest]=useState('investigative')
-  const [academic,setAcademic]=useState(true)
-  const [target,setTarget]=useState('job-data-analyst')
-  const graph=useMemo(()=>{
-    const courses=academic?demoCourses:[]
-    return projectStateToPerson360({state:{approved:academic,courses,goal:'data',consents:{insight:true},insight:{declaredPreferences:interest?{careerInterest:interest}:{}}},skills:inferSkills(courses)})
-  },[academic,interest])
-  const matches=useMemo(()=>matchTargets(buildMatchingProfile({graph}),{type:'job',lang}),[graph,lang])
-  return <section id="semantic-inference" className="v2-section shell inference-demo"><div className="v2-section-heading"><span className="v2-kicker">{tr(lang,'الفكرة الأساسية · شاهدها تعمل','THE CORE IDEA · SEE IT WORK')}</span><h2>{tr(lang,'كيف يستنتج كامن علاقة جديدة؟','How does Kamin infer a new connection?')}</h2><p>{tr(lang,'غيّر مدخلًا في هذا المثال، ثم تتبّع المعلومة والقاعدة والنتيجة. يستخدم المحرك نفسه الذي يحلل ملفك.','Change an input, then follow the information, rule and result. This example uses the same engine that analyzes your profile.')}</p></div><div className="inference-demo-controls"><label>{tr(lang,'اهتمام الطالب في المثال','Sample student’s interest')}<select value={interest} onChange={e=>setInterest(e.target.value)}><option value="">{tr(lang,'لم أحدد بعد','Undecided')}</option>{DECLARED_PREFERENCE_SCHEMES.careerInterest.options.map(o=><option value={o.id} key={o.id}>{o.label[lang]}</option>)}</select></label><label>{tr(lang,'المسار في المثال','Sample pathway')}<select value={target} onChange={e=>setTarget(e.target.value)}>{matches.map(m=><option key={m.id} value={m.id}>{m.title[lang]}</option>)}</select></label><label className="inference-academic-toggle"><input type="checkbox" checked={academic} onChange={e=>setAcademic(e.target.checked)}/>{tr(lang,'تضمين الأدلة الأكاديمية الوهمية','Include synthetic academic evidence')}</label></div><InferenceProof lang={lang} graph={graph} match={matches.find(m=>m.id===target)||matches[0]} demo/></section>
 }

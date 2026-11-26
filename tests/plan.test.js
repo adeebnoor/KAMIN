@@ -33,7 +33,6 @@ const titles = learningCatalog.items.flatMap(i => [i.title.ar, i.title.en])
 // src/state/useKaminProfile.js; the source checks below read the files the code now lives in.
 const appState = appProfileState
 const readSource = file => readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
-const app = readSource('src/App.jsx')
 const profileHook = readSource('src/state/useKaminProfile.js')
 const profileStateSource = readSource('src/state/profileState.js')
 
@@ -217,7 +216,7 @@ describe('Task 58 · items that left the learning list', () => {
     expect(plan.match(/^import .*$/gm)).toEqual(["import { copy } from '../i18n.js'"])
     // Task 59: the check runs in the shared profile hook (was App.jsx).
     expect(profileHook).toContain("import('../plan/catalogCheck.js')")
-    for (const source of [app, profileHook, profileStateSource]) expect(source).not.toMatch(/^import .*catalogCheck/m)
+    for (const source of [profileHook, profileStateSource]) expect(source).not.toMatch(/^import .*catalogCheck/m)
     expect(profileStateSource).toMatch(/^import \{ normalizePlan \} from '\.\.\/plan\/plan\.js'$/m)
     expect(profileHook).toMatch(/^import \{ chooseGoal as chooseGoalIn \} from '\.\.\/plan\/plan\.js'$/m)
   })
@@ -262,7 +261,7 @@ describe('Task 58 · never evidence, never a transcript upload', () => {
   })
 })
 
-describe("Task 58 · the app's own state (src/App.jsx)", () => {
+describe("Task 58 · the app's own state (src/state/profileState.js)", () => {
   it('blankState has empty goals, plan and marks; normalizeState keeps goal === goals[0]', () => {
     const { blankState, normalizeState } = appState
     expect(blankState).toMatchObject({ goal: null, goals: [], plan: [], notForMe: [], planDropped: 0 })

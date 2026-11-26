@@ -7,6 +7,8 @@
 //   interests in their own words (Task 56). Free interests are a goal signal only, never evidence:
 //   capability chips are ignored here. Without a goal the feed is empty, with the reason
 //   "Choose a goal first". The caller passes freeInterests only when the interests consent is on.
+// - Task 79: `handled` counts the suggestions left out because they are already in the plan or marked
+//   "not for me", so an empty feed can say its real reason (handled, nothing in the list, or no gap).
 // - Per goal, the gap comes from computeGap and the items from suggestPath (src/path/suggest.js),
 //   so an item appears only if it closes a "limited" or "missing" capability of a chosen goal, and a
 //   university course already on the record is never suggested (the existing rule).
@@ -33,23 +35,24 @@ export function feedGoals(goalIds = [], freeInterests = []) {
 }
 
 /**
- * @returns {{ version: string, goals: string[], cards: object[], uncovered: {goalId:string, capabilities:string[]}[], reason: {ar:string,en:string}|null }}
+ * @returns {{ version: string, goals: string[], cards: object[], uncovered: {goalId:string, capabilities:string[]}[], handled: number, reason: {ar:string,en:string}|null }}
  * Each card: { itemId, kind, supports, improves, why: {ar,en}, gapCapabilities, forGoals,
  * prerequisitesMet, missingPrerequisites, status, source, illustrative }.
  */
 export function nextStepFeed({ skills = [], goalIds = [], freeInterests = [], plan = [], notForMe = [], takenCourses = [], catalog = LEARNING_CATALOG.items } = {}) {
   const goals = feedGoals(goalIds, freeInterests)
-  if (!goals.length) return { version: NEXT_STEPS_VERSION, goals: [], cards: [], uncovered: [], reason: NO_GOAL_REASON }
+  if (!goals.length) return { version: NEXT_STEPS_VERSION, goals: [], cards: [], uncovered: [], handled: 0, reason: NO_GOAL_REASON }
   const hidden = new Set([...itemIds(plan), ...itemIds(notForMe)])
   const byItem = new Map()
   const uncovered = []
+  const handled = new Set()
   for (const goalId of goals) {
     const gap = computeGap(skills, goalId)
     const suggestions = suggestPath(gap, catalog, { skills, takenCourses })
     const left = uncoveredGaps(gap, suggestions).map(r => r.capability)
     if (left.length) uncovered.push({ goalId, capabilities: left })
     for (const s of suggestions) {
-      if (hidden.has(s.itemId)) continue
+      if (hidden.has(s.itemId)) { handled.add(s.itemId); continue }
       const item = catalog.find(i => i.id === s.itemId)
       const card = byItem.get(s.itemId)
       if (!card) {
@@ -84,5 +87,5 @@ export function nextStepFeed({ skills = [], goalIds = [], freeInterests = [], pl
       { itemId: a.itemId, prerequisitesMet: a.prerequisitesMet, closesMissing: a._closesMissing, level: a._level, kind: a.kind },
       { itemId: b.itemId, prerequisitesMet: b.prerequisitesMet, closesMissing: b._closesMissing, level: b._level, kind: b.kind }))
     .map(({ _closesMissing, _level, ...card }) => card)
-  return { version: NEXT_STEPS_VERSION, goals, cards, uncovered, reason: null }
+  return { version: NEXT_STEPS_VERSION, goals, cards, uncovered, handled: handled.size, reason: null }
 }

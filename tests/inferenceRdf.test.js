@@ -7,13 +7,13 @@ import { projectStateToPerson360 } from '../src/ontology/projector.js'
 import { JSON_LD_CONTEXT } from '../src/ontology/registry.js'
 import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
 import { buildInferenceDataset } from '../src/ontology/rdf.js'
-import { INFERENCE_VERSION } from '../src/matching/inference.js'
+import { INFERENCE_VERSION, inferRelations } from '../src/matching/inference.js'
 
 function sample({courses=demoCourses,interest='investigative',goal='data'}={}) {
   const graph=projectStateToPerson360({state:{courses,goal,insight:{declaredPreferences:interest?{careerInterest:interest}:{}}},skills:inferSkills(courses)})
   return {graph,match:judge(graph)}
 }
-const judge=graph=>matchTargets(buildMatchingProfile({graph}),{lang:'en'}).find(m=>m.id==='job-data-analyst')
+const judge=(graph,id='job-data-analyst')=>matchTargets(buildMatchingProfile({graph}),{lang:'en'}).find(m=>m.id===id)
 const toRdf=document=>jsonld.toRDF(document,{format:'application/n-quads'})
 
 describe('Semantic inference and standards-based RDF export',()=>{
@@ -73,5 +73,40 @@ describe('Semantic inference and standards-based RDF export',()=>{
     graph.claims=graph.claims.map(c=>({...c,status:'active',subject:'urn:kamin:person:other'}))
     expect(judge(graph).inferences).toEqual([])
     expect(sample({courses:[],interest:null,goal:null}).match.inferences).toEqual([])
+  })
+  // Task 76: step 4 and My plan store a goal as a pathway id (e.g. job-data-analyst). R2's second premise used to get no
+  // object for it ({"@id": null}); it now names the student's goal node. The four old directions keep their catalog edge.
+  it('states both R2 premises for a pathway-id goal and keeps its evidence strength and scope',async()=>{
+    const {graph,match}=sample({goal:'job-data-analyst'})
+    const r2=match.inferences.find(r=>r.ruleId==='R2')
+    expect(r2.premises).toEqual([
+      {subject:'urn:kamin:person:local',predicate:'kamin:pursuesGoal',object:'urn:kamin:goal:job-data-analyst'},
+      {subject:'urn:kamin:target:job-data-analyst',predicate:'kamin:supportsGoal',object:'urn:kamin:goal:job-data-analyst'},
+    ])
+    expect(r2.evidenceStrength).toBe('self-reported')
+    expect(r2.scope).toBe('self-declared-context')
+    const dataset=buildInferenceDataset(graph,match)
+    expect(JSON.stringify(dataset)).not.toContain('"@id":null')
+    const rdf=await toRdf(dataset)
+    expect(rdf).toContain('<urn:kamin:person:local> <urn:kamin:hasGoalContextFor> <urn:kamin:target:job-data-analyst> <urn:kamin:graph:inferred>')
+    expect(rdf).toContain('<http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <urn:kamin:goal:job-data-analyst>')
+  })
+  it('gives no goal conclusion to another pathway when the goal is a pathway id',()=>{
+    const {graph}=sample({goal:'job-data-analyst'})
+    expect(judge(graph,'job-cyber-analyst').inferences.some(r=>r.ruleId==='R2')).toBe(false)
+  })
+  it('keeps the four old directions on their catalog goal edge',()=>{
+    for(const goal of ['data','cyber','management','product']){
+      const {graph}=sample({goal})
+      for(const match of matchTargets(buildMatchingProfile({graph}),{lang:'en'})){
+        for(const r2 of match.inferences.filter(r=>r.ruleId==='R2')) expect(r2.premises[1].object).toBe(`urn:kamin:goal:${goal}`)
+      }
+    }
+    expect(sample({goal:'data'}).match.inferences.some(r=>r.ruleId==='R2')).toBe(true)
+  })
+  it('never exports a conclusion whose premise has no object',()=>{
+    const path={kind:'goal-alignment',status:'supported',targetId:'job-x',personClaimId:'urn:c',personGoalId:'urn:kamin:goal:x',goal:'x',targetGoalId:null}
+    expect(inferRelations('urn:kamin:person:local',[path])).toEqual([])
+    expect(inferRelations('urn:kamin:person:local',[{...path,targetGoalId:'urn:kamin:goal:x'}])).toHaveLength(1)
   })
 })

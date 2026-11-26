@@ -1,9 +1,9 @@
 {
-  "note": "Task 40: the lowest scores the lexicon and improved engines may reach on the frozen test sets. npm test (tests/engineScores.test.js) fails on any drop below these values; on a rise it passes and prints \"update the floors\".",
-  "rule": "Floors change only in a PR that names the reason. A lexicon change is tuned on dev-set.json only. Only approved frozen sets have floors: testset.json (v1) and testset-ai-v2.json now, testset-v2.json once it is frozen. Never testset-ai-v3.json (Claude-drafted, reviewed by people) or a diagnostic set.",
+  "note": "Task 40: the lowest scores the lexicon and improved engines may reach on the frozen test sets. npm test (tests/engineScores.test.js) fails on any drop below these values; on a rise it passes and prints \"update the floors\". Task 80 adds testset-workflow.json (Task 77) and testset-dialect.json (Task 80), the latter also per variety (byVariety: dialect, msa, en, mixed).",
+  "rule": "Floors change only in a PR that names the reason. A lexicon change is tuned on development sets only (dev-set.json, dev-set-workflow.json, dev-set-dialect.json). Only approved frozen sets have floors: testset.json (v1), testset-ai-v2.json, testset-workflow.json and testset-dialect.json now (the last two written by Claude, approved by team and supervisor, stated by Amjd 2026-11-18), testset-v2.json once it is frozen. Never testset-ai-v3.json (Claude-drafted, reviewed by people) or a diagnostic set. Margin: none; a floor is the exact measured count (Task 40).",
   "harness": "kamin-eval-project-suggest-v1",
-  "measuredAt": "2026-11-17",
-  "measuredOn": "main 71962cb",
+  "measuredAt": "2026-11-17 (v1, ai-v2); 2026-11-22 (workflow, dialect)",
+  "measuredOn": "main 71962cb (v1, ai-v2); ai/dialect, engine kamin-project-suggest-improved-v3 (workflow, dialect)",
   "counts": "tp, fp, fn are the exact values; precision, recall and f1 are the same values in percent, rounded to 0.1. The test compares exact ratios computed from the counts.",
   "sets": {
     "testset.json": {
@@ -11,14 +11,56 @@
       "cases": 40,
       "methods": {
         "lexicon": {
-          "ar": { "tp": 14, "fp": 1, "fn": 9, "precision": 93.3, "recall": 60.9, "f1": 73.7 },
-          "en": { "tp": 13, "fp": 2, "fn": 10, "precision": 86.7, "recall": 56.5, "f1": 68.4 },
-          "all": { "tp": 27, "fp": 3, "fn": 19, "precision": 90, "recall": 58.7, "f1": 71.1 }
+          "ar": {
+            "tp": 14,
+            "fp": 1,
+            "fn": 9,
+            "precision": 93.3,
+            "recall": 60.9,
+            "f1": 73.7
+          },
+          "en": {
+            "tp": 13,
+            "fp": 2,
+            "fn": 10,
+            "precision": 86.7,
+            "recall": 56.5,
+            "f1": 68.4
+          },
+          "all": {
+            "tp": 27,
+            "fp": 3,
+            "fn": 19,
+            "precision": 90,
+            "recall": 58.7,
+            "f1": 71.1
+          }
         },
         "improved": {
-          "ar": { "tp": 18, "fp": 1, "fn": 5, "precision": 94.7, "recall": 78.3, "f1": 85.7 },
-          "en": { "tp": 19, "fp": 0, "fn": 4, "precision": 100, "recall": 82.6, "f1": 90.5 },
-          "all": { "tp": 37, "fp": 1, "fn": 9, "precision": 97.4, "recall": 80.4, "f1": 88.1 }
+          "ar": {
+            "tp": 18,
+            "fp": 1,
+            "fn": 5,
+            "precision": 94.7,
+            "recall": 78.3,
+            "f1": 85.7
+          },
+          "en": {
+            "tp": 19,
+            "fp": 0,
+            "fn": 4,
+            "precision": 100,
+            "recall": 82.6,
+            "f1": 90.5
+          },
+          "all": {
+            "tp": 37,
+            "fp": 1,
+            "fn": 9,
+            "precision": 97.4,
+            "recall": 80.4,
+            "f1": 88.1
+          }
         }
       }
     },
@@ -27,14 +69,240 @@
       "cases": 52,
       "methods": {
         "lexicon": {
-          "ar": { "tp": 12, "fp": 3, "fn": 13, "precision": 80, "recall": 48, "f1": 60 },
-          "en": { "tp": 13, "fp": 2, "fn": 10, "precision": 86.7, "recall": 56.5, "f1": 68.4 },
-          "all": { "tp": 25, "fp": 5, "fn": 23, "precision": 83.3, "recall": 52.1, "f1": 64.1 }
+          "ar": {
+            "tp": 12,
+            "fp": 3,
+            "fn": 13,
+            "precision": 80,
+            "recall": 48,
+            "f1": 60
+          },
+          "en": {
+            "tp": 13,
+            "fp": 2,
+            "fn": 10,
+            "precision": 86.7,
+            "recall": 56.5,
+            "f1": 68.4
+          },
+          "all": {
+            "tp": 25,
+            "fp": 5,
+            "fn": 23,
+            "precision": 83.3,
+            "recall": 52.1,
+            "f1": 64.1
+          }
         },
         "improved": {
-          "ar": { "tp": 20, "fp": 2, "fn": 5, "precision": 90.9, "recall": 80, "f1": 85.1 },
-          "en": { "tp": 21, "fp": 1, "fn": 2, "precision": 95.5, "recall": 91.3, "f1": 93.3 },
-          "all": { "tp": 41, "fp": 3, "fn": 7, "precision": 93.2, "recall": 85.4, "f1": 89.1 }
+          "ar": {
+            "tp": 20,
+            "fp": 2,
+            "fn": 5,
+            "precision": 90.9,
+            "recall": 80,
+            "f1": 85.1
+          },
+          "en": {
+            "tp": 21,
+            "fp": 1,
+            "fn": 2,
+            "precision": 95.5,
+            "recall": 91.3,
+            "f1": 93.3
+          },
+          "all": {
+            "tp": 41,
+            "fp": 3,
+            "fn": 7,
+            "precision": 93.2,
+            "recall": 85.4,
+            "f1": 89.1
+          }
+        }
+      }
+    },
+    "testset-workflow.json": {
+      "sha256": "7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e",
+      "cases": 40,
+      "methods": {
+        "lexicon": {
+          "ar": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 26,
+            "precision": 100,
+            "recall": 10.3,
+            "f1": 18.8
+          },
+          "en": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 26,
+            "precision": 100,
+            "recall": 10.3,
+            "f1": 18.8
+          },
+          "all": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 52,
+            "precision": 100,
+            "recall": 10.3,
+            "f1": 18.8
+          }
+        },
+        "improved": {
+          "ar": {
+            "tp": 23,
+            "fp": 1,
+            "fn": 6,
+            "precision": 95.8,
+            "recall": 79.3,
+            "f1": 86.8
+          },
+          "en": {
+            "tp": 25,
+            "fp": 1,
+            "fn": 4,
+            "precision": 96.2,
+            "recall": 86.2,
+            "f1": 90.9
+          },
+          "all": {
+            "tp": 48,
+            "fp": 2,
+            "fn": 10,
+            "precision": 96,
+            "recall": 82.8,
+            "f1": 88.9
+          }
+        }
+      }
+    },
+    "testset-dialect.json": {
+      "sha256": "67010db0ecb5794fceab0313621bc61d831076ac7ee6b2e26bd50fbe9c2681bc",
+      "cases": 66,
+      "methods": {
+        "lexicon": {
+          "ar": {
+            "tp": 23,
+            "fp": 9,
+            "fn": 30,
+            "precision": 71.9,
+            "recall": 43.4,
+            "f1": 54.1
+          },
+          "en": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 2,
+            "precision": 100,
+            "recall": 75,
+            "f1": 85.7
+          },
+          "all": {
+            "tp": 29,
+            "fp": 9,
+            "fn": 32,
+            "precision": 76.3,
+            "recall": 47.5,
+            "f1": 58.6
+          },
+          "byVariety": {
+            "dialect": {
+              "tp": 10,
+              "fp": 6,
+              "fn": 23,
+              "precision": 62.5,
+              "recall": 30.3,
+              "f1": 40.8
+            },
+            "msa": {
+              "tp": 7,
+              "fp": 1,
+              "fn": 2,
+              "precision": 87.5,
+              "recall": 77.8,
+              "f1": 82.4
+            },
+            "en": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 2,
+              "precision": 100,
+              "recall": 75,
+              "f1": 85.7
+            },
+            "mixed": {
+              "tp": 6,
+              "fp": 2,
+              "fn": 5,
+              "precision": 75,
+              "recall": 54.5,
+              "f1": 63.2
+            }
+          }
+        },
+        "improved": {
+          "ar": {
+            "tp": 43,
+            "fp": 3,
+            "fn": 10,
+            "precision": 93.5,
+            "recall": 81.1,
+            "f1": 86.9
+          },
+          "en": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 2,
+            "precision": 100,
+            "recall": 75,
+            "f1": 85.7
+          },
+          "all": {
+            "tp": 49,
+            "fp": 3,
+            "fn": 12,
+            "precision": 94.2,
+            "recall": 80.3,
+            "f1": 86.7
+          },
+          "byVariety": {
+            "dialect": {
+              "tp": 27,
+              "fp": 1,
+              "fn": 6,
+              "precision": 96.4,
+              "recall": 81.8,
+              "f1": 88.5
+            },
+            "msa": {
+              "tp": 5,
+              "fp": 0,
+              "fn": 4,
+              "precision": 100,
+              "recall": 55.6,
+              "f1": 71.4
+            },
+            "en": {
+              "tp": 6,
+              "fp": 0,
+              "fn": 2,
+              "precision": 100,
+              "recall": 75,
+              "f1": 85.7
+            },
+            "mixed": {
+              "tp": 11,
+              "fp": 2,
+              "fn": 0,
+              "precision": 84.6,
+              "recall": 100,
+              "f1": 91.7
+            }
+          }
         }
       }
     }

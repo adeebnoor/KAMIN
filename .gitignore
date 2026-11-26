@@ -43,5 +43,5 @@ e2e/zz-*.probe.js
 # name). Only the anonymised result enters the repository, in Task 32.
 /review/
 
-# Browser-model evaluation: downloaded comparison models stay local.
+# Browser-model evaluation (log/task-evaluation.md): downloaded comparison models stay local.
 evaluation/models/

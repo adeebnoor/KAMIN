@@ -5,6 +5,7 @@ import { taskById } from '../tasks/catalog.js'
 import { courseIri } from './registry.js'
 import { FCIT_MAPPING_VERSION } from '../catalog/fcit.js'
 import { EVIDENCE_LEVELS_VERSION, limitingReasons } from '../evidence/levels.js'
+import { normalizeDeclaredPreferences, preferenceValues } from '../insight.js'
 const taskSkillIds=id=>taskById(id)?.skillIds||[]
 
 const slug=value=>String(value||'').trim().toLowerCase().replace(/[^a-z0-9؀-ۿ]+/g,'-').replace(/^-|-$/g,'')
@@ -15,6 +16,9 @@ const evidenceId=(type,key)=>`urn:kamin:evidence:${type}:${slug(key)}`
 const skillId=id=>`urn:kamin:skill:${slug(id)}`
 const preferenceId=(scheme,option)=>`urn:kamin:preference:${slug(scheme)}:${slug(option)}`
 const goalId=goal=>`urn:kamin:goal:${slug(goal)}`
+const GOALS_IN_GRAPH=3
+// The chosen goals, main goal first: state.goal, then state.goals (Task 58), no repeats, at most 3.
+const personGoals=state=>[...new Set([state?.goal,...(Array.isArray(state?.goals)?state.goals:[])].filter(g=>typeof g==='string'&&g.trim()))].slice(0,GOALS_IN_GRAPH)
 
 export function projectStateToPerson360({state,skills=[],educationClassification=null}){
   let graph=emptyPerson360()
@@ -194,16 +198,18 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     }))
   }
 
-  if(state?.goal){
-    const gid=goalId(state.goal)
+  // Task 78: one goal claim per chosen goal (state.goals, at most 3, the main goal first), so R2's two premises name
+  // the same goal for the 2nd and 3rd goals too. Each claim has today's shape and id (urn:kamin:claim:goal:<goal>).
+  for(const goal of personGoals(state)){
+    const gid=goalId(goal)
     graph=addEntity(graph,{
       '@id':gid,
       '@type':'Goal',
-      notation:state.goal,
+      notation:goal,
       goalType:'career-direction',
     })
     graph=addClaim(graph,createClaim({
-      id:`urn:kamin:claim:goal:${slug(state.goal)}`,
+      id:`urn:kamin:claim:goal:${slug(goal)}`,
       predicate:'kamin:pursuesGoal',
       object:gid,
       source:'urn:kamin:evidence:self-declaration',
@@ -214,24 +220,31 @@ export function projectStateToPerson360({state,skills=[],educationClassification
     }))
   }
 
-  for(const [scheme,option] of Object.entries(state?.insight?.declaredPreferences||{})){
-    const pid=preferenceId(scheme,option)
-    graph=addEntity(graph,{
-      '@id':pid,
-      '@type':'skos:Concept',
-      scheme:`urn:kamin:preference-scheme:${scheme}`,
-      notation:option,
+  // Task 78: interest areas and work values hold up to 3 choices each. One claim per chosen value; the first keeps
+  // today's id (urn:kamin:claim:preference:<scheme>), each further one adds its option (…:<scheme>:<option>).
+  const stored=state?.insight?.declaredPreferences
+  const preferences=normalizeDeclaredPreferences(stored)
+  // The stored order of the schemes, as before (a graph with one value per scheme is unchanged).
+  for(const scheme of Object.keys(stored&&typeof stored==='object'?stored:{}).filter(key=>Object.hasOwn(preferences,key))){
+    preferenceValues(preferences,scheme).forEach((option,index)=>{
+      const pid=preferenceId(scheme,option)
+      graph=addEntity(graph,{
+        '@id':pid,
+        '@type':'skos:Concept',
+        scheme:`urn:kamin:preference-scheme:${scheme}`,
+        notation:option,
+      })
+      graph=addClaim(graph,createClaim({
+        id:`urn:kamin:claim:preference:${slug(scheme)}${index?`:${slug(option)}`:''}`,
+        predicate:`kamin:prefers:${scheme}`,
+        object:pid,
+        source:'urn:kamin:evidence:self-declaration',
+        sourceType:'self-declared',
+        generatedBy:'urn:kamin:activity:structured-preference',
+        evidenceStrength:'self-reported',
+        consentPurpose:'urn:kamin:purpose:student-insight',
+      }))
     })
-    graph=addClaim(graph,createClaim({
-      id:`urn:kamin:claim:preference:${slug(scheme)}`,
-      predicate:`kamin:prefers:${scheme}`,
-      object:pid,
-      source:'urn:kamin:evidence:self-declaration',
-      sourceType:'self-declared',
-      generatedBy:'urn:kamin:activity:structured-preference',
-      evidenceStrength:'self-reported',
-      consentPurpose:'urn:kamin:purpose:student-insight',
-    }))
   }
 
   for(const observation of state?.insight?.personGraph?.observations||[]){

@@ -101,7 +101,8 @@ describe('the interest vocabulary is goals only, never evidence (guard)', () => 
   it('it never gives a capability: the capability chips are the approved engine’s alone', () => {
     for (const [sentence] of [[HOSPITAL], ...DIALECT]) {
       expect(Object.keys(matchInterestVocabulary(sentence)).sort()).toEqual(['pathways', 'topics'])
-      expect(understandInterest(sentence).capabilities).toEqual(suggestCapabilities(sentence, { max: 4 }).suggestions.map(s => s.skillId))
+      // Task 80: interests read wishes ("ودي اشتغل هكر"), so the engine is called as freeText.js calls it.
+      expect(understandInterest(sentence).capabilities).toEqual(suggestCapabilities(sentence, { max: 4, keepWishes: true }).suggestions.map(s => s.skillId))
     }
   })
 
