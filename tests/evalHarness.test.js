@@ -165,8 +165,11 @@ describe('test-set checks', () => {
 
   it('v2 check requires human-written texts, two reviewers, enough Arabic/English, synonym, dialect and should-abstain cases, and recorded agreement', () => {
     const set = JSON.parse(readFileSync('eval/project-suggest/testset-v2.json', 'utf8'))
-    expect(set).toMatchObject({ version: 'testset-v2', writtenBy: 'human', cases: [] })
-    const { errors } = checkSetV2({ meta: set, cases: set.cases })
+    expect(set).toMatchObject({ version: 'testset-v2', writtenBy: 'human' })
+    // The real set (written and labelled by the team, frozen 2026-11-24) passes; the empty set it started as fails for every reason.
+    expect(checkSetV2({ meta: set, cases: set.cases }).errors).toEqual([])
+    const empty = { ...set, status: 'collecting', reviewers: { A: '', B: '' }, agreement: null, cases: [] }
+    const { errors } = checkSetV2({ meta: empty, cases: empty.cases })
     const all = errors.join('\n')
     for (const needed of ['two different reviewers', 'ar has 0 cases', 'en has 0 cases', 'synonym', 'should-abstain', 'dialect', 'agreement must be recorded']) expect(all).toContain(needed)
     const bad = checkSetV2({ meta: { writtenBy: 'human', reviewers: { A: 'r1', B: 'r2' }, agreement: { observed: 1, kappa: 1 } }, cases: [
@@ -438,9 +441,12 @@ describe('Claude-drafted cases (Task 38b)', () => {
     expect(readFileSync(`${AI}/README.md`, 'utf8')).toMatch(/cannot erase|does not erase/)
   })
 
-  it('the human set is untouched and protected: empty, human-only, and refuses any Claude draft', () => {
+  it('the human set is protected: human-only, frozen, no Claude draft in it, and refuses any Claude draft', () => {
     const v2 = JSON.parse(readFileSync('eval/project-suggest/testset-v2.json', 'utf8'))
-    expect(v2).toMatchObject({ version: 'testset-v2', writtenBy: 'human', cases: [] })
+    expect(v2).toMatchObject({ version: 'testset-v2', writtenBy: 'human' })
+    expect(assertLockMatches('eval/project-suggest/testset-v2.json').sha256).toBe(fileSha256('eval/project-suggest/testset-v2.json'))
+    const draftTexts = new Set(loadSet(`${AI}/drafts.json`).cases.map(c => c.text.trim()))
+    expect(v2.cases.filter(c => draftTexts.has(c.text.trim())).map(c => c.id)).toEqual([])
     expect(existsSync('eval/project-suggest/testset-ai-v3.json')).toBe(false)
     const draft = loadSet(`${AI}/drafts.json`).cases[0]
     const casesCsv = toCsvText([[...CASE_COLUMNS], [draft.id.replace('aid-', ''), draft.lang, draft.category, `  ${draft.text.toUpperCase()} `, 'student', 'X', '']])
@@ -588,7 +594,8 @@ describe('Claude-drafted cases (Task 38b)', () => {
     const before = fileSha256('eval/project-suggest/testset-v2.json')
     const intoHuman = cli('import-ai-review', `${FX}/review-a.csv`, `${FX}/review-b.csv`, '--reviewer-a', 'A', '--reviewer-b', 'B', '--set', 'eval/project-suggest/testset-v2.json', ...common)
     expect(intoHuman.status).toBe(1)
-    expect(intoHuman.stderr).toMatch(/never go into the human set/)
+    // Refused either way: Claude's cases never go into the human set, and the human set is now frozen.
+    expect(intoHuman.stderr).toMatch(/never go into the human set|is frozen/)
     expect(fileSha256('eval/project-suggest/testset-v2.json')).toBe(before)
   })
 })

@@ -1,0 +1,72 @@
+id,lang,expected,predicted,unsupported_ids,tp,fp,fn,unsupported,abstained,correct_abstention,wrong_abstention,false_alarm
+ar-01,ar,web-development,web-development,,1,0,0,0,false,false,false,false
+ar-02,ar,database,database,,1,0,0,0,false,false,false,false
+ar-03,ar,requirements,requirements,,1,0,0,0,false,false,false,false
+ar-04,ar,web-development,,,0,0,1,0,true,false,true,false
+ar-05,ar,testing,testing,,1,0,0,0,false,false,false,false
+ar-06,ar,cyber,,,0,0,1,0,true,false,true,false
+ar-07,ar,software,,,0,0,1,0,true,false,true,false
+ar-08,ar,systems-analysis,,,0,0,1,0,true,false,true,false
+ar-09,ar,database,,,0,0,1,0,true,false,true,false
+ar-10,ar,web-development,,,0,0,1,0,true,false,true,false
+ar-11,ar,statistics,,,0,0,1,0,true,false,true,false
+ar-12,ar,software,software,,1,0,0,0,false,false,false,false
+ar-13,ar,,,,0,0,0,0,true,true,false,false
+ar-14,ar,,,,0,0,0,0,true,true,false,false
+ar-15,ar,ai-work,ai-work,,1,0,0,0,false,false,false,false
+ar-16,ar,web-development software database,database web-development,,2,0,1,0,false,false,false,false
+ar-17,ar,statistics,,,0,0,1,0,true,false,true,false
+ar-18,ar,testing database,database,,1,0,1,0,false,false,false,false
+ar-19,ar,,cyber,,0,1,0,0,false,false,false,true
+ar-20,ar,,,,0,0,0,0,true,true,false,false
+en-1,en,web-development,web-development,,1,0,0,0,false,false,false,false
+en-2,en,database,database,,1,0,0,0,false,false,false,false
+en-3,en,requirements,requirements,,1,0,0,0,false,false,false,false
+en-4,en,web-development,,,0,0,1,0,true,false,true,false
+en-5,en,testing,testing,,1,0,0,0,false,false,false,false
+en-6,en,software,,,0,0,1,0,true,false,true,false
+en-7,en,cyber,cyber,,1,0,0,0,false,false,false,false
+en-8,en,systems-analysis,systems-analysis,,1,0,0,0,false,false,false,false
+en-9,en,database,,,0,0,1,0,true,false,true,false
+en-10,en,web-development,web-development,,1,0,0,0,false,false,false,false
+en-11,en,statistics,,,0,0,1,0,true,false,true,false
+en-12,en,software,software,,1,0,0,0,false,false,false,false
+en-13,en,,,,0,0,0,0,true,true,false,false
+en-14,en,,,,0,0,0,0,true,true,false,false
+en-15,en,ai-work,ai-work,,1,0,0,0,false,false,false,false
+en-16,en,web-development software database,web-development database software,,3,0,0,0,false,false,false,false
+en-17,en,statistics,,,0,0,1,0,true,false,true,false
+en-18,en,testing database,database,,1,0,1,0,false,false,false,false
+en-19,en,,,,0,0,0,0,true,true,false,false
+en-20,en,,,,0,0,0,0,true,true,false,false
+ar-21,ar,web-development,web-development,,1,0,0,0,false,false,false,false
+ar-22,ar,database,database,,1,0,0,0,false,false,false,false
+ar-23,ar,software,software,,1,0,0,0,false,false,false,false
+ar-24,ar,testing,testing,,1,0,0,0,false,false,false,false
+ar-25,ar,statistics,,,0,0,1,0,true,false,true,false
+ar-26,ar,web-development,,,0,0,1,0,true,false,true,false
+ar-27,ar,,,,0,0,0,0,true,true,false,false
+ar-28,ar,ai-work,,,0,0,1,0,true,false,true,false
+ar-29,ar,,,,0,0,0,0,true,true,false,false
+ar-30,ar,,,,0,0,0,0,true,true,false,false
+ar-31,ar,db-operations,database db-operations,,1,1,0,0,false,false,false,false
+en-21,en,db-operations,db-operations database,,1,1,0,0,false,false,false,false
+ar-32,ar,db-operations,database db-operations,,1,1,0,0,false,false,false,false
+ar-33,ar,project,project,,1,0,0,0,false,false,false,false
+en-22,en,project,project,,1,0,0,0,false,false,false,false
+ar-34,ar,project,,,0,0,1,0,true,false,true,false
+ar-35,ar,systems-analysis,,,0,0,1,0,true,false,true,false
+en-23,en,requirements,systems-analysis requirements,,1,1,0,0,false,false,false,false
+ar-36,ar,cyber,cyber software,,1,1,0,0,false,false,false,false
+ar-37,ar,db-operations,database,,0,1,1,0,false,false,false,false
+en-24,en,systems-analysis,,,0,0,1,0,true,false,true,false
+ar-38,ar,requirements,requirements,,1,0,0,0,false,false,false,false
+ar-39,ar,project,,,0,0,1,0,true,false,true,false
+en-25,en,cyber,cyber,,1,0,0,0,false,false,false,false
+ar-40,ar,ai-work,ai-work,,1,0,0,0,false,false,false,false
+ar-41,ar,,database,,0,1,0,0,false,false,false,true
+ar-42,ar,,,,0,0,0,0,true,true,false,false
+en-26,en,,,,0,0,0,0,true,true,false,false
+en-27,en,,,,0,0,0,0,true,true,false,false
+ar-43,ar,,software,,0,1,0,0,false,false,false,true
+ar-44,ar,,,,0,0,0,0,true,true,false,false
