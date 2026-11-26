@@ -8,5 +8,88 @@
     "sweep": "0.20–0.80 step 0.01",
     "tunedAt": "2026-10-25T18:05:17.559Z",
     "devMacroF1": 0.7212
+  },
+  "hybrid": {
+    "method": "kamin-project-suggest-hybrid-v1",
+    "threshold": 0.53,
+    "max": 1,
+    "tunedOn": "dev-set.json",
+    "tunedOnSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "objective": "mean of per-language F1 (Arabic, English) of improved + fallback; ties: the lowest threshold at which the fallback alone (top 1, every dev case) has no false positive on dev, else the highest tied",
+    "sweep": "0.53–0.8 step 0.01 (always above the embedding threshold 0.52)",
+    "tunedAt": "2026-11-21",
+    "devMacroF1": 1,
+    "devImprovedMacroF1": 1,
+    "devTiedThresholds": 28,
+    "devFallbackAloneTp": 16,
+    "devFallbackAloneFp": 0,
+    "devCases": 27,
+    "devFallbackCases": 4
+  },
+  "hybridV2": {
+    "method": "kamin-project-suggest-hybrid-v2",
+    "thresholds": {
+      "dialect": 0.53,
+      "msa": 0.58,
+      "en": 0.53,
+      "mixed": 0.53
+    },
+    "max": 1,
+    "tunedOn": [
+      "dev-set.json",
+      "dev-set-workflow.json",
+      "dev-set-dialect.json"
+    ],
+    "tunedOnSha256": {
+      "dev-set.json": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+      "dev-set-workflow.json": "ee70d154db0de09134445ce60b8ca6761130343bfa7175c25a597782a7914e5b",
+      "dev-set-dialect.json": "d533ec1bf17074ee5adcead59fd3f27dde0de35d04df926c518029dab37384f6"
+    },
+    "objective": "per variety (a case's variety label, else detectVariety): F1 of improved + fallback v2 on the dev cases of that variety; ties: the lowest threshold at which the fallback alone (top 1, every dev case of that variety) has no false positive, else the highest tied",
+    "sweep": "0.53–0.8 step 0.01 (always above the embedding threshold 0.52)",
+    "tunedAt": "2026-11-22",
+    "devSetsGrownAfterTuning": {
+      "dev-set-dialect.json": {
+        "task": "Task 80b (2026-11-22)",
+        "addedCases": 18,
+        "addedIn": "Task 80b",
+        "tunedCasesSha256": "2f2d76546b2592d1919fccfbc41f5ce49b3ce92aac8ebdd302f00d7f67c561b0",
+        "note": "18 hard negatives were added after tuning; the thresholds were NOT retuned. tunedOnSha256 above is the 44-case file; tunedCasesSha256 is sha256 of JSON.stringify(cases) of those 44 cases, which stay unchanged in the file."
+      }
+    },
+    "byVariety": {
+      "dialect": {
+        "devCases": 29,
+        "fallbackCases": 5,
+        "devF1": 1,
+        "tiedThresholds": 28,
+        "fallbackAloneTp": 19,
+        "fallbackAloneFp": 0
+      },
+      "msa": {
+        "devCases": 29,
+        "fallbackCases": 9,
+        "devF1": 1,
+        "tiedThresholds": 28,
+        "fallbackAloneTp": 13,
+        "fallbackAloneFp": 0
+      },
+      "en": {
+        "devCases": 31,
+        "fallbackCases": 8,
+        "devF1": 1,
+        "tiedThresholds": 28,
+        "fallbackAloneTp": 14,
+        "fallbackAloneFp": 0
+      },
+      "mixed": {
+        "devCases": 8,
+        "fallbackCases": 2,
+        "devF1": 1,
+        "tiedThresholds": 28,
+        "fallbackAloneTp": 4,
+        "fallbackAloneFp": 0
+      }
+    }
   }
 }

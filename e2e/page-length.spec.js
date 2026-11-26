@@ -1,8 +1,6 @@
-import { test, expect } from './fixtures.js'
+import { test, expect } from '@playwright/test'
 import { readFileSync } from 'node:fs'
-import { pageLength, sidewaysScroll, cutOffInputs, messagesOverHeading, screensAllowed, writeResults, documentLength, visibleDocumentChoices, settleDocument } from './usability-lib.js'
-import { APP_VIEWS, walkAppViews, openAppWindow, loadSample, approveSample, openAppView } from './nav.js'
-import { LEGACY_VIEWS } from '../src/navigation.js'
+import { cutOffInputs, screensAllowed, writeResults, documentLength, visibleDocumentChoices, settleDocument } from './usability-lib.js'
 import { NEW_APP_VIEWS, kamin } from './roles.js'
 import { VIEW_TEXT } from '../src/ui2/views.js'
 
@@ -16,88 +14,65 @@ import { VIEW_TEXT } from '../src/ui2/views.js'
 // Problems measured on 2026-11-12 are listed in the budget file ("knownProblems", and budgets
 // above zero), never skipped: each check runs and is recorded, and fails if its screen gets worse.
 // Results: test-results/usability.json. Before/after table: docs/USABILITY_BASELINE.md.
-// Task 69: these walk the old interface (?ui=old, e2e/fixtures.js) until Task 70 deletes it; the last block measures
-// every view of the new interface, now the default, against its own budgets.
+// Task 69 walked the old interface until Task 70 deleted it; the interface's views are measured below against their
+// own budgets.
 const BUDGET = JSON.parse(readFileSync(new URL('./usability-budget.json', import.meta.url), 'utf8'))
 const LANGS = ['ar', 'en']
 const results = {}
-const known = (id, project) => !!BUDGET.knownProblems[id]?.projects.includes(project)
 
-test('every view in src/navigation.js is in the list these checks walk', () => {
-  // "skills" is the dashboard scrolled to its capability list, not a page of its own.
-  expect([...APP_VIEWS].sort()).toEqual(Object.keys(LEGACY_VIEWS).filter(view => view !== 'skills').sort())
-})
-
-for (const lang of LANGS) test(`page length: no app view is longer than its budget (${lang})`, async ({ page }, info) => {
-  test.setTimeout(90_000)
-  const budget = BUDGET.screens[info.project.name][lang]
-  const measured = {}
-  await walkAppViews(page, lang, async view => { measured[view] = await pageLength(page) })
-  results[`page-length.${lang}`] = measured
-  // In CI, test-results/ is emptied by the later `npm run visual` step, but reports/playwright.json
-  // (the test-results-page artifact) keeps this attachment: the numbers measured on Linux.
-  await info.attach(`page-length.${lang}.json`, { body: JSON.stringify(measured), contentType: 'application/json' })
-  for (const [view, m] of Object.entries(measured)) {
-    expect.soft(m.screens, `${view} (${lang}) is ${m.screens} screens long (${m.scrollHeight}px in a ${m.clientHeight}px window). Budget: ${budget[view]} screens, plus the allowance.`).toBeLessThanOrEqual(screensAllowed(budget[view]))
-  }
+// Task 70: the old interface's walks (its page-length budgets, its Back test and its dashboard heading) are deleted with it;
+// mapped in log/task-70.md. Its two layout rules run on every view of the interface below: at 360px no element of the
+// page is wider than its box (a region that scrolls on purpose is marked and reachable by keyboard: data-scroll-x, or
+// role="region" with tabindex="0") and no text field cuts its text; after approval no message lies on top of the
+// page heading.
+const allViews = async (app, visit) => {
+  await app.home(); await visit('home')
+  await app.goToView('upload'); await visit('upload')
+  await app.sample()
+  for (const view of NEW_APP_VIEWS.filter(v => !['home', 'upload'].includes(v))) { await app.goToView(view); await visit(view) }
+}
+const contentWider = page => page.evaluate(() => {
+  const root = document.querySelector('.ui2-main')
+  if (!root) return null
+  const name = el => el.tagName.toLowerCase() + (el.dataset.testid ? `[data-testid="${el.dataset.testid}"]` : [...el.classList].map(c => '.' + c).join(''))
+  return [root, ...root.querySelectorAll('*')]
+    .filter(el => el instanceof HTMLElement && !el.matches('input, textarea, select') && !el.closest('[data-scroll-x], [role=region][tabindex="0"]')
+      && el.getClientRects().length > 0 && el.clientWidth > 1 && el.scrollWidth > el.clientWidth + 1)
+    .map(el => `${name(el)} ${el.scrollWidth}>${el.clientWidth}`)
 })
 
 test.describe('on a 360px screen', () => {
   test.use({ viewport: { width: 360, height: 740 } })
-  for (const lang of LANGS) test(`360px: nothing scrolls sideways and no text field cuts its text (${lang})`, async ({ page }, info) => {
-    test.setTimeout(90_000)
+  for (const lang of LANGS) test(`360px: nothing scrolls sideways and no text field cuts its text, on every view (${lang})`, async ({ page }, info) => {
+    test.setTimeout(120_000)
     const sideways = {}, cut = {}
-    await walkAppViews(page, lang, async view => { sideways[view] = await sidewaysScroll(page); cut[view] = await cutOffInputs(page) })
+    const app = kamin(page, { ui: 'new', lang })
+    await allViews(app, async view => { await settleDocument(page); sideways[view] = await contentWider(page); cut[view] = await cutOffInputs(page, '.ui2-main') })
     results[`sideways-scroll-360.${lang}`] = sideways
     results[`cut-off-inputs-360.${lang}`] = cut
     await info.attach(`layout-360.${lang}.json`, { body: JSON.stringify({ sideways, cut }), contentType: 'application/json' })
-    for (const view of APP_VIEWS) {
-      expect.soft(sideways[view].length, `${view} (${lang}) has content wider than its box: ${sideways[view].join(' | ')}`).toBeLessThanOrEqual(BUDGET.sidewaysScroll360[view] ?? 0)
-      expect.soft(cut[view].length, `${view} (${lang}) has text fields that cut their text: ${cut[view].join(' | ')}`).toBeLessThanOrEqual(BUDGET.cutOffInputs360[view]?.[lang] ?? 0)
+    for (const view of NEW_APP_VIEWS) {
+      expect.soft(sideways[view], `${view} (${lang}) has content wider than its box`).toEqual([])
+      expect.soft(cut[view], `${view} (${lang}) has text fields that cut their text`).toEqual([])
     }
   })
 })
 
-test('Back goes to the previous app screen, then closes the app', async ({ page }, info) => {
-  const where = () => page.evaluate(() => {
-    const visible = el => !!el && el.getClientRects().length > 0
-    const app = visible(document.querySelector('.app-overlay'))
-    return {
-      path: location.pathname,
-      app,
-      section: app ? [...document.querySelectorAll('nav button[aria-current=page]')].find(visible)?.dataset.section ?? null : null,
-      tab: app ? [...document.querySelectorAll('.app-overlay [role=tab][aria-selected=true]')].find(visible)?.id ?? null : null,
-    }
+for (const lang of LANGS) test(`after approval no message covers the page heading (${lang})`, async ({ page }) => {
+  const app = kamin(page, { ui: 'new', lang })
+  await page.goto(`/${lang}/?start=sample`)
+  await app.approve()
+  await expect(app.heading('projects')).toBeVisible()
+  const covering = await page.evaluate(() => {
+    const h = document.querySelector('#ui2-page-title').getBoundingClientRect()
+    return [...document.querySelectorAll('.ui2 [role=status], .ui2 [role=alert]')].filter(el => el.getClientRects().length > 0).flatMap(el => {
+      const m = el.getBoundingClientRect()
+      const width = Math.min(m.right, h.right) - Math.max(m.left, h.left), height = Math.min(m.bottom, h.bottom) - Math.max(m.top, h.top)
+      return width > 0 && height > 0 ? [`${el.className || el.tagName} covers ${Math.round(width)}x${Math.round(height)}px of the heading`] : []
+    })
   })
-  await openAppWindow(page, 'ar')
-  const steps = { opened: await where() }
-  await openAppView(page, 'matches', 'ar')
-  await openAppView(page, 'compare', 'ar')
-  steps.twoTabsLater = await where()
-  for (const press of ['back1', 'back2', 'back3']) {
-    await page.goBack().catch(() => null)
-    await page.waitForTimeout(200)
-    steps[press] = await where()
-  }
-  const wanted = {
-    back1: { path: '/ar/', app: true, section: 'next', tab: 'tab-matches' },
-    back2: steps.opened,
-    back3: { path: '/ar/', app: false, section: null, tab: null },
-  }
-  const ok = Object.entries(wanted).every(([press, want]) => JSON.stringify(steps[press]) === JSON.stringify(want))
-  results['back-button'] = { ok, steps }
-  expect(steps.twoTabsLater, 'the route itself works').toEqual({ path: '/ar/', app: true, section: 'next', tab: 'tab-compare' })
-  if (!ok && !known('back-button', info.project.name)) expect({ back1: steps.back1, back2: steps.back2, back3: steps.back3 }, 'Back must stay in KAMIN: previous tab, then the first screen, then close the app').toEqual(wanted)
-})
-
-for (const lang of LANGS) test(`after approval no message covers the page heading (${lang})`, async ({ page }, info) => {
-  await openAppWindow(page, lang)
-  await loadSample(page, lang)
-  await approveSample(page, lang)
-  const covering = await messagesOverHeading(page)
   results[`message-covers-heading.${lang}`] = covering
-  expect(covering, 'the dashboard has a page heading to measure against').not.toBeNull()
-  if (!known('message-covers-heading', info.project.name)) expect(covering, 'a message lies on top of the page heading').toEqual([])
+  expect(covering, 'a message lies on top of the page heading').toEqual([])
 })
 
 // ---------- Task 69 · the new interface (the default): page length, visible controls and clicks for every view ----------
@@ -132,7 +107,6 @@ test('every view of the new interface has a route here and its three budgets', (
 })
 
 test.describe('the new interface (the default)', () => {
-  test.use({ kaminUi: 'new' })
   for (const lang of LANGS) test(`new interface: page length, visible controls and clicks from Home for every view (${lang})`, async ({ page }, info) => {
     test.setTimeout(120_000)
     const measured = {}

@@ -1,6 +1,6 @@
-import {test,expect} from './fixtures.js'
+import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { openSection, openTab, openPrivacySection } from './nav.js'
+import { kamin } from './roles.js'
 import { RUNTIME_MANIFEST } from '../src/content/runtimeManifest.js'
 
 // Task 16 · the main journey against the production build (`npm run preview` of `npm run build`,
@@ -32,38 +32,39 @@ test('the main journey makes no request outside the app and triggers no CSP viol
  test.setTimeout(120_000)
  const net=watchNetwork(page,baseURL)
  await page.addInitScript(()=>{window.__cspViolations=[];document.addEventListener('securitypolicyviolation',e=>window.__cspViolations.push(`${e.violatedDirective} ${e.blockedURI}`))})
- await page.goto('/ar/')
- await page.getByRole('button',{name:/افتح مساحة العمل/}).first().click()
+ // Task 70: the same journey on the interface (the old window, menu and privacy page are deleted).
+ const app=kamin(page,{ui:'new',lang:'ar'})
+ await app.home()
+ await app.openUpload()
 
  // 1. Upload a synthetic transcript (PDF) and approve it.
- await page.locator('#kamin-transcript-file').setInputFiles({name:'synthetic-transcript.pdf',mimeType:'application/pdf',buffer:syntheticTranscriptPdf([
+ await page.locator('#ui2-transcript-file').setInputFiles({name:'synthetic-transcript.pdf',mimeType:'application/pdf',buffer:syntheticTranscriptPdf([
   'Synthetic transcript - not a real student','CPIT 240 Databases 3 A','CPIT 251 Software Engineering 3 B+','STAT 110 Introduction to Statistics 3 B'])})
- await expect(page.locator('.app-overlay table input').first()).toBeVisible({timeout:30_000})
+ await expect(app.resultLine()).toBeVisible({timeout:30_000})
  // Task 55: no dropdown; this PDF prints no college, so the note's Fix opens the one-tap list.
  await page.getByTestId('college-note').getByRole('button',{name:'تصحيح'}).click()
  await page.getByTestId('college-fix').getByRole('button',{name:'كلية الحاسبات وتقنية المعلومات'}).click()
- await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
- await page.getByRole('button',{name:/أعتمد السجل/}).last().click()
- await expect(page.locator('.capability-list')).toBeVisible()
+ await app.approve()
+ await expect(app.heading('projects')).toBeVisible()
 
- // 2. Capabilities and the next step.
- await page.locator('.capability-row').first().click()
- await expect(page.locator('.capability-detail .evidence-item').first()).toBeVisible()
- await openSection(page,'next')
- await expect(page.locator('.match-card').first()).toBeVisible()
+ // 2. Capabilities (one opened) and the next steps.
+ await app.openCapabilities()
+ await app.openCapability(0)
+ await expect(app.capabilitySheet().locator('.evidence-item').first()).toBeVisible()
+ await page.keyboard.press('Escape')
+ await app.openGoals()
+ await app.chooseGoal('data')
+ await app.openGoalElsewhere()
+ await expect(app.stepCards().first()).toBeVisible()
 
  // 3. Save on this device, then 4. download an encrypted backup.
- await openSection(page,'home')
- await page.getByRole('button',{name:'نعم، احتفظ بملفي'}).click()
- await openSection(page,'my-data'); await openTab(page,'الموافقات والحفظ والحذف')
- await openPrivacySection(page,'backup') // Task 27
- const pass='synthetic passphrase 2026'
- await page.getByLabel('عبارة المرور',{exact:true}).fill(pass); await page.getByLabel(/تأكيد العبارة/).fill(pass)
- const download=page.waitForEvent('download'); await page.getByRole('button',{name:/تنزيل نسخة مشفّرة/}).click()
- expect((await download).suggestedFilename()).toMatch(/\.kamin$/)
+ await app.openSaveOffer()
+ await app.keepOnDevice()
+ const download=await app.downloadBackup('synthetic passphrase 2026')
+ expect(download.suggestedFilename()).toMatch(/\.kamin$/)
 
- // 5. The privacy screen links to "What runs where" (Task 27: in the Delete section, next to the storage details).
- await openPrivacySection(page,'delete')
+ // 5. Delete everything links to "What runs where", next to the storage details.
+ await app.openSettingsSection('delete')
  await page.getByTestId('runs-where-link').click()
  await expect(page.getByRole('heading',{level:1,name:'ما الذي يعمل وأين'})).toBeVisible()
 

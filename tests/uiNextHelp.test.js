@@ -110,9 +110,12 @@ describe('Task 68 · the Help page', () => {
     const importers = name => sourceFiles('src/ui2').filter(file => read(file).split('\n').some(line => line.includes('import') && line.includes(`components/${name}.jsx'`))).map(file => file.split(path.sep).join('/'))
     expect(importers('KnowledgeWorkspace')).toEqual(['src/ui2/screens/Help.jsx'])
     expect(importers('SemanticRecall')).toEqual(['src/ui2/screens/Help.jsx'])
-    // The old interface still loads them on its own (its knowledge view, its interests page).
-    expect(read('src/App.jsx')).toContain("const KnowledgeWorkspace = lazy(()=>import('./components/KnowledgeWorkspace.jsx'))")
-    expect(read('src/components/StudentInsight.jsx')).toContain("const SemanticRecall=lazy(()=>import('./SemanticRecall.jsx'))")
+    // Task 70: the old interface (its knowledge view in src/App.jsx, its interests page StudentInsight.jsx) is deleted;
+    // Help is now the only place in the app that loads the two tools.
+    const all = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? all(`${dir}/${e.name}`) : /\.jsx?$/.test(e.name) ? [`${dir}/${e.name}`] : [])
+    const users = name => all('src').filter(file => read(file).split('\n').some(line => line.includes('import') && line.includes(`${name}.jsx'`)))
+    expect(users('KnowledgeWorkspace')).toEqual(['src/ui2/screens/Help.jsx'])
+    expect(users('SemanticRecall')).toEqual(['src/ui2/screens/Help.jsx'])
   })
 })
 
@@ -179,18 +182,17 @@ describe('Task 68 · nothing about how it works on Home or in the flow; "Why?" s
 
 describe('Task 68 · every old landing explanation has a Help destination (inventory check)', () => {
   it('every page the old landing page links to is a Help page, or one tap from every Help page (the public pages\' shared header and footer)', () => {
-    const landing = read('src/components/LandingExperience.jsx')
-    const linked = [...new Set([...landing.matchAll(/pageHref\('([\w-]+\.html)'/g)].map(m => m[1]))]
-    expect(linked.length).toBeGreaterThanOrEqual(7)
+    // Task 70: the old landing page (src/components/LandingExperience.jsx) is deleted. These are the pages it linked to
+    // (its pageHref('….html') calls, read from the file at b443bad before the deletion); every one keeps a destination.
+    const linked = ['about.html', 'catalog.html', 'faq.html', 'guide.html', 'sample-report.html', 'services.html', 'trust.html', 'validation.html']
+    expect(existsSync('src/components/LandingExperience.jsx')).toBe(false)
     const shared = new Set([...navItems, ...footerItems].map(([file]) => file))
     for (const file of linked) expect(Object.values(FILES).includes(file) || shared.has(file), `${file} has a Help destination`).toBe(true)
     // The landing's own explanation blocks: How it works → the guide (a Help page); Why you can trust it and Before you
     // begin → the trust center and the FAQ, in every public page's header and footer.
-    expect(landing).toContain("<a href={pageHref('guide.html',lang)}>")
     expect(Object.values(FILES)).toContain('guide.html')
     expect(shared.has('trust.html') && shared.has('faq.html') && shared.has('methodology.html')).toBe(true)
     // "Explore further" (the knowledge search) → Help → Reviewer tools → the knowledge explorer.
-    expect(landing).toMatch(/onKnowledge\(knowledgeSearch\)/)
     expect(HELP_SECTIONS).toContain('knowledge')
   })
   it('the inventory\'s "moved to Help" rows K23–K30 each name their Help destination (Task 68)', () => {

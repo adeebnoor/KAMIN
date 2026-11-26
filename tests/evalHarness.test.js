@@ -3,10 +3,11 @@ import { existsSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFile
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { assertLockMatches, assertNotFrozen, agreement, fileSha256, checkSet, checkSetV2, isSupported, lockPathFor, score, toCsv, toMarkdown } from '../eval/project-suggest/lib.mjs'
+import { assertLockMatches, assertNotFrozen, agreement, closestText, fileSha256, checkSet, checkSetV2, isSupported, loadSet, lockPathFor, score, toCsv, toMarkdown } from '../eval/project-suggest/lib.mjs'
 import { AI_REVIEW_COLUMNS, AI_SET_VERSION, BLIND_ROW_ID, BLIND_STATEMENT, aiReviewSheet, checkDrafts, checkSetAiReviewed, importAiReview, resolveAiReview, sha256 } from '../eval/project-suggest/lib.mjs'
 import { CAPABILITY_IDS, CASE_COLUMNS, LABEL_COLUMNS, capabilityCoverage, casesFromCsv, closestText, coverageReport, disagreementsMarkdown, importV2, labelsSheet, languageProblem, loadSet, parseCsv, resolveV2, toCsvText } from '../eval/project-suggest/lib.mjs'
 import { lexicon } from '../eval/project-suggest/methods.mjs'
+import { BOOTSTRAP, bootstrapInterval, seededRandom, withInterval } from '../eval/project-suggest/lib.mjs'
 import { evaluateSuggestions } from '../src/ai/projectSuggest.js'
 
 // Task 07 · the evaluation harness enforces its rules and never calls an outside service.
@@ -34,6 +35,51 @@ describe('frozen sets', () => {
     expect(() => assertLockMatches(file)).not.toThrow()
     writeFileSync(file, JSON.stringify([{ id: 'x', lang: 'en', text: 'Wrote SQL queries!', expected: ['database'] }]))
     expect(() => assertLockMatches(file)).toThrow(/changed after it was frozen/)
+  })
+})
+
+// Task 43 · uncertainty for the hybrid report (Task 39's rule: 2,000 draws, fixed seed, cases resampled).
+describe('bootstrap intervals (Task 43)', () => {
+  const rows = [
+    { id: 'a', lang: 'en', tp: 2, fp: 0, fn: 0 }, { id: 'b', lang: 'en', tp: 1, fp: 1, fn: 1 }, { id: 'c', lang: 'ar', tp: 0, fp: 0, fn: 2 },
+    { id: 'd', lang: 'ar', tp: 1, fp: 0, fn: 0 }, { id: 'e', lang: 'en', tp: 0, fp: 1, fn: 0 }, { id: 'f', lang: 'ar', tp: 3, fp: 0, fn: 1 },
+  ]
+  it('uses 2,000 draws and a fixed seed, so two runs give identical numbers', () => {
+    expect(BOOTSTRAP).toEqual({ draws: 2000, seed: 43, level: 0.95 })
+    const a = seededRandom(43), b = seededRandom(43)
+    expect(Array.from({ length: 5 }, a)).toEqual(Array.from({ length: 5 }, b))
+    expect(bootstrapInterval(rows)).toEqual(bootstrapInterval(rows))
+  })
+  it('gives the point value inside its interval, per language, and the printed form "88.1% (95% CI a–b)"', () => {
+    for (const lang of ['ar', 'en', 'all']) {
+      const ci = bootstrapInterval(rows, { lang })
+      for (const key of ['precision', 'recall', 'f1']) {
+        expect(ci[key].low, `${lang} ${key}`).toBeLessThanOrEqual(ci[key].value)
+        expect(ci[key].high, `${lang} ${key}`).toBeGreaterThanOrEqual(ci[key].value)
+      }
+    }
+    expect(bootstrapInterval(rows).precision.value).toBeCloseTo(7 / 9)
+    expect(bootstrapInterval([{ lang: 'en', tp: 3, fp: 0, fn: 0 }, { lang: 'en', tp: 1, fp: 0, fn: 0 }]).recall).toEqual({ value: 1, low: 1, high: 1 })
+    expect(withInterval({ value: 0.881, low: 0.786, high: 0.951 })).toBe('88.1% (95% CI 78.6–95.1)')
+    expect(withInterval({ value: null })).toBe('n/a')
+  })
+  it('refuses to tune the hybrid threshold on a test set', () => {
+    const cli = spawnSync(process.execPath, ['eval/project-suggest/eval.mjs', 'tune', 'eval/project-suggest/testset.json', '--method', 'hybrid'], { encoding: 'utf8' })
+    expect(cli.status).toBe(1)
+    expect(cli.stderr).toMatch(/REFUSED/)
+  })
+  it('the committed hybrid report names the dev-only threshold, both frozen sets and an undecided ship rule (v2 has 0 cases)', () => {
+    const report = readFileSync('eval/project-suggest/results/2026-11-21-hybrid.md', 'utf8')
+    const config = JSON.parse(readFileSync('eval/project-suggest/config.json', 'utf8'))
+    expect(report).toContain(`at **${config.hybrid.threshold}**`)
+    expect(report).toContain(`Threshold tuned on \`dev-set.json\` only (sha256 \`${config.hybrid.tunedOnSha256}\``)
+    const text = report.replace(/\r\n/g, '\n')
+    for (const set of ['testset.json', 'testset-ai-v2.json']) expect(text).toContain(`## ${set}\n\n`)
+    expect(text).toContain('## testset-v2.json\n\n**0 cases: not measurable.**')
+    expect(report).toContain('testset-v2.json has 0 cases: **not decided**')
+    // v1 numbers of the improved engine are unchanged (Task 08: 97.4 / 80.4 / 88.1)
+    expect(report).toContain('| improved | All | 97.4% (95% CI ')
+    expect(report).toMatch(/\| improved \| All \| 97\.4% \(95% CI [\d.–]+\) \| 80\.4% \(95% CI [\d.–]+\) \| 88\.1% /)
   })
 })
 
@@ -555,5 +601,94 @@ describe('no outside network', () => {
       for (const banned of ['api.openai.com', 'generativelanguage', 'x-goog-api-key', 'LLM_PRICES', 'geminiSuggest', 'fetch(']) expect(text, `${file} contains ${banned}`).not.toContain(banned)
       expect(text, `${file} contains a URL`).not.toMatch(/https?:\/\//)
     }
+  })
+})
+
+// Task 77 · the workflow sets: a development set (tuned on) and a test set written by Claude, frozen by sha256
+// before any method ran on it, never tuned on. Neither copies another set.
+describe('Task 77 · workflow sets', () => {
+  const DIR = 'eval/project-suggest'
+  const PROVENANCE = 'Written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)'
+  it('the test set is frozen (40 cases, sha256 7ef9ae73…738e), labelled with its provenance, and cannot be tuned on', () => {
+    const lock = assertLockMatches(`${DIR}/testset-workflow.json`)
+    expect(lock).toMatchObject({ sha256: '7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e', cases: 40 })
+    const set = loadSet(`${DIR}/testset-workflow.json`)
+    expect(set.meta).toMatchObject({ provenance: PROVENANCE, writtenBy: 'ai', status: 'frozen-before-method' })
+    expect(checkSet(set.cases).errors).toEqual([])
+    expect(set.cases.length).toBeGreaterThanOrEqual(30)
+    for (const lang of ['ar', 'en']) expect(set.cases.filter(c => c.lang === lang && !c.expected.length).length, lang).toBeGreaterThanOrEqual(5)
+    expect(() => assertNotFrozen(`${DIR}/testset-workflow.json`)).toThrow(/REFUSED/)
+  })
+  it('the development set has 20+ new cases in Arabic and English, is not frozen, and shares no text with any other set', () => {
+    const dev = loadSet(`${DIR}/dev-set-workflow.json`)
+    expect(dev.meta.provenance).toBe(PROVENANCE)
+    expect(checkSet(dev.cases).errors).toEqual([])
+    expect(dev.cases.length).toBeGreaterThanOrEqual(20)
+    for (const lang of ['ar', 'en']) expect(dev.cases.filter(c => c.lang === lang).length, lang).toBeGreaterThanOrEqual(10)
+    expect(() => assertNotFrozen(`${DIR}/dev-set-workflow.json`)).not.toThrow()
+    const sets = ['dev-set.json', 'testset.json', 'testset-ai-v2.json', 'ai-drafts/drafts.json', 'dev-set-workflow.json', 'testset-workflow.json']
+    const all = sets.flatMap(set => loadSet(`${DIR}/${set}`).cases.map(c => ({ set, id: c.id, text: c.text })))
+    for (const set of ['dev-set-workflow.json', 'testset-workflow.json']) for (const c of all.filter(x => x.set === set)) {
+      expect(closestText(c.text, all.filter(x => x.set !== set)), `${set} ${c.id}`).toBeNull()
+    }
+  })
+  it('the report on the frozen set shows before and after with bootstrap intervals and no unsupported suggestion', () => {
+    const report = readFileSync(`${DIR}/results/2026-11-22-workflow.md`, 'utf8')
+    for (const set of ['testset-workflow.json', 'dev-set-workflow.json', 'dev-set.json', 'testset.json', 'testset-ai-v2.json']) expect(report).toContain(`## ${set}\n\n`)
+    expect(report).toContain('2000 draws, seed 43, 95% percentile interval')
+    const after = JSON.parse(readFileSync(`${DIR}/results/2026-11-22-workflow/after-testset-workflow.json`, 'utf8'))
+    expect(after.meta).toMatchObject({ methodVersion: 'kamin-project-suggest-improved-v2', setSha256: '7ef9ae73f26d4e0158cbfc556bb7d1c5937cd1e1a01780d3f686f3e67e62738e' })
+    expect(after.metrics.all.unsupported).toBe(0)
+  })
+})
+
+// Task 80 · the dialect sets: a development set (tuned on) and a test set written by Claude, frozen by sha256 and
+// committed on its own before any method ran on it, never tuned on. Results per variety (dialect, MSA, English, mixed).
+describe('Task 80 · dialect sets', () => {
+  const DIR = 'eval/project-suggest'
+  const PROVENANCE = 'Written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)'
+  const SHA = '67010db0ecb5794fceab0313621bc61d831076ac7ee6b2e26bd50fbe9c2681bc'
+  const count = (cases, v, neg) => cases.filter(c => c.variety === v && (neg === undefined || !c.expected.length === neg)).length
+  it('the test set is frozen (66 cases), at least half dialect, every variety with should-abstain cases, every capability 4+ times', () => {
+    expect(assertLockMatches(`${DIR}/testset-dialect.json`)).toMatchObject({ sha256: SHA, cases: 66 })
+    const set = loadSet(`${DIR}/testset-dialect.json`)
+    expect(set.meta).toMatchObject({ provenance: PROVENANCE, writtenBy: 'ai', status: 'frozen-before-method' })
+    expect(checkSet(set.cases).errors).toEqual([])
+    expect(set.cases.length).toBeGreaterThanOrEqual(60)
+    expect(count(set.cases, 'dialect') * 2).toBeGreaterThanOrEqual(set.cases.length)
+    for (const v of ['dialect', 'msa', 'en', 'mixed']) { expect(count(set.cases, v), v).toBeGreaterThanOrEqual(10); expect(count(set.cases, v, true), v).toBeGreaterThanOrEqual(2) }
+    for (const c of set.cases) { expect(c.variety === 'en' ? 'en' : 'ar', c.id).toBe(c.lang); if (c.variety !== 'en') expect(/[A-Za-z]{2,}/.test(c.text), c.id).toBe(c.variety === 'mixed') }
+    for (const id of CAPABILITY_IDS) expect(set.cases.filter(c => c.expected.includes(id)).length, id).toBeGreaterThanOrEqual(4)
+    expect(() => assertNotFrozen(`${DIR}/testset-dialect.json`)).toThrow(/REFUSED/)
+  })
+  it('the development set has 40+ cases, mostly dialect, is not frozen, and neither set shares a text with any other set', () => {
+    const dev = loadSet(`${DIR}/dev-set-dialect.json`)
+    expect(dev.meta.provenance).toBe(PROVENANCE)
+    expect(checkSet(dev.cases).errors).toEqual([])
+    expect(dev.cases.length).toBeGreaterThanOrEqual(40)
+    expect(count(dev.cases, 'dialect') * 2).toBeGreaterThan(dev.cases.length)
+    expect(() => assertNotFrozen(`${DIR}/dev-set-dialect.json`)).not.toThrow()
+    const sets = ['dev-set.json', 'testset.json', 'testset-ai-v2.json', 'ai-drafts/drafts.json', 'dev-set-workflow.json', 'testset-workflow.json', 'dev-set-dialect.json', 'testset-dialect.json']
+    const all = sets.flatMap(set => loadSet(`${DIR}/${set}`).cases.map(c => ({ set, id: c.id, text: c.text })))
+    for (const set of ['dev-set-dialect.json', 'testset-dialect.json']) for (const c of all.filter(x => x.set === set)) {
+      expect(closestText(c.text, all.filter(x => x.set !== set)), `${set} ${c.id}`).toBeNull()
+    }
+  })
+  it('refuses to tune the per-variety thresholds when any file given is a test set', () => {
+    const cli = spawnSync(process.execPath, ['eval/project-suggest/eval.mjs', 'tune', 'eval/project-suggest/dev-set.json', 'eval/project-suggest/testset-dialect.json', '--method', 'hybrid'], { encoding: 'utf8' })
+    expect(cli.status).toBe(1)
+    expect(cli.stderr).toMatch(/REFUSED/)
+  })
+  it('the report shows every set before and after per variety with bootstrap intervals, the engine commit, and no unsupported suggestion', () => {
+    const report = readFileSync(`${DIR}/results/2026-11-22-dialect.md`, 'utf8')
+    for (const set of ['testset-dialect.json', 'dev-set-dialect.json', 'dev-set.json', 'dev-set-workflow.json', 'testset.json', 'testset-ai-v2.json', 'testset-workflow.json']) expect(report).toContain(`## ${set}\n\n`)
+    expect(report).toContain('2000 draws, seed 43, 95% percentile interval, per variety')
+    for (const v of ['Saudi dialect', 'Standard Arabic', 'English', 'Mixed Arabic-English']) expect(report).toContain(`| engine after | ${v} |`)
+    for (const [label, version] of [['before', 'kamin-project-suggest-improved-v2'], ['after', 'kamin-project-suggest-improved-v3']]) {
+      const run = JSON.parse(readFileSync(`${DIR}/results/2026-11-22-dialect/${label}-testset-dialect-engine.json`, 'utf8'))
+      expect(run.meta).toMatchObject({ methodVersion: version, setSha256: SHA })
+      expect(run.metrics.all.unsupported).toBe(0)
+    }
+    expect(JSON.parse(readFileSync(`${DIR}/results/2026-11-22-dialect/before-testset-dialect-engine.json`, 'utf8')).meta.engine).toMatch(/^as committed at `/)
   })
 })

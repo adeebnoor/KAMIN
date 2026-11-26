@@ -64,7 +64,7 @@ export function scanNetworkCalls(files = code) {
 describe('network guard: no outside calls from the app', () => {
   it('scans a real code base (sanity)', () => {
     expect(code.length).toBeGreaterThan(50)
-    expect(code.some(f => rel(f) === 'src/App.jsx')).toBe(true)
+    expect(code.some(f => rel(f) === 'src/ui2/AppNext.jsx')).toBe(true) // Task 70: was src/App.jsx (deleted)
   })
 
   it('every fetch / XMLHttpRequest / WebSocket / sendBeacon / EventSource / importScripts is allowlisted', () => {
@@ -135,7 +135,7 @@ describe('network guard: no outside calls from the app', () => {
 // Task 49 · the whole repository, not only the app. Every .js/.mjs/.jsx file under these folders is
 // scanned, committed or not yet committed; files Git ignores (vendor copies that `npm run build`
 // writes into public/ocr/ and public/ai-runtime/) are not ours and are left out.
-// evaluation/ (the browser-model evaluation) is scanned like eval/.
+// evaluation/ (the browser-model evaluation, added with log/task-evaluation.md) is scanned like eval/.
 export const REPO_DIRS = ['src', 'public', 'scripts', 'eval', 'evaluation', 'resources']
 const REPO_CODE = /\.(m?js|jsx)$/
 
@@ -160,6 +160,7 @@ export const REPO_ALLOWLIST = [
   ...ALLOWLIST,
   { file: 'scripts/prepare-semantic.mjs', primitive: 'fetch', count: 1, why: 'build time only: downloads the pinned MiniLM model files from huggingface.co once into .model-cache/ (sha256 checked); sends no text and no user data; the app then serves them from /models/ on this site' },
   { file: 'evaluation/download-model.mjs', primitive: 'fetch', count: 1, why: 'developer tool, never part of the app or the build: downloads a public comparison model (ONNX) from huggingface.co into evaluation/models/ (git-ignored); sends no text and no user data' },
+  { file: 'scripts/check-roadmap-links.mjs', primitive: 'fetch', count: 1, why: 'Task 79 developer tool, never part of the app, the build or CI (no npm script, no workflow): checks from a laptop that each link in src/catalog/roadmaps.json still answers (plain GET, no cookies, no body); sends no text and no user data' },
 ]
 
 // Hosts that may be written in code outside comments (links in comments are documentation and are
@@ -213,7 +214,7 @@ describe('repository guard: no script, module or tool calls an outside service (
 
   it('scans every code file in src/, public/, scripts/, eval/ and resources/, and no ignored vendor copy', () => {
     const names = files.map(rel)
-    for (const known of ['src/App.jsx', 'public/sw.js', 'scripts/prepare-semantic.mjs', 'eval/project-suggest/eval.mjs', 'evaluation/eval.mjs', 'evaluation/download-model.mjs']) expect(names).toContain(known)
+    for (const known of ['src/ui2/AppNext.jsx', 'public/sw.js', 'scripts/prepare-semantic.mjs', 'eval/project-suggest/eval.mjs', 'evaluation/eval.mjs', 'evaluation/download-model.mjs']) expect(names).toContain(known)
     expect(names.every(name => REPO_DIRS.some(dir => name.startsWith(`${dir}/`)))).toBe(true)
     expect(names.some(name => /^public\/(ocr|ai-runtime|models)\//.test(name))).toBe(false)
     expect(names.length).toBeGreaterThan(code.length - 1)
@@ -273,7 +274,7 @@ describe('repository guard: no script, module or tool calls an outside service (
     expect(scanRepoSource('resources/zz.mjs', 'new XMLHttpRequest(); navigator.sendBeacon(u); new WebSocket(u); new EventSource(u)').calls.map(hit => hit.primitive).sort())
       .toEqual(['EventSource', 'WebSocket', 'XMLHttpRequest', 'sendBeacon'])
     // An allowed host is only allowed in the files named for it; a link in a comment is documentation.
-    expect(hostAllowed({ file: 'src/App.jsx', host: 'huggingface.co' })).toBe(false)
+    expect(hostAllowed({ file: 'src/ui2/AppNext.jsx', host: 'huggingface.co' })).toBe(false)
     expect(scanRepoSource('src/x.js', '// see https://example.com/docs\nexport const x=1').hosts).toEqual([])
     // One more call in an allowlisted file changes its count, so it is caught too.
     expect(callAllowed({ file: 'scripts/prepare-semantic.mjs', primitive: 'fetch', count: 2 })).toBe(false)

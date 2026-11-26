@@ -1,7 +1,9 @@
-import {test,expect} from './fixtures.js'
+import {test,expect} from '@playwright/test'
 import {mkdir,readdir} from 'node:fs/promises'
 import path from 'node:path'
 import AxeBuilder from '@axe-core/playwright'
+import {VIEW_TEXT} from '../src/ui2/views.js'
+import {nextCopy} from '../src/ui2/copy.js'
 
 // Discover every built public page: new pages cannot silently escape the gate.
 const pages=(await readdir('dist/ar')).filter(file=>file.endsWith('.html')).sort()
@@ -21,8 +23,16 @@ for(const lang of ['ar','en'])for(const file of pages){
     const title=page.locator('h1:visible')
     await expect(title).toHaveCount(1)
     if(file==='index.html'){
-      await expect(page.locator('.k-network-stage')).toBeVisible()
-      await expect(page.locator('.k-advantage-grid')).toBeVisible()
+      // Task 70 removed the old landing (.k-network-stage, .k-advantage-grid); the root page is the interface's Home
+      // (src/ui2/screens/Home.jsx): its sentence as the one heading, the three idea lines and one Start button.
+      const home=page.locator('section[data-view="home"]')
+      await expect(home).toBeVisible()
+      await expect(home.locator('h1')).toHaveText(VIEW_TEXT.home.line[lang])
+      await expect(page.getByTestId('ui2-home-idea').locator('li')).toHaveText([...nextCopy(lang).home.idea])
+      // One button in Home itself (the top bar keeps its own main action on every view).
+      await expect(home.locator('button:visible, a:visible')).toHaveCount(1)
+      await expect(home.getByTestId('ui2-home-action')).toHaveAttribute('data-kind','start')
+      await expect(home.getByTestId('ui2-home-action')).toHaveText(nextCopy(lang).home.start)
     }
     const typography=await title.evaluate(el=>{
       const style=getComputedStyle(el)

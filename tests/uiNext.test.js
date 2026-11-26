@@ -1,13 +1,17 @@
-// Task 60 · the switch to the new interface (?ui=next), its views and address rule, the Start/Continue
-// button, and the rule that the new interface stays out of the startup bundle.
+// Task 60 · the interface (src/ui2), its views and address rule, the Start/Continue button, and the rule that it
+// stays out of the startup bundle. Task 70: the old interface and its switch (src/uiSwitch.js, ?ui=old / ?ui=next,
+// the device's 'kamin-ui') are deleted; the interface is the only one.
 import { describe, it, expect, afterEach } from 'vitest'
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
-import { UI_KEY, chooseUi } from '../src/uiSwitch.js'
 import { NEXT_VIEWS, NEXT_TABS, FLOW, VIEW_TEXT, tabOf, nextViewToParam, paramToNextView, resumeView, mainAction, OLD_VIEW_ADDRESSES, OLD_PRIVACY_SECTIONS, SETTINGS_SECTIONS, HELP_SECTIONS, oldAddress, translateOldAddress } from '../src/ui2/views.js'
-import { LEGACY_VIEWS, SECTIONS } from '../src/navigation.js'
 import { blankState, hasMeaningfulProfileState } from '../src/state/profileState.js'
-import { KEPT_INTERFACE_KEYS, verifyDeviceCleared } from '../src/utils/dataControl.js'
+import { KEPT_INTERFACE_KEYS, RETIRED_UI_KEY, verifyDeviceCleared } from '../src/utils/dataControl.js'
+
+// Task 70: the old interface's view ids and menu section ids (its src/navigation.js LEGACY_VIEWS and SECTIONS at
+// b443bad). Old bookmarks and links still use them, so each keeps a destination (Task 69).
+const OLD_VIEW_IDS = ['dashboard', 'skills', 'start', 'review', 'matches', 'courses', 'compare', 'studio', 'insight', 'mydata', 'privacy', 'audit']
+const OLD_SECTION_IDS = ['home', 'next', 'insight', 'my-data']
 
 // A small Storage stand-in (Map-backed, with key(i) and length, as the device check reads them).
 function memoryStorage(entries = {}) {
@@ -21,59 +25,31 @@ function memoryStorage(entries = {}) {
     dump: () => Object.fromEntries(map),
   }
 }
-const blocked = { getItem() { throw new Error('blocked') }, setItem() { throw new Error('blocked') }, removeItem() { throw new Error('blocked') } }
+// Task 70 replaces Task 60's and 69's switch tests (?ui=old opened and remembered the old interface, ?ui=next forgot it,
+// blocked storage fell back to the address): there is nothing left to switch. These check that no switch remains.
+describe('Task 70 · one interface: no ?ui= switch, nothing remembered', () => {
+  const sources = dir => readdirSync(dir).flatMap(name => { const p = path.join(dir, name); return statSync(p).isDirectory() ? sources(p) : /\.(jsx?|mjs)$/.test(name) ? [p] : [] })
 
-// Task 69 changed the default: the new interface opens unless ?ui=old asks for the old one (remembered on the device).
-// These tests were Task 60's for the opposite default; each one now checks the same rule the other way round.
-describe('Task 60 · the interface switch (src/uiSwitch.js), Task 69: the new interface is the default', () => {
-  it('opens the new interface by default and stores nothing', () => {
-    const storage = memoryStorage()
-    expect(chooseUi('', storage)).toBe('next')
-    expect(chooseUi('?app=dashboard&pilot=1', storage)).toBe('next')
-    expect(storage.dump()).toEqual({})
+  it('the switch, the old root and the old view table are gone', () => {
+    for (const gone of ['src/uiSwitch.js', 'src/App.jsx', 'src/navigation.js']) expect(existsSync(gone), gone).toBe(false)
   })
 
-  it('?ui=old opens the old interface and remembers the choice on this device', () => {
-    const storage = memoryStorage()
-    expect(chooseUi('?ui=old', storage)).toBe('old')
-    expect(storage.getItem(UI_KEY)).toBe('old')
-    expect(UI_KEY).toBe('kamin-ui')
-    // Later visits without the parameter keep the old interface.
-    expect(chooseUi('', storage)).toBe('old')
-    expect(chooseUi('?app=dashboard', storage)).toBe('old')
-  })
-
-  it('?ui=next opens the new interface and forgets the choice', () => {
-    const storage = memoryStorage({ [UI_KEY]: 'old', 'kamin-lang': 'en' })
-    expect(chooseUi('?ui=next', storage)).toBe('next')
-    expect(storage.dump()).toEqual({ 'kamin-lang': 'en' })
-    expect(chooseUi('', storage)).toBe('next')
-  })
-
-  it('an unknown ?ui= value changes nothing; a stored "next" (from an earlier ?ui=next) or any other value opens the new one', () => {
-    const storage = memoryStorage({ [UI_KEY]: 'old' })
-    expect(chooseUi('?ui=beta', storage)).toBe('old')
-    expect(storage.getItem(UI_KEY)).toBe('old')
-    expect(chooseUi('', memoryStorage({ [UI_KEY]: 'next' }))).toBe('next')
-    expect(chooseUi('', memoryStorage({ [UI_KEY]: 'v2' }))).toBe('next')
-  })
-
-  it('blocked or missing storage never breaks the page: the address still decides', () => {
-    expect(chooseUi('?ui=next', blocked)).toBe('next')
-    expect(chooseUi('?ui=old', blocked)).toBe('old')
-    expect(chooseUi('', blocked)).toBe('next')
-    expect(chooseUi('?ui=old', null)).toBe('old')
-    expect(chooseUi('', null)).toBe('next')
-  })
-
-  // Task 74 (team decision 2026-11-19): the snapshot reader moved into the new interface, so a shared snapshot link no
-  // longer forces the old one (Task 69's version of this test checked `||incomingSnapshot?'old'`).
-  it('src/main.jsx opens the old interface for ?ui=old only; a shared snapshot link opens in the chosen interface, which reads it', () => {
+  it('src/main.jsx always renders the interface (lazy); any ?ui= value is ignored because nothing reads it', () => {
     const main = readFileSync('src/main.jsx', 'utf8')
-    expect(main).toMatch(/const ui=chooseUi\(\)==='old'\?'old':'next'/)
+    expect(main).not.toMatch(/chooseUi|uiSwitch|<App\b|ui==='/)
+    expect(main).toMatch(/<Suspense fallback=\{null\}><AppNext incomingSnapshot=\{incomingSnapshot\}\/><\/Suspense>/)
+    expect(main.match(/<AppNext\b/g)).toHaveLength(1)
+    for (const file of sources('src')) {
+      const code = readFileSync(file, 'utf8').replace(/^\s*\/\/.*$/gm, '')
+      expect(code, file).not.toMatch(/\.get\(\s*['"]ui['"]\s*\)|['"]kamin-ui['"]\s*,\s*['"]old/)
+    }
+  })
+
+  // Task 74 (team decision 2026-11-19): the snapshot reader moved into the new interface; Task 70: it is the only one.
+  it('a shared snapshot link opens in the interface, which reads it', () => {
+    const main = readFileSync('src/main.jsx', 'utf8')
     expect(main).not.toMatch(/\|\|incomingSnapshot/)
     expect(main).toMatch(/<AppNext incomingSnapshot=\{incomingSnapshot\}\/>/)
-    expect(main).toMatch(/<App incomingSnapshot=\{incomingSnapshot\}\/>/)
   })
 
   it('Task 74 · the new interface shows the old snapshot reader, loaded only for a snapshot link, and reads a link opened later', () => {
@@ -92,13 +68,13 @@ describe('Task 69 · old addresses open the nearest view of the new interface (s
   const at = path => translateOldAddress(`https://kamin.example${path}`)
 
   it('every old view id and old section id has a view of the new interface; no old id opens Home by accident', () => {
-    for (const id of [...Object.keys(LEGACY_VIEWS), 'knowledge']) {
+    for (const id of [...OLD_VIEW_IDS, 'knowledge']) {
       const target = oldAddress(id)
       expect(target, id).not.toBe(null)
       expect(NEXT_VIEWS, id).toContain(target.view)
       expect(paramToNextView(id), id).toBe(target.view)
     }
-    for (const section of SECTIONS.map(s => s.id)) expect(NEXT_VIEWS, section).toContain(paramToNextView(section))
+    for (const section of OLD_SECTION_IDS) expect(NEXT_VIEWS, section).toContain(paramToNextView(section))
     expect({ ...OLD_VIEW_ADDRESSES }).toEqual({
       start: 'upload', review: 'upload', dashboard: 'profile', skills: 'profile', matches: 'next', courses: 'next', compare: 'plan', studio: 'plan',
       insight: 'interests', mydata: 'settings#courses', privacy: 'settings', audit: 'settings#log', 'my-data': 'settings', knowledge: 'help#knowledge',
@@ -145,19 +121,28 @@ describe('Task 69 · old addresses open the nearest view of the new interface (s
   })
 })
 
-describe('Task 60 · "delete everything" keeps the interface choice, like the language', () => {
+// Task 60 kept the interface choice like the language; Task 70: the choice ('kamin-ui') is retired with the old
+// interface, so "delete everything" removes a leftover one and the device check would report it.
+describe('Task 70 · "delete everything" keeps the language and the theme, and removes the retired interface choice', () => {
   const saved = { sessionStorage: globalThis.sessionStorage, localStorage: globalThis.localStorage }
   afterEach(() => { Object.assign(globalThis, saved) })
 
-  it('kamin-ui is not reported as a leftover; a personal key still is', async () => {
-    // Task 61 adds the theme choice ('kamin-theme') to the kept interface keys (tests/themeChoice.test.js).
-    expect(KEPT_INTERFACE_KEYS).toEqual(['kamin-lang', 'kamin-ui', 'kamin-theme'])
-    Object.assign(globalThis, { sessionStorage: memoryStorage(), localStorage: memoryStorage({ 'kamin-lang': 'ar', [UI_KEY]: 'next' }) })
+  it('kamin-lang and kamin-theme are not leftovers; kamin-ui and a personal key are', async () => {
+    expect(KEPT_INTERFACE_KEYS).toEqual(['kamin-lang', 'kamin-theme'])
+    expect(RETIRED_UI_KEY).toBe('kamin-ui')
+    Object.assign(globalThis, { sessionStorage: memoryStorage(), localStorage: memoryStorage({ 'kamin-lang': 'ar', 'kamin-theme': 'dark' }) })
     expect((await verifyDeviceCleared()).leftovers).toEqual([])
-    Object.assign(globalThis, { localStorage: memoryStorage({ [UI_KEY]: 'next', 'kamin-pilot-v1': '{}' }) })
+    Object.assign(globalThis, { localStorage: memoryStorage({ [RETIRED_UI_KEY]: 'old', 'kamin-pilot-v1': '{}' }) })
     const check = await verifyDeviceCleared()
     expect(check.clean).toBe(false)
-    expect(check.leftovers).toEqual(['local:kamin-pilot-v1'])
+    expect(check.leftovers.sort()).toEqual(['local:kamin-pilot-v1', 'local:kamin-ui'])
+  })
+
+  it('the hook\'s "delete everything" removes the retired kamin-ui before the device check', () => {
+    const hook = readFileSync('src/state/useKaminProfile.js', 'utf8')
+    const remove = hook.indexOf("localStorage.removeItem('kamin-ui')")
+    expect(remove).toBeGreaterThan(hook.indexOf('const deleteAll = async () => {'))
+    expect(remove).toBeLessThan(hook.indexOf('await verifyDeviceCleared('))
   })
 })
 
@@ -221,12 +206,11 @@ describe('Task 60 · views, tabs and the address (src/ui2/views.js)', () => {
 describe('Task 60 · the new interface stays out of the startup bundle', () => {
   const sourceFiles = dir => readdirSync(dir).flatMap(name => { const p = path.join(dir, name); return statSync(p).isDirectory() ? sourceFiles(p) : /\.(jsx?|css)$/.test(name) ? [p] : [] })
 
-  it('src/main.jsx loads src/ui2 only with lazy(() => import(\'./ui2/AppNext.jsx\')), behind the switch', () => {
+  it('src/main.jsx loads src/ui2 only with lazy(() => import(\'./ui2/AppNext.jsx\'))', () => {
     const main = readFileSync('src/main.jsx', 'utf8')
     expect(main).toContain("const AppNext = lazy(() => import('./ui2/AppNext.jsx'))")
-    expect(main).toMatch(/import \{ chooseUi \} from '\.\/uiSwitch\.js'/)
-    // Task 74: the new interface takes the shared snapshot link too (it holds the reader since then).
-    expect(main).toMatch(/ui==='next'\s*\?\s*<Suspense fallback=\{null\}><AppNext incomingSnapshot=\{incomingSnapshot\}\/><\/Suspense>\s*:\s*<App incomingSnapshot=\{incomingSnapshot\}\/>/)
+    // Task 74: the interface takes the shared snapshot link too. Task 70: no switch; the interface is always rendered.
+    expect(main).toMatch(/<Suspense fallback=\{null\}><AppNext incomingSnapshot=\{incomingSnapshot\}\/><\/Suspense>/)
     expect(main).not.toMatch(/^import[^\n]*['"]\.\/ui2\//m)
   })
 
@@ -239,10 +223,12 @@ describe('Task 60 · the new interface stays out of the startup bundle', () => {
   it('the new interface reuses the shared profile hook, Task 20\'s address rule and Task 25\'s message rule', () => {
     const app = readFileSync('src/ui2/AppNext.jsx', 'utf8')
     expect(app).toMatch(/useKaminProfile\(/)
-    expect(app).toMatch(/useAppHistory\(\{[^}]*toParam: nextViewToParam, fromParam: paramToNextView, firstEntry: 'replace'/)
+    expect(app).toMatch(/useAppHistory\(\{[^}]*toParam: nextViewToParam, fromParam: paramToNextView \}\)/)
     expect(readFileSync('src/ui2/Notice.jsx', 'utf8')).toMatch(/from '\.\.\/components\/Notice\.jsx'/)
     const history = readFileSync('src/utils/useAppHistory.js', 'utf8')
-    expect(history).toMatch(/export function useAppHistory\(\{ view, setView, getState, toParam = viewToParam, fromParam = paramToView, firstEntry = 'push' \}\)/)
+    // Task 70: the old interface's defaults (its view table) and its 'push' first entry are gone; the interface passes its own.
+    expect(history).toMatch(/export function useAppHistory\(\{ view, setView, getState, toParam, fromParam \}\)/)
+    expect(history.replace(/^\s*\/\/.*$/gm, '')).not.toMatch(/usePageHistory|consumeEntryParams|navigation\.js'/)
   })
 
   it('ui2.css uses the brand and spacing tokens only: no colour literals', () => {

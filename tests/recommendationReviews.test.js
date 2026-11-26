@@ -107,6 +107,15 @@ describe('human review trust boundary', () => {
     expect(JSON.stringify(candidate)).not.toContain('PRIVATE')
     for(const change of [{targetId:'private-name'},{reason:'PRIVATE note'},{kind:'PRIVATE kind'}])expect(()=>buildRedTeamCandidate({...r,...change})).toThrow('UNRECOGNIZED_REVIEW_TARGET')
   })
+  // Task 70: step 4 reviews learning-list items (K37); the review screen vouches for the item it shows. Imported records
+  // and any other id still need a catalog id.
+  it('a step-4 item the screen shows can be exported; an imported record or another id still cannot',async()=>{
+    const r={...(await record()),kind:'course',targetId:'fcit-cpit-340'}
+    expect(()=>buildRedTeamCandidate(r)).toThrow('UNRECOGNIZED_REVIEW_TARGET')
+    expect(buildRedTeamCandidate(r,{knownTargetIds:['fcit-cpit-340']}).target).toEqual({kind:'course',id:'fcit-cpit-340'})
+    expect(()=>buildRedTeamCandidate({...r,imported:true},{knownTargetIds:['fcit-cpit-340']})).toThrow('UNRECOGNIZED_REVIEW_TARGET')
+    expect(()=>buildRedTeamCandidate(r,{knownTargetIds:['another-item']})).toThrow('UNRECOGNIZED_REVIEW_TARGET')
+  })
   it('does not silently evict history when the local limit is reached',async()=>{
     const r=await record(),history=Array.from({length:MAX_REVIEWS},(_,i)=>({...r,id:`review-${i}`}))
     expect(()=>appendRecommendationReview(history,{...r,id:'another-review'})).toThrow('REVIEW_LIMIT_REACHED')

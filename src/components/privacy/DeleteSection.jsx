@@ -23,6 +23,7 @@ function DeleteEverythingConfirm({ lang, state, children }) {
     <p id="delete-all-title"><strong>{lang==='ar'?'سيُحذف من هذا الجهاز:':'This will be deleted from this device:'}</strong></p>
     <ul>{items.length ? items.map(i => <li key={i.label}>{i.count} {i.label}</li>) : <li>{lang==='ar'?'لا توجد بيانات محفوظة سوى إعدادات هذه الجلسة.':'Nothing saved except this session’s settings.'}</li>}</ul>
     <p>{lang==='ar'?'من: ':'From: '}{preview.stores.join(lang==='ar'?'، ':', ')}.</p>
+    <TechDetails lang={lang}>{preview.storesTechnical}</TechDetails>
     {preview.kept && <p data-testid="delete-study-kept">{preview.kept}</p>}
     <p className="delete-outside">{preview.outside}</p>
     <div>{children}</div>

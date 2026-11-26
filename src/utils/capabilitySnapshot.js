@@ -1,17 +1,21 @@
 import {skills} from '../data.js'
 import {copy} from '../i18n.js'
+import {targetProfiles} from '../matching/targets.js'
 import {PROVENANCE_LEVELS} from './provenance.js'
+import {SNAPSHOT_LIMIT,encode,decode,parseSnapshotFragment} from './snapshotLink.js'
+// Task 76: the fragment reader moved to ./snapshotLink.js (the only part the startup bundle needs); kept here too.
+export {SNAPSHOT_LIMIT,parseSnapshotFragment}
 const encoder=new TextEncoder(),decoder=new TextDecoder('utf-8',{fatal:true})
 const FORMAT='kamin-capability-snapshot'
 export const snapshotSkills=Object.fromEntries(Object.values(skills).map(skill=>[skill.id,skill]))
 const AAD=encoder.encode(`${FORMAT}|1`)
-export const SNAPSHOT_LIMIT=12000
 const fail=()=>{throw new Error('INVALID_SNAPSHOT')}
-const encode=bytes=>btoa(String.fromCharCode(...bytes)).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'')
-const decode=value=>{
- if(typeof value!=='string'||!value||value.length>SNAPSHOT_LIMIT||!/^[A-Za-z0-9_-]+$/.test(value))return fail()
- try{const bytes=Uint8Array.from(atob(value.replaceAll('-','+').replaceAll('_','/')+'='.repeat((4-value.length%4)%4)),c=>c.charCodeAt(0));if(encode(bytes)!==value)return fail();return bytes}catch{return fail()}
-}
+// Task 76: a goal is one of the four directions the old interface saved ('data', 'cyber', …) or, from step 4 and My
+// plan, a pathway id (src/plan/plan.js). The link carries that id, checked against the catalog, so nothing else can
+// travel in it; the preview and the reader show its plain name in the reader's language, never the id.
+const PATHWAYS=new Map(targetProfiles.map(target=>[target.id,target]))
+export const isSnapshotGoal=goal=>typeof goal==='string'&&(Object.hasOwn(copy.en.app.goals,goal)||PATHWAYS.has(goal))
+export const snapshotGoalName=(goal,lang)=>PATHWAYS.get(goal)?.title?.[lang]||(Object.hasOwn(copy.en.app.goals,goal)?copy[lang].app.goals[goal]:null)
 export function validateSnapshot(value){
  if(!value||value.format!==FORMAT||value.version!==1||Object.keys(value).some(k=>!['format','version','createdAt','capabilities','goal','levels'].includes(k)))return fail()
  // Optional evidence levels travel with the claims they describe: the holder sees whether a
@@ -22,7 +26,7 @@ export function validateSnapshot(value){
  }
  if(typeof value.createdAt!=='string'||!/^\d{4}-\d{2}-\d{2}T/.test(value.createdAt)||!Number.isFinite(Date.parse(value.createdAt)))return fail()
  if(!Array.isArray(value.capabilities)||value.capabilities.length>20||new Set(value.capabilities).size!==value.capabilities.length||value.capabilities.some(id=>typeof id!=='string'||!Object.hasOwn(snapshotSkills,id)))return fail()
- if(value.goal!==null&&(typeof value.goal!=='string'||!Object.hasOwn(copy.en.app.goals,value.goal)))return fail()
+ if(value.goal!==null&&!isSnapshotGoal(value.goal))return fail()
  if(!value.capabilities.length&&!value.goal)return fail()
  return value
 }
@@ -47,14 +51,6 @@ export function snapshotFragment(packet){
  const fragment=`#payload=${packet.payload}&key=${packet.key}`
  if(fragment.length>SNAPSHOT_LIMIT)throw new Error('SNAPSHOT_TOO_LARGE')
  return fragment
-}
-export function parseSnapshotFragment(hash){
- if(!hash.startsWith('#payload='))return null
- if(hash.length>SNAPSHOT_LIMIT)return {invalid:true}
- const params=new URLSearchParams(hash.slice(1))
- if([...params.keys()].length!==2||!params.has('key'))return {invalid:true}
- const packet={payload:params.get('payload'),key:params.get('key')}
- try{if(decode(packet.key).length!==32||decode(packet.payload).length<29)return {invalid:true};return packet}catch{return {invalid:true}}
 }
 export async function decryptSnapshot(packet){
  try{

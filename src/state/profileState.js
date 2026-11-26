@@ -1,7 +1,7 @@
 // Task 59: the pure helpers of the student profile, moved unchanged out of src/App.jsx so that the old
-// interface and the new one (src/ui2, behind ?ui=next) read and save the same state the same way.
+// interface and the new one (src/ui2) read and save the same state the same way. Task 70: only src/ui2 remains.
 import { courseSkillMap } from '../data.js'
-import { emptyInsightState } from '../insight.js'
+import { emptyInsightState, normalizeDeclaredPreferences } from '../insight.js'
 import { normalizePlan } from '../plan/plan.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
 import { cleanAuditEntries } from '../utils/auditPrivacy.js'
@@ -25,6 +25,8 @@ export const blankState = {
   plan: [],
   notForMe: [],
   planDropped: 0,
+  // Task 79: ticked roadmap items (src/plan/plan.js), the student's own record, never evidence.
+  roadmapDone: [],
   consents: { analyze: false, insight: false, advisor: false, research: false },
   insight: emptyInsightState(),
   audit: [],
@@ -47,7 +49,7 @@ export const normalizeState = parsed => {
     ...parsed,
     localPersistence:!!parsed.localPersistence,
     consents:{...blankState.consents,...(parsed.consents||{})},
-    insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})},digitalInterests:normalizeDigitalInterests(parsed.insight?.digitalInterests),freeInterests:Array.isArray(parsed.insight?.freeInterests)?parsed.insight.freeInterests:[]},
+    insight:{...emptyInsightState(),...(parsed.insight||{}),responses:{...(parsed.insight?.responses||{})},declaredPreferences:normalizeDeclaredPreferences(parsed.insight?.declaredPreferences),digitalInterests:normalizeDigitalInterests(parsed.insight?.digitalInterests),freeInterests:Array.isArray(parsed.insight?.freeInterests)?parsed.insight.freeInterests:[]},
     audit:cleanAuditEntries(parsed.audit), // Task 46: drops old lines that copied a file name or project title
     recommendationReviews:normalizeRecommendationReviews(parsed.recommendationReviews),
     projects:normalizeProjectEvidence(parsed.projects),
@@ -68,7 +70,7 @@ export const hasMeaningfulProfileState = state => !!(
   state?.tasks?.length ||
   state?.credentials?.length ||
   state?.goal ||
-  state?.goals?.length || state?.plan?.length || state?.notForMe?.length ||
+  state?.goals?.length || state?.plan?.length || state?.notForMe?.length || state?.roadmapDone?.length ||
   state?.localPersistence ||
   state?.consents?.insight ||
   Object.keys(state?.insight?.declaredPreferences||{}).length ||

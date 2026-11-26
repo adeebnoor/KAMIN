@@ -37,8 +37,8 @@ const checks = {
 const label = (entries, value, lang) => entries[value]?.[lang === 'ar' ? 0 : 1] || value
 const blank = () => ({ action: 'unresolved', reason: 'unclear-explanation', note: '', reviewer: { label: '', role: 'student' }, confidence: 'unsure', checks: [] })
 
-function exportCandidate(record) {
-  const content = JSON.stringify(buildRedTeamCandidate(record), null, 2)
+function exportCandidate(record, item) {
+  const content = JSON.stringify(buildRedTeamCandidate(record, { knownTargetIds: item?.id ? [item.id] : [] }), null, 2)
   const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }))
   const a = document.createElement('a'); a.href = url; a.download = `kamin-review-candidate-${record.targetId}.json`; a.click()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
@@ -124,7 +124,7 @@ export default function RecommendationReview({ item, kind = 'pathway', state, la
       {limit && <p role="alert">{t(lang, 'وصل السجل إلى 200 حدث. صدّر نسخة مشفّرة ثم امسح المراجعات من الخصوصية للمتابعة.', 'History reached 200 events. Export an encrypted backup, then clear reviews in Privacy to continue.')}</p>}
       <div className="review-actions"><button className="button primary" type="submit" disabled={!canSave}>{t(lang, 'احفظ المراجعة محليًا', 'Save review locally')}</button><button className="button secondary" type="button" onClick={close}>{t(lang, 'إلغاء', 'Cancel')}</button></div>
     </form>}
-    {latest?.action === 'contested' && <div className="review-candidate"><p>{t(lang, 'اعتراضك حالة غير مؤكدة. يمكنك تنزيل مرشح فحص يحتوي رمز المسار والقاعدة ونوع المشكلة فقط، دون الاسم أو الملاحظة أو بيانات الملف. لا يُرسل تلقائيًا.', 'Your contest is unverified. Download a test candidate with the target, rule and issue type only, excluding names, notes and profile data. It is not submitted automatically.')}</p><button type="button" className="text-button" onClick={() => { try { exportCandidate(latest) } catch { setMessage(t(lang, 'تعذر التنزيل. حاول مرة أخرى.', 'Download failed. Please retry.')) } }}><Download size={16}/>{t(lang, 'صدّر مرشح فحص بلا بيانات الملف', 'Export test candidate without profile data')}</button></div>}
+    {latest?.action === 'contested' && <div className="review-candidate"><p>{t(lang, 'اعتراضك حالة غير مؤكدة. يمكنك تنزيل مرشح فحص يحتوي رمز المسار والقاعدة ونوع المشكلة فقط، دون الاسم أو الملاحظة أو بيانات الملف. لا يُرسل تلقائيًا.', 'Your contest is unverified. Download a test candidate with the target, rule and issue type only, excluding names, notes and profile data. It is not submitted automatically.')}</p><button type="button" className="text-button" onClick={() => { try { exportCandidate(latest, item) } catch { setMessage(t(lang, 'تعذر التنزيل. حاول مرة أخرى.', 'Download failed. Please retry.')) } }}><Download size={16}/>{t(lang, 'صدّر مرشح فحص بلا بيانات الملف', 'Export test candidate without profile data')}</button></div>}
     {message && <p role="status">{message}</p>}
   </section>
 }

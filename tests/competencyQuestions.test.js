@@ -207,3 +207,18 @@ describe('Task 34 · competency questions about evidence and review', () => {
     expect(map).toEqual(dashboardCodes(skills))
   })
 })
+
+// Task 78: three goals and three interest areas and work values add self-declared claims only. On the coverage profile
+// (scripts/ontology-terms.mjs: 3 goals, 3 + 3 values, every projector branch) the two "self-report" questions still
+// find nothing: no capability comes from a self-report (cq05) and no academic capability rests on one (cq14).
+describe('Task 78 · cq05 and cq14 on a profile with 3 goals, 3 interest areas and 3 work values', () => {
+  it('cq05 is false and cq14 returns no row', async () => {
+    const { coverageGraph } = await import('../scripts/ontology-terms.mjs')
+    const person = coverageGraph()
+    expect(person.claims.filter(c => c.predicate === 'kamin:pursuesGoal' || c.predicate.startsWith('kamin:prefers:')).length).toBe(3 + 3 + 3 + 5)
+    const data = buildWorkspaceDataset('personal', { personalGraph: person, allowPersonal: true })
+    const ask = file => executeReadOnlyQuery(oxigraph.Store, data, readFileSync(new URL(file, CQ_DIR), 'utf8'))
+    expect(ask('cq05-no-capability-from-self-report.rq').value).toBe(false)
+    expect(ask('cq14-self-report-stays-self-report.rq').rows).toEqual([])
+  })
+})

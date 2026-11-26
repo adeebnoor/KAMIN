@@ -2,7 +2,7 @@
 // Upload the made-up fcit-it-2p.pdf (Task 50), approve, keep the profile on this device, then search
 // sessionStorage, localStorage, every IndexedDB store, the downloaded backup (decrypted) and the downloaded
 // capability file for the made-up name, student number, nationality and NID printed in the PDF: none.
-import { test, expect } from './fixtures.js'
+import { test, expect } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 import { MADE_UP_PERSONAL } from '../scripts/make-transcript-fixtures.mjs'
 import { decryptPortableProfile } from '../src/utils/portableProfile.js'
@@ -36,13 +36,17 @@ async function browserStorage(page) {
 
 for (const lang of LANGS) {
   test(`no made-up name, student number, nationality or NID in storage, backup or export after approving a KAU transcript: ${lang}`, async ({ page }) => {
-    const app = kamin(page, { ui: 'old', lang })
+    // Task 70: on the interface (the old interface's run is deleted): step 1, its Fix sheet, Settings → keep on this device.
+    const app = kamin(page, { ui: 'new', lang })
     await app.home()
     await app.openUpload()
     await app.chooseTranscript(FIXTURE)
+    await app.showReadRows()
     await expect(app.readCodes().first()).toBeVisible()
+    await app.hideReadRows()
     await app.approve()
     await expect(app.approvedView()).toBeVisible()
+    await app.openSaveOffer()
     await app.keepOnDevice()
     await expect(app.saveStatus()).toHaveText(app.c.app.savedOnDevice)
 

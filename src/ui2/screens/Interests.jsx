@@ -2,7 +2,7 @@
 // First the interests consent, word for word (src/i18n.js screens.insight.consent, the approved sentence), shown
 // once: nothing is saved before it is ticked, and until then the chips and the text box are disabled and say why.
 // Then two rows of chips with today's options and ids (src/insight.js: the six interest areas and the six work
-// values; one choice per question, a second tap removes it), and "Something else?": a sentence in the student's
+// values; Task 78: up to 3 choices per question, a second tap removes one, a 4th does nothing and the hint says so), and "Something else?": a sentence in the student's
 // own words (3–500 characters). Add loads the local engine (src/interests/freeText.js, Task 56; a skeleton shows
 // while it loads, nothing leaves the browser) and shows a card with the sentence and the chips KAMIN understood,
 // each removable; the sentence can be edited or deleted (Undo in the one message, Task 25).
@@ -21,7 +21,7 @@ import StepChip from '../StepChip.jsx'
 import Chip from '../Chip.jsx'
 import Skeleton from '../Skeleton.jsx'
 import FreeInterestCard, { longEnough, MAX_INTEREST } from '../components/FreeInterestCard.jsx'
-import { appendFreeInterest, CHIP_QUESTIONS, grantInterests, hasInterests, replaceFreeInterest, restoreFreeInterest, tapPreference, toggleFreeChip } from '../interestsState.js'
+import { appendFreeInterest, CHIP_QUESTIONS, chosenOf, grantInterests, hasInterests, questionFull, replaceFreeInterest, restoreFreeInterest, tapPreference, toggleFreeChip } from '../interestsState.js'
 import '../interests.css'
 
 // The engine loads once, on the first Add or edit, and is kept for the page's life.
@@ -38,7 +38,6 @@ export default function Interests({ lang, profile, focusHeading, onNavigate, not
   const stateRef = useRef(state)
   stateRef.current = state
   const consent = Boolean(state.consents?.insight)
-  const prefs = state.insight?.declaredPreferences || {}
   const free = normalizeFreeInterests(state.insight?.freeInterests)
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
@@ -54,6 +53,9 @@ export default function Interests({ lang, profile, focusHeading, onNavigate, not
 
   const grant = event => { if (!event.target.checked) return; granted.current = true; actions.setState(s => grantInterests(s, S.consentGranted)) }
   const tap = (schemeId, optionId) => {
+    // Task 78: a 4th choice changes nothing (the hint says why), so nothing is logged.
+    const now = stateRef.current
+    if (questionFull(now, schemeId) && !chosenOf(now, schemeId).includes(optionId)) return
     actions.setState(s => tapPreference(s, schemeId, optionId))
     // The old screen's usage-log line (no choice in it).
     actions.log(lang === 'ar' ? 'تحديث تفضيل منظم' : 'Structured preference updated')
@@ -109,10 +111,11 @@ export default function Interests({ lang, profile, focusHeading, onNavigate, not
     <div ref={chipsRef}>
       {CHIP_QUESTIONS.map(schemeId => {
         const scheme = DECLARED_PREFERENCE_SCHEMES[schemeId]
+        const picked = chosenOf(state, schemeId)
         return <fieldset className="ui2-interest-question" key={schemeId} aria-describedby={consent ? `${id}-${schemeId}-hint` : reasonId}>
           <legend>{w[QUESTION_WORDS[schemeId]]}</legend>
-          <p className="ui2-interest-hint" id={`${id}-${schemeId}-hint`}>{w.pickOne}</p>
-          <div>{scheme.options.map(option => <Chip key={option.id} data-option={option.id} selected={prefs[schemeId] === option.id} disabled={!consent}
+          <p className="ui2-interest-hint" id={`${id}-${schemeId}-hint`} aria-live="polite" data-testid={`ui2-interests-hint-${schemeId}`}>{consent && questionFull(state, schemeId) ? w.pickFull : w.pickUpTo}</p>
+          <div>{scheme.options.map(option => <Chip key={option.id} data-option={option.id} selected={picked.includes(option.id)} disabled={!consent}
             onClick={() => tap(schemeId, option.id)}>{option.label[lang]}</Chip>)}</div>
         </fieldset>
       })}

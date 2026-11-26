@@ -2,13 +2,13 @@
 // panel's, byte for byte (both interfaces are rendered here), a project never changes a capability or its level,
 // edit and Undo keep the record self-declared, one main action at a time, and step 2 loads on its own.
 import { describe, it, expect } from 'vitest'
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { PROJECT_COPY, projectCopy } from '../src/content/projectCopy.js'
-import ProjectEvidencePanel, { ProjectEvidenceList } from '../src/components/ProjectEvidence.jsx'
-import Projects, { saveBlock } from '../src/ui2/screens/Projects.jsx'
+// Task 70: the old panel (src/components/ProjectEvidence.jsx) is deleted.
+import Projects, { ProjectForm, saveBlock } from '../src/ui2/screens/Projects.jsx'
 import ProjectCard from '../src/ui2/components/ProjectCard.jsx'
 import { projectFromDraft, replaceProject, restoreProject } from '../src/ui2/projectsState.js'
 import { NEXT_COPY } from '../src/ui2/copy.js'
@@ -45,19 +45,18 @@ describe('Task 63 · the self-declared sentences, the same bytes in both interfa
     expect(Object.keys(PROJECT_COPY.ar).sort()).toEqual(Object.keys(PROJECT_COPY.en).sort())
   })
 
-  for (const lang of LANGS) it(`${lang}: the old panel and step 2 show the same rule and badge`, () => {
+  // Task 70: the old panel (src/components/ProjectEvidence.jsx), which showed the same rule and badge, is deleted.
+  for (const lang of LANGS) it(`${lang}: step 2 shows the rule and the badge`, () => {
     const P = projectCopy(lang)
-    const old = textOf(renderToStaticMarkup(createElement(ProjectEvidencePanel, { lang, projects: [A], onSave: noop, onRemove: noop })))
-    const oldList = textOf(renderToStaticMarkup(createElement(ProjectEvidenceList, { lang, projects: [A], onRemove: noop })))
     const now = textOf(page(lang, [A]))
-    for (const [where, text] of [['old panel', old], ['new step 2', now]]) expect(text, where).toContain(P.rule)
-    for (const [where, text] of [['old list', oldList], ['new card', now]]) expect(text, where).toContain(P.badge)
+    expect(now, 'step 2').toContain(P.rule)
+    expect(now, 'the project card').toContain(P.badge)
   })
 
   it('src/ui2 never copies a self-declared sentence: it reads them from src/content/projectCopy.js', () => {
     const sentences = LANGS.flatMap(lang => ['badge', 'rule', 'saved', 'abstain', 'suggestNote', 'urlError', 'invalid'].map(key => PROJECT_COPY[lang][key]))
     for (const file of sourceFiles('src/ui2')) for (const sentence of sentences) expect(read(file), `${file} holds a copy`).not.toContain(sentence)
-    for (const sentence of sentences) expect(read('src/components/ProjectEvidence.jsx'), 'the old panel reads them too').not.toContain(sentence)
+    expect(existsSync('src/components/ProjectEvidence.jsx'), 'Task 70: the old panel is deleted').toBe(false)
     expect(read('src/ui2/screens/Projects.jsx')).toMatch(/P\.rule/)
     expect(read('src/ui2/screens/Projects.jsx')).toMatch(/notify\(P\.saved\)/)
     expect(read('src/ui2/components/ProjectCard.jsx')).toMatch(/P\.badge/)
@@ -152,6 +151,25 @@ describe('Task 63 · step 2: one main action at a time', () => {
     for (const lang of LANGS) {
       expect(JSON.stringify(NEXT_COPY[lang].projects)).not.toMatch(/\d\s?[%٪]|[%٪]\s?\d/)
       expect(NEXT_COPY[lang].projects.line.split(/[.؛!?؟]\s/)).toHaveLength(1)
+    }
+  })
+})
+
+describe('Task 77 · the line under the link field', () => {
+  it('says, in Arabic and English, that KAMIN does not open links and the description is what counts; the field points to it', () => {
+    expect(NEXT_COPY.en.projects.linkNote).toBe('KAMIN does not open links; describe what you built in the text.')
+    expect(NEXT_COPY.ar.projects.linkNote).toBe('لا يفتح كامن الروابط؛ اكتب في الوصف ماذا بنيت.')
+    for (const lang of LANGS) {
+      const html = renderToStaticMarkup(createElement(ProjectForm, { lang, onSave: noop, onCancel: noop }))
+      const w = NEXT_COPY[lang].projects
+      const link = html.match(/<input id="([^"]+)-url"[^>]*>/)
+      expect(link, lang).toBeTruthy()
+      expect(link[0]).toContain(`aria-describedby="${link[1]}-url-note"`)
+      // right under the link field, before "Suggest skills"
+      const note = html.indexOf(`id="${link[1]}-url-note"`)
+      expect(note).toBeGreaterThan(html.indexOf(link[0]))
+      expect(note).toBeLessThan(html.indexOf(w.suggest))
+      expect(textOf(html)).toContain(w.linkNote)
     }
   })
 })

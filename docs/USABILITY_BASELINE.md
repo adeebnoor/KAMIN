@@ -106,7 +106,7 @@ The "before" columns are the budget in [`e2e/usability-budget.json`](../e2e/usab
 
 **My data on the phone is the one budget that went up, and why.** The "before" numbers were measured while My data was 702px wide on the phone (see "Known layout problems" below), so its text ran in long lines off the side of the screen. PR #27 (merged 2026-11-13) made the page fit the screen; the text now wraps at the phone's width and the page is taller. Measured on Linux on 2026-11-13: phone AR 1787 → 1863px (2.6 → 2.7 screens), phone EN 1808 → 1994px (2.6 → 2.9 screens); desktop unchanged (1797px and 1787px, 2.9). The budget uses the new Linux numbers. Every other view measured the same as before, to the pixel.
 
-**Not the same numbers as the task brief.** The brief lists numbers from a hand walk-through in other window sizes: desktop 1366×768 English and phone 390×844 Arabic (for example Matches 13.4 and 27.2 screens). Those were measured by the brief's author, not by this suite, and are not repeated here. Window size changes the result, so compare a later run only with the table above.
+**Not the same numbers as the task brief.** The brief (`Tasks/ui/30-…`) lists numbers from a hand walk-through in other window sizes: desktop 1366×768 English and phone 390×844 Arabic (for example Matches 13.4 and 27.2 screens). Those were measured by the brief's author, not by this suite, and are not repeated here. Window size changes the result, so compare a later run only with the table above.
 
 ### Windows and Linux
 The same code gives the same numbers on both systems for every view except the ones below. The fonts are the same (both use the bundled Inter and Noto Sans Arabic; Chromium reports the same fonts and glyph counts). Windows and Linux measure the same text a fraction of a pixel differently, and a line that sits exactly at the edge of its box breaks on one system and not on the other.
@@ -120,7 +120,7 @@ The same code gives the same numbers on both systems for every view except the o
 | Matches, phone AR | 24.3 | 24.4 | 24px longer on Linux. |
 | Review at 360px, EN: cut-off fields | 18 | 17 | The Grade 4 field is 33px wide for 34px of text on Windows, 34px on Linux. |
 
-The budget uses the Linux numbers because CI decides. On Windows, `npm run e2e` therefore fails two checks, both because Windows wraps a line that Linux does not (Courses on the phone in Arabic, 6.7 > 6.4 allowed; Review cut-off fields in English, 18 > 17). To get the CI result on a Windows machine, run the suite in the Playwright image. The 3% allowance was not changed: the two Courses differences (+5% and −7%) are one wrapped line repeated in every card, and a larger allowance would hide real growth on every other view.
+The budget uses the Linux numbers because CI decides. On Windows, `npm run e2e` therefore fails two checks, both because Windows wraps a line that Linux does not (Courses on the phone in Arabic, 6.7 > 6.4 allowed; Review cut-off fields in English, 18 > 17). To get the CI result on a Windows machine, run the suite in the Playwright image: see `log/task-30.md`. The 3% allowance was not changed: the two Courses differences (+5% and −7%) are one wrapped line repeated in every card, and a larger allowance would hide real growth on every other view.
 
 ### Known layout problems at 360px (recorded, not hidden)
 The same counts were measured in both projects.

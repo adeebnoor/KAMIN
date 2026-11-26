@@ -11,7 +11,9 @@ if(inter>60*1024)throw new Error(`Inter subset exceeds 60 KiB: ${inter}`)
 // learning outcomes, ~3 KiB gzip) must load with the inference engine. Approved by the supervisor (recorded 2026-11-11).
 // 224 → 228 KiB (Task 02): ordinal evidence-level rules with bilingual reasons shown on every
 // capability card (~3 KiB gzip). Approved by the supervisor (recorded 2026-11-11).
-const INITIAL_LIMIT_KIB=228
+// 228 → 121.8 KiB (Task 70, 2026-11-21): the old interface is deleted. Measured after it: 119,599 bytes gzip (116.8 KiB;
+// before Task 70: 232,385 bytes, 227.0 KiB). The limit is the measured size + 5 KiB, as Task 70 asks.
+const INITIAL_LIMIT_KIB=121.8
 if(compressed>INITIAL_LIMIT_KIB*1024)throw new Error(`Initial assets exceed ${INITIAL_LIMIT_KIB} KiB gzip: ${compressed}`)
 if(font>180*1024)throw new Error(`Arabic subset font exceeds 180 KiB: ${font}`)
 if(initial.some(f=>/tesseract|pdf|sparql|oxigraph/i.test(f)))throw new Error('Heavy optional tools must remain lazy-loaded')

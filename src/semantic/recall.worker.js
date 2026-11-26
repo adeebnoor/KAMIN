@@ -1,7 +1,10 @@
 import {pipeline,env} from '@huggingface/transformers'
 import {EMBEDDING_MODEL as model} from './config.js'
 import {rankSemanticCandidates} from './catalog.js'
-let extractor=null,manifest=null,modelCache=null
+import {createFallback} from '../ai/hybridFallback.js'
+// Task 43: the same model also serves the project step's "Look deeper" (type 'project'): the MiniLM fallback of
+// src/ai/hybridFallback.js, at most one capability, quoting the student's own sentence. No score leaves the worker.
+let extractor=null,manifest=null,modelCache=null,fallback=null
 const memory=new Map()
 const hash=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('')
 async function initialise(){
@@ -51,15 +54,21 @@ async function initialise(){
 }
 self.onmessage=async({data})=>{
  try{
-  if(data.type==='dispose'){await extractor?.dispose();extractor=null;memory.clear();self.close();return}
+  if(data.type==='dispose'){await extractor?.dispose();extractor=null;fallback=null;memory.clear();self.close();return}
   if(!extractor)await initialise()
   if(data.type==='query'){
    if(typeof data.text!=='string'||!data.text.trim()||data.text.length>300)throw new Error('INVALID_RECALL_INPUT')
    const tensor=await extractor(data.text.trim(),{pooling:'mean',normalize:true})
    self.postMessage({status:'result',results:rankSemanticCandidates(Array.from(tensor.data),manifest.index)})
   }
+  if(data.type==='project'){
+   if(typeof data.text!=='string'||!data.text.trim()||data.text.length>400)throw new Error('INVALID_PROJECT_INPUT')
+   fallback||=createFallback(async text=>Array.from((await extractor(text,{pooling:'mean',normalize:true})).data))
+   const result=await fallback.suggest(data.text)
+   self.postMessage({status:'project',result:{...result,suggestions:result.suggestions.map(({score,...s})=>s)}})
+  }
  }catch(error){
-  await extractor?.dispose().catch(()=>{});extractor=null;memory.clear()
+  await extractor?.dispose().catch(()=>{});extractor=null;fallback=null;memory.clear()
   self.postMessage({status:'error',code:/^(MODEL_|INVALID_)/.test(error.message)?error.message:'MODEL_UNAVAILABLE'})
  }
 }

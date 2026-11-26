@@ -3,6 +3,10 @@ import { MATCH_GROUPS, groupOf, groupMatches, matchReason } from '../src/utils/m
 import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
 import { projectStateToPerson360 } from '../src/ontology/projector.js'
 import { emptyInsightState, setDeclaredPreference } from '../src/insight.js'
+import { createHash } from 'node:crypto'
+import { demoCourses } from '../src/data.js'
+import { profileSkills } from '../src/utils/engine.js'
+import { buildInferenceDataset } from '../src/ontology/rdf.js'
 
 describe('explainable matching engine', () => {
   it('treats academic skill evidence as the primary capability signal', () => {
@@ -166,5 +170,110 @@ describe('matches list: groups and reasons', () => {
     expect(matchReason(item({ requiredSkills: [] }), 'en')).toEqual({ kind: 'no-prerequisite', text: 'No academic prerequisite' })
     expect(matchReason(item(), 'en').kind).toBe('catalog')
     for (const lang of ['ar', 'en']) for (const it of [item({ missingSkills: ['cyber'] }), item({ judgment: 'exploratory' }), item({ requiredSkills: [] })]) expect(matchReason(it, lang).text).not.toMatch(/\d+\s*%/)
+  })
+})
+
+// Task 78 (Amjd, 2026-11-21): up to 3 interest areas and 3 work values, and one goal claim per chosen goal.
+describe('Task 78 · several interest areas, work values and goals', () => {
+  const SAMPLE_COURSES = () => demoCourses.map(row => ({ ...row }))
+  const stateOf = ({ goal = null, goals = [], prefs = {} } = {}) => ({ approved: true, courses: SAMPLE_COURSES(), goal, goals, consents: { analyze: true, insight: true }, insight: { declaredPreferences: prefs } })
+  const graphOf = state => projectStateToPerson360({ state, skills: profileSkills(state) })
+  const matchesOf = (state, lang = 'en') => matchTargets(buildMatchingProfile({ graph: graphOf(state), goals: state.goals }), { lang })
+  const strip = value => JSON.parse(JSON.stringify(value, (k, v) => (/(At|AtTime|Time)$/.test(k) ? undefined : v)))
+  // The canonical output for one state: graph and flat matching in both languages, the inference export, the claims.
+  const canonical = state => {
+    const graph = graphOf(state)
+    const out = {}
+    for (const lang of ['ar', 'en']) {
+      const matches = matchTargets(buildMatchingProfile({ graph, goals: state.goals }), { lang })
+      out[lang] = { matches, inference: matches.map(m => buildInferenceDataset(graph, m)) }
+    }
+    out.flat = matchTargets(buildMatchingProfile({ skills: profileSkills(state), goal: state.goal, goals: state.goals, insight: state.insight }), { lang: 'en' })
+    out.claims = graph.claims
+    return JSON.stringify(strip(out))
+  }
+  const sha = text => createHash('sha256').update(text).digest('hex')
+  // Measured with the same function on local main 3a9cbac (before Task 78), the example's courses, one value per
+  // question. A deliberate change to the catalog or the engine must measure these again on the commit before it.
+  const BEFORE_TASK_78 = {
+    'interest+value+direction-goal': [{ goal: 'data', goals: ['data'], prefs: { careerInterest: 'investigative', workValue: 'achievement' } }, '42a256ddd378aac5f9ba543306c2ba78da16806c03d78b2e56e7c4e5e90b0fdc'],
+    'interest+value+pathway-goal': [{ goal: 'job-data-analyst', goals: ['job-data-analyst'], prefs: { careerInterest: 'social', workValue: 'support' } }, 'a4ef231064f88b09d82b23b464549a4b08d7597bdab4bcf4cd09feaea8a84c8b'],
+    'interest-only-no-goal': [{ goal: null, goals: [], prefs: { careerInterest: 'artistic' } }, '6983b072d189a79a1b0c38062ba6e058f1c63d38edcfd7aadfb975089415c118'],
+    'all-single-schemes': [{ goal: 'cyber', goals: ['cyber'], prefs: { careerInterest: 'conventional', workValue: 'independence', workStructure: 'structured', collaboration: 'small-team' } }, 'd2b38ca4287bf3625e0cd5d31851202c201d155bc94eeb1ef1ae0b77e355343f'],
+  }
+  const asLists = prefs => Object.fromEntries(Object.entries(prefs).map(([k, v]) => [k, ['careerInterest', 'workValue'].includes(k) ? [v] : v]))
+
+  for (const [name, [spec, hash]] of Object.entries(BEFORE_TASK_78)) it(`one value per question gives exactly today's results (${name}): old string shape and one-item list`, () => {
+    expect(sha(canonical(stateOf(spec))), 'stored as one string, as before').toBe(hash)
+    expect(sha(canonical(stateOf({ ...spec, prefs: asLists(spec.prefs) }))), 'stored as a one-item list').toBe(hash)
+  })
+
+  it('every chosen interest area has its own preference claim; the first keeps today\'s id', () => {
+    const graph = graphOf(stateOf({ prefs: { careerInterest: ['social', 'investigative', 'artistic'], workValue: ['support', 'achievement'] } }))
+    const claims = graph.claims.filter(c => c.predicate.startsWith('kamin:prefers:'))
+    expect(claims.map(c => c['@id'])).toEqual([
+      'urn:kamin:claim:preference:careerinterest',
+      'urn:kamin:claim:preference:careerinterest:investigative',
+      'urn:kamin:claim:preference:careerinterest:artistic',
+      'urn:kamin:claim:preference:workvalue',
+      'urn:kamin:claim:preference:workvalue:achievement',
+    ])
+    expect(claims.map(c => c.object)).toEqual(['social', 'investigative', 'artistic'].map(id => `urn:kamin:preference:careerinterest:${id}`).concat(['support', 'achievement'].map(id => `urn:kamin:preference:workvalue:${id}`)))
+  })
+
+  it('matching reads every value: one R3 per compatible value, both premises on that value; the sentence once; "less connected" only when none fits', () => {
+    const several = matchesOf(stateOf({ prefs: { careerInterest: ['social', 'investigative', 'conventional'] } })).find(m => m.id === 'job-data-analyst')
+    const r3 = several.inferences.filter(i => i.ruleId === 'R3')
+    expect(r3.map(i => i.premises[0].object)).toEqual(['urn:kamin:preference:careerinterest:investigative', 'urn:kamin:preference:careerinterest:conventional'])
+    for (const i of r3) expect(i.premises[1].object).toBe(i.premises[0].object)
+    expect(new Set(r3.map(i => i.id)).size).toBe(2)
+    expect(r3.map(i => i.id)).toEqual(['urn:kamin:inference:job-data-analyst:R3:careerInterest:investigative', 'urn:kamin:inference:job-data-analyst:R3:careerInterest:conventional'])
+    expect(several.supportingMechanisms.filter(s => /declared career interest aligns/.test(s))).toHaveLength(1)
+    expect(several.limitingMechanisms.join(' ')).not.toMatch(/less connected/)
+    expect(several.semanticPaths.filter(p => p.kind === 'preference-alignment').map(p => [p.option, p.status])).toEqual([['social', 'context-only'], ['investigative', 'supported'], ['conventional', 'supported']])
+    // Only the first area was chosen before: social alone does not fit, so the old "less connected" sentence stays.
+    const one = matchesOf(stateOf({ prefs: { careerInterest: ['social'] } })).find(m => m.id === 'job-data-analyst')
+    expect(one.inferences.filter(i => i.ruleId === 'R3')).toEqual([])
+    expect(one.limitingMechanisms.join(' ')).toMatch(/less connected/)
+    // A second area that fits makes the pathway's interest context supported.
+    const flat = matchTargets(buildMatchingProfile({ skills: [], insight: { declaredPreferences: { careerInterest: ['social', 'conventional'], workValue: ['support', 'independence'] } } }), { lang: 'en' }).find(m => m.id === 'job-data-analyst')
+    expect(flat.supportingMechanisms.join(' ')).toMatch(/career interest aligns/)
+    expect(flat.supportingMechanisms.join(' ')).toMatch(/work value is supported/)
+    expect(flat.limitingMechanisms.join(' ')).not.toMatch(/less aligned/)
+  })
+
+  it('the person graph holds one goal claim per chosen goal (main first), at most 3', () => {
+    const graph = graphOf(stateOf({ goal: 'data', goals: ['data', 'job-cyber-analyst', 'job-project-coordinator', 'job-qa-tester'] }))
+    const goals = graph.claims.filter(c => c.predicate === 'kamin:pursuesGoal')
+    expect(goals.map(c => c.object)).toEqual(['urn:kamin:goal:data', 'urn:kamin:goal:job-cyber-analyst', 'urn:kamin:goal:job-project-coordinator'])
+    expect(goals.every(c => c.evidenceStrength === 'self-reported' && c.consentPurpose === 'urn:kamin:purpose:student-insight')).toBe(true)
+    expect(graph.entities.filter(e => e['@type'] === 'Goal').map(e => e.notation)).toEqual(['data', 'job-cyber-analyst', 'job-project-coordinator'])
+  })
+
+  it('R2\'s two premises name the same goal for the 2nd and 3rd goals too (Task 76\'s open item)', () => {
+    const state = stateOf({ goal: 'data', goals: ['data', 'job-cyber-analyst', 'management'] })
+    const graph = graphOf(state)
+    const claimOf = goal => graph.claims.find(c => c.predicate === 'kamin:pursuesGoal' && c.object === `urn:kamin:goal:${goal}`)['@id']
+    const matches = matchesOf(state)
+    const r2 = id => matches.find(m => m.id === id).inferences.find(i => i.ruleId === 'R2')
+    for (const [pathway, goal] of [['job-data-analyst', 'data'], ['job-cyber-analyst', 'job-cyber-analyst'], ['job-project-coordinator', 'management']]) {
+      const i = r2(pathway)
+      expect(i.premises[0], pathway).toEqual({ subject: graph['@id'], predicate: 'kamin:pursuesGoal', object: `urn:kamin:goal:${goal}` })
+      expect(i.premises[1].object, pathway).toBe(i.premises[0].object)
+      expect(i.claimId, pathway).toBe(claimOf(goal))
+    }
+    // Every R2 of every pathway: both premises on one goal.
+    for (const m of matches) for (const i of m.inferences.filter(x => x.ruleId === 'R2')) expect(i.premises[1].object, m.id).toBe(i.premises[0].object)
+  })
+
+  it('interests are never evidence: capabilities, levels and evidence claims are the same with 3 areas, 3 values and 3 goals', () => {
+    const plain = stateOf()
+    const full = stateOf({ goal: 'data', goals: ['data', 'cyber', 'job-qa-tester'], prefs: { careerInterest: ['investigative', 'social', 'artistic'], workValue: ['achievement', 'support', 'recognition'] } })
+    expect(profileSkills(full)).toEqual(profileSkills(plain))
+    const evidence = state => strip(graphOf(state).claims.filter(c => ['kamin:demonstrates', 'kamin:verifiedBy', 'kamin:studied'].includes(c.predicate)))
+    expect(evidence(full)).toEqual(evidence(plain))
+    // By pathway (goals change the order of the list and the judgments, never the evidence).
+    const caps = state => matchesOf(state).map(m => [m.id, m.missingSkills, m.semanticPaths.filter(p => p.kind === 'capability-match').map(p => [p.capabilityKey, p.evidenceLevel])]).sort((a, b) => a[0].localeCompare(b[0]))
+    expect(caps(full)).toEqual(caps(plain))
   })
 })

@@ -1,0 +1,493 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "method": "improved",
+    "methodVersion": "kamin-project-suggest-improved-v1",
+    "label": "before",
+    "commit": "3115175-dirty",
+    "engine": "as committed at `3115175`",
+    "set": "dev-set-workflow.json",
+    "setSha256": "ee70d154db0de09134445ce60b8ca6761130343bfa7175c25a597782a7914e5b",
+    "frozen": false,
+    "frozenAt": null,
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 14,
+      "tp": 2,
+      "fp": 0,
+      "fn": 15,
+      "unsupported": 0,
+      "abstained": 12,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 7,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 0.11764705882352941,
+      "f1": 0.21052631578947367
+    },
+    "en": {
+      "cases": 12,
+      "tp": 1,
+      "fp": 0,
+      "fn": 13,
+      "unsupported": 0,
+      "abstained": 11,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 6,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 0.07142857142857142,
+      "f1": 0.13333333333333333
+    },
+    "all": {
+      "cases": 26,
+      "tp": 3,
+      "fp": 0,
+      "fn": 28,
+      "unsupported": 0,
+      "abstained": 23,
+      "correctAbstentions": 10,
+      "wrongAbstentions": 13,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 10,
+      "precision": 1,
+      "recall": 0.0967741935483871,
+      "f1": 0.17647058823529413
+    }
+  },
+  "rows": [
+    {
+      "id": "dev-wf-ar-01",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-02",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-03",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-04",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-05",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-06",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-07",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-08",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-09",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-10",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-11",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-12",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-13",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-ar-14",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-01",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-02",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-03",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-04",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-05",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-06",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-07",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-08",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-09",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-10",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-11",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false
+    },
+    {
+      "id": "dev-wf-en-12",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    }
+  ]
+}

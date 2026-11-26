@@ -124,11 +124,15 @@ export function recommendationReviewStatus(record, fingerprint) {
 }
 
 // Deliberate allowlist: no reviewer, free text, grades, evidence, times or profile fingerprint.
-export function buildRedTeamCandidate(record) {
+// Task 70: `knownTargetIds` are the ids of the target the review screen itself shows (a step-4 card's item from the
+// learning list, which this module does not load: it stays out of the interface's first chunk). Imported records still
+// need a catalog id.
+export function buildRedTeamCandidate(record, { knownTargetIds = [] } = {}) {
   if (record.action !== 'contested') throw new Error('CONTEST_REQUIRED')
   // Imported records are untrusted: even metadata could contain personal text.
   const catalog = record.kind === 'pathway' ? targetProfiles : record.kind === 'course' ? opportunities : []
-  if (!catalog.some(target => target.id === record.targetId) || !REVIEW_REASONS.includes(record.reason)) throw new Error('UNRECOGNIZED_REVIEW_TARGET')
+  const known = catalog.some(target => target.id === record.targetId) || (!record.imported && knownTargetIds.includes(record.targetId))
+  if (!known || !REVIEW_REASONS.includes(record.reason)) throw new Error('UNRECOGNIZED_REVIEW_TARGET')
   const ruleVersion = ['kamin-graph-fit-v1', 'kamin-fit-v1', 'kamin-course-fit-v1'].includes(record.ruleVersion)
     ? record.ruleVersion : 'unrecognized-version'
   return {

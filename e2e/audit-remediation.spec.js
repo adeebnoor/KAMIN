@@ -1,6 +1,9 @@
-import {test,expect} from './fixtures.js'
-import { openView, openMatch } from './nav.js'
+// Task 70: the old interface is deleted. The public-page tests stay as they were; three app tests are rewritten on the
+// interface (below); the network tour (inventory D01), the course comparison (D03) and the Matches row's plan button
+// (K08, e2e/next-parity.spec.js) are deleted, mapped in log/task-70.md.
+import {test,expect} from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { LANGS, kamin } from './roles.js'
 const publicPages=['catalog','capstone','pdpl','runs-where','tests','services','guide','privacy','trust','methodology','faq','validation','stories','about','contact','business-model','changelog','interoperability','mapping','sample-report','advisor','admin']
 for(const lang of ['ar','en']){
  test(`shared public navigation and single-language content: ${lang}`,async({page,request})=>{
@@ -22,53 +25,7 @@ for(const lang of ['ar','en']){
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),path).toBe(true)
   }
  })
- test(`localized entry, choices, recovery and no automatic consent: ${lang}`,async({page})=>{
-  await page.goto(`/${lang}/`)
-  await expect(page.locator('.skip-link')).toHaveText(lang==='ar'?'تجاوز إلى المحتوى':'Skip to content')
-  await page.getByRole('button',{name:lang==='ar'?'ابدأ بناء ملفك':'Build your profile',exact:true}).first().click()
-  await expect(page.getByRole('checkbox')).not.toBeChecked()
-  await page.getByRole('checkbox').check()
-  await page.getByRole('button',{name:lang==='ar'?'ابدأ بصمتي':'Start my profile',exact:true}).click()
-  await expect(page.locator('input[name="careerInterest"][value=""]')).toBeChecked()
-  await page.locator('input[name="careerInterest"][value="investigative"]').check()
-  await page.locator('input[name="goal"][value="data"]').check()
-  const s=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')))
-  expect(s.consents).toMatchObject({insight:true,analyze:false,advisor:false,research:false})
-  expect(s.courses).toEqual([])
-  const report=await new AxeBuilder({page}).analyze()
-  expect(report.violations.filter(v=>['serious','critical'].includes(v.impact)),JSON.stringify(report.violations)).toEqual([])
- })
- test(`network tour leaves personal state untouched: ${lang}`,async({page})=>{
-  await page.goto(`/${lang}/`)
-  await page.locator('.pilot-advanced > summary').click()
-  await page.locator('.network-tour button').click()
-  for(let i=1;i<=4;i++){
-   await expect(page.locator('.network-tour strong')).toContainText(`${i}/4`)
-   await page.locator('.network-tour').getByRole('button',{name:i===4?(lang==='ar'?'إنهاء الجولة':'Finish tour'):(lang==='ar'?'التالي':'Next'),exact:true}).click()
-  }
-  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBeNull()
- })
 }
-test('storage quota failure is visible and does not crash the profile',async({page})=>{
- await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key==='kamin-session-v3')throw new DOMException('Storage full','QuotaExceededError');return original.call(this,key,value)}})
- await page.goto('/?lang=en&start=profile')
- await page.getByRole('checkbox').check()
- await page.getByRole('button',{name:'Start my profile',exact:true}).click()
- await page.locator('input[name="goal"][value="data"]').check()
- await expect(page.getByRole('alert')).toContainText('could not be saved')
- await page.getByRole('button',{name:'Open saving & backup options'}).click()
- await expect(page.getByRole('heading',{name:'You control your data'})).toBeVisible()
-})
-test('device storage failure is reported without a false saved confirmation',async({page})=>{
- await page.addInitScript(()=>{IDBFactory.prototype.open=function(){throw new DOMException('Storage blocked','SecurityError')}})
- await page.goto('/?lang=en&start=profile')
- await page.getByRole('checkbox').check()
- await page.getByRole('button',{name:'Start my profile',exact:true}).click()
- await page.getByRole('button',{name:'Profile saving options',exact:true}).click()
- await page.getByRole('button',{name:'Keep my profile on this device',exact:true}).click()
- await expect(page.getByRole('alert')).toContainText('Storage is unavailable')
- expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')).localPersistence)).toBe(false)
-})
 test('static content exposes security headers and English metadata without running JavaScript',async({request})=>{
  const response=await request.get('/en/guide.html'),headers=response.headers(),html=await response.text()
  expect(headers['content-security-policy']).toContain("frame-ancestors 'none'")
@@ -78,35 +35,6 @@ test('static content exposes security headers and English metadata without runni
  expect(html).toContain('og-kamin-en.jpg')
  expect(html).not.toContain('data-kamin-lang="ar"')
 })
-test('empty comparison offers courses and a working two-course starting point',async({page})=>{
- await page.goto('/?lang=ar')
- await page.getByRole('button',{name:'افتح مساحة العمل',exact:true}).first().click()
- await page.getByRole('dialog').getByRole('button',{name:'جرّب المثال التوضيحي',exact:true}).click()
- await page.getByRole('checkbox',{name:/أوافق صراحةً/}).check()
- await page.getByRole('button',{name:/أعتمد السجل/}).click()
- await openView(page,'المقارنة')
- await expect(page.getByRole('button',{name:'اختر الدورات',exact:true})).toBeVisible()
- await page.getByRole('button',{name:'قارن اقتراحين',exact:true}).click()
- // Task 23: the Compare tab also shows the pathway comparison above; read the course comparison.
- await expect(page.locator('.compare-courses .compare-table thead th')).toHaveCount(3)
-})
-
-test('a match opens its own development plan without inventing evidence',async({page})=>{
- await page.goto('/?lang=en&start=profile')
- await page.getByRole('checkbox').check()
- await page.getByRole('button',{name:'Start my profile',exact:true}).click()
- await page.locator('input[name="goal"][value="cyber"]').check()
- await openView(page,'Matches')
- const card=page.locator('.match-card').filter({has:page.getByRole('heading',{name:'Junior Cybersecurity Analyst',exact:true})})
- // Task 23: the plan button is in the pathway's opened row.
- await openMatch(page,'job-cyber-analyst')
- const before=await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))
- await card.getByRole('button',{name:'Open this pathway’s plan',exact:true}).click()
- await expect(page.getByLabel('Pathway to explore')).toHaveValue('job-cyber-analyst')
- await expect(page.getByRole('tab',{name:'Development plan',exact:true})).toHaveAttribute('aria-selected','true')
- expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
-})
-
 test("published team plan and AI status match the released baseline",async({page})=>{
  await page.goto("/en/capstone.html")
  await expect(page.getByRole("main")).toContainText("three-college")
@@ -119,4 +47,51 @@ test("published team plan and AI status match the released baseline",async({page
  await expect(card).toContainText("runs locally")
  await page.goto("/ar/services.html")
  await expect(page.getByRole("main")).toContainText("تجربة عاملة + تطوير مخطط")
+})
+
+// ---------- Task 70: rewritten on the interface (the old start screen, interests page and saving panel are deleted) ----------
+// No automatic consent: the skip link speaks the page's language; step 3's interests consent starts unticked; ticking it
+// gives the interests consent only (transcript analysis, advisor sharing and research stay off) and adds no course.
+for (const lang of LANGS) test(`localized entry, choices and no automatic consent: ${lang}`, async ({ page }) => {
+  const app = kamin(page, { ui: 'new', lang })
+  await app.home()
+  await expect(page.locator('.skip-link')).toHaveText(lang === 'ar' ? 'تجاوز إلى المحتوى' : 'Skip to content')
+  await app.goToView('interests')
+  await expect(app.interestsConsent()).not.toBeChecked()
+  await app.click(app.interestsConsent(), 'interests consent')
+  await app.click(app.interestChip('careerInterest', 'investigative'), 'a chip')
+  await expect(app.interestChip('careerInterest', 'investigative')).toHaveAttribute('aria-pressed', 'true')
+  const s = await page.evaluate(() => JSON.parse(sessionStorage.getItem('kamin-session-v3')))
+  expect(s.consents).toMatchObject({ insight: true, analyze: false, advisor: false, research: false })
+  expect(s.courses).toEqual([])
+  const report = await new AxeBuilder({ page }).analyze()
+  expect(report.violations.filter(v => ['serious', 'critical'].includes(v.impact)), JSON.stringify(report.violations)).toEqual([])
+})
+
+// The session cannot be saved (storage full): the interface says so in an alert that stays, and its button opens
+// Settings → Back up and restore. The words are the old interface's (src/ui2/StorageAlert.jsx).
+test('storage quota failure is visible and does not crash the profile', async ({ page }) => {
+  await page.addInitScript(() => { const original = Storage.prototype.setItem; Storage.prototype.setItem = function (key, value) { if (key === 'kamin-session-v3') throw new DOMException('Storage full', 'QuotaExceededError'); return original.call(this, key, value) } })
+  const app = kamin(page, { ui: 'new', lang: 'en' })
+  await app.goToView('interests')
+  await app.click(app.interestsConsent(), 'interests consent')
+  const alert = page.getByTestId('storage-alert')
+  await expect(alert).toContainText('could not be saved')
+  await expect(page.getByRole('alert').filter({ has: alert })).toBeVisible()
+  await expect(app.interestChip('careerInterest', 'investigative'), 'the page still works').toBeEnabled()
+  await alert.getByRole('button', { name: 'Open saving & backup options', exact: true }).click()
+  await expect(app.sectionHeading('backup')).toBeVisible()
+})
+
+// The device store is blocked: keeping the profile on this device fails with the alert, and no false "saved".
+test('device storage failure is reported without a false saved confirmation', async ({ page }) => {
+  await page.addInitScript(() => { IDBFactory.prototype.open = function () { throw new DOMException('Storage blocked', 'SecurityError') } })
+  const app = kamin(page, { ui: 'new', lang: 'en' })
+  await app.sample()
+  await app.home()
+  await app.openSaveOffer()
+  await app.keepOnDevice()
+  await expect(page.getByTestId('storage-alert')).toContainText('Storage is unavailable')
+  await expect(app.saveStatus()).not.toHaveAttribute('data-saved', 'true')
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('kamin-session-v3')).localPersistence)).toBe(false)
 })

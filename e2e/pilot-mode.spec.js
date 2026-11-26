@@ -1,10 +1,11 @@
 // Task 18 · the trial with FCIT students, browser-only: consent first, the synthetic transcript from a
 // local fixture, the end-of-session form, the anonymous study file (downloaded, never sent), withdrawal,
-// and no change at all for normal users.
-import { test, expect } from './fixtures.js'
+// and no change at all for normal users. Task 70: the routes are the interface's (the trial transcript opens on step 1
+// right after joining; approving opens step 2; "delete everything" is Settings'); the trial layer is the same component.
+import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { readFileSync } from 'node:fs'
-import { openView, openPrivacySection } from './nav.js'
+import { kamin } from './roles.js'
 import { validate } from '../tests/helpers/miniJsonSchema.js'
 
 const schema = JSON.parse(readFileSync('src/pilot/study-file.schema.json', 'utf8'))
@@ -31,9 +32,13 @@ async function joinAndLoad(page, lang) {
   await consent.getByRole('checkbox', { name: l.agree }).check()
   await consent.getByRole('button', { name: l.start }).click()
   await expect(page.getByTestId('pilot-bar')).toBeVisible()
-  await page.locator('.app-overlay').getByRole('button', { name: l.demo, exact: true }).click()
   // The trial transcript comes from the local fixture (CPIT-425 is only in the fixture, not in the normal demo).
-  await expect(page.locator('.app-overlay table input[value="CPIT-425"]').first()).toBeVisible()
+  const app = kamin(page, { ui: 'new', lang })
+  await expect(app.resultLine()).toBeVisible()
+  await app.showReadRows()
+  await expect(app.fixSheet().locator('table input[value="CPIT-425"]').first()).toBeVisible()
+  await app.hideReadRows()
+  return app
 }
 
 test('pilot mode: consent first, synthetic transcript, form, review and a valid anonymous study file, with no outside request', async ({ page, baseURL }) => {
@@ -42,10 +47,9 @@ test('pilot mode: consent first, synthetic transcript, form, review and a valid 
   // As in Task 16 (e2e/no-external-requests.spec.js): a blocked outside call never shows up as a request, so CSP violations are watched too.
   await page.addInitScript(() => { window.__cspViolations = []; document.addEventListener('securitypolicyviolation', e => window.__cspViolations.push(`${e.violatedDirective} ${e.blockedURI}`)) })
   const l = L.en
-  await joinAndLoad(page, 'en')
-  await page.getByRole('checkbox', { name: l.consent }).check()
-  await page.getByRole('button', { name: l.approve }).last().click()
-  await expect(page.locator('.capability-list')).toBeVisible()
+  const app = await joinAndLoad(page, 'en')
+  await app.approve()
+  await expect(app.heading('projects')).toBeVisible()
 
   await page.getByTestId('pilot-bar').getByRole('button', { name: l.finish }).click()
   const form = page.getByRole('dialog', { name: 'End of the session' })
@@ -76,7 +80,7 @@ test('pilot mode: consent first, synthetic transcript, form, review and a valid 
   for (const course of fixture.courses) for (const value of [course.code, course.name.en, course.name.ar]) expect(text).not.toContain(value)
 
   await form.getByRole('button', { name: l.end }).click()
-  await expect(page.getByTestId('pilot-notice')).toContainText('deleted from this device')
+  await expect(page.getByTestId('notice') /* the interface's one message (pilot-notice in the old) */).toContainText('deleted from this device')
   await expect(page.getByTestId('pilot-bar')).toHaveCount(0)
   expect(await study(page)).toBeNull()
   expect(outside).toEqual([])
@@ -89,7 +93,7 @@ test('withdrawing from the study deletes the local queue at once (Arabic)', asyn
   expect((await study(page)).events.map(e => e.event)).toEqual(expect.arrayContaining(['study_joined', 'synthetic_transcript_loaded']))
   await page.getByTestId('pilot-bar').getByRole('button', { name: l.withdraw }).click()
   await page.getByRole('dialog', { name: l.withdraw }).getByRole('button', { name: l.withdrawYes }).click()
-  await expect(page.getByTestId('pilot-notice')).toContainText('انسحبت من الدراسة')
+  await expect(page.getByTestId('notice') /* the interface's one message (pilot-notice in the old) */).toContainText('انسحبت من الدراسة')
   expect(await study(page)).toBeNull()
   expect(await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('kamin-pilot')))).toEqual([])
   await page.goto('/ar/')
@@ -99,20 +103,18 @@ test('withdrawing from the study deletes the local queue at once (Arabic)', asyn
 
 test('"delete everything" during the trial removes the profile, keeps the study file and says so', async ({ page }) => {
   const l = L.ar
-  await joinAndLoad(page, 'ar')
-  await page.getByRole('checkbox', { name: l.consent }).check()
-  await page.getByRole('button', { name: l.approve }).last().click()
+  const app = await joinAndLoad(page, 'ar')
+  await app.approve()
+  await expect(app.heading('projects')).toBeVisible()
   // Task 44: a saved project's counts in the queue (as the project form records them); "delete everything" removes them.
   await page.evaluate(key => {
     const s = JSON.parse(localStorage.getItem(key))
     s.events.push({ event: 'suggest_shown', at: s.joinedAt, count: 3, engine: 'kamin-project-suggest-improved-v1' }, { event: 'suggest_kept', at: s.joinedAt, count: 2, engine: 'kamin-project-suggest-improved-v1' })
     localStorage.setItem(key, JSON.stringify(s))
   }, STUDY_KEY)
-  await openView(page, 'الخصوصية')
-  await openPrivacySection(page, 'delete') // Task 27
-  await page.getByRole('button', { name: /حذف بياناتي/ }).click()
+  await app.askDeleteEverything()
   await expect(page.getByTestId('delete-study-kept')).toContainText('يبقى ملف الدراسة المجهول')
-  await page.getByTestId('delete-everything-confirm').getByRole('button', { name: /نعم، احذف كل شيء من هذا الجهاز/ }).click()
+  await app.confirmDeleteEverything()
   const done = page.getByTestId('deleted-confirmation')
   await expect(done).toContainText('حُذفت بياناتك من هذا الجهاز')
   await expect(done.getByTestId('study-kept')).toBeVisible()
@@ -133,11 +135,11 @@ test('declining the trial leaves Kamin as usual and records nothing', async ({ p
 })
 
 for (const lang of ['ar', 'en']) test(`outside pilot mode nothing changes: no consent screen, no bar, the usual demo, nothing stored: ${lang}`, async ({ page }) => {
-  await page.goto(`/${lang}/`)
-  await page.getByRole('button', { name: lang === 'ar' ? /افتح مساحة العمل/ : /Open workspace/ }).first().click()
-  await page.locator('.app-overlay').getByRole('button', { name: L[lang].demo, exact: true }).click()
-  await expect(page.locator('.app-overlay table input[value="CPIT-499"]').first()).toBeVisible()
-  await expect(page.locator('.app-overlay table input[value="CPIT-425"]')).toHaveCount(0)
+  const app = kamin(page, { ui: 'new', lang })
+  await page.goto(`/${lang}/?start=sample`)
+  await app.showReadRows()
+  await expect(app.fixSheet().locator('table input[value="CPIT-499"]').first()).toBeVisible()
+  await expect(app.fixSheet().locator('table input[value="CPIT-425"]')).toHaveCount(0)
   await expect(page.getByTestId('pilot-bar')).toHaveCount(0)
   await expect(page.locator('.pilot-dialog')).toHaveCount(0)
   expect(await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('kamin-pilot')))).toEqual([])

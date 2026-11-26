@@ -6,8 +6,11 @@
 // Everything here is the student's own choice (Task 58, src/plan/plan.js): nothing changes evidence.
 // Task 44: in the trial, Remove counts once (step_removed, with the feed's version; src/pilot/studyCounts.js) and Undo
 // takes the count back. Never the item or its title.
-import { useEffect, useRef, useState } from 'react'
-import { Columns3, LockKeyhole } from 'lucide-react'
+// Task 79: "Roadmaps for my goals": for each chosen goal that is a pathway, a button that shows its roadmap
+// (src/ui2/components/Roadmap.jsx; the data loads on demand, the first time one is opened). Ticks are saved with the plan
+// and are never evidence. The K08 development plan stays where Task 74 put it (Why these paths? → a pathway).
+import { useEffect, useId, useRef, useState } from 'react'
+import { ChevronDown, Columns3, LockKeyhole } from 'lucide-react'
 import { LEARNING_PATH_COPY } from '../../content/learningPathCopy.js'
 import { saveOffer } from '../../content/saveOfferCopy.js'
 import { normalizePlan } from '../../plan/plan.js'
@@ -17,7 +20,10 @@ import { VIEW_TEXT } from '../views.js'
 import { fillIn, nextCopy } from '../copy.js'
 import Skeleton from '../Skeleton.jsx'
 import Sheet from '../Sheet.jsx'
-import GoalPicker from '../components/GoalPicker.jsx'
+import GoalPicker, { goalName } from '../components/GoalPicker.jsx'
+import Roadmap from '../components/Roadmap.jsx'
+import { tickRoadmapItem } from '../../roadmap/roadmap.js'
+import { useRoadmaps } from '../useRoadmaps.js'
 import { dropStep, hideStep, isPathway, restoreStep, toggleGoal, unhideStep } from '../nextState.js'
 import { useStepsEngine } from '../useStepsEngine.js'
 import { recordStepChoice, takeBackStepChoice } from '../../pilot/studyCounts.js'
@@ -33,6 +39,20 @@ export function compareStart(goals, matches) {
   return other ? [...known, other.id] : known
 }
 
+// Task 79 · one goal's roadmap behind a button (closed at first, so the page stays short).
+function GoalRoadmap({ lang, goal, data, state, open, onToggle, onTick }) {
+  const r = nextCopy(lang).roadmap
+  const id = useId()
+  return <li className="ui2-plan-roadmap" data-testid="ui2-plan-roadmap" data-goal={goal}>
+    <h3 className="ui2-plan-roadmap-title"><button type="button" className="ui2-path-toggle" aria-expanded={open} aria-controls={`${id}-panel`} onClick={onToggle}>
+      <span>{fillIn(r.show, { path: goalName(goal, lang) })}</span><ChevronDown size={16} aria-hidden="true"/>
+    </button></h3>
+    <div id={`${id}-panel`} hidden={!open}>
+      {open && (data ? <Roadmap lang={lang} data={data} pathwayId={goal} state={state} onTick={onTick} level={4}/> : <Skeleton lang={lang} lines={5}/>)}
+    </div>
+  </li>
+}
+
 export default function Plan({ lang, profile, focusHeading, onNavigate, notify }) {
   const w = nextCopy(lang).plan
   const T = LEARNING_PATH_COPY[lang]
@@ -41,6 +61,9 @@ export default function Plan({ lang, profile, focusHeading, onNavigate, notify }
   const { goals, plan, notForMe } = normalizePlan(state)
   const [compare, setCompare] = useState(false)
   const [notNow, setNotNow] = useState(false)
+  const [openRoadmaps, setOpenRoadmaps] = useState([])
+  const roadmaps = useRoadmaps(openRoadmaps.length > 0)
+  const roadmapGoals = goals.filter(isPathway)
   const heading = useRef(null)
   useEffect(() => { if (focusHeading) heading.current?.focus() }, [focusHeading])
   // Task 58: steps dropped because their item left the list are named once, the first time the plan opens.
@@ -94,6 +117,13 @@ export default function Plan({ lang, profile, focusHeading, onNavigate, notify }
             </li>
           })}</ul>}
     </section>
+
+    {roadmapGoals.length > 0 && <section className="ui2-plan-block" aria-labelledby="ui2-plan-roadmaps" data-testid="ui2-plan-roadmaps">
+      <h2 id="ui2-plan-roadmaps">{nextCopy(lang).roadmap.planTitle}</h2>
+      <ul className="ui2-plan-list">{roadmapGoals.map(goal => <GoalRoadmap key={goal} lang={lang} goal={goal} data={roadmaps} state={state}
+        open={openRoadmaps.includes(goal)} onToggle={() => setOpenRoadmaps(list => (list.includes(goal) ? list.filter(g => g !== goal) : [...list, goal]))}
+        onTick={(key, done) => actions.setState(s => tickRoadmapItem(s, key, done))}/>)}</ul>
+    </section>}
 
     {notForMe.length > 0 && <section className="ui2-plan-block" aria-labelledby="ui2-plan-hidden" data-testid="ui2-plan-hidden">
       <h2 id="ui2-plan-hidden">{w.hiddenTitle}</h2>

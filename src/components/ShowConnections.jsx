@@ -10,7 +10,11 @@ import ProfileNetwork from './ProfileNetwork.jsx'
 import RelationshipNetwork from './RelationshipNetwork.jsx'
 import { InferenceProof } from './InferenceExplorer.jsx'
 import { copy } from '../i18n.js'
+import { targetProfiles } from '../matching/targets.js'
 const tr = (lang, ar, en) => lang === 'ar' ? ar : en
+// Task 79: the goal's plain name for "Academic evidence path to the opportunity": one of the old four directions, or a
+// pathway's title when the goal is a pathway (Task 58), never an id; nothing when no goal is chosen.
+export const goalLabelOf = (goal, lang) => (goal ? copy[lang].app.goals[goal] || targetProfiles.find(t => t.id === goal)?.title?.[lang] : undefined) || undefined
 
 export function PathwayControls({ lang, matches, match, status, onChange }) {
   const S = copy[lang].screens.studio
@@ -18,5 +22,5 @@ export function PathwayControls({ lang, matches, match, status, onChange }) {
 }
 
 export default function ShowConnections({ lang, state, match, graph, onGoal, onCapability }) {
-  return <div className="studio-profile-network"><RelationshipNetwork lang={lang} state={state} match={match} onCapability={onCapability}/><InferenceProof match={match} graph={graph} lang={lang} demo={state.courses.some(c=>c.source==='demo')}/><details className="studio-evidence-details"><summary>{tr(lang,'تفاصيل أبعاد ملفي','My profile dimensions')}</summary><ProfileNetwork lang={lang} state={state} demo={state.courses.some(c=>c.source==='demo')}/></details><div className="studio-context-note"><p>{tr(lang,'هذه شبكة معلوماتك الشخصية. افتح مسار الدليل لترى كيف ترتبط المقررات بمتطلبات المسار المختار.','This is your personal information network. Open the evidence path to see how courses connect to the selected pathway.')}</p><button className="text-button" onClick={onGoal}>{tr(lang,'عدّل اهتماماتي وهدفي','Edit my interests & goal')}</button></div><details className="studio-evidence-details"><summary>{tr(lang,'مسار الدليل الأكاديمي إلى الفرصة','Academic evidence path to the opportunity')}</summary><KnowledgeNetwork match={match} lang={lang} goalLabel={copy[lang].app.goals[state.goal]} demo={state.courses.some(c=>c.source==='demo')}/></details></div>
+  return <div className="studio-profile-network"><RelationshipNetwork lang={lang} state={state} match={match} onCapability={onCapability}/><InferenceProof match={match} graph={graph} lang={lang} demo={state.courses.some(c=>c.source==='demo')}/><details className="studio-evidence-details"><summary>{tr(lang,'تفاصيل أبعاد ملفي','My profile dimensions')}</summary><ProfileNetwork lang={lang} state={state} demo={state.courses.some(c=>c.source==='demo')}/></details><div className="studio-context-note"><p>{tr(lang,'هذه شبكة معلوماتك الشخصية. افتح مسار الدليل لترى كيف ترتبط المقررات بمتطلبات المسار المختار.','This is your personal information network. Open the evidence path to see how courses connect to the selected pathway.')}</p><button className="text-button" onClick={onGoal}>{tr(lang,'عدّل اهتماماتي وهدفي','Edit my interests & goal')}</button></div><details className="studio-evidence-details"><summary>{tr(lang,'مسار الدليل الأكاديمي إلى الفرصة','Academic evidence path to the opportunity')}</summary><KnowledgeNetwork match={match} lang={lang} goalLabel={goalLabelOf(state.goal, lang)} demo={state.courses.some(c=>c.source==='demo')}/></details></div>
 }

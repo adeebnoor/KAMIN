@@ -22,14 +22,15 @@ import { levelLabel } from '../../evidence/levels.js'
 import { ACTION_LABELS, LEVEL_MEANINGS, limitLine, sharedLimitLine } from '../../content/levelReasons.js'
 import { courseEvidencePrinciple } from '../../content/trustCopy.js'
 import { collegeHasMap, collegeLabel } from '../../catalog/colleges.js'
-import { DECLARED_PREFERENCE_SCHEMES } from '../../insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, preferenceValues } from '../../insight.js'
 import { normalizeFreeInterests } from '../../interests/freeInterestState.js'
 import { normalizeDigitalInterests } from '../../digitalInterests.js'
 import { normalizePlan } from '../../plan/plan.js'
 import { targetProfiles } from '../../matching/targets.js'
 import { projectsForSkill } from '../../utils/projectEvidence.js'
 import { verifiedSkillIds } from '../../credentials/records.js'
-import { SkillCard } from '../../components/Dashboard.jsx'
+import { AwaitingEvidence, SkillCard } from '../../components/Dashboard.jsx'
+import { awaitingEvidence } from '../../utils/engine.js'
 import { VIEW_TEXT } from '../views.js'
 import { fillIn, nextCopy } from '../copy.js'
 import Sheet from '../Sheet.jsx'
@@ -74,7 +75,8 @@ export function sectionSummaries(state, lang) {
   const projects = (state?.projects || []).map(project => project.title)
   const consent = Boolean(state?.consents?.insight)
   const prefs = state?.insight?.declaredPreferences || {}
-  const chips = consent ? CHIP_QUESTIONS.map(scheme => DECLARED_PREFERENCE_SCHEMES[scheme].options.find(option => option.id === prefs[scheme])?.label[lang]).filter(Boolean) : []
+  // Task 78: every chosen chip of both questions (up to 3 each), in the order chosen.
+  const chips = consent ? CHIP_QUESTIONS.flatMap(scheme => preferenceValues(prefs, scheme).map(optionId => DECLARED_PREFERENCE_SCHEMES[scheme].options.find(option => option.id === optionId)?.label[lang])).filter(Boolean) : []
   const words = consent ? normalizeFreeInterests(state?.insight?.freeInterests).length : 0
   const digital = consent ? normalizeDigitalInterests(state?.insight?.digitalInterests).confirmed.length : 0
   const interests = [...chips, ...(words ? [fillIn(w.ownWords, { n: words })] : []), ...(digital ? [fillIn(w.digital, { n: digital })] : [])]
@@ -185,6 +187,9 @@ export default function Profile({ lang, profile, focusHeading, onNavigate, onEdi
         ? <ul className="ui2-cap-list">{skills.map(s => <li key={s.id}><CapabilityRow lang={lang} skill={s} describedBy={shared ? `${id}-why` : undefined} onOpen={() => setOpened(s.id)}/></li>)}</ul>
         : <p className="ui2-profile-summary">{w.noCapabilities}</p>}
       {skills.length > 0 && <LevelLegend lang={lang} testId="level-legend"/>}
+      {/* Task 70: hand-typed courses that match a mapped course wait for a document and never count as evidence (the old
+          dashboard's note, unchanged; inventory K10). "Upload your record" opens step 1, as "Update transcript" does. */}
+      {approved && <div className="ui2-legacy"><AwaitingEvidence lang={lang} rows={awaitingEvidence(state.courses, { college: state.college })} onUpload={() => onEdit('upload')}/></div>}
     </section>
 
     <section className="ui2-profile-map" aria-label={w.map} data-testid="ui2-profile-map">

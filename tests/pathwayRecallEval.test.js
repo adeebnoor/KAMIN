@@ -11,7 +11,7 @@ import {
 } from '../eval/pathway-recall/lib.mjs'
 
 // Task 42 · measurement of the in-app MiniLM pathway search. These tests need no model: the model
-// run itself is `node eval/pathway-recall/eval.mjs run`.
+// run itself is `node eval/pathway-recall/eval.mjs run` (see log/task-42.md for two identical runs).
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DIR = path.join(ROOT, 'eval/pathway-recall')

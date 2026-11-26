@@ -1,0 +1,680 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "method": "improved",
+    "methodVersion": "kamin-project-suggest-improved-v2",
+    "label": "after",
+    "commit": "e7faacc",
+    "engine": "as committed at `e7faacc`",
+    "set": "dev-set.json",
+    "setSha256": "22123e75330e5196cc70be8e543e2b66d9899102442fc2f02b73ae4f3fda94c7",
+    "frozen": false,
+    "frozenAt": null,
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 14,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 3,
+      "correctAbstentions": 3,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 3,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "en": {
+      "cases": 13,
+      "tp": 15,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 1,
+      "correctAbstentions": 1,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 1,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "all": {
+      "cases": 27,
+      "tp": 32,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 4,
+      "correctAbstentions": 4,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 4,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "en-01",
+      "lang": "en",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-02",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-03",
+      "lang": "en",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-04",
+      "lang": "en",
+      "expected": [
+        "db-operations",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-05",
+      "lang": "en",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-06",
+      "lang": "en",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-07",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-08",
+      "lang": "en",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-09",
+      "lang": "en",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-10",
+      "lang": "en",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-11",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "en-12",
+      "lang": "en",
+      "expected": [
+        "database",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-01",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-02",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-03",
+      "lang": "ar",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-04",
+      "lang": "ar",
+      "expected": [
+        "db-operations",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-05",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-06",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-07",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-08",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-09",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-10",
+      "lang": "ar",
+      "expected": [
+        "ai-work",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-11",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "ar-12",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "nz-ar-01",
+      "lang": "ar",
+      "expected": [
+        "web-development",
+        "software",
+        "database",
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "nz-en-01",
+      "lang": "en",
+      "expected": [
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    },
+    {
+      "id": "nz-ar-02",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false
+    }
+  ]
+}

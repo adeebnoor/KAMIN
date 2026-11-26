@@ -1,4 +1,4 @@
-// Task 59: one profile engine for the old interface (src/App.jsx) and the new one (src/ui2, behind
+// Task 59: one profile engine for the old interface (deleted in Task 70) and the new one (src/ui2, at first behind
 // ?ui=next). Reading, saving, approving, recomputing, deleting and backups live here, moved unchanged
 // from KaminApp. Actions return results or throw codes; they never choose a view, show a message or move
 // focus: the interface decides where to go and what to say.
@@ -14,7 +14,7 @@ import { profileSkills, judgeOpportunities } from '../utils/engine.js'
 import { mergeNeedsReview } from '../evidence/needsReview.js'
 import { normalizeCollege, cleanTranscriptText } from '../catalog/colleges.js'
 import { inferTranscriptSsces } from '../reference/ssce.js'
-import { emptyInsightState } from '../insight.js'
+import { emptyInsightState, normalizeDeclaredPreferences } from '../insight.js'
 import { chooseGoal as chooseGoalIn } from '../plan/plan.js'
 import { buildMatchingProfile, matchTargets } from '../matching/engine.js'
 import { projectStateToPerson360 } from '../ontology/projector.js'
@@ -258,7 +258,7 @@ export function useKaminProfile({ lang, pilot = false, entry = 'default', onRest
       ...blankState,
       ...restored,
       consents:{...blankState.consents,...restored.consents,advisor:false,research:false},
-      insight:{...emptyInsightState(),...(restored.insight||{}),responses:{...(restored.insight?.responses||{})}},
+      insight:{...emptyInsightState(),...(restored.insight||{}),responses:{...(restored.insight?.responses||{})},declaredPreferences:normalizeDeclaredPreferences(restored.insight?.declaredPreferences)},
       audit:[{label:lang==='ar'?'استعادة نسخة محلية مشفّرة وإعادة الحساب':'Encrypted local backup restored and recomputed',ts:Date.now()},...(restored.audit||[])].slice(0,100),
     }
     setState(next)
@@ -291,6 +291,8 @@ export function useKaminProfile({ lang, pilot = false, entry = 'default', onRest
       sessionStorage.removeItem(STORAGE_KEY)
       sessionStorage.removeItem(LEGACY_SESSION_KEY)
       localStorage.removeItem(LEGACY_STORAGE_KEY)
+      // Task 70: the old interface's choice ('kamin-ui') no longer exists; a device that still holds it loses it.
+      localStorage.removeItem('kamin-ui') // = RETIRED_UI_KEY of src/utils/dataControl.js (imported there only on demand)
       // Task 18: a trial participant's anonymous study queue is separate research data. It stays until
       // they finish the session or withdraw from the study, and the confirmation says so.
       clearPilotLocalData({keepStudy:studyKept})

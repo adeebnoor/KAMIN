@@ -257,9 +257,9 @@ describe('repository hygiene (Task 48)', () => {
     expect(git('ls-files', 'undefined', 'design-review').trim()).toBe('')
     const ignore = readFileSync('.gitignore', 'utf8').split(/\r?\n/)
     for (const line of ['undefined/', 'design-review/', 'e2e/zz-*.spec.js', 'test-results/']) expect(ignore).toContain(line)
-    const redesign = readFileSync('e2e/redesign.spec.js', 'utf8')
-    const shots = [...redesign.matchAll(/screenshot\(\{path:`([^`]+)`/g)].map(m => m[1])
-    expect(shots.length).toBeGreaterThan(0)
+    // Task 70: e2e/redesign.spec.js (the spec that saved review screenshots) is deleted with the old interface; any spec
+    // that saves a screenshot to a written path still saves it under test-results/.
+    const shots = e2eSources.flatMap(({ text }) => [...text.matchAll(/screenshot\(\{path:`([^`]+)`/g)].map(m => m[1]))
     for (const shot of shots) expect(shot.startsWith('test-results/')).toBe(true)
   })
   it('local probes e2e/zz-*.spec.js never run with the suite', () => {

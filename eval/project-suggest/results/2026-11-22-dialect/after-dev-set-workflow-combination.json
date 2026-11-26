@@ -1,0 +1,752 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "setup": "combination",
+    "method": "hybrid",
+    "methodVersion": "kamin-project-suggest-hybrid-v2+2c4055b",
+    "thresholds": {
+      "dialect": 0.53,
+      "msa": 0.58,
+      "en": 0.53,
+      "mixed": 0.53
+    },
+    "label": "after",
+    "commit": "1aef481",
+    "engine": "as committed at `1aef481`",
+    "set": "dev-set-workflow.json",
+    "setSha256": "ee70d154db0de09134445ce60b8ca6761130343bfa7175c25a597782a7914e5b",
+    "frozen": false,
+    "frozenAt": null,
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 14,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 5,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "en": {
+      "cases": 12,
+      "tp": 14,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 5,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "all": {
+      "cases": 26,
+      "tp": 31,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 10,
+      "correctAbstentions": 10,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 10,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "dev-wf-ar-01",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام طوارى للمستشفي: يجي اتصال، المشرف يدخل تفاصيل الحاله، النظام يرسلها للوحده المتاحه، الوحده ترد بالموقع وتفاصيل الحاله، وبعد الاستجابه يروح تقرير للمشرف.",
+        "requirements": "نظام طوارى للمستشفي: يجي اتصال، المشرف يدخل تفاصيل الحاله، النظام يرسلها للوحده المتاحه، الوحده ترد بالموقع وتفاصيل الحاله، وبعد الاستجابه يروح تقرير للمشرف."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-02",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام الطوارئ في المستشفى: يصل اتصال، فيُدخل المشرف تفاصيل الحالة، ثم يرسلها النظام إلى الوحدة المتاحة، وتردّ الوحدة بالموقع، وبعد الاستجابة يُرسل تقرير إلى المشرف.",
+        "requirements": "نظام الطوارئ في المستشفى: يصل اتصال، فيُدخل المشرف تفاصيل الحالة، ثم يرسلها النظام إلى الوحدة المتاحة، وتردّ الوحدة بالموقع، وبعد الاستجابة يُرسل تقرير إلى المشرف."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-03",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "النظام يحولها للقسم المسؤول ويتابع حالتها.",
+        "requirements": "النظام يحولها للقسم المسؤول ويتابع حالتها."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-04",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "نظام لتتبع طلبات الشراء، كل طلب يمر علي المدير ثم الماليه ثم المستودع، والنظام يبين وين وصل الطلب.",
+        "requirements": "نظام لتتبع طلبات الشراء، كل طلب يمر علي المدير ثم الماليه ثم المستودع، والنظام يبين وين وصل الطلب."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-05",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "النظام يستقبل طلبات الانشا من المقاولين ويوزعها علي المهندسين، والمهندس يرفع تقرير المعاينه للمسئول.",
+        "requirements": "النظام يستقبل طلبات الانشا من المقاولين ويوزعها علي المهندسين، والمهندس يرفع تقرير المعاينه للمسئول."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-06",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "حددت وش يقدر يسوي المستخدم في التطبيق: يسجل، يضيف طلب، يعدل طلبه، ويشوف حالة الطلب."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-07",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-08",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-09",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-10",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-11",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "رسمت سير العمل لقسم القبول."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-12",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "نظام حجز المواعيد للعياده: المريض يحجز، السكرتير يأكد الموعد، والطبيب يشوف قائمة مرضاه، وخزنت كل شي في قاعدة بيانات.",
+        "systems-analysis": "نظام حجز المواعيد للعياده: المريض يحجز، السكرتير يأكد الموعد، والطبيب يشوف قائمة مرضاه، وخزنت كل شي في قاعدة بيانات.",
+        "requirements": "نظام حجز المواعيد للعياده: المريض يحجز، السكرتير يأكد الموعد، والطبيب يشوف قائمة مرضاه، وخزنت كل شي في قاعدة بيانات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-13",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "البرنامج اللي سويته يستلم البلاغ من الحارس ويرسله لفريق الصيانه، وبعدين الفريق يقفل البلاغ ويطلع تقرير للمدير.",
+        "requirements": "البرنامج اللي سويته يستلم البلاغ من الحارس ويرسله لفريق الصيانه، وبعدين الفريق يقفل البلاغ ويطلع تقرير للمدير."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-ar-14",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-01",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "A hospital emergency system: a call comes in, the supervisor enters the case details, the system sends it to the available unit, the unit responds with its location, and after the response a report goes to the supervisor.",
+        "requirements": "A hospital emergency system: a call comes in, the supervisor enters the case details, the system sends it to the available unit, the unit responds with its location, and after the response a report goes to the supervisor."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-02",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "The system forwards it to the responsible department and tracks its status.",
+        "requirements": "The system forwards it to the responsible department and tracks its status."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-03",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Purchase orders go from the manager to finance to the warehouse, and the system shows where each order is.",
+        "requirements": "Purchase orders go from the manager to finance to the warehouse, and the system shows where each order is."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-04",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "Listed what users can do in the app: register, add a request, edit it and check its status."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-05",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "The guard reports a fault, the app sends it to the maintenance team, the team closes it and the manager gets a report.",
+        "requirements": "The guard reports a fault, the app sends it to the maintenance team, the team closes it and the manager gets a report."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-06",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-07",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-08",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-09",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-10",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Clinic booking: the patient books, the receptionist confirms, the doctor sees the list, and everything is stored in a MySQL database.",
+        "systems-analysis": "Clinic booking: the patient books, the receptionist confirms, the doctor sees the list, and everything is stored in a MySQL database.",
+        "requirements": "Clinic booking: the patient books, the receptionist confirms, the doctor sees the list, and everything is stored in a MySQL database."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-11",
+      "lang": "en",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "The platform assigns each new case to a caseworker, sends reminders when a case is overdue, and escalates it to the supervisor after three days.",
+        "requirements": "The platform assigns each new case to a caseworker, sends reminders when a case is overdue, and escalates it to the supervisor after three days."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-wf-en-12",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    }
+  ]
+}

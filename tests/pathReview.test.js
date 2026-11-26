@@ -16,6 +16,7 @@ import { nextStepFeed } from '../src/path/nextSteps.js'
 import { targetProfiles } from '../src/matching/targets.js'
 import { catalogCourses } from '../src/catalog/fcit.js'
 import { opportunities } from '../src/data.js'
+import { LEARNING_PATH_COPY } from '../src/content/learningPathCopy.js'
 import { courseFitView } from '../src/catalog/courseFitView.js'
 import { checkSheet, applyReview, sheetRows, parseCsv, toCsvText, reviewableItems, COLUMNS, KIT_VERSION, PROBLEM_TYPES } from '../scripts/path-review/lib.mjs'
 
@@ -103,59 +104,84 @@ describe('Task 36: the review rules (src/path/review.js)', () => {
   })
 })
 
-describe('Task 36: the Courses tab labels', () => {
+// Task 70: the old Courses tab (src/components/LearningPath.jsx) is deleted. Its four Task 36 label tests now run on
+// step 4, which shows the same list (src/ui2/components/StepCard.jsx: the card and its Details; src/ui2/stepsEngine.js:
+// whether the list is reviewed). Step 4 says "an early version of a feature planned for the next phase" (intro) in each
+// card's Details instead of a separate "Planned feature" badge, and the reviewers' sentence (introReviewed) once every
+// course capability has a reviewed item; each illustrative card carries "Illustrative example".
+describe('Task 36: the step 4 labels (the old Courses tab until Task 70)', () => {
   afterEach(() => { vi.doUnmock('../src/catalog/learning-opportunities.json'); vi.resetModules() })
-  const render = async (lang, catalog) => {
+  const noop = () => {}
+  const ALL_GOALS = targetProfiles.map(t => t.id)
+  // Every card of the feed for every pathway, with its Details, as step 4 renders them.
+  const renderStep4 = async (lang, catalog) => {
     vi.resetModules()
     if (catalog) vi.doMock('../src/catalog/learning-opportunities.json', () => ({ default: catalog }))
-    const { default: LearningPath } = await import('../src/components/LearningPath.jsx')
-    return renderToStaticMarkup(createElement(LearningPath, { lang, skills: [], goal: 'cyber', takenCourses: [] }))
+    const engine = await import('../src/ui2/stepsEngine.js')
+    const { default: StepCard, StepDetails } = await import('../src/ui2/components/StepCard.jsx')
+    const feed = engine.nextStepFeed({ skills: [], goalIds: ALL_GOALS })
+    const html = feed.cards.map(card => {
+      const item = engine.catalogItem(card.itemId)
+      return renderToStaticMarkup(createElement(StepCard, { lang, card, item, goals: [], onTake: noop, onHide: noop, onDetails: noop }))
+        + renderToStaticMarkup(createElement(StepDetails, { lang, card, item, reviewed: engine.LIST_REVIEWED }))
+    }).join('\n')
+    return { html, feed, reviewed: engine.LIST_REVIEWED }
   }
   const reviewed = ids => ({ ...list, items: items.map(i => ids.includes(i.id) ? { ...i, status: 'reviewed', reviewers: ['Course coordinator', 'Faculty member'], reviewedAt: '2026-11-21' } : i) })
 
-  it('today: "Planned feature", every suggestion an "Illustrative example", each with its source (the catalogue page)', async () => {
-    for (const [lang, planned, illustrative] of [['en', 'Planned feature', 'Illustrative example'], ['ar', 'ميزة مخطط لها', 'مثال توضيحي']]) {
-      const html = await render(lang)
-      expect(html).toContain(`data-testid="path-planned">${planned}<`)
+  it('today: "planned feature" in every card\'s Details, "Illustrative example" on every illustrative card, each with its source', async () => {
+    for (const lang of ['en', 'ar']) {
+      const T = LEARNING_PATH_COPY[lang]
+      const { html, feed, reviewed: isReviewed } = await renderStep4(lang)
+      expect(isReviewed).toBe(false)
+      expect(feed.cards.length).toBeGreaterThan(3)
+      expect(html.split('data-testid="ui2-step-list-note"').length - 1).toBe(feed.cards.length)
+      expect(html).toContain(`data-testid="ui2-step-list-note">${T.intro}<`)
+      expect(html).not.toContain(T.introReviewed)
       expect(html).toContain('data-item="fcit-cpit-425"')
-      expect(html).toContain(illustrative)
-      expect(html).not.toContain('data-testid="path-reviewed"')
-      expect(html).toContain('CPIT-425 · FCIT Catalog 2024-25, p. 62. Official FCIT Catalog 2024-25')
+      expect(html).toContain('FCIT Catalog 2024-25, p. 62')
+      const illustrative = feed.cards.filter(card => card.illustrative)
+      expect(illustrative.length).toBeGreaterThan(0)
+      expect(html.split('data-testid="ui2-step-illustrative"').length - 1).toBe(illustrative.length)
+      expect(html).toContain(T.illustrative)
       for (const id of RETIRED) expect(html).not.toContain(`data-item="${id}"`)
     }
   })
 
-  it('with no goal it opens on the first field the list has a step for; a field with a gap but no step says so in the summary', async () => {
-    vi.resetModules()
-    const { default: LearningPath } = await import('../src/components/LearningPath.jsx')
+  it('with no goal the feed waits for one; a goal with a gap but no step says what the list does not close yet', async () => {
     const { demoCourses } = await import('../src/data.js')
     const { inferSkills } = await import('../src/utils/engine.js')
     const skills = inferSkills(demoCourses), takenCourses = demoCourses.map(c => c.code)
-    // The synthetic example: Business Analyst (the first field) has a gap, but CPIT-250 and CPIT-251 are on the record.
-    const html = renderToStaticMarkup(createElement(LearningPath, { lang: 'en', skills, goal: null, takenCourses }))
-    expect(html).toMatch(/<option value="job-data-analyst" selected="">/)
-    expect(html).toContain('data-testid="path-summary">1 suggested step for Data Analyst<')
-    // A chosen goal still decides the field, even when the list has nothing for it yet.
-    const ba = renderToStaticMarkup(createElement(LearningPath, { lang: 'en', skills, goal: 'management', takenCourses }))
-    expect(ba).toMatch(/<option value="job-business-analyst" selected="">/)
-    expect(ba).toContain('data-testid="path-summary">Nothing in the list yet for Business Analyst<')
-    expect(renderToStaticMarkup(createElement(LearningPath, { lang: 'ar', skills, goal: 'management', takenCourses }))).toContain('لا شيء في القائمة بعد لمسار محلل أعمال')
+    const none = nextStepFeed({ skills, goalIds: [], takenCourses })
+    expect(none.cards).toEqual([])
+    expect(none.reason.en).toBe('Choose a goal first.')
+    // The synthetic example: Data Analyst has one step; Business Analyst has a gap, but CPIT-250 and CPIT-251 are on the record.
+    expect(nextStepFeed({ skills, goalIds: ['job-data-analyst'], takenCourses }).cards.map(c => c.itemId)).toEqual(['fcit-cpit-340'])
+    const ba = nextStepFeed({ skills, goalIds: ['job-business-analyst'], takenCourses })
+    expect(ba.cards).toEqual([])
+    expect(ba.uncovered).toEqual([{ goalId: 'job-business-analyst', capabilities: ['requirements'] }])
+    // Task 79: with no card at all, the empty state itself names what the list does not close yet ("list-empty"), so
+    // the line under the feed is shown only when there are cards (it would repeat the empty state otherwise).
+    expect(readFileSync('src/ui2/screens/NextSteps.jsx', 'utf8')).toMatch(/feed\.uncovered\.length > 0 && empty !== 'list-empty' && <p className="ui2-feed-uncovered" data-testid="ui2-feed-uncovered">/)
   })
 
-  it('a reviewed item shows "Reviewed by the department"; "Planned feature" stays while a course capability has no reviewed item', async () => {
-    const html = await render('en', reviewed(['fcit-cpit-425']))
-    expect(html).toContain('data-testid="path-reviewed">Reviewed by the department<')
-    expect(html).toContain('data-testid="path-planned"')
-    expect(await render('ar', reviewed(['fcit-cpit-425']))).toContain('data-testid="path-reviewed">راجعه القسم<')
+  it('a reviewed item alone does not change the label: "planned feature" stays while a course capability has no reviewed item', async () => {
+    for (const lang of ['en', 'ar']) {
+      const T = LEARNING_PATH_COPY[lang]
+      const { html, reviewed: isReviewed } = await renderStep4(lang, reviewed(['fcit-cpit-425']))
+      expect(isReviewed).toBe(false)
+      expect(html).toContain(T.intro)
+      expect(html).not.toContain(T.introReviewed)
+    }
   })
 
-  it('once every course capability has a reviewed item, "Planned feature" goes and the intro says who checked the list', async () => {
+  it('once every course capability has a reviewed item, "planned feature" goes and the Details say who checked the list', async () => {
     const all = reviewed(['capm', 'fcit-cpit-240', 'fcit-stat-110', 'fcit-cpit-250', 'fcit-cpit-251', 'fcit-cpit-425'])
-    const html = await render('en', all)
-    expect(html).not.toContain('data-testid="path-planned"')
+    const { html, reviewed: isReviewed } = await renderStep4('en', all)
+    expect(isReviewed).toBe(true)
+    expect(html).not.toContain(LEARNING_PATH_COPY.en.intro)
     expect(html).toContain('two department reviewers checked')
-    expect(html).toContain('Reviewed by the department')
-    expect(await render('ar', all)).toContain('راجعها مراجعان من القسم')
+    expect((await renderStep4('ar', all)).html).toContain(LEARNING_PATH_COPY.ar.introReviewed)
   })
 })
 
@@ -273,8 +299,8 @@ describe('Task 36: the full list is out of the startup bundle', () => {
     const code = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '')
     return [...code.matchAll(/^\s*(?:import|export)\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/gm)].map(m => m[1])
   }
-  const initialGraph = () => {
-    const seen = new Set(), queue = [path.resolve('src/main.jsx')]
+  const initialGraph = (entry = 'src/main.jsx') => {
+    const seen = new Set(), queue = [path.resolve(entry)]
     while (queue.length) {
       const file = queue.pop()
       if (seen.has(file)) continue
@@ -290,15 +316,24 @@ describe('Task 36: the full list is out of the startup bundle', () => {
     return seen
   }
 
-  it('the startup graph holds the five course-fit cards, not the learning list, the path code or the review rules', () => {
-    const graph = initialGraph()
-    expect(graph.has(path.resolve('src/App.jsx'))).toBe(true)
-    expect(graph.has(path.resolve('src/data.js'))).toBe(true)
-    expect(graph.has(path.resolve('src/catalog/course-fit-cards.json'))).toBe(true)
-    for (const file of ['src/catalog/learning-opportunities.json', 'src/path/suggest.js', 'src/path/gap.js', 'src/path/review.js', 'src/path/nextSteps.js', 'src/components/LearningPath.jsx', 'src/components/CourseCards.jsx']) {
-      expect(graph.has(path.resolve(file)), file).toBe(false)
-    }
+  // Task 70: the startup graph is src/main.jsx and its static imports (the old src/App.jsx is deleted). The interface's
+  // first chunk (src/ui2/AppNext.jsx and its static imports) holds the app data with the five course-fit cards; the full
+  // list and the path code load only on demand, in both. Task 76: startup carried the app data and the cards too, through
+  // the snapshot reader; it now holds only the link's fragment reader (src/utils/snapshotLink.js), so it carries neither.
+  const LAZY_ONLY = ['src/catalog/learning-opportunities.json', 'src/path/suggest.js', 'src/path/gap.js', 'src/path/review.js', 'src/path/nextSteps.js', 'src/ui2/stepsEngine.js']
+  it('the interface\'s first chunk holds the five course-fit cards (startup holds none), not the learning list, the path code or the review rules', () => {
+    const startup = initialGraph()
+    expect(startup.has(path.resolve('src/themeChoice.js'))).toBe(true)
+    expect(startup.has(path.resolve('src/utils/snapshotLink.js'))).toBe(true)
+    expect(startup.has(path.resolve('src/data.js'))).toBe(false)
+    expect(startup.has(path.resolve('src/catalog/course-fit-cards.json'))).toBe(false)
+    for (const file of LAZY_ONLY) expect(startup.has(path.resolve(file)), `startup: ${file}`).toBe(false)
+    const first = initialGraph('src/ui2/AppNext.jsx')
+    expect(first.has(path.resolve('src/data.js'))).toBe(true)
+    expect(first.has(path.resolve('src/catalog/course-fit-cards.json'))).toBe(true)
+    for (const file of LAZY_ONLY) expect(first.has(path.resolve(file)), `first chunk: ${file}`).toBe(false)
   })
+
 
   it('behaviour identical: the course-fit cards equal the view of the full list, field for field', () => {
     expect(JSON.parse(readFileSync('src/catalog/course-fit-cards.json', 'utf8'))).toEqual(courseFitView(list))

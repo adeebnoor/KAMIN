@@ -28,6 +28,8 @@
 .ui2-project-form input+label,.ui2-project-form textarea+label{margin-top:var(--space-2)}
 .ui2-project-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin-top:var(--space-2)}
 .ui2-project-hint{font-size:var(--text-sm);color:var(--muted)}
+/* Task 77 · the line under the link field: KAMIN does not open links */
+.ui2-project-form p.ui2-project-hint{margin:0;line-height:1.5}
 .ui2-project-form p.ui2-project-abstain{margin:0;padding:var(--space-2) var(--space-3);border-radius:var(--radius-small);background:var(--warn-bg);color:var(--warn);font-size:var(--text-sm);line-height:1.5}
 .ui2-project-chips{margin:0;padding:0;border:0;min-width:0}
 .ui2-project-chips legend{padding:0;margin-bottom:var(--space-2);font-weight:650;color:var(--ink)}
@@ -42,3 +44,15 @@
 .ui2-project-why p{margin:0;line-height:1.6}
 .ui2-project-why ul{display:grid;gap:var(--space-2);margin:0;padding-inline-start:var(--space-5)}
 .ui2-project-why summary{min-height:var(--control-h);display:flex;align-items:center;color:var(--navy);font-weight:650;cursor:pointer}
+
+/* ----- Task 43 · "Look deeper" (hybrid method only, ?suggest=hybrid): inside the form, on its --paper, with no
+   colour of its own; the consent box as the interests consent's ----- */
+.ui2-look-deeper{display:grid;gap:var(--space-2);margin-top:var(--space-2)}
+.ui2-look-deeper p{margin:0;line-height:1.5}
+.ui2-look-deeper p.ui2-look-deeper-details{font-size:var(--text-sm)}
+.ui2-project-form label.ui2-look-deeper-consent{display:flex;align-items:flex-start;gap:var(--space-3);font-weight:400;line-height:1.5;cursor:pointer}
+.ui2-project-form .ui2-look-deeper-consent input{flex:none;width:22px;height:22px;min-height:0;margin-top:var(--space-1);padding:0;accent-color:var(--navy)}
+.ui2-look-deeper-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
+.ui2-look-deeper-actions .ui2-text-btn{display:inline-flex;align-items:center;gap:var(--space-1);min-height:var(--control-h)}
+.ui2-look-deeper progress{width:100%}
+.ui2-by-meaning{font-size:var(--text-sm);font-weight:600}

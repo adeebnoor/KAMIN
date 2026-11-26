@@ -20,8 +20,11 @@
     "visual": "playwright test --config=playwright.visual.config.js",
     "eval:suggest": "node eval/project-suggest/eval.mjs run eval/project-suggest/testset.json",
     "eval:compare": "node eval/project-suggest/eval.mjs compare eval/project-suggest/testset-ai-v2.json eval/project-suggest/testset.json --date 2026-11-10",
+    "eval:hybrid": "node eval/project-suggest/eval.mjs hybrid eval/project-suggest/testset-v2.json eval/project-suggest/testset-ai-v2.json eval/project-suggest/testset.json --date 2026-11-21",
     "eval:pathways": "node eval/pathway-recall/eval.mjs run",
-    "fixtures:transcripts": "node scripts/make-transcript-fixtures.mjs"
+    "fixtures:transcripts": "node scripts/make-transcript-fixtures.mjs",
+    "eval:workflow": "node eval/project-suggest/eval.mjs workflow eval/project-suggest/testset-workflow.json eval/project-suggest/dev-set-workflow.json eval/project-suggest/dev-set.json eval/project-suggest/testset.json eval/project-suggest/testset-ai-v2.json --date 2026-11-22",
+    "eval:dialect": "node eval/project-suggest/eval.mjs dialect eval/project-suggest/testset-dialect.json eval/project-suggest/dev-set-dialect.json eval/project-suggest/dev-set.json eval/project-suggest/dev-set-workflow.json eval/project-suggest/testset.json eval/project-suggest/testset-ai-v2.json eval/project-suggest/testset-workflow.json --date 2026-11-22"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",

@@ -1,0 +1,1344 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "setup": "combination",
+    "method": "hybrid",
+    "methodVersion": "kamin-project-suggest-hybrid-v2+2c4055b",
+    "thresholds": {
+      "dialect": 0.53,
+      "msa": 0.58,
+      "en": 0.53,
+      "mixed": 0.53
+    },
+    "label": "after",
+    "commit": "1aef481",
+    "engine": "as committed at `1aef481`",
+    "set": "testset-ai-v2.json",
+    "setSha256": "11f5e181eb0beb529611bbc85986c268ac9ba6fe11443c570fa3723ebfd8195d",
+    "frozen": true,
+    "frozenAt": "2026-11-10",
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 27,
+      "tp": 21,
+      "fp": 3,
+      "fn": 4,
+      "unsupported": 0,
+      "abstained": 8,
+      "correctAbstentions": 5,
+      "wrongAbstentions": 3,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 5,
+      "precision": 0.875,
+      "recall": 0.84,
+      "f1": 0.8571428571428572
+    },
+    "en": {
+      "cases": 25,
+      "tp": 21,
+      "fp": 1,
+      "fn": 2,
+      "unsupported": 0,
+      "abstained": 8,
+      "correctAbstentions": 6,
+      "wrongAbstentions": 2,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 6,
+      "precision": 0.9545454545454546,
+      "recall": 0.9130434782608695,
+      "f1": 0.9333333333333332
+    },
+    "all": {
+      "cases": 52,
+      "tp": 42,
+      "fp": 4,
+      "fn": 6,
+      "unsupported": 0,
+      "abstained": 16,
+      "correctAbstentions": 11,
+      "wrongAbstentions": 5,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 11,
+      "precision": 0.9130434782608695,
+      "recall": 0.875,
+      "f1": 0.8936170212765957
+    }
+  },
+  "rows": [
+    {
+      "id": "ai-en-01",
+      "lang": "en",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Designed the relational schema for a clinic booking system and wrote the SQL queries for its reports."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-02",
+      "lang": "en",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "Wrote unit tests for the shopping cart and measured test coverage after each change."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-03",
+      "lang": "en",
+      "expected": [
+        "db-operations"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": false
+        }
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "Set up nightly backups of the department's PostgreSQL server and practised restoring them on a spare machine.",
+        "database": "Set up nightly backups of the department's PostgreSQL server and practised restoring them on a spare machine."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-04",
+      "lang": "en",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "Gathered requirements from the library staff and wrote user stories with acceptance criteria."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-05",
+      "lang": "en",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "Built a responsive front-end for the events page using HTML, CSS and React."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-06",
+      "lang": "en",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "Kept a five-person team on track by breaking the work into two-week phases, tracking deadlines and reporting progress to the supervisor."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-07",
+      "lang": "en",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-08",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "Looked at two years of exam scores and checked whether students who attended tutoring scored higher, using averages and a significance test."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-09",
+      "lang": "en",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-10",
+      "lang": "en",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "Made sure only logged-in staff could open the admin pages and that passwords were stored hashed, not as plain text."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-11",
+      "lang": "en",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "Used a chatbot to draft the survey questions, then checked and rewrote its answers before sending them out."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-12",
+      "lang": "en",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "Secured the REST endpoints with JWT and OAuth2."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-13",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "Cleaned the survey data in Pandas and plotted the distributions with Matplotlib."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-14",
+      "lang": "en",
+      "expected": [
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "Built the backend in Spring Boot with layered services and a repository pattern."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-15",
+      "lang": "en",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "Trained a small image classifier in PyTorch and compared it with a pretrained model."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-16",
+      "lang": "en",
+      "expected": [
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "Wrote the requirements document, then designed the database tables and the SQL views the dashboard reads from.",
+        "requirements": "Wrote the requirements document, then designed the database tables and the SQL views the dashboard reads from."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-17",
+      "lang": "en",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "Refactored the payment module into smaller classes and added pytest cases for every refund rule.",
+        "testing": "Refactored the payment module into smaller classes and added pytest cases for every refund rule."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-18",
+      "lang": "en",
+      "expected": [
+        "project",
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "Planned the milestones for our capstone and ran a regression to see which features predict churn.",
+        "statistics": "Planned the milestones for our capstone and ran a regression to see which features predict churn."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-19",
+      "lang": "en",
+      "expected": [
+        "cyber",
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "Ran a vulnerability scan on the lab web app and fixed the XSS issues in its React pages.",
+        "web-development": "Ran a vulnerability scan on the lab web app and fixed the XSS issues in its React pages."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-en-20",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-21",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-22",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-23",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-24",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-en-25",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-01",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "صممت مخطط قاعدة بيانات لنظام حجز العيادات وكتبت استعلامات SQL للتقارير."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-02",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "كتبت اختبارات وحدة لسلة المشتريات وقست تغطية الاختبار بعد كل تعديل."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-03",
+      "lang": "ar",
+      "expected": [
+        "db-operations"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": false
+        },
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "جهزت نسخًا احتياطية ليلية لخادم قاعدة البيانات وجربت استعادتها على جهاز آخر.",
+        "db-operations": "جهزت نسخًا احتياطية ليلية لخادم قاعدة البيانات وجربت استعادتها على جهاز آخر."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-04",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "جمعت المتطلبات من موظفي المكتبة وكتبت قصص المستخدم مع معايير القبول."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-05",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "بنيت واجهة ويب متجاوبة لصفحة الفعاليات باستخدام HTML وCSS."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-06",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "نظّمت عمل فريق من خمسة أشخاص وقسّمت المهام على مراحل وتابعت المواعيد النهائية ورفعت تقريرًا أسبوعيًا للمشرف."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-07",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-08",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-09",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": false,
+      "wrongAbstention": true,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-10",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": false
+        }
+      ],
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "تأكدت أن صفحات الإدارة لا يفتحها إلا الموظف المسجّل وأن كلمات المرور تُحفظ مجزّأة لا كنص صريح."
+      },
+      "fallback": [
+        "db-operations"
+      ]
+    },
+    {
+      "id": "ai-ar-11",
+      "lang": "ar",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "استعنت بروبوت محادثة لصياغة أسئلة الاستبيان ثم راجعت إجاباته وعدلتها قبل النشر."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-12",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": false
+        }
+      ],
+      "tp": 1,
+      "fp": 1,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "أمّنت نقاط الوصول في الواجهة البرمجية باستخدام JWT وOAuth2.",
+        "software": "أمّنت نقاط الوصول في الواجهة البرمجية باستخدام JWT وOAuth2."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-13",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "نظّفت بيانات الاستبيان بمكتبة Pandas ورسمت التوزيعات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-14",
+      "lang": "ar",
+      "expected": [
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "بنيت الخادم الخلفي بإطار Spring Boot مع طبقات منفصلة للخدمات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-15",
+      "lang": "ar",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "درّبت مصنّف صور صغيرًا باستخدام PyTorch وقارنته بنموذج مدرّب مسبقًا."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-16",
+      "lang": "ar",
+      "expected": [
+        "requirements",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "كتبت وثيقة المتطلبات ثم صممت جداول قاعدة البيانات التي تقرأ منها لوحة المعلومات.",
+        "requirements": "كتبت وثيقة المتطلبات ثم صممت جداول قاعدة البيانات التي تقرأ منها لوحة المعلومات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-17",
+      "lang": "ar",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "أعدت هيكلة وحدة الدفع إلى أصناف أصغر وأضفت حالات اختبار لكل قاعدة استرجاع.",
+        "testing": "أعدت هيكلة وحدة الدفع إلى أصناف أصغر وأضفت حالات اختبار لكل قاعدة استرجاع."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-18",
+      "lang": "ar",
+      "expected": [
+        "project",
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "وضعت الجدول الزمني ومعالم مشروع التخرج وحللت البيانات بالانحدار لمعرفة أسباب ترك العملاء.",
+        "statistics": "وضعت الجدول الزمني ومعالم مشروع التخرج وحللت البيانات بالانحدار لمعرفة أسباب ترك العملاء."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-19",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "سويت قاعدة بيانات للمكتبة وكتبت الاستعلامات اللي تطلع تقارير الإعارة."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-20",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "كنت أتابع الفريق وأوزع الشغل على مراحل وأتأكد إننا ماشين على المواعيد."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-21",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "قعدت أجرب البرنامج بكل الحالات الغريبة وأسجل الأخطاء اللي تطلع لي."
+      },
+      "fallback": [
+        "testing"
+      ]
+    },
+    {
+      "id": "ai-ar-22",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "سويت صفحة ويب للنادي تشتغل على الجوال والكمبيوتر."
+      },
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-23",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-24",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-25",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-26",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "ai-ar-27",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    }
+  ]
+}

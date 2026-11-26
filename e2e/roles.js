@@ -7,17 +7,14 @@
 // label, visible text or a data-testid (docs/FEATURE_INVENTORY.md lists them and which ones the new
 // interface carries too): never a CSS class or CSS selector.
 //
-// `ui` is 'old' (the app window over the landing page, src/App.jsx) or 'new' (the rebuilt interface, src/ui2).
-// Task 60 added the NewUI class next to OldUI and put 'new' in UIS; each task that rebuilds a feature then
-// implements that feature's methods in NewUI and lists the inventory row in NewUI.FEATURES, so the row's
-// keep-test runs on both interfaces (keep-features.spec.js asks uisFor(row)). Rows: docs/FEATURE_INVENTORY.md.
-// Task 69: the new interface is the default, so NewUI opens the plain addresses (/ar/, /en/?app=<view>); OldUI
-// needs the browser context to open the old interface (useOldInterface in e2e/fixtures.js, as after ?ui=old).
+// `ui` is 'new' (the interface, src/ui2). Task 60 added the NewUI class next to the old interface's driver; each task that
+// rebuilt a feature implemented that feature's methods in NewUI and listed the inventory row in NewUI.FEATURES
+// (keep-features.spec.js asks uisFor(row)). Rows: docs/FEATURE_INVENTORY.md. NewUI opens the plain addresses (/ar/,
+// /en/?app=<view>). Task 70 deleted the old interface and its driver, so 'new' is the only value.
 // Task 74: every keep row now runs on the new interface (K04 was dropped by the team on 2026-11-19). K38 (My map) exists on
 // the new interface only (NEW_ONLY).
 import { expect } from '@playwright/test'
 import { copy, fill } from '../src/i18n.js'
-import { SECTIONS, TABS } from '../src/navigation.js'
 import { LEVEL_MEANINGS } from '../src/content/levelReasons.js'
 import { DECLARED_PREFERENCE_SCHEMES } from '../src/insight.js'
 import { PILOT_CONSENT, PILOT_COPY } from '../src/content/pilotConsent.js'
@@ -26,13 +23,12 @@ import { NEXT_COPY, fillIn } from '../src/ui2/copy.js'
 import { targetProfiles } from '../src/matching/targets.js'
 
 export const LANGS = Object.freeze(['ar', 'en'])
-export const UIS = Object.freeze(['old', 'new'])
+// Task 70: the old interface (OldUI, src/App.jsx) is deleted; 'new' is the only interface.
+export const UIS = Object.freeze(['new'])
 // Task 60 · every view of the new interface, in walking order (the APP_VIEWS list of e2e/nav.js is the old
 // interface's), so page-length and axe checks can walk them all. A new view is added in src/ui2/views.js.
 export const NEW_APP_VIEWS = NEXT_VIEWS
 
-const sectionLabel = (id, lang) => SECTIONS.find(s => s.id === id).labels[lang]
-const tabLabel = (view, lang) => Object.values(TABS).flat().find(tab => tab.view === view).labels[lang]
 const startsWith = text => new RegExp(`^${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
 
 // Clicks are counted from Home: every click, tap, tick and untick a test makes. Typing, picking a file in
@@ -74,310 +70,6 @@ class Driver {
     await this.click(this.pilotBar().getByRole('button', { name: PILOT_COPY[this.lang].withdraw }), 'withdraw from the study')
     await this.click(this.page.getByRole('dialog', { name: PILOT_COPY[this.lang].withdraw }).getByRole('button', { name: PILOT_COPY[this.lang].withdrawYes }), 'yes, withdraw')
   }
-}
-
-// ---------- Today's interface: the app window over the landing page ----------
-class OldUI extends Driver {
-  static FEATURES = 'all'
-
-  get c() { return copy[this.lang] }
-  // The app window, its scrolling page area and its two navigations (sidebar on desktop, bottom bar on phones).
-  app() { return this.page.getByRole('dialog', { name: this.c.app.title }) }
-  main() { return this.app().getByRole('main') }
-  async section(id) { await this.click(this.app().getByRole('navigation').getByRole('button', { name: sectionLabel(id, this.lang), exact: true }).filter({ visible: true }).first(), `section ${id}`) }
-  async tab(view) { await this.click(this.app().getByRole('tab', { name: tabLabel(view, this.lang), exact: true }), `tab ${view}`) }
-  footerLink(name) { return this.page.getByRole('navigation', { name: this.t('روابط المساعدة والمشروع', 'Help and project links') }).getByRole('link', { name, exact: true }) }
-
-  // ----- Home and set-up (set-up is never counted) -----
-  async home() {
-    await this.page.goto(`/${this.lang}/`)
-    await expect(this.page.getByRole('button', { name: this.t('افتح مساحة العمل', 'Open workspace'), exact: true }).first()).toBeVisible()
-  }
-  // An approved synthetic example in this tab's session: the review opened by ?start=sample (kept for tests
-  // and reviewers after the demo leaves Home), consent, approve. The test then goes Home.
-  async sample() {
-    await this.page.goto(`/${this.lang}/?start=sample`)
-    await this.reviewConsent().check()
-    await this.approveButton().click()
-    await expect(this.capabilitiesHeading()).toBeVisible()
-  }
-  // Opens the app window from Home; inside the window already, it does nothing (and counts nothing).
-  async openApp() {
-    if (await this.app().isVisible()) return
-    await this.click(this.page.getByRole('button', { name: this.t('افتح مساحة العمل', 'Open workspace'), exact: true }).first(), 'open workspace')
-    await expect(this.app()).toBeVisible()
-  }
-
-  // ----- K01, K02 · upload, review, approve -----
-  async openUpload() { await this.openApp(); await expect(this.uploadControl()).toBeVisible() }
-  uploadControl() { return this.app().getByRole('button', { name: this.t('ارفع كشف الدرجات', 'Upload your transcript') }) }
-  async chooseTranscript(file) {
-    await this.chooseFile(this.uploadControl(), 'choose a transcript file', file)
-    await expect(this.app().getByRole('heading', { name: this.c.screens.review.title, level: 2 })).toBeVisible()
-  }
-  // The review screen lists every row that was read: nothing to open or close (Task 62: the new interface keeps
-  // them in its "Fix something" sheet).
-  async showReadRows() {}
-  async hideReadRows() {}
-  readRows() { return this.main() }
-  readCodes() { return this.app().getByRole('textbox', { name: new RegExp(`^${this.c.app.courseCode} \\d+$`) }) }
-  readGrade(n) { return this.app().getByRole('textbox', { name: `${this.c.app.grade} ${n}`, exact: true }) }
-  reviewConsent() { return this.app().getByRole('checkbox', { name: this.c.screens.review.consent, exact: true }) }
-  approveButton() { return this.app().getByRole('button', { name: this.c.app.approve, exact: true }) }
-  approveReason() { return this.app().getByTestId('approve-reason') }
-  async approve() {
-    await this.check(this.reviewConsent(), 'tick the transcript consent')
-    await this.click(this.approveButton(), 'approve')
-  }
-  // Where the student lands once the record is approved.
-  approvedView() { return this.capabilitiesHeading() }
-
-  // ----- K10, K11 · capabilities, levels and reasons -----
-  capabilitiesHeading() { return this.app().getByRole('heading', { name: this.c.screens.dashboard.title, level: 2 }) }
-  async openCapabilities() { await this.openApp(); await expect(this.capabilitiesHeading()).toBeVisible() }
-  capabilityRows() { return this.app().getByTestId('capability-row') }
-  // Task 63: every capability row's text, so a keep-test can compare before and after (NewUI reads the same rows).
-  async capabilityLevels() { return this.capabilityRows().allInnerTexts() }
-  async openCapability(i = 0) { await this.click(this.capabilityRows().nth(i), 'open a capability') }
-  // Where an opened capability shows its courses, grades and reasons (Task 66: the new interface's reasons sheet).
-  capabilityDetails() { return this.main() }
-  // The "because" line: said once above the list when every capability has the same reason, else per row.
-  async levelReason() {
-    const shared = this.app().getByTestId('capability-why-all')
-    return (await shared.count()) ? shared : this.app().getByTestId('capability-why').first()
-  }
-  async openLevelMeanings() { await this.click(this.app().getByText(LEVEL_MEANINGS[this.lang].title, { exact: true }), 'what do the levels mean') }
-
-  // ----- K03 · project evidence -----
-  projects() { return this.app().getByRole('region', { name: this.t('أدلة تطبيقية مصرّح بها', 'Self-declared applied evidence') }) }
-  async openProjects() { await this.openApp(); await expect(this.projects()).toBeVisible() }
-  async addProject(title) {
-    const panel = this.projects()
-    await this.click(panel.getByRole('button', { name: this.t('أضف دليل مشروع', 'Add project evidence') }), 'add project evidence')
-    await panel.getByLabel(this.t('عنوان الدليل', 'Evidence title')).fill(title)
-    await this.check(panel.getByRole('group', { name: this.t('القدرات التي يخدمها هذا الدليل', 'Capabilities this evidence addresses') }).getByRole('checkbox').first(), 'tick a capability')
-    await this.click(panel.getByRole('button', { name: this.t('سجّل الدليل محليًا', 'Record evidence locally') }), 'record the evidence')
-  }
-
-  // ----- K04 · interests -----
-  async openInterests() { await this.click(this.page.getByRole('button', { name: this.t('ابنِ ملف قدراتك', 'Build your capability profile'), exact: true }), 'build your capability profile'); await expect(this.app()).toBeVisible() }
-  interestsConsent() { return this.app().getByRole('checkbox', { name: this.c.screens.insight.consent, exact: true }) }
-  interestsStart() { return this.app().getByRole('button', { name: this.t('ابدأ بصمتي', 'Start my profile') }) }
-  async startInterests() { await this.check(this.interestsConsent(), 'tick the interests consent'); await this.click(this.interestsStart(), 'start my profile') }
-  interestChoices() { return this.app().getByRole('group', { name: DECLARED_PREFERENCE_SCHEMES.careerInterest.label[this.lang] }).getByRole('radio') }
-  // The first choice is "Undecided"; this picks the first real interest.
-  async chooseInterest() { await this.check(this.interestChoices().nth(1), 'choose an interest'); return this.interestChoices().nth(1) }
-
-  // ----- K05, K08, K37 · pathways, their plan and their review -----
-  async openPathways() { await this.openApp(); await this.section('next'); await expect(this.main().getByRole('heading', { name: this.c.screens.matches.title, level: 2 })).toBeVisible() }
-  pathway(i = 0) { return this.main().getByRole('article').nth(i) }
-  pathwayReason(i = 0) { return this.pathway(i).getByTestId('match-reason') }
-  opportunityNote() { return this.main().getByTestId('opportunity-status') }
-  async openPathway(i = 0) {
-    const toggle = this.pathway(i).getByRole('heading').getByRole('button')
-    await this.click(toggle, 'open a pathway')
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true')
-    return this.pathway(i).getByTestId('match-evidence')
-  }
-  async openPlan() {
-    await this.openPathways(); await this.openPathway(0)
-    await this.click(this.pathway(0).getByRole('button', { name: this.t('افتح خطة هذا المسار', 'Open this pathway’s plan') }), 'open the pathway plan')
-    await expect(this.app().getByRole('tab', { name: this.t('خطة التطوير', 'Development plan') })).toHaveAttribute('aria-selected', 'true')
-  }
-  plan() { return this.app().getByRole('tabpanel') }
-  async downloadPlan() { return this.download(this.plan().getByRole('button', { name: this.t('تنزيل الخطة', 'Download plan') }), 'download the plan') }
-  // K37 (Task 74: the new interface reviews a next step in its Details sheet): the recommendation to review, the
-  // contest, and where the review history is.
-  async openRecommendation() { await this.openPathways(); await this.openPathway(0) }
-  async contestRecommendation(alias) { return this.contestPathway(alias) }
-  async openReviewHistory() { await this.openUsageLog() }
-  async contestPathway(alias) {
-    const review = this.pathway(0).getByRole('region', { name: /^(مراجعة توصية|Review recommendation:) / })
-    await this.click(review.getByRole('button', { name: this.t('أعترض على هذا الحكم', 'Contest this judgment') }), 'contest this judgment')
-    await review.getByLabel(this.t('اسم المراجع أو اسمه المستعار — محلي', 'Reviewer name or alias — local')).fill(alias)
-    const save = review.getByRole('button', { name: this.t('احفظ المراجعة محليًا', 'Save review locally') })
-    await expect(save).toBeEnabled()
-    await this.click(save, 'save the review')
-    return review
-  }
-
-  // ----- K06 · courses and the learning path -----
-  async openCourses() { await this.openApp(); await this.section('next'); await this.tab('courses') }
-  courseGaps() { return this.main().getByTestId('course-closes') }
-  async openLearningPath() { await this.click(this.main().getByRole('heading', { name: this.t('مسار تعلم مقترح', 'Suggested learning path') }), 'open the learning path') }
-  // Where the learning path's own sentences show (Task 65: the new interface shows them in a card's Details sheet).
-  learningPathScope() { return this.main() }
-  learningGap() { return this.main().getByTestId('path-gap') }
-  learningSteps() { return this.main().getByTestId('path-suggestion') }
-
-  // ----- K07 · goal -----
-  // Where the goal is chosen (the dashboard's "Your next step" card), and another place it shows (Matches).
-  async openGoals() { await this.openCapabilities() }
-  async openGoalElsewhere() { await this.openPathways() }
-  currentGoal(goal) { return this.main().getByText(fill(this.c.screens.matches.goalCurrent, { goal: this.c.app.goals[goal] }), { exact: true }).filter({ visible: true }).first() }
-  async chooseGoal(goal) {
-    const chip = this.app().getByTestId('next-step-card').getByRole('button', { name: this.c.app.goals[goal], exact: true })
-    await this.click(chip, `choose the goal ${goal}`)
-    return chip
-  }
-
-  // ----- K09 · pathway comparison -----
-  async openPathwayComparison() { await this.openApp(); await this.section('next'); await this.tab('compare') }
-  pathwayComparison() { return this.main().getByRole('region', { name: this.t('مقارنة المسارات', 'Pathway comparison'), exact: true }) }
-
-  // ----- K12 · credential import -----
-  async openCredentials() { await this.openPrivacySection('backup'); await expect(this.credentials()).toBeVisible() }
-  credentials() { return this.app().getByRole('region', { name: this.t('استيراد اعتماد قابل للتحقق', 'Import a verifiable credential') }) }
-  async importCredential(file) {
-    await this.chooseFile(this.credentials().getByText(this.t('اختر ملف اعتماد (.json / .jsonld)', 'Choose a credential file (.json / .jsonld)'), { exact: true }), 'choose a credential file', file)
-    return this.credentials().getByTestId('credential-result')
-  }
-  async saveCredential() { await this.click(this.credentials().getByRole('button', { name: this.t('احفظ نتيجة التحقق محليًا', 'Save the verification result locally') }), 'save the verification result') }
-
-  // ----- K13 · practice tasks -----
-  tasks() { return this.app().getByRole('region', { name: this.t('المهمة والدليل والمراجعة', 'Task, evidence and review') }) }
-  async openTasks() {
-    await this.openApp()
-    await this.click(this.app().getByText(this.t('المزيد: المهام، القرار التالي، الروابط، التصنيف الوطني', 'More: tasks, next decision, connections, national classification'), { exact: true }), 'more')
-    await expect(this.tasks()).toBeVisible()
-  }
-  async startFirstTask() {
-    await this.click(this.tasks().getByRole('button', { expanded: false }).first(), 'open a task')
-    await this.click(this.tasks().getByRole('button', { name: this.t('ابدأ المهمة', 'Start the task') }), 'start the task')
-  }
-
-  // ----- K14, K15, K16 · my data: correct, delete one, delete everything -----
-  async openMyData() { await this.openApp(); await this.section('my-data'); await expect(this.main().getByRole('heading', { name: this.c.screens.myData.title, level: 2 })).toBeVisible() }
-  myGrade(code) { return this.app().getByRole('textbox', { name: this.t(`درجة ${code}`, `Grade ${code}`), exact: true }) }
-  async saveMyData() {
-    await this.click(this.app().getByRole('button', { name: this.t('احفظ التعديلات', 'Save changes') }), 'save changes')
-    const confirm = this.app().getByRole('alertdialog', { name: this.t('تأكيد التعديلات', 'Confirm your changes') })
-    await expect(confirm).toBeVisible()
-    return confirm
-  }
-  async confirmMyData() { await this.click(this.app().getByRole('alertdialog').getByRole('button', { name: this.t('تأكيد وإعادة الحساب', 'Confirm and recompute') }), 'confirm and recompute') }
-  async undo() { await this.click(this.app().getByRole('button', { name: this.t('تراجع عن آخر تغيير', 'Undo last change') }), 'undo') }
-  changeSummary(title) { return this.app().getByRole('region', { name: title }) }
-  async askDeleteCourse(code) {
-    await this.click(this.app().getByRole('button', { name: this.t(`حذف ${code}`, `Delete ${code}`), exact: true }), `delete ${code}`)
-    const confirm = this.app().getByRole('alertdialog', { name: this.t(`حذف ${code}؟`, `Delete ${code}?`) })
-    await expect(confirm).toBeVisible()
-    return confirm
-  }
-  async confirmDeleteOne() { await this.click(this.app().getByRole('alertdialog').getByRole('button', { name: this.t('احذف نهائيًا', 'Delete permanently') }), 'delete permanently') }
-  async askDeleteEverything() {
-    await this.openMyData()
-    await this.click(this.app().getByRole('button', { name: this.t('احذف كل بياناتي من هذا الجهاز', 'Delete all my data from this device') }), 'delete all my data')
-    const confirm = this.app().getByRole('alertdialog', { name: this.t('سيُحذف من هذا الجهاز:', 'This will be deleted from this device:') })
-    await expect(confirm).toBeVisible()
-    return confirm
-  }
-  async confirmDeleteEverything() { await this.click(this.app().getByRole('alertdialog').getByRole('button', { name: this.t('نعم، احذف كل شيء من هذا الجهاز', 'Yes, delete everything from this device') }), 'yes, delete everything') }
-  deletedConfirmation() { return this.app().getByTestId('deleted-confirmation') }
-
-  // ----- K17–K22 · consents, saving, backup, sharing, usage log, export -----
-  async openConsents() { await this.openApp(); await this.section('my-data'); await this.tab('privacy'); await expect(this.main().getByRole('heading', { name: this.c.screens.myData.privacyTitle, level: 2 })).toBeVisible() }
-  consent(key) { return this.app().getByRole('checkbox', { name: startsWith(this.c.app.consentItems[key]) }) }
-  async withdraw(key) { await this.uncheck(this.consent(key), `withdraw ${key}`) }
-  // One part of "Consent, saving & deletion" (Permissions starts open; the others open with their heading).
-  async openPrivacySection(id) {
-    await this.openConsents()
-    if (id !== 'permissions') await this.click(this.app().getByRole('heading', { name: this.c.screens.privacy.sections[id], exact: true }), `open ${id}`)
-  }
-  // K18: where the offer to keep the profile on this device is made (the dashboard's alert; Task 67: Settings).
-  async openSaveOffer() { await this.openCapabilities() }
-  // K33: where the save offer is a message on the page (the dashboard's alert slot; Task 74: My plan's offer).
-  async openOfferMessage() { await this.openCapabilities() }
-  async keepOnDevice() { await this.openApp(); await this.click(this.app().getByRole('button', { name: this.t('نعم، احتفظ بملفي', 'Yes, keep my profile') }), 'keep my profile') }
-  saveStatus() { return this.app().getByTestId('save-status') }
-  notices() { return this.app().getByTestId('notice') }
-  // Every message on screen now: notices and the dashboard's alert slot (Task 25: at most one).
-  messages() { return this.notices().or(this.main().getByTestId('dashboard-alert')) }
-  async closeNotice() { await this.click(this.notices().getByRole('button', { name: this.t('إغلاق الرسالة', 'Close message') }), 'close the message') }
-  async downloadBackup(passphrase) {
-    await this.openPrivacySection('backup')
-    await this.app().getByLabel(this.t('عبارة المرور', 'Passphrase'), { exact: true }).fill(passphrase)
-    await this.app().getByLabel(this.t('تأكيد العبارة — مطلوب للتصدير فقط', 'Confirm — export only'), { exact: true }).fill(passphrase)
-    return this.download(this.app().getByRole('button', { name: this.t('تنزيل نسخة مشفّرة', 'Download encrypted backup') }), 'download the backup')
-  }
-  // A returning student on a device that holds nothing: Home, open the app, restore from the backup file.
-  async restoreBackup(file, passphrase) {
-    await this.openApp()
-    await this.section('my-data')
-    await this.app().getByLabel(this.t('عبارة مرور النسخة المستعادة', 'Passphrase of the backup to restore'), { exact: true }).fill(passphrase)
-    await this.chooseFile(this.app().getByRole('button', { name: this.t('اختر ملف النسخة واستعدها', 'Choose the backup file and restore') }), 'choose the backup file', file)
-  }
-  async downloadCapabilityFile() {
-    await this.openPrivacySection('backup')
-    return this.download(this.app().getByRole('button', { name: this.c.screens.myData.exportFile }), 'download the capability file')
-  }
-  async makeShareLink() {
-    await this.openPrivacySection('share')
-    await this.check(this.app().getByRole('group', { name: this.t('القدرات التي ستظهر', 'Capabilities to include') }).getByRole('checkbox').first(), 'choose a capability')
-    const create = this.app().getByRole('button', { name: this.t('إنشاء رابط مشفّر', 'Create encrypted link'), exact: true })
-    await expect(create, 'no link before the student confirms the preview').toBeDisabled()
-    await this.check(this.app().getByRole('checkbox', { name: this.t('راجعت محتوى اللقطة وأفهم أن الرابط يمنح حامله إمكانية قراءتها.', 'I reviewed the snapshot and understand that the link grants its holder access.') }), 'confirm the preview')
-    await this.click(create, 'create the link')
-    return this.app().getByRole('textbox', { name: this.t('الرابط الكامل — عامله كمعلومة خاصة', 'Full link — treat it as private') })
-  }
-  async openUsageLog() { await this.openApp(); await this.section('my-data'); await this.tab('audit'); await expect(this.main().getByRole('heading', { name: this.c.screens.myData.auditTitle, level: 2 })).toBeVisible() }
-
-  // ----- K23–K28 · help pages; K29, K30 · reviewer tools -----
-  howItWorks() { return this.page.getByRole('region', { name: this.t('ثلاث خطوات، وكل خطوة تعرف سببها.', 'Three steps, each with its reason.') }) }
-  async openHelpPage(page) {
-    const links = {
-      guide: () => this.howItWorks().getByRole('link', { name: this.t('دليلك إلى البداية', 'Your guide to getting started') }),
-      about: () => this.footerLink(this.t('عن كامن والفريق', 'About & team')),
-      privacy: () => this.footerLink(this.t('الخصوصية', 'Privacy')),
-      contact: () => this.footerLink(this.t('التواصل والمساعدة', 'Contact & help')),
-      'runs-where': () => this.footerLink(this.t('ما الذي يعمل وأين', 'What runs where')),
-      tests: () => this.footerLink(this.t('نتائج الاختبارات والتغييرات', 'Test results & changes')),
-    }
-    await this.click(links[page](), `open ${page}`)
-  }
-  async openKnowledgeExplorer() { await this.click(this.footerLink(this.t('مستكشف المعرفة', 'Knowledge explorer')), 'knowledge explorer') }
-  knowledgeExplorer() { return this.main().getByRole('heading', { name: this.t('مستكشف المعرفة', 'Knowledge explorer'), level: 2 }) }
-  async openPathwaySearch() {
-    await this.openInterests(); await this.startInterests()
-    await this.click(this.app().getByText(this.t('فعّل الاستكشاف المحلي — اختياري', 'Enable local exploration — optional'), { exact: true }), 'enable local exploration')
-  }
-  pathwaySearchConsent() { return this.app().getByRole('checkbox', { name: this.t('أوافق على التحليل المحلي وتحميل ملفات النموذج وحفظها على هذا الجهاز.', 'I agree to local analysis and downloading/caching model files on this device.') }) }
-  pathwaySearchLoad() { return this.app().getByRole('button', { name: this.t('تحميل النموذج المحلي', 'Load local model') }) }
-
-  // ----- K31–K34 · kept as they are: pilot mode, links, one message, snapshot receiver -----
-  // (The trial layer's consent, bar and withdrawal are the same component in both interfaces: see Driver.)
-  async openPilot() { await this.page.goto(`/${this.lang}/?pilot=1`) }
-  pilotNotice() { return this.page.getByTestId('pilot-notice') }
-  // The view a link opened, by the name of what the student sees selected.
-  selectedView(view) { return this.app().getByRole('tab', { name: tabLabel(view, this.lang), exact: true }) }
-  async openView(view) { await this.tab(view) }
-  // ----- Only for the baseline numbers of today's views (docs/usability/before-rebuild.json) -----
-  // The review of the synthetic example from the start screen, and "Show connections".
-  async openSampleReview() {
-    await this.openApp()
-    await this.click(this.app().getByRole('button', { name: this.t('جرّب المثال التوضيحي', 'Try synthetic demo'), exact: true }), 'try the synthetic demo')
-    await expect(this.reviewConsent()).toBeVisible()
-  }
-  async openConnections() { await this.openApp(); await this.section('next'); await this.tab('studio') }
-
-  // ----- K35 · language; K36 · digital interests -----
-  // The driver follows the student: after the switch it reads and names everything in the other language.
-  async switchLanguage() {
-    await this.click(this.app().getByRole('button', { name: this.t('English', 'العربية'), exact: true }), 'switch the language')
-    this.lang = this.lang === 'ar' ? 'en' : 'ar'
-  }
-  async openDigitalInterests() {
-    await this.openInterests(); await this.startInterests()
-    await this.click(this.app().getByRole('button', { name: this.t('استكشف هذا المصدر', 'Explore this source') }), 'explore this source')
-  }
-  digitalConsent() { return this.app().getByRole('checkbox', { name: this.t('أوافق على تحليل نصوص أختارها محليًا لاقتراح اهتمامات أراجعها. تُحفظ فقط الموضوعات التي أؤكدها والكلمات الدالة عليها وتاريخ التأكيد؛ ويمكنني سحب الموافقة وحذفها.', 'I consent to local analysis of text I choose to suggest interests for my review. Only topics I confirm, their matching keywords and confirmation dates are saved. I can withdraw consent and delete them.'), exact: true }) }
-  async suggestDigitalInterests(text) {
-    await this.check(this.digitalConsent(), 'consent to the analysis')
-    await this.click(this.app().getByRole('button', { name: this.t('فعّل التحليل الاختياري', 'Enable optional analysis') }), 'enable the analysis')
-    await this.app().getByLabel(this.t('نصوص اخترتها عن التعلم أو العمل', 'Selected text about learning or work')).fill(text)
-    await this.click(this.app().getByRole('button', { name: this.t('اقترح اهتمامات لأراجعها', 'Suggest interests for review') }), 'suggest interests')
-  }
-  async confirmDigitalInterest() { await this.click(this.app().getByRole('button', { name: this.t('يمثلني — أضفه', 'Reflects me — add it') }).first(), 'reflects me') }
 }
 
 // ---------- The new interface (Task 60): a full page, the default since Task 69 ----------
@@ -767,16 +459,16 @@ class NewUI extends Driver {
   pilotNotice() { return this.page.getByTestId('notice') }
 }
 
-const UI_CLASSES = { old: OldUI, new: NewUI }
+const UI_CLASSES = { new: NewUI }
 
 // The object a keep-test drives. `ui`: one of UIS.
-export function kamin(page, { ui = 'old', lang }) {
+export function kamin(page, { ui = 'new', lang }) {
   const UI = UI_CLASSES[ui]
   if (!UI) throw new Error(`e2e/roles.js: no interface "${ui}" (known: ${UIS.join(', ')})`)
   return new UI(page, lang)
 }
 
-// Rows of features that exist on the new interface only (Task 74: K38, My map). The old interface has every other row.
+// Rows of features that exist on the new interface only (Task 74: K38, My map). Task 70: every row is the new interface's.
 export const NEW_ONLY = Object.freeze(['K38'])
 // The interfaces on which an inventory row's keep-test runs: every interface that implements that row.
-export const uisFor = row => UIS.filter(ui => (UI_CLASSES[ui].FEATURES === 'all' ? !NEW_ONLY.includes(row) : UI_CLASSES[ui].FEATURES.includes(row)))
+export const uisFor = row => UIS.filter(ui => UI_CLASSES[ui].FEATURES.includes(row))

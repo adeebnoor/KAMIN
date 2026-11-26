@@ -1,6 +1,6 @@
 import { skills } from '../data.js'
 import { targetProfiles } from '../matching/targets.js'
-import { DECLARED_PREFERENCE_SCHEMES } from '../insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, preferenceValues } from '../insight.js'
 import { copy } from '../i18n.js'
 const label=(ar,en)=>({ar,en})
 const skillName=id=>Object.values(skills).find(s=>s.id===id)?.labels||label(id,id)
@@ -22,12 +22,18 @@ export function buildRelationshipNetwork({state={},match,demo=false}){
  const first=path?.capabilityKey||required[0]
  const next=(target.missingSkills||[]).find(s=>s!==first)||required.find(s=>s!==first)||first
  const training=targetProfiles.find(t=>t.type==='training'&&t.teachesSkills?.includes(next))
- const pref=state.consents?.insight?state.insight?.declaredPreferences?.careerInterest:null
- const interest=DECLARED_PREFERENCE_SCHEMES.careerInterest.options.find(o=>o.id===pref)
+ // Task 78: up to 3 interest areas. The node shows the area this pathway fits (its R3 conclusion), or else every
+ // chosen area; with one area chosen this is the old node.
+ const chosenAreas=state.consents?.insight?preferenceValues(state.insight?.declaredPreferences,'careerInterest'):[]
  const interestFit=(match?.inferences||[]).find(i=>i.ruleId==='R3'&&i.scheme==='careerInterest')
+ const fitArea=interestFit?chosenAreas.find(id=>interestFit.premises?.[0]?.object===`urn:kamin:preference:careerinterest:${id}`):null // the projector's IRI (slugged, lower case)
+ const areas=(fitArea?[fitArea]:chosenAreas).map(id=>DECLARED_PREFERENCE_SCHEMES.careerInterest.options.find(o=>o.id===id)).filter(Boolean)
+ const interest=areas.length?{label:areas.length===1?areas[0].label:label(areas.map(a=>a.label.ar).join('، '),areas.map(a=>a.label.en).join(', '))}:null
  const goal=state.goal
  add('person','person',demo?label('سارة · الحاسبات','Sara · Computing'):label('أنت','You'),100,240,label('هذه نقطة انطلاق المسارات، وليست درجة أو حكمًا على الشخص.','The starting point for connections, not a score or judgment about a person.'))
- add('goal','goal',goal?label(copy.ar.app.goals[goal],copy.en.app.goals[goal]):label('هدف لم تحدده بعد','Goal not set'),100,70,declared,goal?`urn:kamin:goal:${goal}`:null)
+ // Task 78: a goal that is a pathway id (step 4, My plan) is named by the pathway's title (it was blank before).
+ const goalTarget=goal&&!copy.en.app.goals[goal]?targetProfiles.find(t=>t.id===goal):null
+ add('goal','goal',goal?(goalTarget?goalTarget.title:label(copy.ar.app.goals[goal],copy.en.app.goals[goal])):label('هدف لم تحدده بعد','Goal not set'),100,70,declared,goal?`urn:kamin:goal:${goal}`:null)
  add('interest','interest',interest?.label||label('اهتمام لم تحدده بعد','Interest not set'),350,70,declared,interestFit?.premises?.[0]?.object||null)
  add('record','evidence',path?label(path.courseCode,path.courseCode):label('دليل غير متاح','Evidence unavailable'),350,240,path?evidence:label('لا يوجد دليل أكاديمي مُراجع مرتبط بهذا المسار في الملف الحالي.','No reviewed coursework evidence connects to this pathway in the current profile.'),path?.courseId)
  if(first)add('skill','skill',skillName(first),605,240,label('قدرة يطلبها المسار. اتصالها بسجل يعتمد على وجود دليل فعلي في الملف.','A pathway requirement. Its connection to coursework depends on evidence actually present in the profile.'),`urn:kamin:skill:${first}`)

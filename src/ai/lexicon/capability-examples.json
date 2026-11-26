@@ -1,0 +1,51 @@
+{
+  "version": "kamin-capability-examples-v1",
+  "builtOn": "Task 80: written by Claude for the MiniLM fallback's comparison (hybrid v2), in the way Saudi students write; no text copied from any development or test set. Each sentence is compared with the student's sentences like the capability's label and description.",
+  "rule": "Per capability: three Saudi-dialect sentences and two mixed Arabic-English sentences. The fallback keeps the best score over all of a capability's texts.",
+  "examples": {
+    "testing": {
+      "dialect": ["كتبت اختبارات للكود وطلعت الأخطاء قبل لا نسلم", "جربت كل حالة في البرنامج وسجلت وش اللي خرب", "سويت تستات تتشغل لحالها كل ما أعدل"],
+      "mixed": ["كتبت test cases للـ login وطلعت كم bug", "شغلت الـ unit tests وصلحت اللي فشل"]
+    },
+    "db-operations": {
+      "dialect": ["آخذ نسخة احتياطية من البيانات كل ليلة وأتأكد إني أقدر أرجعها", "رجعت البيانات من النسخة بعد ما انمسحت", "ضبطت مين يقدر يعدل على البيانات ومين يقرا بس"],
+      "mixed": ["سويت backup يومي وجربت الـ restore", "ضبطت الـ permissions حقت الـ users على الـ server"]
+    },
+    "web-development": {
+      "dialect": ["صممت صفحات الموقع وخليتها تطلع حلوة على الجوال", "بنيت واجهة الموقع اللي يشوفها المستخدم", "سويت موقع للنادي فيه صفحات وتسجيل"],
+      "mixed": ["بنيت الـ frontend بالـ React و CSS", "خليت الـ website responsive على كل الشاشات"]
+    },
+    "systems-analysis": {
+      "dialect": ["جلست مع الموظفين وفهمت كيف يمشي الشغل عندهم من البداية للنهاية", "رسمت خطوات المعاملة ومين يسلم لمين", "حللت الطريقة اللي يشتغلون فيها واقترحت تعديلها"],
+      "mixed": ["رسمت الـ workflow الحالي مع الـ stakeholders", "سويت process map للطلبات من أول ما توصل لين تنقفل"]
+    },
+    "requirements": {
+      "dialect": ["كتبت وش لازم يسوي النظام بالضبط قبل لا نبدأ", "جمعت من العميل وش يبي وكتبتها نقاط واضحة", "حددت وش يقدر المستخدم يسوي في التطبيق وشروط قبول كل شي"],
+      "mixed": ["كتبت الـ requirements والـ user stories حقت التطبيق", "حطيت acceptance criteria لكل feature"]
+    },
+    "software": {
+      "dialect": ["برمجت النظام وقسمت الكود لأجزاء مرتبة", "كتبت الكود حق الخادم اللي يرد على التطبيق", "رتبت الكود القديم عشان يصير أسهل في التعديل"],
+      "mixed": ["بنيت الـ backend بالـ Python وقسمته modules", "سويت API بالـ Node وربطته بالتطبيق"]
+    },
+    "database": {
+      "dialect": ["صممت قاعدة البيانات والجداول والعلاقات بينها", "كتبت استعلامات تطلع البيانات اللي نحتاجها", "سويت داتابيس للمشروع وربطت الجداول ببعض"],
+      "mixed": ["صممت الـ ERD وكتبت الـ SQL queries", "سويت الـ tables في MySQL وربطتها بالـ keys"]
+    },
+    "project": {
+      "dialect": ["كنت أرتب خطة المشروع وأتابع الشباب على المواعيد", "قسمت الشغل لمراحل وحطيت لكل مرحلة وقت", "وزعت المهام على الفريق وأتابع وين وصلوا"],
+      "mixed": ["رتبت الـ sprints والـ deadlines على Trello", "سويت Gantt chart وتابعت الـ milestones"]
+    },
+    "statistics": {
+      "dialect": ["حللت نتايج الاستبيان وطلعت المتوسط والنسب", "قارنت بين المجموعتين وشفت إذا الفرق له دلالة", "حسبت العلاقة بين المتغيرات من البيانات"],
+      "mixed": ["حسبت الـ mean والـ standard deviation للبيانات", "سويت regression على الـ data بالـ Excel"]
+    },
+    "cyber": {
+      "dialect": ["حميت النظام من الاختراق وسكرت الثغرات", "شفرت البيانات الحساسة وضبطت الدخول بكلمات مرور قوية", "فحصت الشبكة ولقيت ثغرات وقفلتها"],
+      "mixed": ["ضبطت الـ firewall وسويت penetration test", "حطيت 2FA وشفرت الـ passwords"]
+    },
+    "ai-work": {
+      "dialect": ["استخدمت الذكاء الاصطناعي عشان يصنف الطلبات لحاله", "دربت نموذج يتعلم من البيانات ويتوقع النتيجة", "سويت روبوت محادثة يرد على أسئلة الناس"],
+      "mixed": ["استخدمت ChatGPT وكتبت prompts عشان يلخص الملاحظات", "دربت machine learning model يصنف الصور"]
+    }
+  }
+}

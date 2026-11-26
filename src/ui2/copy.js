@@ -20,6 +20,14 @@ const eventsEn = n => (n === 0 ? ['', 'No events'] : [String(n), n === 1 ? ' eve
 
 export const NEXT_COPY = Object.freeze({
   ar: Object.freeze({
+    // Task 70 · the old interface's storage alert (src/App.jsx until Task 70), word for word (StorageAlert.jsx).
+    storage: Object.freeze({
+      title: 'تعذر الوصول إلى التخزين أو حفظ آخر التغييرات',
+      deleteTitle: 'تعذر إكمال حذف النسخة المحلية',
+      line: 'أبقِ الصفحة مفتوحة. راجع إعدادات المتصفح، وصدّر نسخة مشفّرة قبل المغادرة.',
+      open: 'افتح خيارات الحفظ والنسخ',
+      recovery: 'خطوات حل المشكلة',
+    }),
     home: Object.freeze({
       start: 'ابدأ', continue: 'تابع', approvedCourses: 'مقرراتك المعتمدة: {n}', nextStep: 'الخطوة التالية: {step}',
       // Task 75 · KAMIN's idea in three short lines, from the How-it-works wording: public/guide.html ("من أول اهتمام إلى خطوة
@@ -71,6 +79,8 @@ export const NEXT_COPY = Object.freeze({
       title: 'عنوان المشروع',
       description: 'ماذا بنيت؟ بضع جمل، بلا معلومات شخصية',
       link: 'رابط https (اختياري)',
+      // Task 77 · KAMIN never opens the link; the skills come from the description only.
+      linkNote: 'لا يفتح كامن الروابط؛ اكتب في الوصف ماذا بنيت.',
       suggest: 'اقترح المهارات',
       suggestHint: 'اكتب 10 أحرف على الأقل في الوصف لتظهر الاقتراحات.',
       chips: 'المهارات التي يُظهرها المشروع. اضغط على مهارة لإزالتها.',
@@ -95,13 +105,34 @@ export const NEXT_COPY = Object.freeze({
       because: 'لأنك كتبت:',
       technical: 'تفاصيل تقنية',
       engine: 'المحرك: {engine}',
+      // Task 43 · "Look deeper", only with the hybrid method (?suggest=hybrid; not the default since Task 80b) and only after the engine abstained.
+      // consent, remove, removed and removeFailed are SemanticRecall.jsx's sentences, word for word.
+      deeper: Object.freeze({
+        line: 'لم يجد معجم كامن في وصفك كلمة تدل على مهارة. يمكن لنموذج لغوي صغير على جهازك أن ينظر نظرة ثانية متأنية.',
+        details: 'يعمل النموذج على هذا الجهاز فقط، ولا يُرسل وصفك إلى أي مكان. في المرة الأولى ينزّل المتصفح ملفات النموذج من هذا الموقع ويحفظها للمرات القادمة.',
+        consent: 'أوافق على التحليل المحلي وتحميل ملفات النموذج وحفظها على هذا الجهاز.',
+        button: 'انظر أعمق (يُنزّل نموذجًا محليًا بحجم 118 MB مرة واحدة)',
+        loading: 'جارٍ تحميل النموذج وتهيئته…',
+        progressLabel: 'تقدم تحميل النموذج',
+        searching: 'يبحث بالمعنى على جهازك…',
+        byMeaning: 'وُجدت بالمعنى، تحقّق منها',
+        found: 'وُجدت مهارة واحدة بالمعنى لا بكلمة في المعجم. تحقّق منها قبل الحفظ، واضغط عليها لإزالتها.',
+        nothing: 'لم يجد النموذج مهارة قريبة بما يكفي في المعنى. اختر المهارات بنفسك.',
+        error: 'تعذر تحميل النموذج أو تشغيله. تحقق من الاتصال ومساحة الجهاز، ثم أعد المحاولة. يمكنك اختيار المهارات بنفسك.',
+        cacheNotice: 'تعذر حفظ بعض ملفات النموذج؛ قد تحتاج تنزيلها مجددًا عند العودة.',
+        remove: 'إيقاف الميزة وحذف ملفات النموذج',
+        removed: 'أُزيلت ملفات النموذج المحفوظة لهذه الميزة.',
+        removeFailed: 'تعذر حذف ذاكرة النموذج. راجع إعدادات بيانات الموقع في المتصفح.',
+      }),
     }),
     // Task 64 · step 3. The interests consent is NOT here: it comes from src/i18n.js (screens.insight.consent, the
     // approved words); the chip labels come from src/insight.js (the old screen's options, same ids).
     interests: Object.freeze({
       areas: 'ما الذي يجذبك؟',
       values: 'ما الأهم لك في العمل؟',
-      pickOne: 'اختر واحدًا؛ اضغط عليه مرة أخرى لإزالته.',
+      // Task 78: up to 3 choices per question.
+      pickUpTo: 'اختر حتى 3؛ اضغط على اختيار مرة أخرى لإزالته.',
+      pickFull: 'اخترت 3. اضغط على اختيار لإزالته قبل أن تختار غيره.',
       needConsent: 'ضع علامة الموافقة أعلاه لتختار. لا يُحفظ شيء قبل ذلك.',
       consentGiven: 'أعطيت موافقة الاهتمامات. يمكنك سحبها وحذف اختياراتك في أي وقت.',
       other: 'شيء آخر؟',
@@ -159,7 +190,16 @@ export const NEXT_COPY = Object.freeze({
       undo: 'تراجع',
       noGoalHint: 'اختر مسارًا في الأعلى، وستظهر خطواتك التالية هنا.',
       noGap: 'لا فجوة لهذا الهدف في القائمة الحالية.',
-      noGapHint: 'إما أن في سجلك دليلًا كافيًا على ما تتطلبه أهدافك، أو أنك تعاملت مع كل اقتراح. اختر هدفًا آخر أو افتح خطتي.',
+      noGapHint: 'في سجلك دليل كافٍ على ما تتطلبه أهدافك. اختر هدفًا آخر، أو اتبع خريطة الطريق لتتقدم أكثر.',
+      // Task 79 · the empty feed says its real reason; pathways from the student's own words become goals in one tap.
+      listEmpty: 'لا يوجد في قائمة التعلّم شيء بعد لما تحتاجه أهدافك: {capabilities}.',
+      listEmptyHint: 'هذا لا يعني أنه لا فجوة لديك: القائمة ما زالت صغيرة. في خريطة الطريق مصادر مجانية لذلك.',
+      handled: 'تعاملت مع كل اقتراح لأهدافك.',
+      handledHint: 'خطواتك المحفوظة في خطتي، ويمكنك هناك أن تُعيد ما علّمته «ليس لي».',
+      wordsGoals: 'من كلماتك: هذه المسارات توجّه خطواتك حتى تختار هدفًا.',
+      makeGoal: 'اجعل «{path}» هدفي',
+      roadmaps: 'خرائط الطريق',
+      seeRoadmap: 'خريطة الطريق: {path}',
       outcome: 'ما ستتمكن منه',
       levelTitle: 'المستوى',
       prerequisites: 'المتطلبات السابقة',
@@ -195,6 +235,34 @@ export const NEXT_COPY = Object.freeze({
       restored: 'سيظهر في خطواتك التالية من جديد.',
       compare: 'قارن المسارات',
       savedSession: 'خطتك محفوظة على هذا الجهاز لهذه الجلسة.',
+    }),
+    // Task 79 · a roadmap per pathway (src/catalog/roadmaps.json, src/ui2/components/Roadmap.jsx): in My plan for each
+    // chosen goal, and from step 4. A tick is the student's own record, never evidence.
+    roadmap: Object.freeze({
+      title: 'خريطة الطريق: {path}',
+      planTitle: 'خرائط الطريق لأهدافي',
+      planEmpty: 'اختر هدفًا لترى خريطة الطريق إليه.',
+      show: 'اعرض خريطة الطريق: {path}',
+      intro: 'مراحل مرتبة، في كل منها مصادر مجانية. علّم ما أنجزته.',
+      stage: 'المرحلة {n}',
+      learn: 'ماذا تتعلم:',
+      why: 'لماذا:',
+      builds: 'يبني:',
+      progress: 'أنجزت {done} من {total}',
+      tickOf: 'أنجزته: {title}',
+      kind: Object.freeze({ course: 'دورة', docs: 'توثيق', website: 'موقع', book: 'كتاب مجاني', 'youtube-channel': 'قناة YouTube', 'youtube-playlist': 'قائمة تشغيل YouTube', 'youtube-video': 'فيديو YouTube', practice: 'أسئلة تدريب' }),
+      language: Object.freeze({ ar: 'بالعربية', en: 'بالإنجليزية' }),
+      newTab: '(يفتح في تبويب جديد)',
+      certsTitle: 'الشهادات',
+      issuer: 'الجهة المانحة:',
+      recommendation: Object.freeze({ take: 'خذها', optional: 'اختيارية', later: 'لاحقًا' }),
+      when: 'متى:',
+      official: 'الصفحة الرسمية: {name}',
+      noPrices: 'لا أسعار هنا: التفاصيل الحالية في الصفحة الرسمية للجهة المانحة.',
+      neverEvidence: 'علامة الإنجاز سجلّك أنت، ولا تُحتسب دليلًا أبدًا: لا تتغير قدراتك ولا مستوياتها.',
+      provenance: 'قائمة مقترحة كتبها Claude، ووافق عليها الفريق والمشرف (بحسب أمجد في 2026-11-18). فُحصت الروابط في {date}.',
+      offline: 'لا يفتح كامن شيئًا من تلقاء نفسه: الرابط يفتح موقع الجهة في تبويب جديد.',
+      none: 'لا توجد خريطة طريق لهذا المسار بعد.',
     }),
     // Task 66 · Profile. The sentences that must stay word for word are NOT here: the level words and their meanings
     // (src/evidence/levels.js, src/content/levelReasons.js), the "because" lines (levelReasons.js), the "clue, not a
@@ -244,7 +312,7 @@ export const NEXT_COPY = Object.freeze({
       groups: Object.freeze({ record: 'سجلك', keep: 'الحفظ والمشاركة', control: 'الموافقات والحذف' }),
       rows: Object.freeze({
         courses: 'مقرراتي', log: 'سجل الاستخدام', save: 'الحفظ على هذا الجهاز', backup: 'النسخ الاحتياطي والاستعادة',
-        share: 'شارك رابط لقطة', export: 'التصدير (CLR JSON)', consents: 'الموافقات', delete: 'احذف كل شيء',
+        share: 'شارك رابط لقطة', export: 'نزّل ملف قدراتي', consents: 'الموافقات', delete: 'احذف كل شيء',
       }),
       back: 'عُد إلى الإعدادات',
       events: eventsAr,
@@ -275,6 +343,14 @@ export const NEXT_COPY = Object.freeze({
     }),
   }),
   en: Object.freeze({
+    // Task 70 · see the Arabic block.
+    storage: Object.freeze({
+      title: 'Storage is unavailable or recent changes could not be saved',
+      deleteTitle: 'Could not finish deleting the local copy',
+      line: 'Keep this page open. Check browser settings and export an encrypted backup before leaving.',
+      open: 'Open saving & backup options',
+      recovery: 'Recovery steps',
+    }),
     home: Object.freeze({
       start: 'Start', continue: 'Continue', approvedCourses: 'Approved courses: {n}', nextStep: 'Next step: {step}',
       // Task 75 · KAMIN's idea in three short lines, from the How-it-works wording: public/guide.html ("From a first interest
@@ -323,6 +399,7 @@ export const NEXT_COPY = Object.freeze({
       title: 'Project title',
       description: 'What did you build? A few sentences, no personal information',
       link: 'https link (optional)',
+      linkNote: 'KAMIN does not open links; describe what you built in the text.',
       suggest: 'Suggest skills',
       suggestHint: 'Write at least 10 characters in the description to get suggestions.',
       chips: 'Skills this project shows. Tap a skill to remove it.',
@@ -347,11 +424,30 @@ export const NEXT_COPY = Object.freeze({
       because: 'Because you wrote:',
       technical: 'Technical details',
       engine: 'Engine: {engine}',
+      // Task 43 · see the Arabic block.
+      deeper: Object.freeze({
+        line: 'KAMIN’s word list found no skill in your description. A small language model on your device can take a second, careful look.',
+        details: 'The model runs on this device only; your description is sent nowhere. The first time, the browser downloads the model files from this site and keeps them for next time.',
+        consent: 'I agree to local analysis and downloading/caching model files on this device.',
+        button: 'Look deeper (downloads a 118 MB local model once)',
+        loading: 'Loading and preparing the model…',
+        progressLabel: 'Model download progress',
+        searching: 'Looking by meaning on your device…',
+        byMeaning: 'found by meaning, please check',
+        found: 'One skill was found by meaning, not by a word in the list. Check it before you save; tap it to remove it.',
+        nothing: 'The model found no skill close enough in meaning. Choose the skills yourself.',
+        error: 'The model could not load or run. Check connectivity and device space, then retry. You can choose the skills yourself.',
+        cacheNotice: 'Some model files could not be cached; returning may require another download.',
+        remove: 'Stop and delete model files',
+        removed: 'Saved model files for this feature were removed.',
+        removeFailed: 'Could not delete the model cache. Check the browser’s site-data settings.',
+      }),
     }),
     interests: Object.freeze({
       areas: 'What draws you?',
       values: 'What matters most to you at work?',
-      pickOne: 'Pick one; tap it again to remove it.',
+      pickUpTo: 'Choose up to 3; tap a choice again to remove it.',
+      pickFull: 'You chose 3. Tap one to remove it before choosing another.',
       needConsent: 'Tick the consent above to choose. Nothing is saved before that.',
       consentGiven: 'Interests consent given. You can withdraw it and delete your choices at any time.',
       other: 'Something else?',
@@ -405,7 +501,16 @@ export const NEXT_COPY = Object.freeze({
       undo: 'Undo',
       noGoalHint: 'Pick a path above; your next steps appear here.',
       noGap: 'No gap for this goal with the current list.',
-      noGapHint: 'Either your record has enough evidence for what your goals need, or you have handled every suggestion. Choose another goal or open My plan.',
+      noGapHint: 'Your record has enough evidence for what your goals need. Choose another goal, or follow the roadmap to go further.',
+      // Task 79 · the empty feed says its real reason; pathways from the student's own words become goals in one tap.
+      listEmpty: 'The learning list has nothing yet for what your goals need: {capabilities}.',
+      listEmptyHint: 'This does not mean you have no gap: the list is still small. The roadmap has free resources for it.',
+      handled: 'You have handled every suggestion for your goals.',
+      handledHint: 'Your saved steps are in My plan, where you can also bring back what you marked “Not for me”.',
+      wordsGoals: 'From your own words: these pathways guide your steps until you choose a goal.',
+      makeGoal: 'Make “{path}” my goal',
+      roadmaps: 'Roadmaps',
+      seeRoadmap: 'Roadmap: {path}',
       outcome: 'What you will be able to do',
       levelTitle: 'Level',
       prerequisites: 'Prerequisites',
@@ -439,6 +544,34 @@ export const NEXT_COPY = Object.freeze({
       restored: 'It will show in your next steps again.',
       compare: 'Compare paths',
       savedSession: 'Your plan is saved on this device for this session.',
+    }),
+    // Task 79 · a roadmap per pathway (src/catalog/roadmaps.json, src/ui2/components/Roadmap.jsx): in My plan for each
+    // chosen goal, and from step 4. A tick is the student's own record, never evidence.
+    roadmap: Object.freeze({
+      title: 'Roadmap: {path}',
+      planTitle: 'Roadmaps for my goals',
+      planEmpty: 'Choose a goal to see its roadmap.',
+      show: 'Show the roadmap: {path}',
+      intro: 'Stages in order, each with free resources. Tick what you have done.',
+      stage: 'Stage {n}',
+      learn: 'What to learn:',
+      why: 'Why:',
+      builds: 'Builds:',
+      progress: '{done} of {total} done',
+      tickOf: 'Done: {title}',
+      kind: Object.freeze({ course: 'Course', docs: 'Documentation', website: 'Website', book: 'Free book', 'youtube-channel': 'YouTube channel', 'youtube-playlist': 'YouTube playlist', 'youtube-video': 'YouTube video', practice: 'Practice questions' }),
+      language: Object.freeze({ ar: 'In Arabic', en: 'In English' }),
+      newTab: '(opens in a new tab)',
+      certsTitle: 'Certifications',
+      issuer: 'Issuer:',
+      recommendation: Object.freeze({ take: 'Take it', optional: 'Optional', later: 'Later' }),
+      when: 'When:',
+      official: 'Official page: {name}',
+      noPrices: 'No prices here: the issuer’s official page has the current details.',
+      neverEvidence: 'A tick is your own record. It never counts as evidence: your capabilities and levels do not change.',
+      provenance: 'A proposed list, written by Claude, approved by the team and the supervisor (stated by Amjd, 2026-11-18). Links checked on {date}.',
+      offline: 'KAMIN opens nothing by itself: a link opens the provider’s site in a new tab.',
+      none: 'No roadmap for this pathway yet.',
     }),
     profile: Object.freeze({
       courses: coursesEn,
@@ -478,7 +611,7 @@ export const NEXT_COPY = Object.freeze({
       groups: Object.freeze({ record: 'Your record', keep: 'Keep and share', control: 'Consent and deletion' }),
       rows: Object.freeze({
         courses: 'My courses', log: 'Usage log', save: 'Save on this device', backup: 'Backup and restore',
-        share: 'Share a snapshot link', export: 'Export (CLR JSON)', consents: 'Consents', delete: 'Delete everything',
+        share: 'Share a snapshot link', export: 'Download my capabilities file', consents: 'Consents', delete: 'Delete everything',
       }),
       back: 'Back to Settings',
       events: eventsEn,

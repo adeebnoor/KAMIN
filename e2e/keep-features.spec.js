@@ -22,9 +22,6 @@ import { demoCourses, skills as catalog } from '../src/data.js'
 import { clrExportFilename } from '../src/utils/clrExport.js'
 import { buildCapabilitySnapshot, encryptSnapshot, snapshotFragment } from '../src/utils/capabilitySnapshot.js'
 import { LANGS, kamin, uisFor } from './roles.js'
-import { useOldInterface } from './fixtures.js'
-import { documentLength, pageLength, visibleChoices, visibleDocumentChoices, writeResults } from './usability-lib.js'
-import { settle } from './nav.js'
 
 test.describe.configure({ mode: 'parallel' })
 
@@ -52,9 +49,8 @@ const clickLimit = (clicks, ui) => (typeof clicks === 'number' ? clicks : clicks
 function keep(id, title, clicks, body) {
   ROWS.set(id, { title, clicks })
   for (const ui of uisFor(id)) for (const lang of LANGS) {
-    test(`${id} ${title} (${lang}${ui === 'old' ? '' : `, ${ui} UI`})`, async ({ page, browser, baseURL }, info) => {
-      // Task 69: the new interface is the default; the old one opens as after ?ui=old (e2e/fixtures.js).
-      if (ui === 'old') await useOldInterface(page.context())
+    // Task 70: the old interface is deleted, so every row runs on the interface only (test names unchanged: ", new UI").
+    test(`${id} ${title} (${lang}, ${ui} UI)`, async ({ page, browser, baseURL }, info) => {
       const app = kamin(page, { ui, lang })
       const more = await body({ app, page, lang, ui, browser, baseURL, info, c: copy[lang] })
       const used = app.clicks + (more?.clicks || 0)
@@ -339,7 +335,6 @@ keep('K19', 'encrypted backup and restore', 8, async ({ app, browser, baseURL, i
   // Another device: a new browser context with this project's settings holds nothing.
   const { viewport, userAgent, deviceScaleFactor, isMobile, hasTouch } = info.project.use
   const device = await browser.newContext({ viewport, userAgent, deviceScaleFactor, isMobile, hasTouch, baseURL })
-  if (ui === 'old') await useOldInterface(device)
   const other = kamin(await device.newPage(), { ui, lang })
   await other.home()
   await other.restoreBackup(file, passphrase)
@@ -395,15 +390,11 @@ async function expectHelpPage(page, name, lang) {
   expect(await page.evaluate(() => [document.documentElement.lang, document.documentElement.dir])).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr'])
 }
 
-keep('K23', 'how it works', 1, async ({ app, page, lang, ui }) => {
+keep('K23', 'how it works', 1, async ({ app, page, lang }) => {
   await app.home()
-  if (ui === 'old') {
-    for (const step of [tr(lang, 'ارفع كشف درجاتك', 'Upload your transcript'), tr(lang, 'راجع واعتمد', 'Review and approve'), tr(lang, 'شاهد قدراتك وخطوتك التالية', 'See your capabilities and next step')])
-      await expect(app.howItWorks().getByRole('heading', { name: step, exact: true })).toBeVisible()
-  } else {
-    // Task 68: the new interface's Home explains nothing; "How KAMIN works" is one tap away, in the footer and on Help.
-    await expect(app.howItWorks(), 'nothing about how it works on Home').toHaveCount(0)
-  }
+  // Task 68: the new interface's Home explains nothing; "How KAMIN works" is one tap away, in the footer and on Help.
+  // (Task 70: the old landing page's three steps are deleted with the old interface.)
+  await expect(app.howItWorks(), 'nothing about how it works on Home').toHaveCount(0)
   await app.openHelpPage('guide')
   await expectHelpPage(page, 'guide', lang)
 })
@@ -442,33 +433,22 @@ keep('K31', 'pilot mode (?pilot=1)', 4, async ({ app, lang }) => {
   await expect(app.pilotNotice()).toContainText(PILOT_COPY[lang].withdrawn)
 })
 
-keep('K32', 'Back, refresh and links with ?app=<view>', 1, async ({ app, page, lang, ui }) => {
+keep('K32', 'Back, refresh and links with ?app=<view>', 1, async ({ app, page, lang }) => {
   const appParam = () => new URL(page.url()).searchParams.get('app')
-  if (ui === 'new') {
-    // Task 69: an old link (Task 27's ?app=privacy#backup) opens the nearest new view, Settings → Back up and restore;
-    // only the view id and the section are in the address. A refresh keeps it; Back comes back to it.
-    await page.goto(`/${lang}/?app=privacy#backup`)
-    await expect(app.sectionHeading('backup')).toBeVisible()
-    await expect.poll(() => [appParam(), new URL(page.url()).hash]).toEqual(['settings', '#backup'])
-    await page.reload()
-    await expect(app.sectionHeading('backup'), 'a refresh keeps the view').toBeVisible()
-    await app.tab('plan')
-    await expect(app.heading('plan')).toBeVisible()
-    await expect.poll(appParam).toBe('plan')
-    await page.goBack()
-    await expect(app.sectionHeading('backup'), 'Back goes to the previous view').toBeVisible()
-    await expect.poll(appParam).toBe('settings')
-    return
-  }
-  await page.goto(`/${lang}/?app=privacy`)
-  await expect(app.selectedView('privacy')).toHaveAttribute('aria-selected', 'true')
+  // Task 69: an old link (Task 27's ?app=privacy#backup) opens the nearest new view, Settings → Back up and restore;
+  // only the view id and the section are in the address. A refresh keeps it; Back comes back to it.
+  // (Task 70: the old interface's own version of this test is deleted with it.)
+  await page.goto(`/${lang}/?app=privacy#backup`)
+  await expect(app.sectionHeading('backup')).toBeVisible()
+  await expect.poll(() => [appParam(), new URL(page.url()).hash]).toEqual(['settings', '#backup'])
   await page.reload()
-  await expect(app.selectedView('privacy'), 'a refresh keeps the view').toHaveAttribute('aria-selected', 'true')
-  await app.openView('audit')
-  await expect.poll(appParam).toBe('audit')
+  await expect(app.sectionHeading('backup'), 'a refresh keeps the view').toBeVisible()
+  await app.tab('plan')
+  await expect(app.heading('plan')).toBeVisible()
+  await expect.poll(appParam).toBe('plan')
   await page.goBack()
-  await expect(app.selectedView('privacy'), 'Back goes to the previous view').toHaveAttribute('aria-selected', 'true')
-  await expect.poll(appParam).toBe('privacy')
+  await expect(app.sectionHeading('backup'), 'Back goes to the previous view').toBeVisible()
+  await expect.poll(appParam).toBe('settings')
 })
 
 // Task 74: the place where the save offer is the one message is the interface's own (old: the dashboard's alert slot;
@@ -584,53 +564,6 @@ test('every Keep row of docs/FEATURE_INVENTORY.md has its keep-test, with the sa
 })
 
 // ---------- Baseline before the rebuild (Task 45) ----------
-// Home and every app view of today's interface, reached from Home by the shortest route, with the
-// approved synthetic example where the view needs a record: page length in screens, visible controls and
-// clicks from Home. 1366×768 in English on the desktop project, 390×844 in Arabic on the phone project.
-// Written to test-results/usability.json ("before-rebuild") and attached to the report; committed in
-// docs/usability/before-rebuild.json (Windows numbers for now; re-measured on Linux CI at the end).
-const BASELINE = { 'desktop-chromium': { lang: 'en', width: 1366, height: 768 }, 'mobile-chromium': { lang: 'ar', width: 390, height: 844 } }
-test('baseline before the rebuild: page length, visible controls and clicks from Home for every view', async ({ page }, info) => {
-  test.setTimeout(150_000)
-  // The baseline is the old interface's (Task 69: it opens as after ?ui=old).
-  await useOldInterface(page.context())
-  const size = BASELINE[info.project.name]
-  await page.setViewportSize({ width: size.width, height: size.height })
-  const views = {}
-  const measure = async (view, app, inApp = true) => {
-    await settle(page)
-    const length = inApp ? await pageLength(page) : await documentLength(page)
-    views[view] = { screens: length.screens, scrollHeight: length.scrollHeight, clientHeight: length.clientHeight, controls: inApp ? await visibleChoices(page) : await visibleDocumentChoices(page), clicks: app.clicks, route: app.steps }
-  }
-  const visit = async (view, open, { fresh = false } = {}) => {
-    const app = kamin(page, { ui: 'old', lang: size.lang })
-    if (fresh) await page.evaluate(() => sessionStorage.clear())
-    await app.home()
-    await open(app)
-    await measure(view, app, view !== 'landing')
-  }
-  // Before a record: Home, the start screen, the review of the synthetic example.
-  await page.goto(`/${size.lang}/`)
-  await visit('landing', async () => {}, { fresh: true })
-  await visit('start', app => app.openApp(), { fresh: true })
-  await visit('review', app => app.openSampleReview(), { fresh: true })
-  // With the approved synthetic example.
-  await kamin(page, { ui: 'old', lang: size.lang }).sample()
-  await visit('dashboard', app => app.openCapabilities())
-  await visit('matches', app => app.openPathways())
-  await visit('courses', app => app.openCourses())
-  await visit('compare', app => app.openPathwayComparison())
-  await visit('studio', app => app.openConnections())
-  await visit('insight', app => app.openInterests())
-  await visit('mydata', app => app.openMyData())
-  await visit('privacy', app => app.openConsents())
-  await visit('audit', app => app.openUsageLog())
-  const result = { size: `${size.width}x${size.height}`, lang: size.lang, views }
-  writeResults(info.project.name, { 'before-rebuild': result })
-  await info.attach('before-rebuild.json', { body: JSON.stringify(result, null, 2), contentType: 'application/json' })
-  expect(Object.keys(views)).toEqual(['landing', 'start', 'review', 'dashboard', 'matches', 'courses', 'compare', 'studio', 'insight', 'mydata', 'privacy', 'audit'])
-  for (const [view, numbers] of Object.entries(views)) {
-    expect(numbers.screens, `${view}: page length`).toBeGreaterThan(0)
-    expect(numbers.controls, `${view}: visible controls`).toBeGreaterThan(0)
-  }
-})
+// Retired in Task 70: it measured the old interface (Home and its 11 app views), which is deleted. Its numbers stay in
+// docs/usability/before-rebuild.json as the record; the interface's own page length, controls and clicks are checked by
+// e2e/page-length.spec.js (e2e/usability-budget.json "newInterface") and every keep-test above.

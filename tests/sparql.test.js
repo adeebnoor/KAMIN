@@ -2,6 +2,9 @@ import { describe,it,expect } from 'vitest'
 import oxigraph from 'oxigraph'
 import { buildWorkspaceDataset, buildSyntheticGraph, QUERY_TEMPLATES, searchKnowledge } from '../src/knowledge/workspace.js'
 import { executeReadOnlyQuery,prepareReadOnlyQuery } from '../src/knowledge/queryPolicy.js'
+import { demoCourses } from '../src/data.js'
+import { inferSkills } from '../src/utils/engine.js'
+import { projectStateToPerson360 } from '../src/ontology/projector.js'
 const run=(scope,query,options)=>executeReadOnlyQuery(oxigraph.Store,buildWorkspaceDataset(scope,options),query)
 describe('local SPARQL workspace',()=>{
   it('keeps personal data out of the default reference graph even when supplied',()=>{
@@ -19,6 +22,17 @@ describe('local SPARQL workspace',()=>{
     }
     expect(JSON.stringify(personalGraph)).toBe(before)
     expect(run('reference',QUERY_TEMPLATES.find(t=>t.id==='inferred').query).rows).toEqual([])
+  })
+  // Task 76: a goal chosen on step 4's or My plan's chips is a pathway id; the personal "inferred" query used to fail on it.
+  it('runs the personal inferred query when the goal is a pathway id, and still with an old direction',()=>{
+    const query=QUERY_TEMPLATES.find(t=>t.id==='inferred').query
+    for(const goal of ['job-data-analyst','data']){
+      const personalGraph=projectStateToPerson360({state:{approved:true,courses:demoCourses,goal,consents:{insight:true},insight:{declaredPreferences:{}}},skills:inferSkills(demoCourses)})
+      const dataset=buildWorkspaceDataset('personal',{personalGraph,allowPersonal:true})
+      expect(JSON.stringify(dataset)).not.toContain('"@id":null')
+      const rows=run('personal',query,{personalGraph,allowPersonal:true}).rows
+      expect(rows.some(row=>row.relation?.value==='urn:kamin:hasGoalContextFor'&&row.pathway?.value==='urn:kamin:target:job-data-analyst')).toBe(true)
+    }
   })
   it('supports real SELECT aggregation, OPTIONAL, language filters and ASK',()=>{
     expect(run('reference','ASK {GRAPH <urn:kamin:graph:reference> {?s <urn:kamin:requiresCapability> ?o}}').value).toBe(true)

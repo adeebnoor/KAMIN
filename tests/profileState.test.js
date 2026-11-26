@@ -155,16 +155,17 @@ describe('Task 59 · course codes in the upload summary', () => {
 })
 
 describe('Task 59 · one profile engine for both interfaces', () => {
-  const app = read('src/App.jsx')
+  // Task 70: the old interface (src/App.jsx) is deleted; the interface (src/ui2/AppNext.jsx) is the one that uses the hook.
+  const app = read('src/ui2/AppNext.jsx')
   const hook = read('src/state/useKaminProfile.js')
   const stateFile = read('src/state/profileState.js')
 
-  it('App.jsx no longer holds the profile helpers or actions; it uses the hook', () => {
+  it('the interface holds none of the profile helpers or actions; it uses the hook', () => {
     for (const moved of ['const blankState', 'const normalizeState', 'const getSaved', 'const hasMeaningfulProfileState =', "'kamin-session-v3'", 'const applyRecompute', 'readLocalProfile', 'writeLocalProfile', 'clearLocalProfile', 'sessionStorage.setItem', 'import(\'./evidence/recompute.js\')', 'import(\'./utils/portableProfile.js\')', 'import(\'./utils/transcript.js\')']) {
       expect(app, moved).not.toContain(moved)
     }
-    expect(app).toMatch(/^import \{ useKaminProfile \} from '\.\/state\/useKaminProfile\.js'$/m)
-    expect(app).toContain('useKaminProfile({ lang, pilot, entry,')
+    expect(app).toMatch(/^import \{ useKaminProfile \} from '\.\.\/state\/useKaminProfile\.js'$/m)
+    expect(app).toContain('const profile = useKaminProfile({')
   })
 
   it('the hook exports useKaminProfile and returns state, derived, draft and actions', () => {

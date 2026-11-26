@@ -1,0 +1,1143 @@
+{
+  "meta": {
+    "harness": "kamin-eval-project-suggest-v1",
+    "setup": "combination",
+    "method": "hybrid",
+    "methodVersion": "kamin-project-suggest-hybrid-v2+2c4055b",
+    "thresholds": {
+      "dialect": 0.53,
+      "msa": 0.58,
+      "en": 0.53,
+      "mixed": 0.53
+    },
+    "label": "after",
+    "commit": "1aef481",
+    "engine": "as committed at `1aef481`",
+    "set": "dev-set-dialect.json",
+    "setSha256": "d533ec1bf17074ee5adcead59fd3f27dde0de35d04df926c518029dab37384f6",
+    "frozen": false,
+    "frozenAt": null,
+    "date": "2026-11-22"
+  },
+  "metrics": {
+    "ar": {
+      "cases": 38,
+      "tp": 33,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 8,
+      "correctAbstentions": 8,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 8,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "en": {
+      "cases": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 2,
+      "correctAbstentions": 2,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 2,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "all": {
+      "cases": 44,
+      "tp": 38,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": 10,
+      "correctAbstentions": 10,
+      "wrongAbstentions": 0,
+      "falseAlarmCases": 0,
+      "shouldAbstainCases": 10,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "dev-dl-dia-01",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "سويت أبلكيشن للحجوزات وربطته بداتابيس فيها جدول للمستخدمين وجدول للمواعيد."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-02",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "أبغى أقول إني سويت تستات للكود حقي وطلعت أكثر من عشرين بق قبل التسليم."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-03",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "سوينا ويب سايت للنادي وخليناه ريسبونسف يشتغل زين على الجوال."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-04",
+      "lang": "ar",
+      "expected": [
+        "db-operations"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "كل يوم آخذ باك اب للسيرفر وجربت أرجعه بعد ما انحذفت بيانات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-05",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "جلست مع الموظفين وفهمت منهم وش يسوون خطوة خطوة ورسمت لهم الووركفلو الحالي."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-06",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "كتبت الريكوايرمنتس حقت التطبيق وش لازم يسوي وكل يوزر ستوري معها شروط القبول."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-07",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "كنت أنا اللي مسوي خطة المشروع والجدول الزمني وأتابع الفريق كل سبرنت."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-08",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "حللت نتايج الاستبيان بالإكسل وطلعت المتوسط والانحراف المعياري وسويت ريقريشن بسيط."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-09",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "سويت فحص للشبكة حقت المعمل ولقيت ثغرات وقفلتها وظبطت الفايروول."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-10",
+      "lang": "ar",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "استخدمت شات جي بي تي عشان يساعدني أكتب البرومبتات وجربت كذا موديل."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-11",
+      "lang": "ar",
+      "expected": [
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "سويت سستم للمخزون بالبايثون وقسمت الكود لكلاسات وفنكشنز مرتبة."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-12",
+      "lang": "ar",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "دربت موديل يصنف الصور وطلعت دقته عالية بعد ما زودت البيانات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-13",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "ودي أوضح إني أنا اللي صممت الداتابيس كاملة، الجداول والعلاقات والمفاتيح."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-14",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "حطيت تسجيل دخول بالتوكن وشفرت الباسووردات عشان محد يقدر يخترق الحسابات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-15",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "كل ما أعدل شي في الكود أشغل التستات الأوتوماتيكية عشان أتأكد ما خربت شي."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-16",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "طلعت الداتا من الجداول بكويريز وسويت داشبورد للمدير."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-17",
+      "lang": "ar",
+      "expected": [
+        "web-development",
+        "software"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "بنيت الفرونت اند بالرياكت والباك اند بالنود.",
+        "software": "بنيت الفرونت اند بالرياكت والباك اند بالنود."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-18",
+      "lang": "ar",
+      "expected": [
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "requirements": "قعدت مع أصحاب الشأن وطلعت منهم وش يبون بالضبط وكتبته كمتطلبات واضحة."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-19",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis",
+        "requirements"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "requirements",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "السستم يستقبل الطلب من العميل، بعدين يدزه للمشرف يوافق عليه، وبعد الموافقة يروح للفني ويرد على العميل.",
+        "requirements": "السستم يستقبل الطلب من العميل، بعدين يدزه للمشرف يوافق عليه، وبعد الموافقة يروح للفني ويرد على العميل."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-20",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "قسمت المشروع لمراحل وحطيت لكل مرحلة موعد تسليم ووزعت المهام على الشباب."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-21",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-22",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-23",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-dia-24",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-01",
+      "lang": "ar",
+      "expected": [
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "database": "صممت قاعدة بيانات علائقية لنظام المكتبة وكتبت الاستعلامات اللازمة للتقارير."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-02",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "أعددت خطة اختبار وكتبت حالات اختبار للوحدات البرمجية الأساسية."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-03",
+      "lang": "ar",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "حللت الإجراءات الحالية في شؤون الطلاب ورسمت مخطط تدفق البيانات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-04",
+      "lang": "ar",
+      "expected": [
+        "ai-work"
+      ],
+      "predicted": [
+        {
+          "skillId": "ai-work",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "ai-work": "درّبت نموذج تعلم آلي للتنبؤ بتسرب الطلاب وقيّمت دقته."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-05",
+      "lang": "ar",
+      "expected": [
+        "cyber"
+      ],
+      "predicted": [
+        {
+          "skillId": "cyber",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "cyber": "طبقت التحقق الثنائي وشفّرت البيانات الحساسة في التطبيق."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-06",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-msa-07",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-01",
+      "lang": "en",
+      "expected": [
+        "software",
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "Built the booking app's backend in Node and wrote integration tests for the payment flow.",
+        "testing": "Built the booking app's backend in Node and wrote integration tests for the payment flow."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-02",
+      "lang": "en",
+      "expected": [
+        "systems-analysis"
+      ],
+      "predicted": [
+        {
+          "skillId": "systems-analysis",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "systems-analysis": "Interviewed the clinic staff and mapped how a patient request moves from reception to the doctor."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-03",
+      "lang": "en",
+      "expected": [
+        "db-operations"
+      ],
+      "predicted": [
+        {
+          "skillId": "db-operations",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "db-operations": "Configured nightly backups for the file server and tested restoring them."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-04",
+      "lang": "en",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "Analysed survey results with a t-test and reported the effect size."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-05",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-en-06",
+      "lang": "en",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-01",
+      "lang": "ar",
+      "expected": [
+        "software",
+        "database"
+      ],
+      "predicted": [
+        {
+          "skillId": "software",
+          "supported": true,
+          "correct": true
+        },
+        {
+          "skillId": "database",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "software": "سويت REST API بالـ Express وربطته بـ MongoDB.",
+        "database": "سويت REST API بالـ Express وربطته بـ MongoDB."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-02",
+      "lang": "ar",
+      "expected": [
+        "testing"
+      ],
+      "predicted": [
+        {
+          "skillId": "testing",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "testing": "كتبت unit tests للـ functions المهمة واستخدمت Jest."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-03",
+      "lang": "ar",
+      "expected": [
+        "web-development"
+      ],
+      "predicted": [
+        {
+          "skillId": "web-development",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "web-development": "صممت الـ UI بالـ Figma وبعدين نفذته بـ React و Tailwind."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-04",
+      "lang": "ar",
+      "expected": [
+        "project"
+      ],
+      "predicted": [
+        {
+          "skillId": "project",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "project": "رتبت الـ sprints على Jira وكنت أتابع الـ deadlines مع التيم."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-05",
+      "lang": "ar",
+      "expected": [
+        "statistics"
+      ],
+      "predicted": [
+        {
+          "skillId": "statistics",
+          "supported": true,
+          "correct": true
+        }
+      ],
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": false,
+      "correctAbstention": false,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {
+        "statistics": "استخدمت Python و pandas عشان أحلل الداتا وأطلع الـ correlation بين المتغيرات."
+      },
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-06",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    },
+    {
+      "id": "dev-dl-mix-07",
+      "lang": "ar",
+      "expected": [],
+      "predicted": [],
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "unsupported": 0,
+      "abstained": true,
+      "correctAbstention": true,
+      "wrongAbstention": false,
+      "falseAlarm": false,
+      "support": {},
+      "fallback": []
+    }
+  ]
+}

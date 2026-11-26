@@ -1,11 +1,15 @@
-import {test,expect} from './fixtures.js'
-import { openView, openPrivacySection, INSIGHT_CONSENT } from './nav.js'
+// Task 70: the old interface's profile start, saving panel and interests page are deleted. The snapshot is made in
+// Settings → Share a snapshot link and read by the interface (K34); the pathway search is Help → Reviewer tools (K30);
+// the SPARQL lab is reached by its old address (?view=knowledge → Help → the knowledge explorer).
+import {test,expect} from '@playwright/test'
+import { kamin } from './roles.js'
 import oxigraph from 'oxigraph'
 import AxeBuilder from '@axe-core/playwright'
 async function profile(page){
- await page.goto('/en/?start=profile')
- await page.getByRole('checkbox',{name:INSIGHT_CONSENT.en}).check()
- await page.getByRole('button',{name:'Start my profile',exact:true}).click()
+ const app=kamin(page,{ui:'new',lang:'en'})
+ await app.goToView('interests')
+ await app.click(app.interestsConsent(),'interests consent')
+ return app
 }
 async function lab(page){await page.goto('/en/?view=knowledge');await page.getByRole('tab',{name:'SPARQL lab',exact:true}).click()}
 async function bytes(download){const stream=await download.createReadStream();const chunks=[];for await(const chunk of stream)chunks.push(chunk);return Buffer.concat(chunks).toString('utf8')}
@@ -47,16 +51,24 @@ test('CSV and graph downloads contain real data with scoped named-graph preserva
  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBeNull()
 })
 test('encrypted snapshot is reviewed, opened locally, stripped from URL and never merged into a profile',async({page})=>{
- await profile(page)
- await page.locator('input[name="goal"][value="data"]').check()
- await page.getByRole('button',{name:'Profile saving options',exact:true}).click()
- await openPrivacySection(page,'share') // Task 27: the snapshot is in "Share with an advisor"
+ const app=await profile(page)
+ // Task 76: the goal is chosen on My plan's chips, so it is a pathway id (job-data-analyst). Task 70 had to use an old
+ // direction here ("Include my goal" failed with INVALID_SNAPSHOT); the link now carries the pathway and shows its name.
+ await app.openGoals()
+ await app.chooseGoal('data')
+ await expect.poll(()=>page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')).goal)).toBe('job-data-analyst')
+ // A reload stores the session in the form the app loads it (it adds insight.responses: {}), so the "never merged"
+ // check below compares like with like, as before (the old setup reloaded after writing the goal).
+ await page.reload()
+ await app.openSettingsSection('share')
  const section=page.locator('.snapshot-share')
  expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('kamin-session-v3')).approved)).toBe(false)
  await expect(section.locator('#snapshot-requirements')).toContainText('To share without a transcript')
  await expect(section.getByRole('button',{name:'Create encrypted link',exact:true})).toBeDisabled()
+ await expect(section.getByRole('checkbox',{name:'Include my goal: Data Analyst',exact:true})).toBeVisible()
  await section.getByRole('checkbox',{name:/Include my goal/}).check()
- await expect(section.locator('.snapshot-preview')).toContainText('Data')
+ await expect(section.locator('.snapshot-preview')).toContainText('Goal: Data Analyst')
+ await expect(section.locator('.snapshot-preview')).not.toContainText('job-data-analyst')
  await section.getByRole('checkbox',{name:/I reviewed the snapshot/}).check()
  await section.getByRole('button',{name:'Create encrypted link',exact:true}).click()
  const link=await section.locator('textarea').inputValue()
@@ -68,7 +80,7 @@ test('encrypted snapshot is reviewed, opened locally, stripped from URL and neve
  await expect(page.getByRole('heading',{name:'Shared capability snapshot',exact:true})).toBeVisible()
  expect(new URL(page.url()).hash).toBe('')
  await page.getByRole('button',{name:'Open snapshot locally',exact:true}).click()
- await expect(page.locator('.snapshot-preview')).toContainText('Data')
+ await expect(page.locator('.snapshot-preview')).toContainText('Goal: Data Analyst')
  expect(requests.some(url=>url.includes('payload=')||url.includes('&key='))).toBe(false)
  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
  const report=await new AxeBuilder({page}).analyze();expect(report.violations.filter(v=>['serious','critical'].includes(v.impact)),JSON.stringify(report.violations)).toEqual([])
@@ -97,7 +109,8 @@ test('legacy locale links land on one language path and canonical links stay con
 test('multilingual WASM recall loads only after opt-in, keeps text local and delegates explanation to the graph',async({page,context})=>{
  test.setTimeout(210000)
  const requests=[];context.on('request',request=>requests.push({url:request.url(),body:request.postData()}))
- await profile(page)
+ const app=await profile(page)
+ await page.goto('/en/?app=help#pathways')
  const section=page.locator('.semantic-recall')
  expect(requests.filter(r=>r.url.includes('/models/'))).toHaveLength(0)
  await section.getByText('Enable local exploration — optional',{exact:true}).click()
@@ -114,10 +127,10 @@ test('multilingual WASM recall loads only after opt-in, keeps text local and del
  }
  expect(requests.filter(r=>new URL(r.url).origin!==new URL(page.url()).origin)).toEqual([])
  expect(await page.evaluate(()=>sessionStorage.getItem('kamin-session-v3'))).toBe(before)
- const target=await section.locator('.recall-results h4').first().innerText()
+ // "Inspect pathway and evidence" opens step 4 (Help.jsx), where the pathways and their evidence are.
  await section.getByRole('button',{name:'Inspect pathway and evidence',exact:true}).first().click()
- await expect(page.getByLabel('Pathway to explore')).toContainText(target)
- await openView(page,'Interests & goal')
+ await expect(app.heading('next')).toBeVisible()
+ await page.goto('/en/?app=help#pathways')
  await page.locator('.semantic-recall').getByText('Enable local exploration — optional',{exact:true}).click()
  await page.getByRole('button',{name:'Stop and delete model files',exact:true}).click()
  expect(await page.evaluate(()=>caches.keys())).not.toContain('kamin-embedding-model-v1')

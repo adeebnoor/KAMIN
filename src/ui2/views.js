@@ -74,7 +74,7 @@ export const nextViewToParam = view => (NEXT_VIEWS.includes(view) ? view : null)
 export const paramToNextView = value => (!value ? null : NEXT_VIEWS.includes(value) ? value : oldAddress(value)?.view || 'home')
 
 // ---------- Task 69 · old addresses still land on a sensible view ----------
-// The old interface's view ids (src/navigation.js, ?app=<view>) and its menu's section ids, each with the nearest
+// The old interface's view ids (its src/navigation.js, deleted in Task 70; ?app=<view>) and its menu's section ids, each with the nearest
 // view of this interface and, where the old view showed one part of it, the Settings section or Help tool that holds
 // that part. A bookmark, a shared link or a page the student had open keeps working after the default changed.
 export const OLD_VIEW_ADDRESSES = Object.freeze({

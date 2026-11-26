@@ -1,0 +1,11 @@
+{
+  "file": "testset-dialect.json",
+  "sha256": "67010db0ecb5794fceab0313621bc61d831076ac7ee6b2e26bd50fbe9c2681bc",
+  "frozenAt": "2026-11-22",
+  "cases": 66,
+  "byLanguage": {
+    "ar": 56,
+    "en": 10
+  },
+  "harness": "kamin-eval-project-suggest-v1"
+}

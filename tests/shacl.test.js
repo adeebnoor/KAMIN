@@ -16,7 +16,10 @@ import { readTranscriptPages } from '../src/utils/transcript.js'
 import { canonicalCourseCode } from '../src/utils/profileQuality.js'
 import { profileSkills } from '../src/utils/engine.js'
 import { FIXTURES, FIXTURE_DIR } from '../scripts/make-transcript-fixtures.mjs'
-import { compareTerms } from '../scripts/ontology-terms.mjs'
+import { compareTerms, coverageGraph } from '../scripts/ontology-terms.mjs'
+import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
+import { buildInferenceDataset } from '../src/ontology/rdf.js'
+import { JSON_LD_CONTEXT } from '../src/ontology/registry.js'
 
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 const K = 'urn:kamin:'
@@ -139,5 +142,32 @@ describe('Task 33 · SHACL on each synthetic KAU transcript after approval', () 
   it('at least one transcript yields kamin:demonstrates claims, so the evidence shape is exercised', async () => {
     const counts = (await graphs).map(g => targets(g.dataset).demonstrates)
     expect(Math.max(...counts)).toBeGreaterThan(0)
+  })
+})
+
+// Task 78: the coverage profile of scripts/ontology-terms.mjs now holds three goals (one kamin:pursuesGoal claim each) and
+// three interest areas and three work values (one kamin:prefers:<scheme> claim each). Its workspace graph, with the
+// inference graph of every pathway, validates and uses only declared terms.
+describe('Task 78 · SHACL on a profile with 3 goals, 3 interest areas and 3 work values', () => {
+  const person = coverageGraph()
+  const dataset = buildWorkspaceDataset('personal', { personalGraph: person, allowPersonal: true })
+
+  it('the profile holds the claims the shapes must see: 3 goal claims and 3 + 3 preference claims', () => {
+    expect(person.claims.filter(c => c.predicate === 'kamin:pursuesGoal')).toHaveLength(3)
+    expect(person.claims.filter(c => c.predicate === 'kamin:prefers:careerInterest')).toHaveLength(3)
+    expect(person.claims.filter(c => c.predicate === 'kamin:prefers:workValue')).toHaveLength(3)
+    expect(targets(dataset).claims).toBeGreaterThan(10)
+  })
+
+  it('the workspace graph validates with 0 violations and uses only declared terms', async () => {
+    await expectConforms(dataset, 'coverage profile with several goals and values')
+    expect(compareTerms({ documents: [{ name: 'task-78', document: dataset }] }).undeclared).toEqual([])
+  })
+
+  it('the inference graph of every pathway validates with 0 violations', async () => {
+    const matches = matchTargets(buildMatchingProfile({ graph: person }), { lang: 'en' })
+    const inference = { '@context': JSON_LD_CONTEXT, '@graph': matches.flatMap(match => buildInferenceDataset(person, match)['@graph']) }
+    expect(matches.flatMap(m => m.inferences).filter(i => i.ruleId === 'R3').length).toBeGreaterThan(matches.length)
+    await expectConforms(inference, 'inference graph with several goals and values')
   })
 })

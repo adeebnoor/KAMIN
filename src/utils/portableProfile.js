@@ -1,6 +1,7 @@
 import { normalizeRecommendationReviews } from '../review/recommendations.js'
 import { normalizeDigitalInterests } from '../digitalInterests.js'
 import { normalizeFreeInterests } from '../interests/freeInterestState.js'
+import { normalizeDeclaredPreferences } from '../insight.js'
 import { normalizeProjectEvidence } from './projectEvidence.js'
 import { normalizeTaskProgress } from '../tasks/progress.js'
 import { normalizeCredentialRecords } from '../credentials/records.js'
@@ -84,7 +85,7 @@ export function buildPortableProfile({state,person360,appVersion='1.0.0'}={}){
         advisor:false,
         research:false,
       },
-      insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests),freeInterests:normalizeFreeInterests(state.insight.freeInterests)} : {},
+      insight:state.consents?.insight && state.insight && typeof state.insight==='object' ? {...state.insight,declaredPreferences:normalizeDeclaredPreferences(state.insight.declaredPreferences),digitalInterests:normalizeDigitalInterests(state.insight.digitalInterests),freeInterests:normalizeFreeInterests(state.insight.freeInterests)} : {},
       audit:cleanAuditEntries(state.audit,100), // Task 46: no old lines with a file name or project title
       recommendationReviews:normalizeRecommendationReviews(state.recommendationReviews),
       projects:normalizeProjectEvidence(state.projects),
@@ -119,7 +120,7 @@ export function normalizePortableState(payload){
       advisor:false,
       research:false,
     },
-    insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests),freeInterests:normalizeFreeInterests(source.insight.freeInterests)} : {},
+    insight:source.consents?.insight && source.insight && typeof source.insight==='object' ? {...source.insight,declaredPreferences:normalizeDeclaredPreferences(source.insight.declaredPreferences),digitalInterests:normalizeDigitalInterests(source.insight.digitalInterests),freeInterests:normalizeFreeInterests(source.insight.freeInterests)} : {},
     // Task 46: a backup made before Task 46 may hold usage-log lines with a file name or a project title.
     audit:cleanAuditEntries(safeArray(source.audit,100)),
     recommendationReviews:normalizeRecommendationReviews(source.recommendationReviews,{imported:true}),

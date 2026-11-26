@@ -1,4 +1,4 @@
-/* Task 61 · light and dark theme for the new interface (src/ui2, behind ?ui=next; loads with its lazy chunk
+/* Task 61 · light and dark theme for the new interface (src/ui2; loads with its lazy chunk
    only, so the old interface never reads this file and stays light only).
    The dark values use the SAME token names as public/brand.css, whose light values are not changed. Brand
    navy and gold stay the brand: the dark surfaces are deep navies derived from --navy (#0b2f5b), the text

@@ -25,10 +25,11 @@ export default function PathwayCompare({ lang, matches = [], profile, selected: 
   const toggle = id => setSelected(s => s.includes(id) ? s.filter(x => x !== id) : s.length >= 3 ? s : [...s, id])
   const have = new Set(profile?.skills || [])
   const preferences = profile?.preferences || {}
+  // Task 78: up to 3 interest areas and 3 work values; "aligned" when the pathway lists any of them.
   const constraint = (match, scheme, field) => {
-    const mine = preferences[scheme]
-    if (!mine) return tr(lang, 'لم تُحدد', 'not declared')
-    return (match[field] || []).includes(mine) ? tr(lang, 'متوافق', 'aligned') : tr(lang, 'مختلف', 'differs')
+    const mine = profile?.preferenceChoices?.[scheme] || (preferences[scheme] ? [preferences[scheme]] : [])
+    if (!mine.length) return tr(lang, 'لم تُحدد', 'not declared')
+    return mine.some(id => (match[field] || []).includes(id)) ? tr(lang, 'متوافق', 'aligned') : tr(lang, 'مختلف', 'differs')
   }
   return <section className="panel pathway-compare" data-testid="pathway-compare" aria-label={tr(lang, 'مقارنة المسارات', 'Pathway comparison')}>
     <div className="panel-head"><div>{!title && <small>{tr(lang, 'قارن قبل أن تختار', 'COMPARE BEFORE YOU CHOOSE')}</small>}<h3><Columns3 size={18}/> {title || tr(lang, 'مقارنة مسارين أو ثلاثة', 'Compare two or three pathways')}</h3></div></div>

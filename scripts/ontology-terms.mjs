@@ -13,7 +13,8 @@
 //   coverage-profile    projectStateToPerson360 on a made-up state that runs every projector branch
 //                       (courses with an edited row, capabilities, projects, task outputs and a local review,
 //                       credentials verified and not,
-//                       SASCED context, goal, all seven declared-preference schemes, digital interests)
+//                       SASCED context, three goals (Task 78: one goal claim each), all seven declared-preference
+//                       schemes with three values for interest areas and work values (Task 78), digital interests)
 //   coverage-inference  buildInferenceDataset (src/ontology/rdf.js) for that profile and every pathway
 //   coverage-workspace  buildWorkspaceDataset('personal') for that profile
 //   ict-kg              src/knowledge/ictKgV1.js, with the published JSON-LD context
@@ -25,7 +26,7 @@ import { pathToFileURL } from 'node:url'
 import oxigraph from 'oxigraph'
 import { demoCourses } from '../src/data.js'
 import { DIGITAL_METHOD, DIGITAL_NOTICE } from '../src/digitalInterests.js'
-import { DECLARED_PREFERENCE_SCHEMES } from '../src/insight.js'
+import { DECLARED_PREFERENCE_SCHEMES, MULTI_CHOICE_SCHEMES, PREFERENCE_CHOICES_MAX } from '../src/insight.js'
 import { buildWorkspaceDataset } from '../src/knowledge/workspace.js'
 import { ictKnowledgeGraph } from '../src/knowledge/ictKgV1.js'
 import { buildMatchingProfile, matchTargets } from '../src/matching/engine.js'
@@ -49,7 +50,7 @@ const RELATION_NAMES = new Set([`${KAMIN}predicate`, `${RDF}predicate`])
 // A made-up student state that reaches every branch of src/ontology/projector.js. No real person.
 export function coverageState(now = new Date('2026-11-18T00:00:00.000Z')) {
   const at = now.toISOString()
-  const declaredPreferences = Object.fromEntries(Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([scheme, { options }]) => [scheme, options[0].id]))
+  const declaredPreferences = Object.fromEntries(Object.entries(DECLARED_PREFERENCE_SCHEMES).map(([scheme, { options }]) => [scheme, MULTI_CHOICE_SCHEMES.includes(scheme) ? options.slice(0, PREFERENCE_CHOICES_MAX).map(o => o.id) : options[0].id]))
   const credentials = normalizeCredentialRecords([
     { id: 'credential-coverage-verified', credentialId: 'urn:uuid:coverage-verified', issuerId: 'did:example:fixture-university', issuerName: 'Fixture University (test only)', issuerTrusted: true, outcome: 'verified', reasons: [], importedAt: at, achievements: [{ id: 'urn:kamin:skill:statistics', name: 'Statistics' }] },
     { id: 'credential-coverage-unverified', credentialId: 'urn:uuid:coverage-unverified', issuerId: 'did:example:unknown', issuerTrusted: false, outcome: 'unverified', reasons: ['ISSUER_NOT_TRUSTED'], importedAt: at, achievements: [{ id: 'urn:kamin:skill:python', name: 'Python' }] },
@@ -59,6 +60,7 @@ export function coverageState(now = new Date('2026-11-18T00:00:00.000Z')) {
     // The demo courses, plus one transcript row with credit hours whose grade the student edited.
     courses: [...demoCourses, editCourseRow({ code: 'CPIT-221', name: 'Made-up course', grade: 'B', hours: 3, source: 'pdf' }, 'grade', 'A')],
     goal: 'data',
+    goals: ['data', 'job-data-analyst', 'job-cyber-analyst'],
     consents: { insight: true },
     projects: [{ id: 'coverage-project', title: 'Made-up SQL dashboard', kind: 'repository', url: 'urn:made-up:project-link', description: 'Synthetic project for the ontology coverage graph.', skillIds: ['database'], reviewStatus: 'unreviewed', createdAt: at }],
     tasks: recordLocalTaskReview(attachTaskOutput([], 'task-access-review', { note: 'Made-up output for the ontology coverage graph.' }, now), 'task-access-review', { reviewerLabel: 'Made-up peer', role: 'peer', scope: 'output', decision: 'reviewed' }, now),

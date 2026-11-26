@@ -1,72 +1,61 @@
-import { test, expect } from './fixtures.js'
-import { openMatch, openView, openOtherOptions, openPrivacySection, reloadLanding } from './nav.js'
+import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { readFile, mkdir } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
+import { kamin } from './roles.js'
+
+// Reviewing or contesting a recommendation (RecommendationReview.jsx, unchanged): local only, the test candidate carries
+// no profile data, acceptance is gated, a restored review needs a fresh confirmation, withdrawal clears reviews.
+// Task 70: rewritten on the interface: the review is in a next step's Details sheet (step 4, keep-test K37); the
+// history is Settings → Usage log; "Delete recommendation reviews" and the consents are Settings → Consents. (The old
+// interface reviewed a pathway on Matches; the interface reviews a next step, so the target is the step's item.)
 
 const text = (lang, ar, en) => lang === 'ar' ? ar : en
 const saved = page => page.evaluate(() => JSON.parse(sessionStorage.getItem('kamin-session-v3')))
 const reviews = async page => (await saved(page))?.recommendationReviews || []
-const card = page => page.locator('[data-review-key="pathway:job-data-analyst"]')
-async function click(page, name) {
-  await page.getByRole('button', { name, exact: true }).filter({ visible: true }).first().click()
-}
 async function openSample(page, lang) {
-  await page.goto(`/${lang}/`)
-  await page.getByRole('button', { name: text(lang, /افتح مساحة العمل/, /Open workspace/) }).first().click()
-  await page.getByRole('dialog').getByRole('button', { name: text(lang, 'جرّب المثال التوضيحي', 'Try synthetic demo'), exact: true }).click()
-  await page.getByRole('checkbox', { name: text(lang, /أوافق صراحةً/, /I explicitly consent/) }).check()
-  await click(page, text(lang, 'أعتمد السجل', 'Approve transcript'))
-  await openView(page, text(lang, 'فرصي', 'Matches'))
-  // Task 23: Review and Contest are in the pathway's opened row.
-  await openMatch(page, 'job-data-analyst')
-  await expect(card(page)).toBeVisible()
+  const app = kamin(page, { ui: 'new', lang })
+  await app.sample()
+  await app.home()
+  await app.openRecommendation()
+  await expect(app.review()).toBeVisible()
+  return app
 }
-async function saveContest(page, lang, note = 'PRIVATE synthetic reviewer note') {
-  const review = card(page)
+async function saveContest(app, lang, note = 'PRIVATE synthetic reviewer note') {
+  const review = app.review()
   await review.getByRole('button', { name: text(lang, 'أعترض على هذا الحكم', 'Contest this judgment'), exact: true }).click()
   await review.getByLabel(text(lang, 'اسم المراجع أو اسمه المستعار — محلي', 'Reviewer name or alias — local')).fill('PRIVATE synthetic reviewer')
   await review.getByLabel(text(lang, /ملاحظة محلية/, /Local note/)).fill(note)
   await review.getByRole('button', { name: text(lang, 'احفظ المراجعة محليًا', 'Save review locally') }).click()
-  await expect.poll(async () => (await reviews(page)).length).toBe(1)
+  await expect.poll(async () => (await reviews(app.page)).length).toBe(1)
 }
 
 for (const lang of ['ar', 'en']) {
-  test(`${lang}: contest is local, export omits personal data, and review form is accessible`, async ({ page }, testInfo) => {
+  test(`${lang}: contest is local, export omits personal data, and review form is accessible`, async ({ page }) => {
     const errors = []; const outbound = []
     page.on('pageerror', error => errors.push(error.message))
-    page.on('request', request => { if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') outbound.push(request.url()) })
-    await openSample(page, lang)
+    page.on('request', request => { if (!/^(data|blob):/.test(request.url()) && new URL(request.url()).origin !== 'http://127.0.0.1:4173') outbound.push(request.url()) })
+    const app = await openSample(page, lang)
     const before = await saved(page)
     const markup = '<img src=x onerror=window.__reviewPwned=1>'
-    await saveContest(page, lang, markup)
+    await saveContest(app, lang, markup)
     const record = (await reviews(page))[0]
     expect(record).toMatchObject({ action: 'contested', checks: [], timing: null, imported: false, note: markup })
     expect((await saved(page)).courses).toEqual(before.courses)
     expect((await saved(page)).approved).toBe(before.approved)
     const download = page.waitForEvent('download')
-    await card(page).getByRole('button', { name: text(lang, 'صدّر مرشح فحص بلا بيانات الملف', 'Export test candidate without profile data') }).click()
+    await app.review().getByRole('button', { name: text(lang, 'صدّر مرشح فحص بلا بيانات الملف', 'Export test candidate without profile data') }).click()
     const candidate = JSON.parse(await readFile(await (await download).path(), 'utf8'))
-    expect(candidate).toMatchObject({ status: 'unverified-candidate', automaticSubmission: false, confirmedDefect: false, target: { id: 'job-data-analyst' } })
+    expect(candidate).toMatchObject({ status: 'unverified-candidate', automaticSubmission: false, confirmedDefect: false })
+    expect(candidate.target.id).toBeTruthy()
     expect(JSON.stringify(candidate)).not.toContain('PRIVATE')
     expect(JSON.stringify(candidate)).not.toContain(markup)
     expect(candidate).not.toHaveProperty('fingerprint')
-    await card(page).getByRole('button', { name: text(lang, 'راجع هذا الحكم', 'Review this judgment'), exact: true }).click()
+    await app.review().getByRole('button', { name: text(lang, 'راجع هذا الحكم', 'Review this judgment'), exact: true }).click()
     const result = await new AxeBuilder({ page }).include('.recommendation-review').analyze()
     expect(result.violations.filter(v => ['serious', 'critical'].includes(v.impact))).toEqual([])
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-    const screenshotDir = `review-candidates/${testInfo.project.name}/${lang}`
-    await mkdir(screenshotDir, { recursive: true })
-    // Capture the real scrollable workspace, not an element screenshot clipped
-    // by the fixed-height dialog. Each part stays visible at the actual viewport.
-    for (const [part, target] of [
-      ['requirements', card(page).getByRole('heading', { level: 4 })],
-      ['decision', card(page).getByLabel(text(lang, 'قراري الآن', 'My decision now'))],
-      ['save', card(page).getByRole('button', { name: text(lang, 'احفظ المراجعة محليًا', 'Save review locally') })],
-    ]) {
-      await target.scrollIntoViewIfNeeded()
-      await page.screenshot({ path: `${screenshotDir}/${part}.png`, scale: 'css', animations: 'disabled' })
-    }
-    await openView(page, text(lang, 'سجل الاستخدام', 'Usage log'))
+    await page.keyboard.press('Escape')
+    await app.openUsageLog()
     await expect(page.locator('.review-history')).toContainText(markup)
     expect(await page.evaluate(() => window.__reviewPwned)).toBeUndefined()
     await expect(page.locator('.review-history img')).toHaveCount(0)
@@ -75,9 +64,9 @@ for (const lang of ['ar', 'en']) {
   })
 
   test(`${lang}: acceptance is gated, survives reload, can be withdrawn and cleared`, async ({ page }) => {
-    await openSample(page, lang)
+    const app = await openSample(page, lang)
     const before = await saved(page)
-    const review = card(page)
+    const review = app.review()
     await review.getByRole('button', { name: text(lang, 'راجع هذا الحكم', 'Review this judgment'), exact: true }).click()
     await review.getByLabel(text(lang, 'قراري الآن', 'My decision now')).selectOption('accepted')
     await review.getByLabel(text(lang, 'اسم المراجع أو اسمه المستعار — محلي', 'Reviewer name or alias — local')).fill('Synthetic reviewer')
@@ -90,53 +79,43 @@ for (const lang of ['ar', 'en']) {
     await save.click()
     await expect.poll(async () => (await reviews(page))[0]?.action).toBe('accepted')
     expect((await reviews(page))[0].timing).toMatchObject({ consented: true, interrupted: false })
-    await reloadLanding(page)
-    await page.getByRole('button', { name: text(lang, /افتح مساحة العمل/, /Open workspace/) }).first().click()
-    await openView(page, text(lang, 'فرصي', 'Matches'))
-    await openMatch(page, 'job-data-analyst')
-    await expect(review.locator('.review-status')).toHaveText(text(lang, 'أقبلها كخطوة استكشافية', 'Accept as an exploratory step'))
-    await openView(page, text(lang, 'لوحة قدراتي', 'Capability dashboard'))
-    await page.locator('.goal-options').getByRole('button', { name: text(lang, 'الإدارة والمشاريع', 'Management & projects'), exact: true }).click()
-    await openView(page, text(lang, 'فرصي', 'Matches'))
-    await openMatch(page, 'job-data-analyst')
-    await expect(review.locator('.review-status')).toHaveText(text(lang, 'تغيّرت المدخلات أو التوصية؛ أعد المراجعة', 'Inputs or recommendation changed; review again'))
-    await review.getByRole('button', { name: text(lang, 'اسحب قراري', 'Withdraw my decision') }).click()
+    // A reload: the same step's review says it was accepted.
+    await page.reload()
+    // (the goal chosen on the way in stays chosen: step 4 opens on it)
+    await app.goToView('next')
+    await app.openLearningPath()
+    await expect(app.review().locator('.review-status')).toHaveText(text(lang, 'أقبلها كخطوة استكشافية', 'Accept as an exploratory step'))
+    await app.review().getByRole('button', { name: text(lang, 'اسحب قراري', 'Withdraw my decision') }).click()
     expect((await reviews(page)).map(r => r.action)).toEqual(['withdrawn', 'accepted'])
     expect((await saved(page)).courses).toEqual(before.courses)
-    await openView(page, text(lang, 'الخصوصية', 'Privacy'))
-    await click(page, text(lang, 'احذف مراجعات التوصيات', 'Delete recommendation reviews'))
-    await click(page, text(lang, 'نعم، احذف المراجعات', 'Yes, delete reviews'))
+    await page.keyboard.press('Escape')
+    await app.openConsents()
+    const actions = page.locator('.review-privacy-actions')
+    await actions.locator('summary').click()
+    await actions.getByRole('button', { name: text(lang, 'احذف مراجعات التوصيات', 'Delete recommendation reviews'), exact: true }).click()
+    await page.getByRole('button', { name: text(lang, 'نعم، احذف المراجعات', 'Yes, delete reviews'), exact: true }).click()
     await expect.poll(async () => (await reviews(page)).length).toBe(0)
     expect((await saved(page)).courses).toEqual(before.courses)
     expect((await saved(page)).approved).toBe(true)
   })
 
   test(`${lang}: encrypted restore keeps reviews historical and consent withdrawal clears them`, async ({ page }) => {
-    await openSample(page, lang)
-    await saveContest(page, lang)
-    await openView(page, text(lang, 'الخصوصية', 'Privacy'))
-    await openPrivacySection(page, 'backup') // Task 27
+    const app = await openSample(page, lang)
+    await saveContest(app, lang)
+    await page.keyboard.press('Escape')
     const pass = 'synthetic review backup passphrase'
-    await page.getByLabel(text(lang, 'عبارة المرور', 'Passphrase'), { exact: true }).fill(pass)
-    await page.getByLabel(text(lang, /تأكيد العبارة/, /Confirm — export only/)).fill(pass)
-    const download = page.waitForEvent('download')
-    await click(page, text(lang, 'تنزيل نسخة مشفّرة', 'Download encrypted backup'))
-    const backup = await (await download).path()
+    const backup = await (await app.downloadBackup(pass)).path()
     expect(await readFile(backup, 'utf8')).not.toContain('PRIVATE')
     await page.evaluate(() => sessionStorage.clear())
-    await reloadLanding(page)
-    await page.getByRole('button', { name: text(lang, /افتح مساحة العمل/, /Open workspace/) }).first().click()
-    await openOtherOptions(page)
-    await click(page, text(lang, 'استعد ملفك المحفوظ', 'Restore your saved profile'))
-    // Task 05: restore uses its own passphrase field.
-    await page.getByLabel(text(lang, 'عبارة مرور النسخة المستعادة', 'Passphrase of the backup to restore'), { exact: true }).fill(pass)
-    await page.locator('input[type="file"][accept*=".kamin"]').setInputFiles(backup)
+    await page.goto(`/${lang}/`)
+    await app.restoreBackup(backup, pass)
     await expect.poll(async () => (await reviews(page))[0]?.imported).toBe(true)
-    await openView(page, text(lang, 'فرصي', 'Matches'))
-    await openMatch(page, 'job-data-analyst')
-    await expect(card(page).locator('.review-status')).toHaveText(text(lang, 'مراجعة مستعادة؛ يلزم تأكيد جديد', 'Restored review; fresh confirmation needed'))
-    await openView(page, text(lang, 'الخصوصية', 'Privacy'))
-    await page.locator('.consents label').first().getByRole('checkbox').uncheck()
+    await app.goToView('next')
+    await app.openLearningPath()
+    await expect(app.review().locator('.review-status')).toHaveText(text(lang, 'مراجعة مستعادة؛ يلزم تأكيد جديد', 'Restored review; fresh confirmation needed'))
+    await page.keyboard.press('Escape')
+    await app.openConsents()
+    await app.consent('analyze').uncheck()
     await expect.poll(async () => (await reviews(page)).length).toBe(0)
     expect((await saved(page)).approved).toBe(false)
   })

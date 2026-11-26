@@ -28,7 +28,7 @@ describe('pilot analytics privacy boundary',()=>{
   // record, the funnel events and clearing (228 KiB budget).
   it('the count events and the study file stay out of the startup modules', () => {
     for (const name of COUNT_EVENTS) expect(PILOT_EVENT_NAMES).not.toContain(name)
-    for (const file of ['src/utils/pilotAnalytics.js', 'src/App.jsx', 'src/main.jsx', 'src/state/useKaminProfile.js', 'src/ui2/AppNext.jsx', 'src/components/privacy/DeleteSection.jsx'])
+    for (const file of ['src/utils/pilotAnalytics.js', 'src/main.jsx', 'src/state/useKaminProfile.js', 'src/ui2/AppNext.jsx', 'src/components/privacy/DeleteSection.jsx'])
       expect(code(file), file).not.toMatch(/pilot\/study(File|Counts)/)
     expect(code('src/components/PilotStudy.jsx')).toContain("from '../pilot/studyFile.js'")
     for (const file of ['src/ui2/screens/Projects.jsx', 'src/ui2/screens/NextSteps.jsx', 'src/ui2/screens/Plan.jsx'])

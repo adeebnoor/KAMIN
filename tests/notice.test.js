@@ -29,7 +29,8 @@ describe('notice timing', () => {
   })
 
   it('the old floating toast and its fixed 4.2 s timer are gone', () => {
-    const app = readFileSync('src/App.jsx', 'utf8'), css = readFileSync('src/styles.css', 'utf8')
+    // Task 70: the old interface (src/App.jsx) is deleted; the interface's own code must not bring the toast back.
+    const app = ['src/ui2/AppNext.jsx', 'src/ui2/Notice.jsx'].map(f => readFileSync(f, 'utf8')).join('\n'), css = readFileSync('src/styles.css', 'utf8')
     expect(app).not.toMatch(/className="toast"|4200/)
     expect(css).not.toMatch(/\.toast\b/)
     expect(css).toMatch(/\.notice-slot\{flex:0 0 auto\}/)

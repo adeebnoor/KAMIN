@@ -2,11 +2,11 @@
 // src/state/useKaminProfile.js, is not changed). They load with step 3's lazy chunk only.
 // The interests consent and the chosen chips keep today's stored shape: consents.insight, and
 // insight.declaredPreferences.careerInterest / .workValue with the same option ids as the old screen
-// (src/insight.js; one choice per question). Interests in the student's own words keep Task 56's shape
+// (src/insight.js). Task 78: up to 3 choices per question, stored as lists (togglePreferenceChoice). Interests in the student's own words keep Task 56's shape
 // (src/interests/freeInterestState.js); understanding a sentence needs the local engine
 // (src/interests/freeText.js), which step 3 loads only when the student presses Add.
 // Nothing here touches courses, projects, capabilities or evidence: an interest is a goal signal, never evidence.
-import { INSIGHT_VERSION, setDeclaredPreference } from '../insight.js'
+import { INSIGHT_VERSION, PREFERENCE_CHOICES_MAX, preferenceValues, togglePreferenceChoice } from '../insight.js'
 import { FREE_INTEREST_METHOD, normalizeFreeInterests } from '../interests/freeInterestState.js'
 // Task 66: the consent and the two chip questions live in interestsConsent.js (Profile asks for the same consent).
 import { CHIP_QUESTIONS, grantInterests, insightOf } from './interestsConsent.js'
@@ -16,18 +16,20 @@ export { CHIP_QUESTIONS, grantInterests }
 const stamp = (state, insight) => ({ ...state, insight: { ...insight, version: INSIGHT_VERSION, updatedAt: new Date().toISOString() } })
 const withFree = (state, freeInterests) => stamp(state, { ...insightOf(state), freeInterests: normalizeFreeInterests(freeInterests) })
 
-// Tap a chip: choose it (it replaces the other choice of the same question), or tap the chosen one to remove it.
-// Nothing is saved without the interests consent.
+// Tap a chip: choose it (Task 78: added to the others, up to 3 per question), or tap a chosen one to remove it.
+// A 4th choice leaves the state unchanged. Nothing is saved without the interests consent.
 export function tapPreference(state, schemeId, optionId) {
   if (!state?.consents?.insight) return state
   const insight = insightOf(state)
-  if (insight.declaredPreferences?.[schemeId] === optionId) {
-    const declaredPreferences = { ...insight.declaredPreferences }
-    delete declaredPreferences[schemeId]
-    return stamp(state, { ...insight, declaredPreferences })
-  }
-  return { ...state, insight: setDeclaredPreference(insight, schemeId, optionId) }
+  const next = togglePreferenceChoice(insight, schemeId, optionId)
+  return next === insight ? state : { ...state, insight: next }
 }
+
+/** The chosen option ids of one question, as a list (an old single value is a one-item list). */
+export const chosenOf = (state, schemeId) => preferenceValues(state?.insight?.declaredPreferences, schemeId)
+/** Whether a question already has its 3 choices. */
+export const questionFull = (state, schemeId) => chosenOf(state, schemeId).length >= PREFERENCE_CHOICES_MAX
+export { PREFERENCE_CHOICES_MAX }
 
 // Turn one understood chip off (it stays listed, so it can be turned back on) or on again. The sentence and the
 // other chips stay. The same change as Task 56's setChipRemoved, without loading the engine.
@@ -72,6 +74,5 @@ export function restoreFreeInterest(state, entry, index) {
 
 // Whether the student has chosen or written anything on step 3.
 export function hasInterests(state) {
-  const prefs = state?.insight?.declaredPreferences || {}
-  return CHIP_QUESTIONS.some(id => prefs[id]) || normalizeFreeInterests(state?.insight?.freeInterests).length > 0
+  return CHIP_QUESTIONS.some(id => chosenOf(state, id).length) || normalizeFreeInterests(state?.insight?.freeInterests).length > 0
 }

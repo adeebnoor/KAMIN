@@ -94,7 +94,11 @@ export function indexPersonGraph(graph){
   const capabilities=new Map()
   const preferences=new Map()
   const digitalInterests=[]
-  let goal=null
+  // Task 78: every chosen goal (one kamin:pursuesGoal claim each, the main goal first) and every chosen value of a
+  // preference scheme (up to 3 for interest areas and work values), in claim order. `goal` stays the main goal and
+  // `preferences` maps a scheme to its first value, as before; `goals` and `preferenceChoices` hold them all.
+  const goals=[]
+  const preferenceChoices=new Map()
 
   for(const claim of claims){
     const object=entities.get(claim.object)
@@ -152,23 +156,29 @@ export function indexPersonGraph(graph){
       if(!topic || !object || claim.status!=='active' || claim.consentPurpose!==DIGITAL_PURPOSE || claim.metadata?.contextAllowed!==true || claim.metadata?.reviewStatus!=='student-confirmed' || claim.metadata?.methodVersion!==DIGITAL_METHOD || consent?.status!=='active' || consent?.consentPurpose!==DIGITAL_PURPOSE || consent?.metadata?.noticeVersion!==DIGITAL_NOTICE || consent?.metadata?.contextAllowed!==true || !evidence || evidence.metadata?.reviewStatus!=='student-confirmed' || !claim.generatedAtTime) continue
       digitalInterests.push({topicId:topic.id,label:topic.label,objectId:claim.object,claimId:claim['@id'],evidenceId:claim.source})
     }else if(claim.predicate==='kamin:pursuesGoal'){
-      goal={
+      const entry={
         key:object?.notation||String(claim.object||'').split(':').pop()||null,
         claimId:claim['@id'],
         objectId:claim.object,
         source:claim.source,
       }
+      if(!goals.some(item=>item.key===entry.key)) goals.push(entry)
     }else if(String(claim.predicate||'').startsWith('kamin:prefers:')){
       const scheme=claim.predicate.slice('kamin:prefers:'.length)
-      preferences.set(scheme,{
+      const entry={
         scheme,
         key:object?.notation||String(claim.object||'').split(':').pop()||null,
         claimId:claim['@id'],
         objectId:claim.object,
         source:claim.source,
-      })
+      }
+      const list=preferenceChoices.get(scheme)||[]
+      if(!list.some(item=>item.key===entry.key)) preferenceChoices.set(scheme,[...list,entry])
     }
   }
+
+  for(const [scheme,list] of preferenceChoices) preferences.set(scheme,list[0])
+  const goal=goals[0]||null
 
   const academicContexts=claims
     .filter(claim=>claim.predicate==='kamin:academicContext')
@@ -185,8 +195,10 @@ export function indexPersonGraph(graph){
     claims,
     capabilities,
     preferences,
+    preferenceChoices,
     digitalInterests,
     goal,
+    goals,
     academicContexts,
   }
 }

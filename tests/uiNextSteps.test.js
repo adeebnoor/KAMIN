@@ -8,7 +8,7 @@
 // aligns with its pathway in matching while the old four directions match exactly as before; and both screens load on
 // their own (the feed and the learning list only on demand), with no change to the startup modules beyond the
 // matching rule.
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { createElement } from 'react'
@@ -37,6 +37,17 @@ import { COURSE_EVIDENCE_PRINCIPLE } from '../src/content/trustCopy.js'
 import { LEARNING_PATH_COPY } from '../src/content/learningPathCopy.js'
 import { PATHWAY_COPY } from '../src/content/pathwayCopy.js'
 import { SAVE_OFFER, saveOffer } from '../src/content/saveOfferCopy.js'
+// Task 79
+import Roadmap from '../src/ui2/components/Roadmap.jsx'
+import { loadRoadmaps } from '../src/ui2/useRoadmaps.js'
+import { loadStepsEngine } from '../src/ui2/useStepsEngine.js'
+import { capabilityName } from '../src/ui2/capabilityName.js'
+import { fillIn } from '../src/ui2/copy.js'
+import { goalLabelOf } from '../src/components/ShowConnections.jsx'
+import { blankState, hasMeaningfulProfileState, normalizeState } from '../src/state/profileState.js'
+import { buildPortableProfile, normalizePortableState } from '../src/utils/portableProfile.js'
+import { deleteEverythingPreview, withdrawConsent } from '../src/utils/dataControl.js'
+import { skills as skillCatalog } from '../src/data.js'
 
 const LANGS = ['ar', 'en']
 const read = file => readFileSync(file, 'utf8').replace(/\r\n/g, '\n')
@@ -314,10 +325,11 @@ describe('Task 65 · a pathway goal in matching; the four directions unchanged',
 })
 
 describe('Task 65 · shared sentences live in one place for both interfaces', () => {
-  it('the save offer: the dashboard, the old app and My plan read src/content/saveOfferCopy.js; nobody holds a copy', () => {
+  // Task 70: the old app (src/App.jsx) is deleted; My plan and Settings say "kept" through the same file.
+  it('the save offer: the dashboard, My plan and Settings read src/content/saveOfferCopy.js; nobody holds a copy', () => {
     expect(read('src/components/Dashboard.jsx')).toMatch(/saveOffer\('question', lang\)/)
-    expect(read('src/App.jsx')).toMatch(/saveOffer\('kept',lang\)/)
     expect(read('src/ui2/screens/Plan.jsx')).toMatch(/saveOffer\('question', lang\)/)
+    for (const file of ['src/ui2/screens/Plan.jsx', 'src/ui2/screens/Settings.jsx']) expect(read(file), file).toMatch(/saveOffer\('kept', lang\)/)
     // ("Not now" and "Yes, keep my profile" are short words other screens use too; the four sentences are checked.)
     const sentences = ['question', 'detail', 'kept', 'savedNote'].map(key => SAVE_OFFER[key])
     for (const file of sourceFiles('src').filter(f => !f.endsWith('saveOfferCopy.js'))) for (const [ar, en] of sentences) {
@@ -325,10 +337,9 @@ describe('Task 65 · shared sentences live in one place for both interfaces', ()
       expect(read(file), `${file}`).not.toContain(ar)
     }
   })
-  it('the pathway sentences and the learning list\'s words: MatchList/LearningPath and step 4 import the same files', () => {
-    expect(read('src/components/MatchList.jsx')).toMatch(/PATHWAY_COPY\.provisional\[lang\]/)
+  // Task 70: the old MatchList.jsx and LearningPath.jsx are deleted; step 4 still reads the two shared files.
+  it('the pathway sentences and the learning list\'s words: step 4 imports the shared files and nobody holds a copy', () => {
     expect(read('src/ui2/components/GoalPicker.jsx')).toMatch(/PATHWAY_COPY\.provisional\[lang\]/)
-    expect(read('src/components/LearningPath.jsx')).toMatch(/const T = LEARNING_PATH_COPY/)
     expect(read('src/ui2/components/StepCard.jsx')).toMatch(/LEARNING_PATH_COPY\[lang\]/)
     for (const file of sourceFiles('src').filter(f => !/(pathwayCopy|learningPathCopy)\.js$/.test(f))) for (const lang of LANGS) {
       expect(read(file), file).not.toContain(PATHWAY_COPY.provisional[lang])
@@ -368,10 +379,12 @@ describe('Task 65 · step 4 and My plan load on their own; the startup modules s
     expect(staticImporters("components/(StepCard|GoalPicker)\\.jsx'").sort()).toEqual(['src/ui2/screens/NextSteps.jsx', 'src/ui2/screens/Plan.jsx'])
   })
   it('the startup modules never import planEdits.js (it loads with the screens)', () => {
-    for (const file of ['src/plan/plan.js', 'src/state/profileState.js', 'src/state/useKaminProfile.js', 'src/App.jsx', 'src/main.jsx']) expect(read(file).replace(/^\s*\/\/.*$/gm, ''), file).not.toContain('planEdits')
+    for (const file of ['src/plan/plan.js', 'src/state/profileState.js', 'src/state/useKaminProfile.js', 'src/main.jsx']) expect(read(file).replace(/^\s*\/\/.*$/gm, ''), file).not.toContain('planEdits')
   })
-  it('the old pathway comparison is reused unchanged in the old interface (it passes no starting choice)', () => {
-    expect(read('src/App.jsx')).not.toMatch(/<PathwayCompare[^>]*initial=/)
+  // Task 70: the old interface (src/App.jsx, which passed no starting choice) is deleted; My plan is the one user.
+  it('the old pathway comparison is reused unchanged; My plan passes its starting choice', () => {
+    const users = sourceFiles('src').map(f => f.split(path.sep).join('/')).filter(f => /<PathwayCompare\b/.test(read(f)))
+    expect(users).toEqual(['src/ui2/screens/Plan.jsx'])
     expect(read('src/ui2/screens/Plan.jsx')).toMatch(/<PathwayCompare [^>]*initial=\{compareStart\(goals, derived\.matches\)\}/)
   })
   // Task 44 landed: the hook comments Task 65 left are wired. The buttons record one count each through
@@ -398,15 +411,15 @@ function fillStep(lang) { return NEXT_COPY[lang].steps.step.replace('{n}', '4').
 
 // ---------- Task 74 · the development plan in My plan (K08) and the review in step 4's Details (K37) ----------
 describe('Task 74 · K08: one development plan for both interfaces, inside My plan', () => {
-  it('the plan code and words live in src/plan/developmentPlan.jsx; "Show connections" imports them and holds no copy', async () => {
+  // Task 70: "Show connections" (src/components/DecisionStudio.jsx) is deleted; My plan's goal picker (the plan) and My map
+  // (its status line, planStatus) are the users.
+  it('the plan code and words live in src/plan/developmentPlan.jsx; only My plan\'s goal picker imports it and nobody holds a copy', async () => {
     const shared = await import('../src/plan/developmentPlan.jsx')
-    const studio = await import('../src/components/DecisionStudio.jsx')
-    expect(studio.buildDevelopmentPlan, 'the same function, re-exported').toBe(shared.buildDevelopmentPlan)
-    const source = read('src/components/DecisionStudio.jsx')
-    expect(source).toMatch(/import \{ DevelopmentPlanPanel, buildDevelopmentPlan, planStatus \} from '\.\.\/plan\/developmentPlan\.jsx'/)
-    expect(source).toMatch(/\{active === 'plan' && <DevelopmentPlanPanel lang=\{lang\} match=\{match\} state=\{state\}\/>\}/)
-    for (const words of ['The plan does not change skills or matching results', 'kamin-development-plan.txt', 'Review your starting point', 'This plan does not change profile evidence or fit judgments.'])
-      expect(source, `"${words}" is not copied into DecisionStudio.jsx`).not.toContain(words)
+    expect(typeof shared.buildDevelopmentPlan).toBe('function')
+    const files = sourceFiles('src').map(f => f.split(path.sep).join('/'))
+    expect(files.filter(f => /^import[^\n]*plan\/developmentPlan\.jsx'/m.test(read(f)))).toEqual(['src/ui2/components/ConnectionsMap.jsx', 'src/ui2/components/GoalPicker.jsx'])
+    for (const file of files.filter(f => f !== 'src/plan/developmentPlan.jsx')) for (const words of ['The plan does not change skills or matching results', 'kamin-development-plan.txt', 'Review your starting point', 'This plan does not change profile evidence or fit judgments.'])
+      expect(read(file), `"${words}" is not copied into ${file}`).not.toContain(words)
   })
 
   it('four steps for every pathway of the example, in both languages, with the sentences of the old plan', async () => {
@@ -429,8 +442,10 @@ describe('Task 74 · K08: one development plan for both interfaces, inside My pl
     const picker = read('src/ui2/components/GoalPicker.jsx')
     expect(picker).toMatch(/import \{ DevelopmentPlanPanel \} from '\.\.\/\.\.\/plan\/developmentPlan\.jsx'/)
     expect(picker).toMatch(/planState=\{withPlan \? state : null\}/)
-    expect(read('src/components/MatchList.jsx'), 'a Matches row\'s link').toContain(`lang==='ar'?'${NEXT_COPY.ar.next.openPlan}':'${NEXT_COPY.en.next.openPlan}'`)
-    expect(read('src/components/DecisionStudio.jsx'), '"Show connections"\' tab').toContain(`tr(lang, '${NEXT_COPY.ar.next.planTitle}', '${NEXT_COPY.en.next.planTitle}')`)
+    // Task 70: the old Matches row (MatchList.jsx) and "Show connections" tab (DecisionStudio.jsx) are deleted; their words,
+    // read from those files at b443bad, stay word for word.
+    expect([NEXT_COPY.ar.next.openPlan, NEXT_COPY.en.next.openPlan], 'a Matches row\'s link').toEqual(['افتح خطة هذا المسار', 'Open this pathway’s plan'])
+    expect([NEXT_COPY.ar.next.planTitle, NEXT_COPY.en.next.planTitle], '"Show connections"\' tab').toEqual(['خطة التطوير', 'Development plan'])
     // My plan's page itself gets no new control (its budget of visible controls stays 33).
     const budget = JSON.parse(read('e2e/usability-budget.json')).newInterface.choices
     expect(budget.plan).toBe(33)
@@ -462,5 +477,266 @@ describe('Task 74 · K37: review or contest a next step in its Details sheet', (
   it('the new words: the same keys in both languages, no percentage', () => {
     expect(Object.keys(NEXT_COPY.ar.next)).toEqual(Object.keys(NEXT_COPY.en.next))
     for (const lang of LANGS) for (const key of ['openPlan', 'planTitle', 'reviewHistory']) expect(NEXT_COPY[lang].next[key]).toBeTruthy()
+  })
+})
+
+// ---------- Task 79 · a roadmap and certifications per pathway; step 4 never says "No gap" when the list is empty ----------
+// (Added to this file, not a new one, so the tests page's file count stays the same.)
+describe('Task 79 · roadmaps', () => {
+  const ROADMAPS = JSON.parse(read('src/catalog/roadmaps.json'))
+  const NOTE = 'written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)'
+  const RESOURCES = new Map(ROADMAPS.resources.map(r => [r.id, r]))
+  const CERTS = new Map(ROADMAPS.certifications.map(c => [c.id, c]))
+  const SKILL_IDS = new Set(Object.keys(skillCatalog))
+  const ARABIC = /[؀-ۿ]/
+  const bilingual = (value, where) => {
+    for (const lang of LANGS) expect(String(value?.[lang] || '').trim(), `${where} ${lang}`).not.toBe('')
+    expect(value.ar, `${where} ar is Arabic`).toMatch(ARABIC)
+  }
+  let roadmap, loaded
+  beforeAll(async () => {
+    roadmap = await import('../src/roadmap/roadmap.js')
+    loaded = await loadRoadmaps()
+    await loadStepsEngine()
+  })
+
+  describe('the data (src/catalog/roadmaps.json)', () => {
+    it('one roadmap for every pathway the app has, and none for anything else', () => {
+      expect(ROADMAPS.version).toBe('kamin-roadmaps-v1')
+      expect(ROADMAPS.roadmaps.map(r => r.pathwayId).sort()).toEqual(targetProfiles.map(t => t.id).sort())
+    })
+    it('stages: ordered 1..n, 3 to 6 of them, each with what to learn and why in both languages, known capabilities and 2-4 distinct free resources', () => {
+      for (const r of ROADMAPS.roadmaps) {
+        expect(r.stages.length, r.pathwayId).toBeGreaterThanOrEqual(3)
+        expect(r.stages.length, r.pathwayId).toBeLessThanOrEqual(6)
+        expect(r.stages.map(s => s.order), r.pathwayId).toEqual(r.stages.map((_, i) => i + 1))
+        expect(new Set(r.stages.map(s => s.id)).size, r.pathwayId).toBe(r.stages.length)
+        for (const s of r.stages) {
+          const where = `${r.pathwayId}/${s.id}`
+          expect(s.id, where).toMatch(/^[\w-]{1,32}$/)
+          for (const field of ['title', 'learn', 'why']) bilingual(s[field], `${where} ${field}`)
+          for (const cap of s.capabilities) expect(SKILL_IDS.has(cap), `${where} capability ${cap}`).toBe(true)
+          expect(s.resources.length, where).toBeGreaterThanOrEqual(2)
+          expect(s.resources.length, where).toBeLessThanOrEqual(4)
+          expect(new Set(s.resources).size, where).toBe(s.resources.length)
+          for (const id of s.resources) expect(RESOURCES.has(id), `${where} resource ${id}`).toBe(true)
+        }
+        // Every roadmap builds at least one capability.
+        expect(r.stages.flatMap(s => s.capabilities).length, r.pathwayId).toBeGreaterThan(0)
+      }
+    })
+    it('certifications: the most important ones per pathway, each known, with why, take it / optional / later, and when', () => {
+      for (const r of ROADMAPS.roadmaps) {
+        expect(r.certifications.length, r.pathwayId).toBeGreaterThan(0)
+        expect(new Set(r.certifications.map(c => c.id)).size, r.pathwayId).toBe(r.certifications.length)
+        for (const c of r.certifications) {
+          expect(CERTS.has(c.id), `${r.pathwayId} ${c.id}`).toBe(true)
+          expect(roadmap.RECOMMENDATIONS, `${r.pathwayId} ${c.id}`).toContain(c.recommendation)
+          bilingual(c.why, `${r.pathwayId}/${c.id} why`)
+          bilingual(c.when, `${r.pathwayId}/${c.id} when`)
+        }
+      }
+      for (const c of ROADMAPS.certifications) {
+        expect(c.issuer.trim(), c.id).not.toBe('')
+        bilingual(c.name, `${c.id} name`)
+      }
+    })
+    it('every entry has source, language, "proposed" and the note; resources are free, https, of a known kind; YouTube only as channels or playlists', () => {
+      const kinds = Object.keys(NEXT_COPY.en.roadmap.kind)
+      for (const entry of [...ROADMAPS.resources, ...ROADMAPS.certifications, ...ROADMAPS.roadmaps]) {
+        const id = entry.id || entry.pathwayId
+        expect(entry.status, id).toBe('proposed')
+        expect(entry.note, id).toBe(NOTE)
+        expect(String(entry.source || '').trim(), id).not.toBe('')
+        for (const lang of [entry.language].flat()) expect(LANGS, id).toContain(lang)
+      }
+      for (const r of ROADMAPS.resources) {
+        expect(r.free, r.id).toBe(true)
+        expect(kinds, r.id).toContain(r.kind)
+        bilingual(r.title, `${r.id} title`)
+        if (/youtube\.com/.test(r.url)) { expect(r.kind, r.id).toMatch(/^youtube-(channel|playlist)$/); expect(r.url, r.id).not.toMatch(/watch\?v=(?!.*list=)/) }
+      }
+      for (const entry of [...ROADMAPS.resources, ...ROADMAPS.certifications]) expect(entry.url, entry.id).toMatch(/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}(\/|$)/)
+      expect(ROADMAPS.status).toBe('proposed')
+      expect(ROADMAPS.note).toBe(NOTE)
+    })
+    it('every resource and certification is used by a roadmap; no price anywhere', () => {
+      const usedResources = new Set(ROADMAPS.roadmaps.flatMap(r => r.stages.flatMap(s => s.resources)))
+      const usedCerts = new Set(ROADMAPS.roadmaps.flatMap(r => r.certifications.map(c => c.id)))
+      expect([...RESOURCES.keys()].filter(id => !usedResources.has(id))).toEqual([])
+      expect([...CERTS.keys()].filter(id => !usedCerts.has(id))).toEqual([])
+      const text = JSON.stringify({ ...ROADMAPS, rules: '' }).replace(/https:\/\/[^"]+/g, '')
+      // («رسوم» is left out: it also means "charts", which the data analyst stages use.)
+      expect(text).not.toMatch(/[$€£]|\b(USD|SAR|EUR|price|prices|cost|fee|fees)\b|ريال|دولار|سعر|أسعار|تكلفة/i)
+      for (const lang of LANGS) expect(JSON.stringify(NEXT_COPY[lang].roadmap)).not.toMatch(/[$€£]|\bUSD\b|\bSAR\b|ريال|دولار/)
+    })
+    it('the links were checked from a laptop with scripts/check-roadmap-links.mjs: none dead', () => {
+      expect(ROADMAPS.linksChecked.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(ROADMAPS.linksChecked.dead).toBe(0)
+      expect(ROADMAPS.linksChecked.total).toBe(new Set([...ROADMAPS.resources, ...ROADMAPS.certifications].map(e => e.url)).size)
+    })
+  })
+
+  describe('ticks: saved with the plan, untickable, removed with the consent and by Delete everything, never evidence', () => {
+    const KEY = 'job-data-analyst:basics:khan-stats'
+    it('an old profile without the field loads with no ticks; malformed keys are dropped; at most 300', () => {
+      expect(normalizePlan({}).roadmapDone).toEqual([])
+      expect(normalizeState({ courses: [], goal: 'job-data-analyst' }).roadmapDone).toEqual([])
+      expect(normalizePlan({ roadmapDone: [KEY, KEY, 'nope', 42, 'a:b', 'x:y:z<script>'] }).roadmapDone).toEqual([KEY])
+      expect(normalizePlan({ roadmapDone: Array.from({ length: 400 }, (_, i) => `p:s:r${i}`) }).roadmapDone).toHaveLength(300)
+      expect(blankState.roadmapDone).toEqual([])
+      expect(hasMeaningfulProfileState({ roadmapDone: [KEY] })).toBe(true)
+    })
+    it('tick and untick are pure; ticking twice keeps one; the progress is a count', () => {
+      const ticked = roadmap.tickRoadmapItem(SAMPLE, KEY, true)
+      expect(ticked.roadmapDone).toEqual([KEY])
+      expect(roadmap.tickRoadmapItem(ticked, KEY, true).roadmapDone).toEqual([KEY])
+      expect(roadmap.isTicked(ticked, KEY)).toBe(true)
+      expect(roadmap.tickRoadmapItem(ticked, KEY, false).roadmapDone).toEqual([])
+      expect(SAMPLE.roadmapDone).toBeUndefined()
+      const r = roadmap.roadmapFor(loaded, 'job-data-analyst')
+      const progress = roadmap.roadmapProgress(r, ticked)
+      expect(progress.done).toBe(1)
+      expect(progress.total).toBe(r.stages.reduce((n, s) => n + s.items.length, 0))
+      expect(progress.stages.basics).toEqual({ done: 1, total: r.stages[0].items.length })
+      expect(roadmap.roadmapFor(loaded, 'no-such-pathway')).toBeNull()
+    })
+    it('a backup keeps the ticks; an older backup without them restores with none', () => {
+      const state = { ...roadmap.tickRoadmapItem(SAMPLE, KEY, true), consents: { analyze: true, insight: true } }
+      const restored = normalizePortableState(JSON.parse(JSON.stringify(buildPortableProfile({ state }))))
+      expect(restored.roadmapDone).toEqual([KEY])
+      const old = buildPortableProfile({ state })
+      delete old.state.roadmapDone
+      expect(normalizePortableState(old).roadmapDone).toEqual([])
+    })
+    it('withdrawing the interests consent removes every tick and says so; Delete everything lists them and leaves none', () => {
+      for (const lang of LANGS) {
+        const state = roadmap.tickRoadmapItem(roadmap.tickRoadmapItem({ ...SAMPLE, consents: { analyze: true, insight: true } }, KEY, true), 'job-data-analyst:core:cs50sql', true)
+        const result = withdrawConsent(state, 'insight', { lang })
+        expect(result.state.roadmapDone).toEqual([])
+        expect(result.summary.sentences[lang].join(' ')).toMatch(lang === 'ar' ? /أُزيلت 2 علامة إنجاز من خرائط الطريق/ : /2 roadmap tick\(s\) were removed/)
+        const preview = deleteEverythingPreview(state, lang)
+        expect(preview.items).toContainEqual({ label: lang === 'ar' ? 'علامات إنجاز في خرائط الطريق' : 'ticked roadmap items', count: 2 })
+      }
+      // "Delete everything" resets the profile to the blank state (src/state/useKaminProfile.js).
+      expect(read('src/state/useKaminProfile.js')).toContain('setState(normalizeState(blankState))')
+      expect(normalizeState(blankState).roadmapDone).toEqual([])
+    })
+    it('never evidence: ticking every item of every roadmap changes no capability, level, graph claim or match', () => {
+      let all = SAMPLE
+      for (const r of ROADMAPS.roadmaps) for (const s of r.stages) for (const id of s.resources) all = { ...all, roadmapDone: [...(all.roadmapDone || []), roadmap.itemKey(r.pathwayId, s.id, id)] }
+      const ticked = normalizeState(all), plain = normalizeState(SAMPLE)
+      expect(ticked.roadmapDone.length).toBeGreaterThan(200)
+      expect(profileSkills(ticked)).toEqual(profileSkills(plain))
+      // The whole person graph without its clock times (updatedAt and an approval's generatedAtTime are "now" at each
+      // call, so even the same state gives different values there).
+      const graph = state => JSON.stringify(projectStateToPerson360({ state, skills: profileSkills(state) }), (key, value) => (key === 'updatedAt' || key === 'generatedAtTime' ? undefined : value))
+      expect(graph(plain)).toContain('"claims"')
+      expect(graph(ticked)).toEqual(graph(plain))
+      expect(derivedFor(ticked).matches).toEqual(derivedFor(plain).matches)
+      // Only the plan, the roadmap, the data controls, the stored-counts card and the saved-state shape read the ticks.
+      const readers = sourceFiles('src').map(f => f.split(path.sep).join('/')).filter(f => /\.(jsx?|mjs)$/.test(f) && /roadmapDone/.test(read(f))).sort()
+      expect(readers).toEqual(['src/components/privacy/StatusSummary.jsx', 'src/plan/plan.js', 'src/roadmap/roadmap.js', 'src/state/profileState.js', 'src/ui2/components/Roadmap.jsx', 'src/utils/dataControl.js'])
+    })
+  })
+
+  describe('the screens', () => {
+    const roadmapHtml = (lang, state = SAMPLE, pathwayId = 'job-data-analyst') => renderToStaticMarkup(createElement(Roadmap, { lang, data: loaded, pathwayId, state, onTick: noop, level: 3 }))
+    for (const lang of LANGS) it(`${lang}: a roadmap shows its stages in order, capabilities by name, free links in a new tab, ticks, the certifications and the never-evidence line`, () => {
+      const r = NEXT_COPY[lang].roadmap
+      const state = roadmap.tickRoadmapItem(SAMPLE, 'job-data-analyst:core:cs50sql', true)
+      const html = roadmapHtml(lang, state)
+      const text = textOf(html)
+      const data = ROADMAPS.roadmaps.find(x => x.pathwayId === 'job-data-analyst')
+      const items = data.stages.reduce((n, s) => n + s.resources.length, 0)
+      const stages = [...html.matchAll(/data-stage="([^"]+)"/g)].map(m => m[1])
+      expect(stages).toEqual(data.stages.map(s => s.id))
+      for (const s of data.stages) { expect(text).toContain(`${fillIn(r.stage, { n: s.order })} · ${s.title[lang]}`); expect(text).toContain(s.learn[lang]); expect(text).toContain(s.why[lang]) }
+      expect(text).toContain(capabilityName('database', lang))
+      const links = [...html.matchAll(/<a [^>]*>/g)].map(m => m[0])
+      expect(links.length).toBe(items + data.certifications.length)
+      for (const a of links) { expect(a).toContain('target="_blank"'); expect(a).toContain('rel="noopener noreferrer"') }
+      expect(html).toContain('data-key="job-data-analyst:core:cs50sql" data-done="true"')
+      expect((html.match(/type="checkbox"/g) || []).length).toBe(items)
+      expect((html.match(/checked=""/g) || []).length).toBe(1)
+      expect(text).toContain(fillIn(r.progress, { done: 1, total: items }))
+      for (const c of data.certifications) { expect(html).toContain(`data-cert="${c.id}" data-recommendation="${c.recommendation}"`); expect(text).toContain(c.when[lang]); expect(text).toContain(CERTS.get(c.id).issuer) }
+      for (const words of [r.certsTitle, r.noPrices, r.neverEvidence, r.offline, fillIn(r.provenance, { date: ROADMAPS.linksChecked.date })]) expect(text).toContain(words)
+      expect(text).not.toMatch(PERCENT)
+    })
+    for (const lang of LANGS) it(`${lang}: step 4 never says "No gap" when the list has nothing yet: it names the gap and offers the roadmap`, () => {
+      const w = NEXT_COPY[lang].next
+      // The synthetic example's Business Analyst: a gap in requirements analysis, and nothing in the list closes it.
+      const html = screen(NextSteps, lang, { ...SAMPLE, goals: ['job-business-analyst'] })
+      const text = textOf(html)
+      expect(html).toContain('data-reason="list-empty"')
+      expect(text).toContain(fillIn(w.listEmpty, { capabilities: capabilityName('requirements', lang) }))
+      expect(text).toContain(w.listEmptyHint)
+      expect(text).not.toContain(w.noGap)
+      expect(html).not.toContain('data-testid="ui2-feed-uncovered"')
+      expect(text).toContain(fillIn(w.seeRoadmap, { path: goalName('job-business-analyst', lang) }))
+    })
+    for (const lang of LANGS) it(`${lang}: pathways only from the student's own words: one-tap "Make it my goal" chips; every suggestion handled says so`, () => {
+      const w = NEXT_COPY[lang].next
+      const words = { ...emptyInsightState(), freeInterests: [{ id: 'fi-1', text: 'made up', lang: 'en', createdAt: '2026-11-19T09:00:00.000Z', method: FREE_INTEREST_METHOD, understood: [{ kind: 'pathway', id: 'job-business-analyst', removed: false }] }] }
+      const html = screen(NextSteps, lang, { ...SAMPLE, insight: words, consents: { analyze: true, insight: true } })
+      expect(html).toContain('data-testid="ui2-feed-words"')
+      expect(textOf(html)).toContain(fillIn(w.makeGoal, { path: goalName('job-business-analyst', lang) }))
+      expect(textOf(html)).not.toContain(w.noGap)
+      // Every suggestion for Junior Cybersecurity Analyst (the list covers its whole gap) already in My plan: "handled", not "No gap".
+      const handled = screen(NextSteps, lang, { ...SAMPLE, goals: ['job-cyber-analyst'], plan: [{ itemId: 'fcit-cpit-425', action: 'take-course', addedAt: '2026-11-19T09:00:00.000Z', status: 'planned' }] })
+      expect(handled).toContain('data-reason="handled"')
+      expect(textOf(handled)).toContain(w.handled)
+      expect(textOf(handled)).not.toContain(w.noGap)
+      // Data Analyst with its one step saved: the list still has nothing for quantitative analysis, so that is said first,
+      // and the handled line follows.
+      const both = textOf(screen(NextSteps, lang, { ...SAMPLE, goals: ['job-data-analyst'], plan: [{ itemId: 'fcit-cpit-340', action: 'take-course', addedAt: '2026-11-19T09:00:00.000Z', status: 'planned' }] }))
+      expect(both).toContain(fillIn(w.listEmpty, { capabilities: capabilityName('statistics', lang) }))
+      expect(both).toContain(w.handledHint)
+      expect(both).not.toContain(w.noGap)
+      // A "Make it my goal" chip makes that pathway a goal (the same toggle as the goal chips).
+      expect(toggleGoal(normalizePlan(SAMPLE), 'job-business-analyst').goals).toEqual(['job-business-analyst'])
+    })
+    for (const lang of LANGS) it(`${lang}: My plan: "Roadmaps for my goals" with one button per pathway goal, nothing without a goal`, () => {
+      const r = NEXT_COPY[lang].roadmap
+      const html = screen(Plan, lang, { ...SAMPLE, goals: ['job-data-analyst', 'job-cyber-analyst'] })
+      expect(textOf(html)).toContain(r.planTitle)
+      for (const goal of ['job-data-analyst', 'job-cyber-analyst']) expect(textOf(html)).toContain(fillIn(r.show, { path: goalName(goal, lang) }))
+      expect((html.match(/data-testid="ui2-plan-roadmap"/g) || []).length).toBe(2)
+      expect(screen(Plan, lang, SAMPLE)).not.toContain('ui2-plan-roadmaps')
+    })
+    it('the words: the same keys in both languages; kinds cover every resource', () => {
+      expect(Object.keys(NEXT_COPY.ar.roadmap)).toEqual(Object.keys(NEXT_COPY.en.roadmap))
+      expect(Object.keys(NEXT_COPY.ar.roadmap.kind)).toEqual(Object.keys(NEXT_COPY.en.roadmap.kind))
+    })
+  })
+
+  describe('lazy loading, the K08 plan and My map', () => {
+    it('the roadmap data loads only on demand; no startup module imports the roadmap', () => {
+      const files = sourceFiles('src').map(f => f.split(path.sep).join('/')).filter(f => /\.(jsx?|mjs)$/.test(f))
+      expect(files.filter(f => /^import[^\n]*roadmaps\.json/m.test(read(f)))).toEqual([])
+      expect(read('src/ui2/useRoadmaps.js')).toContain("import('../catalog/roadmaps.json')")
+      for (const file of ['src/main.jsx', 'src/plan/plan.js', 'src/state/profileState.js', 'src/state/useKaminProfile.js', 'src/ui2/AppNext.jsx']) expect(read(file).replace(/^\s*\/\/.*$/gm, ''), file).not.toMatch(/roadmap\/roadmap|Roadmap\.jsx|useRoadmaps|roadmaps\.json/)
+    })
+    it('K08 is kept as it was: the development plan still opens from "Why these paths?" in My plan', () => {
+      expect(read('src/ui2/components/GoalPicker.jsx')).toContain('<DevelopmentPlanPanel lang={lang} match={item} state={planState}/>')
+      expect(read('src/ui2/screens/Plan.jsx')).toMatch(/<GoalPicker [^>]*withPlan\/>/)
+    })
+    it('My map: "Academic evidence path to the opportunity" names a pathway goal by its title, an old direction by its label', () => {
+      expect(goalLabelOf('job-data-analyst', 'en')).toBe('Data Analyst')
+      expect(goalLabelOf('job-data-analyst', 'ar')).toBe('محلل بيانات')
+      expect(goalLabelOf('data', 'en')).toBe(copy.en.app.goals.data)
+      expect(goalLabelOf(null, 'en')).toBeUndefined()
+      expect(goalLabelOf('no-such-goal', 'en')).toBeUndefined()
+      expect(read('src/components/ShowConnections.jsx')).toContain('goalLabel={goalLabelOf(state.goal, lang)}')
+    })
+    it('the link checker is a developer tool: it sorts answers into ok / blocked / dead and lists each link once', async () => {
+      const { classify, roadmapLinks } = await import('../scripts/check-roadmap-links.mjs')
+      expect([200, 204, 403, 429, 404, 410, 500].map(classify)).toEqual(['ok', 'ok', 'blocked', 'blocked', 'dead', 'dead', 'dead'])
+      const links = roadmapLinks(ROADMAPS)
+      expect(new Set(links.map(l => l.url)).size).toBe(links.length)
+      expect(read('package.json')).not.toContain('check-roadmap-links')
+      for (const file of readdirSync('.github/workflows')) expect(read(`.github/workflows/${file}`), file).not.toContain('check-roadmap-links')
+    })
   })
 })

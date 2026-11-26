@@ -14,7 +14,7 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    # 75: e2e has 1440 tests (about 660 when the limit was set to 30); run 44605095196 was cancelled at 30 min inside e2e.
+    # 75: e2e has 1440 tests (about 660 when the limit was set to 30); run 44605095196 was cancelled at 30 min inside e2e. See log/task-47.md.
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4

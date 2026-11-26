@@ -1,0 +1,4474 @@
+{
+  "version": "kamin-roadmaps-v1",
+  "status": "proposed",
+  "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+  "rules": "Free resources only, from official or well-known sources; no prices (certifications link to the issuer’s official page). Ticking an item is the student’s own record and never evidence. Links are opened by the student in a new tab; the app requests nothing. Links checked from a laptop with scripts/check-roadmap-links.mjs (dev-time only).",
+  "linksChecked": {
+    "date": "2026-11-23",
+    "total": 118,
+    "ok": 116,
+    "blocked": 2,
+    "dead": 0
+  },
+  "resources": [
+    {
+      "id": "cs50x",
+      "title": {
+        "ar": "CS50x: مقدمة في علوم الحاسب",
+        "en": "CS50x: Introduction to Computer Science"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/x/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cs50p",
+      "title": {
+        "ar": "CS50P: مقدمة في البرمجة بلغة Python",
+        "en": "CS50P: Introduction to Programming with Python"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/python/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cs50sql",
+      "title": {
+        "ar": "CS50 SQL: مقدمة في قواعد البيانات بلغة SQL",
+        "en": "CS50 SQL: Introduction to Databases with SQL"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/sql/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cs50web",
+      "title": {
+        "ar": "CS50W: برمجة الويب بلغتي Python وJavaScript",
+        "en": "CS50W: Web Programming with Python and JavaScript"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/web/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cs50cyber",
+      "title": {
+        "ar": "CS50 Cybersecurity: مقدمة في الأمن السيبراني",
+        "en": "CS50 Cybersecurity: Introduction to Cybersecurity"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/cybersecurity/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cs50ai",
+      "title": {
+        "ar": "CS50 AI: مقدمة في الذكاء الاصطناعي بلغة Python",
+        "en": "CS50 AI: Introduction to Artificial Intelligence with Python"
+      },
+      "kind": "course",
+      "url": "https://cs50.harvard.edu/ai/",
+      "source": "Harvard University (CS50)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "py-tutorial",
+      "title": {
+        "ar": "الدليل التعليمي الرسمي للغة Python",
+        "en": "The Python Tutorial"
+      },
+      "kind": "docs",
+      "url": "https://docs.python.org/3/tutorial/",
+      "source": "Python Software Foundation (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-python",
+      "title": {
+        "ar": "توثيق Python بالعربية",
+        "en": "Python reference in Arabic"
+      },
+      "kind": "docs",
+      "url": "https://wiki.hsoub.com/Python",
+      "source": "Hsoub Wiki (موسوعة حسوب)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-sql",
+      "title": {
+        "ar": "توثيق SQL بالعربية",
+        "en": "SQL reference in Arabic"
+      },
+      "kind": "docs",
+      "url": "https://wiki.hsoub.com/SQL",
+      "source": "Hsoub Wiki (موسوعة حسوب)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-html",
+      "title": {
+        "ar": "توثيق HTML بالعربية",
+        "en": "HTML reference in Arabic"
+      },
+      "kind": "docs",
+      "url": "https://wiki.hsoub.com/HTML",
+      "source": "Hsoub Wiki (موسوعة حسوب)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-css",
+      "title": {
+        "ar": "توثيق CSS بالعربية",
+        "en": "CSS reference in Arabic"
+      },
+      "kind": "docs",
+      "url": "https://wiki.hsoub.com/CSS",
+      "source": "Hsoub Wiki (موسوعة حسوب)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-js",
+      "title": {
+        "ar": "توثيق JavaScript بالعربية",
+        "en": "JavaScript reference in Arabic"
+      },
+      "kind": "docs",
+      "url": "https://wiki.hsoub.com/JavaScript",
+      "source": "Hsoub Wiki (موسوعة حسوب)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "khan-stats",
+      "title": {
+        "ar": "الإحصاء والاحتمالات",
+        "en": "Statistics and probability"
+      },
+      "kind": "course",
+      "url": "https://www.khanacademy.org/math/statistics-probability",
+      "source": "Khan Academy",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "khan-ar",
+      "title": {
+        "ar": "أكاديمية خان بالعربية (الرياضيات والإحصاء)",
+        "en": "Khan Academy in Arabic (maths and statistics)"
+      },
+      "kind": "website",
+      "url": "https://ar.khanacademy.org/",
+      "source": "Khan Academy (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "openintro",
+      "title": {
+        "ar": "كتاب OpenIntro Statistics (مجاني)",
+        "en": "OpenIntro Statistics (free book)"
+      },
+      "kind": "book",
+      "url": "https://www.openintro.org/book/os/",
+      "source": "OpenIntro (free textbook)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "excel",
+      "title": {
+        "ar": "مساعدة Excel ودروسه",
+        "en": "Excel help and training"
+      },
+      "kind": "website",
+      "url": "https://support.microsoft.com/en-us/excel",
+      "source": "Microsoft Support (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-powerbi",
+      "title": {
+        "ar": "دروس Power BI",
+        "en": "Power BI training"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/powerplatform/power-bi",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-powerbi-ar",
+      "title": {
+        "ar": "دروس Power BI بالعربية",
+        "en": "Power BI training in Arabic"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/ar-sa/training/powerplatform/power-bi",
+      "source": "Microsoft Learn (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-pl300-course",
+      "title": {
+        "ar": "مسار تعلم محلل بيانات Power BI ‏(PL-300)",
+        "en": "Microsoft Power BI Data Analyst (PL-300) learning path"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/courses/pl-300t00",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-data-career",
+      "title": {
+        "ar": "المسار المهني لمحلل البيانات",
+        "en": "Data analyst career path"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/career-paths/data-analyst",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-data-core",
+      "title": {
+        "ar": "استكشف مفاهيم البيانات الأساسية",
+        "en": "Explore core data concepts"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-core-data-concepts/",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-data-core-ar",
+      "title": {
+        "ar": "استكشف مفاهيم البيانات الأساسية (بالعربية)",
+        "en": "Explore core data concepts (Arabic)"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/ar-sa/training/paths/azure-data-fundamentals-explore-core-data-concepts/",
+      "source": "Microsoft Learn (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-data-relational",
+      "title": {
+        "ar": "استكشف البيانات العلائقية",
+        "en": "Explore relational data"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-relational-data/",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-dp300-course",
+      "title": {
+        "ar": "مسار تعلم إدارة حلول Azure SQL ‏(DP-300)",
+        "en": "Administering Microsoft Azure SQL Solutions (DP-300) learning path"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/courses/dp-300t00",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-pl900-course",
+      "title": {
+        "ar": "مسار تعلم أساسيات Power Platform ‏(PL-900)",
+        "en": "Microsoft Power Platform Fundamentals (PL-900) learning path"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/courses/pl-900t00",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-github",
+      "title": {
+        "ar": "مقدمة في GitHub",
+        "en": "Introduction to GitHub"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/modules/introduction-to-github/",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-github-ar",
+      "title": {
+        "ar": "مقدمة في GitHub (بالعربية)",
+        "en": "Introduction to GitHub (Arabic)"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/ar-sa/training/modules/introduction-to-github/",
+      "source": "Microsoft Learn (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-github-path",
+      "title": {
+        "ar": "مسار تعلم أساسيات GitHub",
+        "en": "GitHub Foundations learning path"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/paths/github-foundations/",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-genai",
+      "title": {
+        "ar": "أساسيات الذكاء الاصطناعي التوليدي",
+        "en": "Fundamentals of generative AI"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai/",
+      "source": "Microsoft Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-genai-ar",
+      "title": {
+        "ar": "أساسيات الذكاء الاصطناعي التوليدي (بالعربية)",
+        "en": "Fundamentals of generative AI (Arabic)"
+      },
+      "kind": "course",
+      "url": "https://learn.microsoft.com/ar-sa/training/modules/fundamentals-generative-ai/",
+      "source": "Microsoft Learn (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-learn-ar",
+      "title": {
+        "ar": "فهرس دروس Microsoft Learn بالعربية",
+        "en": "Microsoft Learn training catalogue in Arabic"
+      },
+      "kind": "website",
+      "url": "https://learn.microsoft.com/ar-sa/training/",
+      "source": "Microsoft Learn (Arabic)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pg-tutorial",
+      "title": {
+        "ar": "الدليل التعليمي لـ PostgreSQL",
+        "en": "PostgreSQL tutorial"
+      },
+      "kind": "docs",
+      "url": "https://www.postgresql.org/docs/current/tutorial.html",
+      "source": "PostgreSQL (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pg-admin",
+      "title": {
+        "ar": "إدارة خادم PostgreSQL",
+        "en": "PostgreSQL server administration"
+      },
+      "kind": "docs",
+      "url": "https://www.postgresql.org/docs/current/admin.html",
+      "source": "PostgreSQL (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pg-backup",
+      "title": {
+        "ar": "النسخ الاحتياطي والاستعادة",
+        "en": "Backup and restore"
+      },
+      "kind": "docs",
+      "url": "https://www.postgresql.org/docs/current/backup.html",
+      "source": "PostgreSQL (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pg-roles",
+      "title": {
+        "ar": "أدوار قاعدة البيانات وصلاحياتها",
+        "en": "Database roles and privileges"
+      },
+      "kind": "docs",
+      "url": "https://www.postgresql.org/docs/current/user-manag.html",
+      "source": "PostgreSQL (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "sqlite-lang",
+      "title": {
+        "ar": "لغة SQL كما يفهمها SQLite",
+        "en": "SQL as understood by SQLite"
+      },
+      "kind": "docs",
+      "url": "https://www.sqlite.org/lang.html",
+      "source": "SQLite (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "cmu-15445",
+      "title": {
+        "ar": "CMU 15-445: نظم قواعد البيانات (محاضرات وملاحظات)",
+        "en": "CMU 15-445: Database Systems (lectures and notes)"
+      },
+      "kind": "course",
+      "url": "https://15445.courses.cs.cmu.edu/",
+      "source": "Carnegie Mellon University",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "kaggle-learn",
+      "title": {
+        "ar": "دورات Kaggle Learn القصيرة",
+        "en": "Kaggle Learn short courses"
+      },
+      "kind": "course",
+      "url": "https://www.kaggle.com/learn",
+      "source": "Kaggle Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "kaggle-sql",
+      "title": {
+        "ar": "مقدمة في SQL",
+        "en": "Intro to SQL"
+      },
+      "kind": "course",
+      "url": "https://www.kaggle.com/learn/intro-to-sql",
+      "source": "Kaggle Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "kaggle-pandas",
+      "title": {
+        "ar": "مكتبة Pandas",
+        "en": "Pandas"
+      },
+      "kind": "course",
+      "url": "https://www.kaggle.com/learn/pandas",
+      "source": "Kaggle Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "kaggle-dataviz",
+      "title": {
+        "ar": "تمثيل البيانات بصريًا",
+        "en": "Data visualization"
+      },
+      "kind": "course",
+      "url": "https://www.kaggle.com/learn/data-visualization",
+      "source": "Kaggle Learn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pandas-start",
+      "title": {
+        "ar": "البدء مع pandas",
+        "en": "Getting started with pandas"
+      },
+      "kind": "docs",
+      "url": "https://pandas.pydata.org/docs/getting_started/index.html",
+      "source": "pandas (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "missing-semester",
+      "title": {
+        "ar": "الفصل المفقود في دراسة الحاسب (سطر الأوامر وGit والأدوات)",
+        "en": "The Missing Semester of Your CS Education (shell, Git, tools)"
+      },
+      "kind": "course",
+      "url": "https://missing.csail.mit.edu/",
+      "source": "MIT CSAIL",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "git-book",
+      "title": {
+        "ar": "كتاب Pro Git (مجاني)",
+        "en": "Pro Git (free book)"
+      },
+      "kind": "book",
+      "url": "https://git-scm.com/book/en/v2",
+      "source": "Git (official site)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "github-skills",
+      "title": {
+        "ar": "GitHub Skills (تمارين عملية)",
+        "en": "GitHub Skills (hands-on exercises)"
+      },
+      "kind": "course",
+      "url": "https://skills.github.com/",
+      "source": "GitHub",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "github-pages",
+      "title": {
+        "ar": "GitHub Pages: انشر موقعًا مجانًا",
+        "en": "GitHub Pages: publish a site for free"
+      },
+      "kind": "docs",
+      "url": "https://docs.github.com/en/pages",
+      "source": "GitHub Docs",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "github-profile",
+      "title": {
+        "ar": "ملفك على GitHub (معرض أعمال يراه الآخرون)",
+        "en": "Your GitHub profile (a portfolio others can see)"
+      },
+      "kind": "docs",
+      "url": "https://docs.github.com/en/account-and-profile",
+      "source": "GitHub Docs",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "swe-book",
+      "title": {
+        "ar": "كتاب Software Engineering at Google (مجاني)",
+        "en": "Software Engineering at Google (free book)"
+      },
+      "kind": "book",
+      "url": "https://abseil.io/resources/swe-book",
+      "source": "Google (free online book)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "mdn-learn",
+      "title": {
+        "ar": "تعلّم تطوير الويب",
+        "en": "Learn web development"
+      },
+      "kind": "course",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development",
+      "source": "MDN Web Docs (Mozilla)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "webdev-html",
+      "title": {
+        "ar": "تعلّم HTML",
+        "en": "Learn HTML"
+      },
+      "kind": "course",
+      "url": "https://web.dev/learn/html",
+      "source": "web.dev (Google Chrome team)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "webdev-css",
+      "title": {
+        "ar": "تعلّم CSS",
+        "en": "Learn CSS"
+      },
+      "kind": "course",
+      "url": "https://web.dev/learn/css",
+      "source": "web.dev (Google Chrome team)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "webdev-a11y",
+      "title": {
+        "ar": "تعلّم إتاحة الوصول",
+        "en": "Learn accessibility"
+      },
+      "kind": "course",
+      "url": "https://web.dev/learn/accessibility",
+      "source": "web.dev (Google Chrome team)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "odin",
+      "title": {
+        "ar": "The Odin Project (منهج ويب كامل)",
+        "en": "The Odin Project (full web curriculum)"
+      },
+      "kind": "course",
+      "url": "https://www.theodinproject.com/",
+      "source": "The Odin Project",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "react-learn",
+      "title": {
+        "ar": "تعلّم React",
+        "en": "Learn React"
+      },
+      "kind": "docs",
+      "url": "https://react.dev/learn",
+      "source": "React (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-learn",
+      "title": {
+        "ar": "منهج freeCodeCamp",
+        "en": "freeCodeCamp curriculum"
+      },
+      "kind": "course",
+      "url": "https://www.freecodecamp.org/learn/",
+      "source": "freeCodeCamp",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-rwd",
+      "title": {
+        "ar": "تصميم الويب المتجاوب (دورة شهادة مجانية)",
+        "en": "Responsive Web Design (free certification course)"
+      },
+      "kind": "course",
+      "url": "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+      "source": "freeCodeCamp",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-data-python",
+      "title": {
+        "ar": "تحليل البيانات بلغة Python (دورة شهادة مجانية)",
+        "en": "Data Analysis with Python (free certification course)"
+      },
+      "kind": "course",
+      "url": "https://www.freecodecamp.org/learn/data-analysis-with-python/",
+      "source": "freeCodeCamp",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-relational-db",
+      "title": {
+        "ar": "قواعد البيانات العلائقية (دورة شهادة مجانية)",
+        "en": "Relational Database (free certification course)"
+      },
+      "kind": "course",
+      "url": "https://www.freecodecamp.org/learn/relational-database/",
+      "source": "freeCodeCamp",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "playwright-docs",
+      "title": {
+        "ar": "Playwright: البداية",
+        "en": "Playwright: getting started"
+      },
+      "kind": "docs",
+      "url": "https://playwright.dev/docs/intro",
+      "source": "Playwright (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pytest-docs",
+      "title": {
+        "ar": "pytest: البداية",
+        "en": "pytest: getting started"
+      },
+      "kind": "docs",
+      "url": "https://docs.pytest.org/en/stable/getting-started.html",
+      "source": "pytest (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "selenium-docs",
+      "title": {
+        "ar": "توثيق Selenium",
+        "en": "Selenium documentation"
+      },
+      "kind": "docs",
+      "url": "https://www.selenium.dev/documentation/",
+      "source": "Selenium (official docs)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "google-testing-blog",
+      "title": {
+        "ar": "مدونة Google للاختبار",
+        "en": "Google Testing Blog"
+      },
+      "kind": "website",
+      "url": "https://testing.googleblog.com/",
+      "source": "Google Testing Blog",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "istqb-syllabus",
+      "title": {
+        "ar": "منهج ISTQB للمستوى التأسيسي (تنزيل مجاني)",
+        "en": "ISTQB Foundation Level syllabus (free download)"
+      },
+      "kind": "website",
+      "url": "https://istqb.org/certifications/certified-tester-foundation-level-ctfl-v4-0/",
+      "source": "ISTQB (official syllabus)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "roadmap-sh",
+      "title": {
+        "ar": "roadmap.sh (خرائط طريق للأدوار من المجتمع)",
+        "en": "roadmap.sh (community role roadmaps)"
+      },
+      "kind": "website",
+      "url": "https://roadmap.sh/",
+      "source": "roadmap.sh",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "netacad-net",
+      "title": {
+        "ar": "أساسيات الشبكات",
+        "en": "Networking Basics"
+      },
+      "kind": "course",
+      "url": "https://www.netacad.com/courses/networking-basics",
+      "source": "Cisco Networking Academy",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "netacad-cyber",
+      "title": {
+        "ar": "مقدمة في الأمن السيبراني",
+        "en": "Introduction to Cybersecurity"
+      },
+      "kind": "course",
+      "url": "https://www.netacad.com/courses/introduction-to-cybersecurity",
+      "source": "Cisco Networking Academy",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "nist-csf",
+      "title": {
+        "ar": "إطار الأمن السيبراني من NIST",
+        "en": "NIST Cybersecurity Framework"
+      },
+      "kind": "website",
+      "url": "https://www.nist.gov/cyberframework",
+      "source": "NIST (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "owasp-top10",
+      "title": {
+        "ar": "أهم 10 مخاطر لتطبيقات الويب من OWASP",
+        "en": "OWASP Top 10 web application risks"
+      },
+      "kind": "website",
+      "url": "https://owasp.org/projects/top-ten",
+      "source": "OWASP Foundation",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "owasp-juiceshop",
+      "title": {
+        "ar": "OWASP Juice Shop (تطبيق آمن للتدرّب عليه)",
+        "en": "OWASP Juice Shop (a safe app to practise on)"
+      },
+      "kind": "website",
+      "url": "https://owasp.org/projects/juice-shop",
+      "source": "OWASP Foundation",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "nca",
+      "title": {
+        "ar": "الهيئة الوطنية للأمن السيبراني: الضوابط والأدلة",
+        "en": "National Cybersecurity Authority: controls and guides"
+      },
+      "kind": "website",
+      "url": "https://nca.gov.sa/",
+      "source": "National Cybersecurity Authority (NCA, official)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "messer",
+      "title": {
+        "ar": "Professor Messer: دورات Security+ وNetwork+ مجانية",
+        "en": "Professor Messer: free Security+ and Network+ courses"
+      },
+      "kind": "course",
+      "url": "https://www.professormesser.com/",
+      "source": "Professor Messer (free video courses)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "isc2-1mcc",
+      "title": {
+        "ar": "برنامج ISC2 لمليون معتمد في الأمن السيبراني (تدريب مجاني)",
+        "en": "ISC2 One Million Certified in Cybersecurity (free training)"
+      },
+      "kind": "course",
+      "url": "https://www.isc2.org/landing/1mcc",
+      "source": "ISC2 (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "scrum-guide",
+      "title": {
+        "ar": "دليل سكرم",
+        "en": "The Scrum Guide"
+      },
+      "kind": "docs",
+      "url": "https://scrumguides.org/scrum-guide.html",
+      "source": "Scrum Guides (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "scrum-guide-ar",
+      "title": {
+        "ar": "دليل سكرم بلغات أخرى منها العربية",
+        "en": "The Scrum Guide in other languages, Arabic included"
+      },
+      "kind": "docs",
+      "url": "https://scrumguides.org/download.html",
+      "source": "Scrum Guides (official translations)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "atlassian-agile",
+      "title": {
+        "ar": "Agile Coach: شرح أجايل وسكرم",
+        "en": "Agile Coach: agile and Scrum explained"
+      },
+      "kind": "website",
+      "url": "https://www.atlassian.com/agile",
+      "source": "Atlassian Agile Coach",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "atlassian-pm",
+      "title": {
+        "ar": "إدارة المشاريع بأسلوب أجايل",
+        "en": "Agile project management"
+      },
+      "kind": "website",
+      "url": "https://www.atlassian.com/agile/project-management",
+      "source": "Atlassian Agile Coach",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "atlassian-user-stories",
+      "title": {
+        "ar": "قصص المستخدم مع أمثلة",
+        "en": "User stories with examples"
+      },
+      "kind": "website",
+      "url": "https://www.atlassian.com/agile/project-management/user-stories",
+      "source": "Atlassian Agile Coach",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "atlassian-requirements",
+      "title": {
+        "ar": "متطلبات المنتج",
+        "en": "Product requirements"
+      },
+      "kind": "website",
+      "url": "https://www.atlassian.com/agile/product-management/requirements",
+      "source": "Atlassian Agile Coach",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "nngroup",
+      "title": {
+        "ar": "مقالات بحث المستخدم وقابلية الاستخدام",
+        "en": "User research and usability articles"
+      },
+      "kind": "website",
+      "url": "https://www.nngroup.com/articles/",
+      "source": "Nielsen Norman Group (free articles)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "bpmn",
+      "title": {
+        "ar": "BPMN: ترميز نمذجة إجراءات العمل",
+        "en": "BPMN: Business Process Model and Notation"
+      },
+      "kind": "docs",
+      "url": "https://www.omg.org/spec/BPMN",
+      "source": "Object Management Group (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "uml",
+      "title": {
+        "ar": "UML: لغة النمذجة الموحدة",
+        "en": "UML: Unified Modeling Language"
+      },
+      "kind": "docs",
+      "url": "https://www.omg.org/uml/",
+      "source": "Object Management Group (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "elements-ai",
+      "title": {
+        "ar": "أساسيات الذكاء الاصطناعي (Elements of AI)",
+        "en": "Elements of AI"
+      },
+      "kind": "course",
+      "url": "https://www.elementsofai.com/",
+      "source": "University of Helsinki and MinnaLearn",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "sdaia",
+      "title": {
+        "ar": "سدايا: توجيهات وطنية للذكاء الاصطناعي والبيانات",
+        "en": "SDAIA: national AI and data guidance"
+      },
+      "kind": "website",
+      "url": "https://sdaia.gov.sa/en/",
+      "source": "Saudi Data and AI Authority (SDAIA, official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "aws-skillbuilder",
+      "title": {
+        "ar": "AWS Skill Builder (دورات رقمية مجانية)",
+        "en": "AWS Skill Builder (free digital courses)"
+      },
+      "kind": "course",
+      "url": "https://skillbuilder.aws/",
+      "source": "AWS Skill Builder (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "edraak",
+      "title": {
+        "ar": "إدراك: دورات مجانية بالعربية",
+        "en": "Edraak: free Arabic online courses"
+      },
+      "kind": "website",
+      "url": "https://www.edraak.org/",
+      "source": "Edraak (إدراك)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "doroob",
+      "title": {
+        "ar": "دروب: تدريب مجاني على مهارات العمل",
+        "en": "Doroob: free training for work skills"
+      },
+      "kind": "website",
+      "url": "https://doroob.sa/",
+      "source": "Doroob, HRDF (official)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "satr",
+      "title": {
+        "ar": "سطر: دورات برمجة مجانية بالعربية",
+        "en": "Satr: free Arabic programming courses"
+      },
+      "kind": "website",
+      "url": "https://satr.tuwaiq.edu.sa/",
+      "source": "Satr, Tuwaiq Academy (official)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "jadarat",
+      "title": {
+        "ar": "جدارات: اقرأ إعلانات وظائف حقيقية في السعودية",
+        "en": "Jadarat: read real job postings in Saudi Arabia"
+      },
+      "kind": "website",
+      "url": "https://jadarat.sa/",
+      "source": "Jadarat, national jobs platform (official)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "hsoub-academy",
+      "title": {
+        "ar": "مقالات برمجة بالعربية",
+        "en": "Programming articles in Arabic"
+      },
+      "kind": "website",
+      "url": "https://academy.hsoub.com/programming/",
+      "source": "Hsoub Academy (free articles)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-cs50",
+      "title": {
+        "ar": "CS50 على YouTube (كل المحاضرات)",
+        "en": "CS50 on YouTube (every lecture)"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@cs50",
+      "source": "CS50 at Harvard (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-fcc",
+      "title": {
+        "ar": "freeCodeCamp على YouTube (دورات كاملة)",
+        "en": "freeCodeCamp on YouTube (full courses)"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@freecodecamp",
+      "source": "freeCodeCamp (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-elzero",
+      "title": {
+        "ar": "أكاديمية الزيرو: قوائم ويب وبرمجة بالعربية",
+        "en": "Elzero Web School: web and programming playlists in Arabic"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@ElzeroWebSchool",
+      "source": "Elzero Web School (YouTube channel)",
+      "language": "ar",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-cmu-db",
+      "title": {
+        "ar": "محاضرات مجموعة قواعد البيانات في CMU",
+        "en": "CMU Database Group lectures"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@CMUDatabaseGroup",
+      "source": "CMU Database Group (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-statquest",
+      "title": {
+        "ar": "StatQuest: شرح الإحصاء",
+        "en": "StatQuest: statistics explained"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@statquest",
+      "source": "StatQuest with Josh Starmer (YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-messer",
+      "title": {
+        "ar": "Professor Messer على YouTube",
+        "en": "Professor Messer on YouTube"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@ProfessorMesser",
+      "source": "Professor Messer (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-owasp",
+      "title": {
+        "ar": "محاضرات OWASP",
+        "en": "OWASP talks"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@OWASPGLOBAL",
+      "source": "OWASP Foundation (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-scrumorg",
+      "title": {
+        "ar": "Scrum.org على YouTube",
+        "en": "Scrum.org on YouTube"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@ScrumOrg",
+      "source": "Scrum.org (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-powerbi",
+      "title": {
+        "ar": "Microsoft Power BI على YouTube",
+        "en": "Microsoft Power BI on YouTube"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@MicrosoftPowerBI",
+      "source": "Microsoft Power BI (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "yt-playwright",
+      "title": {
+        "ar": "Playwright على YouTube",
+        "en": "Playwright on YouTube"
+      },
+      "kind": "youtube-channel",
+      "url": "https://www.youtube.com/@Playwrightdev",
+      "source": "Playwright (official YouTube channel)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "scrum-open",
+      "title": {
+        "ar": "تقييمات Scrum.org المفتوحة المجانية (أسئلة تدريب)",
+        "en": "Scrum.org free open assessments (practice questions)"
+      },
+      "kind": "practice",
+      "url": "https://www.scrum.org/open-assessments",
+      "source": "Scrum.org (official)",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "github-projects",
+      "title": {
+        "ar": "خطط للعمل وتابعه في GitHub Projects",
+        "en": "Plan and track work with GitHub Projects"
+      },
+      "kind": "docs",
+      "url": "https://docs.github.com/en/issues/planning-and-tracking-with-projects",
+      "source": "GitHub Docs",
+      "language": "en",
+      "free": true,
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "ms-pl300",
+      "name": {
+        "ar": "شهادة Microsoft: محلل بيانات Power BI المشارك (PL-300)",
+        "en": "Microsoft Certified: Power BI Data Analyst Associate (PL-300)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-pl900",
+      "name": {
+        "ar": "شهادة Microsoft: أساسيات Power Platform ‏(PL-900)",
+        "en": "Microsoft Certified: Power Platform Fundamentals (PL-900)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-az900",
+      "name": {
+        "ar": "شهادة Microsoft: أساسيات Azure ‏(AZ-900)",
+        "en": "Microsoft Certified: Azure Fundamentals (AZ-900)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-ai900",
+      "name": {
+        "ar": "شهادة Microsoft: أساسيات الذكاء الاصطناعي في Azure ‏(AI-900)",
+        "en": "Microsoft Certified: Azure AI Fundamentals (AI-900)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-dp300",
+      "name": {
+        "ar": "شهادة Microsoft: مسؤول قواعد بيانات Azure المشارك (DP-300)",
+        "en": "Microsoft Certified: Azure Database Administrator Associate (DP-300)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-database-administrator-associate/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "ms-sc900",
+      "name": {
+        "ar": "شهادة Microsoft: أساسيات الأمن والامتثال والهوية (SC-900)",
+        "en": "Microsoft Certified: Security, Compliance, and Identity Fundamentals (SC-900)"
+      },
+      "issuer": "Microsoft",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/security-compliance-and-identity-fundamentals/",
+      "source": "Microsoft (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "github-foundations",
+      "name": {
+        "ar": "أساسيات GitHub ‏(GitHub Foundations)",
+        "en": "GitHub Foundations"
+      },
+      "issuer": "GitHub (Microsoft)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/github-foundations/",
+      "source": "GitHub (Microsoft) (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "aws-ccp",
+      "name": {
+        "ar": "شهادة AWS لممارس الحوسبة السحابية",
+        "en": "AWS Certified Cloud Practitioner"
+      },
+      "issuer": "Amazon Web Services",
+      "url": "https://aws.amazon.com/certification/certified-cloud-practitioner/",
+      "source": "Amazon Web Services (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "comptia-secplus",
+      "name": {
+        "ar": "شهادة CompTIA Security+ في الأمن",
+        "en": "CompTIA Security+"
+      },
+      "issuer": "CompTIA",
+      "url": "https://www.comptia.org/en-us/certifications/security/",
+      "source": "CompTIA (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "comptia-netplus",
+      "name": {
+        "ar": "شهادة CompTIA Network+ في الشبكات",
+        "en": "CompTIA Network+"
+      },
+      "issuer": "CompTIA",
+      "url": "https://www.comptia.org/en-us/certifications/network/",
+      "source": "CompTIA (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "isc2-cc",
+      "name": {
+        "ar": "شهادة ISC2 في الأمن السيبراني (CC)",
+        "en": "ISC2 Certified in Cybersecurity (CC)"
+      },
+      "issuer": "ISC2",
+      "url": "https://www.isc2.org/certifications/cc",
+      "source": "ISC2 (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "istqb-ctfl",
+      "name": {
+        "ar": "شهادة ISTQB لمختبر البرمجيات، المستوى التأسيسي (CTFL)",
+        "en": "ISTQB Certified Tester Foundation Level (CTFL)"
+      },
+      "issuer": "ISTQB",
+      "url": "https://istqb.org/certifications/certified-tester-foundation-level-ctfl-v4-0/",
+      "source": "ISTQB (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "pmi-capm",
+      "name": {
+        "ar": "شهادة مشارك معتمد في إدارة المشاريع (CAPM)",
+        "en": "Certified Associate in Project Management (CAPM)"
+      },
+      "issuer": "Project Management Institute (PMI)",
+      "url": "https://www.pmi.org/certifications/certified-associate-capm",
+      "source": "Project Management Institute (PMI) (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "scrum-psm1",
+      "name": {
+        "ar": "شهادة سكرم ماستر المحترف، المستوى الأول (PSM I)",
+        "en": "Professional Scrum Master I (PSM I)"
+      },
+      "issuer": "Scrum.org",
+      "url": "https://www.scrum.org/assessments/professional-scrum-master-i-certification",
+      "source": "Scrum.org (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "scrum-pspo1",
+      "name": {
+        "ar": "شهادة مالك المنتج المحترف في سكرم، المستوى الأول (PSPO I)",
+        "en": "Professional Scrum Product Owner I (PSPO I)"
+      },
+      "issuer": "Scrum.org",
+      "url": "https://www.scrum.org/assessments/professional-scrum-product-owner-i-certification",
+      "source": "Scrum.org (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "iiba-ecba",
+      "name": {
+        "ar": "الشهادة التمهيدية في تحليل الأعمال (ECBA)",
+        "en": "Entry Certificate in Business Analysis (ECBA)"
+      },
+      "issuer": "IIBA",
+      "url": "https://www.iiba.org/business-analysis-certifications/ecba/",
+      "source": "IIBA (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "iiba-ccba",
+      "name": {
+        "ar": "شهادة الكفاءة في تحليل الأعمال (CCBA)",
+        "en": "Certification of Capability in Business Analysis (CCBA)"
+      },
+      "issuer": "IIBA",
+      "url": "https://www.iiba.org/business-analysis-certifications/ccba/",
+      "source": "IIBA (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "itil4",
+      "name": {
+        "ar": "ITIL 4 المستوى التأسيسي",
+        "en": "ITIL 4 Foundation"
+      },
+      "issuer": "PeopleCert (AXELOS)",
+      "url": "https://www.axelos.com/certifications/itil-service-management",
+      "source": "PeopleCert (AXELOS) (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-rwd",
+      "name": {
+        "ar": "شهادة freeCodeCamp في تصميم الويب المتجاوب",
+        "en": "freeCodeCamp Responsive Web Design certification"
+      },
+      "issuer": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org/learn/2022/responsive-web-design/",
+      "source": "freeCodeCamp (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-data-python",
+      "name": {
+        "ar": "شهادة freeCodeCamp في تحليل البيانات بلغة Python",
+        "en": "freeCodeCamp Data Analysis with Python certification"
+      },
+      "issuer": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org/learn/data-analysis-with-python/",
+      "source": "freeCodeCamp (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    },
+    {
+      "id": "fcc-relational-db",
+      "name": {
+        "ar": "شهادة freeCodeCamp في قواعد البيانات العلائقية",
+        "en": "freeCodeCamp Relational Database certification"
+      },
+      "issuer": "freeCodeCamp",
+      "url": "https://www.freecodecamp.org/learn/relational-database/",
+      "source": "freeCodeCamp (official page)",
+      "language": "en",
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)"
+    }
+  ],
+  "roadmaps": [
+    {
+      "pathwayId": "job-data-analyst",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "الجداول الإلكترونية والإحصاء الأساسي: المتوسطات والتشتت والرسوم وكيف يُنظَّم جدول البيانات.",
+            "en": "Spreadsheets and basic statistics: averages, spread, charts and how a data table is organised."
+          },
+          "why": {
+            "ar": "كل تحليل يبدأ بقراءة الجدول قراءة صحيحة ووصفه بأمانة.",
+            "en": "Every analysis starts with reading a table correctly and describing it honestly."
+          },
+          "capabilities": [
+            "statistics"
+          ],
+          "resources": [
+            "khan-stats",
+            "khan-ar",
+            "openintro",
+            "excel"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "لغة SQL لتسأل قاعدة البيانات، ثم Python مع pandas لتنظيف البيانات وتلخيصها.",
+            "en": "SQL to ask questions of a database, then Python with pandas to clean and summarise data."
+          },
+          "why": {
+            "ar": "هاتان هما الأداتان الأكثر ذكرًا في إعلانات وظائف محلل البيانات.",
+            "en": "These are the two tools data analyst postings name most often."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "cs50sql",
+            "kaggle-sql",
+            "hsoub-sql",
+            "kaggle-pandas"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "تحليل واحد من أوله إلى آخره: سؤال، وبيانات عامة، وجدول منظَّف، وثلاثة رسوم، وخلاصة في صفحة واحدة.",
+            "en": "One analysis end to end: a question, a public dataset, a cleaned table, three charts and a one-page conclusion."
+          },
+          "why": {
+            "ar": "المشروع المكتمل يُظهر ما تستطيع فعله أوضح من قائمة دورات.",
+            "en": "A finished project shows what you can do better than a list of courses."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "kaggle-dataviz",
+            "ms-powerbi",
+            "ms-powerbi-ar",
+            "ms-github"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "استعد لشهادة بيانات معروفة بمسار تعلمها الرسمي المجاني.",
+            "en": "Prepare for one recognised data certificate with its official free learning path."
+          },
+          "why": {
+            "ar": "الشهادة تحقق خارجي من الأساسيات، ولا تغني عن المشروع.",
+            "en": "A certificate is an outside check of the basics; it does not replace a project."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "ms-pl300-course",
+            "ms-data-career"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر المشروع، واكتب سطرًا في سيرتك الذاتية لكل مشروع، واقرأ إعلانات حقيقية لوظيفة محلل بيانات في السعودية.",
+            "en": "Publish the project, write one CV line per project, and read real data analyst postings in Saudi Arabia."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat",
+            "doroob"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-pl300",
+          "recommendation": "take",
+          "when": {
+            "ar": "بعد المرحلة 3 (مشروعك التطبيقي)",
+            "en": "After stage 3 (your practice project)"
+          },
+          "why": {
+            "ar": "أكثر شهادة تُذكر لعمل التحليل بأداة Power BI، ومسار تعلمها مجاني.",
+            "en": "The most named certificate for Power BI analysis work; its learning path is free."
+          }
+        },
+        {
+          "id": "fcc-data-python",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "مجانية وقائمة على المشاريع؛ اختبار جيد لتحليلك بلغة Python.",
+            "en": "Free and project-based; a good check of your Python analysis."
+          }
+        },
+        {
+          "id": "ms-az900",
+          "recommendation": "later",
+          "when": {
+            "ar": "في السنة الأخيرة، إن كنت تتجه إلى عمل البيانات السحابي",
+            "en": "Final year, if you aim for cloud data work"
+          },
+          "why": {
+            "ar": "مفيدة فقط إذا كانت الوظائف التي تريدها تعمل على السحابة.",
+            "en": "Useful only when the jobs you want run on the cloud."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-business-analyst",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "كيف تعمل المؤسسات: الإجراءات وأصحاب المصلحة وكيف تُنجز الفرق عملها في دورات قصيرة.",
+            "en": "How organisations work: processes, stakeholders, and how teams deliver in short cycles."
+          },
+          "why": {
+            "ar": "محلل الأعمال يصل بين ما يحتاجه الناس وما يبنيه الفريق.",
+            "en": "A business analyst connects what people need to what a team builds."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "atlassian-agile",
+            "nngroup",
+            "edraak"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "المتطلبات: المقابلات، وقصص المستخدم مع معايير القبول، ونمذجة الإجراءات بترميز BPMN.",
+            "en": "Requirements: interviews, user stories with acceptance criteria, and process models in BPMN."
+          },
+          "why": {
+            "ar": "المتطلبات الواضحة هي جوهر عمل هذا الدور.",
+            "en": "Clear requirements are the core work of this role."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "atlassian-user-stories",
+            "atlassian-requirements",
+            "bpmn",
+            "scrum-guide-ar"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "حلّل إجراءً حقيقيًا صغيرًا (مثل التسجيل في نادٍ): 10 قصص مستخدم ومخطط إجراء واحد.",
+            "en": "Analyse one real small process (for example a club’s sign-up): 10 user stories and one process diagram."
+          },
+          "why": {
+            "ar": "أصحاب المصلحة الحقيقيون والإجراء الحقيقي هما ما تسأل عنه المقابلات.",
+            "en": "Real stakeholders and a real process are what interviews ask about."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "nngroup",
+            "uml",
+            "ms-github"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "تدرّب على التقييمات المفتوحة المجانية واقرأ دليل سكرم قبل شهادة تمهيدية.",
+            "en": "Practise the free open assessments and read the Scrum Guide before an entry certificate."
+          },
+          "why": {
+            "ar": "معظم المحللين يعملون في فرق سكرم، ومصطلحاتها تُختبر في المقابلات.",
+            "en": "Most analysts work inside Scrum teams; the vocabulary is tested in interviews."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "scrum-open",
+            "scrum-guide",
+            "yt-scrumorg"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "ضع متطلباتك ومخططاتك في معرض أعمال قصير واقرأ إعلانات حقيقية لوظيفة محلل أعمال.",
+            "en": "Put your requirements and diagrams in a short portfolio and read real business analyst postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "jadarat",
+            "doroob",
+            "github-profile"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "iiba-ecba",
+          "recommendation": "take",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "الشهادة التمهيدية من الهيئة الرئيسة لتحليل الأعمال، ولا تتطلب خبرة عمل.",
+            "en": "The entry certificate of the main business analysis body; it needs no work experience."
+          }
+        },
+        {
+          "id": "scrum-pspo1",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "تُظهر فهمك لقائمة أعمال المنتج التي يكتبها المحللون غالبًا.",
+            "en": "Shows you understand product backlogs, which analysts often write."
+          }
+        },
+        {
+          "id": "iiba-ccba",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد سنوات من العمل في التحليل",
+            "en": "After some years of analysis work"
+          },
+          "why": {
+            "ar": "تتطلب خبرة عمل، فمكانها بعد وظيفتك الأولى.",
+            "en": "It asks for work experience, so it comes after your first job."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-project-coordinator",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "ما المشروع: النطاق والوقت والمخاطر وأصحاب المصلحة، والفرق بين المشاريع المخططة مسبقًا ومشاريع أجايل.",
+            "en": "What a project is: scope, time, risk and stakeholders, and how plan-driven and agile projects differ."
+          },
+          "why": {
+            "ar": "المنسق يُبقي هذه الأمور أمام الفريق كله.",
+            "en": "A coordinator keeps these in view for the whole team."
+          },
+          "capabilities": [
+            "project"
+          ],
+          "resources": [
+            "atlassian-pm",
+            "scrum-guide",
+            "edraak"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "التخطيط والمتابعة: تقسيم المهام، والجدول الزمني، وسجل المخاطر، وتقارير الحالة، ولوحة كانبان.",
+            "en": "Planning and tracking: task breakdown, a schedule, a risk log, status reports and a Kanban board."
+          },
+          "why": {
+            "ar": "هذه هي الأدوات التي يستعملها المنسق كل أسبوع.",
+            "en": "These are the tools a coordinator uses every week."
+          },
+          "capabilities": [
+            "project"
+          ],
+          "resources": [
+            "atlassian-agile",
+            "yt-scrumorg",
+            "excel",
+            "scrum-guide-ar"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "نسّق مشروعًا طلابيًا حقيقيًا مدة 4 إلى 6 أسابيع بلوحة مهام وسجل مخاطر وتقارير أسبوعية.",
+            "en": "Coordinate a real student project for 4 to 6 weeks with a board, a risk log and weekly reports."
+          },
+          "why": {
+            "ar": "تنسيق أشخاص حقيقيين هو المهارة التي يسأل عنها أصحاب العمل.",
+            "en": "Coordinating real people is the skill employers ask about."
+          },
+          "capabilities": [
+            "project",
+            "requirements"
+          ],
+          "resources": [
+            "github-projects",
+            "atlassian-user-stories"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "تدرّب على التقييمات المفتوحة المجانية، ثم استعد لشهادة مشاريع تمهيدية.",
+            "en": "Practise the free open assessments, then prepare for an entry project certificate."
+          },
+          "why": {
+            "ar": "الشهادة التمهيدية تُظهر المصطلحات المشتركة لفرق المشاريع.",
+            "en": "An entry certificate shows the shared vocabulary of project teams."
+          },
+          "capabilities": [
+            "project"
+          ],
+          "resources": [
+            "scrum-open",
+            "scrum-guide"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب عن المشروع الذي نسّقته (الخطة والمخاطر وما تغيّر) واقرأ إعلانات حقيقية لوظيفة منسق مشاريع.",
+            "en": "Write up your coordinated project (plan, risks, what changed) and read real coordinator postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "jadarat",
+            "doroob",
+            "github-profile"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "pmi-capm",
+          "recommendation": "take",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "الشهادة التمهيدية من الهيئة الرئيسة لإدارة المشاريع، مصممة للمبتدئين.",
+            "en": "The entry certificate of the main project management body, made for people new to projects."
+          }
+        },
+        {
+          "id": "scrum-psm1",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "كثير من الفرق التقنية تعمل بسكرم؛ وهذه تُظهر أنك تعرفه.",
+            "en": "Many technical teams work in Scrum; this shows you know how."
+          }
+        },
+        {
+          "id": "itil4",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد وظيفتك الأولى، إن عملت في خدمات تقنية المعلومات",
+            "en": "After your first job, if you work in IT services"
+          },
+          "why": {
+            "ar": "مفيدة لفرق الخدمات والتشغيل، ولا تلزم للبداية.",
+            "en": "Useful for service and operations teams, not needed to start."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-software-engineer",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "أساسيات البرمجة بلغة واحدة: المتغيرات والشروط والحلقات والدوال وهياكل البيانات البسيطة.",
+            "en": "Programming fundamentals in one language: variables, conditions, loops, functions and simple data structures."
+          },
+          "why": {
+            "ar": "كل ما بعد ذلك في البرمجيات يقوم على كتابة برامج صغيرة تعمل.",
+            "en": "Everything else in software builds on writing small programs that work."
+          },
+          "capabilities": [
+            "software"
+          ],
+          "resources": [
+            "cs50x",
+            "cs50p",
+            "py-tutorial",
+            "yt-elzero"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "العمل كمهندس: Git وسطر الأوامر والاختبارات ومراجعة الشيفرة والشيفرة المقروءة.",
+            "en": "Working like an engineer: Git, the command line, tests, code review and readable code."
+          },
+          "why": {
+            "ar": "تختار الفرق موظفيها لهذه العادات بقدر ما تختارهم للغة البرمجة.",
+            "en": "Teams hire for these habits as much as for a language."
+          },
+          "capabilities": [
+            "software",
+            "testing"
+          ],
+          "resources": [
+            "missing-semester",
+            "git-book",
+            "ms-github-ar",
+            "swe-book"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "تطبيق صغير باختبارات وملف README على GitHub، تبنيه مع طالب آخر على الأقل عبر طلبات الدمج.",
+            "en": "A small app with tests and a README on GitHub, built with at least one other student through pull requests."
+          },
+          "why": {
+            "ar": "المستودع المشترك يُظهر شيفرتك وطريقة عملك مع غيرك.",
+            "en": "A shared repository shows both your code and how you work with others."
+          },
+          "capabilities": [
+            "software",
+            "testing"
+          ],
+          "resources": [
+            "github-skills",
+            "ms-github",
+            "cs50web",
+            "pytest-docs"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "اختياري: شهادة أساسيات في GitHub أو السحابة، بدورتها الرسمية المجانية.",
+            "en": "Optional: a fundamentals certificate in GitHub or the cloud, with its free official course."
+          },
+          "why": {
+            "ar": "في وظائف البرمجيات المبتدئة، المشاريع أهم من الشهادات.",
+            "en": "For junior software roles, projects count more than certificates."
+          },
+          "capabilities": [
+            "software"
+          ],
+          "resources": [
+            "ms-github-path",
+            "aws-skillbuilder"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "رتّب ملفك على GitHub، وثبّت أفضل مشروعين، واقرأ إعلانات حقيقية لوظائف المطورين المبتدئين.",
+            "en": "Tidy your GitHub profile, pin your best two projects, and read real junior developer postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "roadmap-sh",
+            "jadarat",
+            "satr"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "github-foundations",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 3",
+            "en": "After stage 3"
+          },
+          "why": {
+            "ar": "تؤكد أساسيات Git وGitHub التي يستعملها كل فريق.",
+            "en": "Confirms the Git and GitHub basics every team uses."
+          }
+        },
+        {
+          "id": "aws-ccp",
+          "recommendation": "optional",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "أول شهادة سحابية؛ كثير من أصحاب العمل في السعودية يعملون على منصات سحابية.",
+            "en": "A first cloud certificate; many Saudi employers run on cloud platforms."
+          }
+        },
+        {
+          "id": "ms-az900",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد وظيفتك الأولى، إن كان فريقك يستعمل Azure",
+            "en": "After your first job, if your team uses Azure"
+          },
+          "why": {
+            "ar": "خذ الشهادة السحابية للمنصة التي يستعملها فريقك فعلًا.",
+            "en": "Take the cloud certificate of the platform your team actually uses."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-cyber-analyst",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "كيف تعمل الشبكات وأنظمة التشغيل: العناوين والمنافذ والبروتوكولات والمستخدمون وسطر الأوامر.",
+            "en": "How networks and operating systems work: addresses, ports, protocols, users and the command line."
+          },
+          "why": {
+            "ar": "لا تستطيع حماية ما لا تفهمه.",
+            "en": "You cannot protect what you do not understand."
+          },
+          "capabilities": [
+            "cyber"
+          ],
+          "resources": [
+            "netacad-net",
+            "missing-semester",
+            "yt-messer"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "مبادئ الأمن: التهديدات، ومخاطر الويب الشائعة، والسجلات، والضوابط الأساسية للهيئة الوطنية للأمن السيبراني.",
+            "en": "Security principles: threats, common web risks, logs, and the Saudi NCA essential controls."
+          },
+          "why": {
+            "ar": "المحللون يقرؤون التنبيهات والضوابط كل يوم، وأصحاب العمل في السعودية يتبعون ضوابط الهيئة.",
+            "en": "Analysts read alerts and controls every day; Saudi employers follow the NCA controls."
+          },
+          "capabilities": [
+            "cyber"
+          ],
+          "resources": [
+            "cs50cyber",
+            "netacad-cyber",
+            "owasp-top10",
+            "nca"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "تدرّب في مختبر على تطبيق ضعيف عن قصد واكتب تقريرًا بما وجدت. لا تختبر أبدًا أنظمة لا تملكها.",
+            "en": "Practise in a lab on a deliberately vulnerable app and write a findings report. Never test systems you do not own."
+          },
+          "why": {
+            "ar": "التقرير الواضح بالنتائج هو المنتج الرئيس للمحلل.",
+            "en": "A clear findings report is the analyst’s main product."
+          },
+          "capabilities": [
+            "cyber"
+          ],
+          "resources": [
+            "owasp-juiceshop",
+            "yt-owasp",
+            "nist-csf"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "استعمل التدريب الرسمي المجاني لشهادة أمن تمهيدية، ثم الدورات المرئية المجانية للشهادة التالية.",
+            "en": "Use the free official training for an entry security certificate, then free video courses for the next one."
+          },
+          "why": {
+            "ar": "كثيرًا ما تذكر إعلانات وظائف الأمن شهادة تمهيدية.",
+            "en": "Security job postings often name an entry certificate."
+          },
+          "capabilities": [
+            "cyber"
+          ],
+          "resources": [
+            "isc2-1mcc",
+            "messer"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر تقارير مختبرك (دون أهداف حقيقية) واقرأ إعلانات حقيقية لوظيفة محلل أمن.",
+            "en": "Publish your lab write-ups (no real targets), and read real security analyst postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "jadarat",
+            "doroob",
+            "github-profile"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "isc2-cc",
+          "recommendation": "take",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة تمهيدية بتدريب رسمي مجاني؛ أول تحقق خارجي من أساسياتك.",
+            "en": "An entry certificate with free official training; a first outside check of your basics."
+          }
+        },
+        {
+          "id": "comptia-secplus",
+          "recommendation": "take",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة الأمن الأكثر ذكرًا في إعلانات وظائف المحللين المبتدئين.",
+            "en": "The security certificate most often named in junior analyst postings."
+          }
+        },
+        {
+          "id": "comptia-netplus",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 1",
+            "en": "After stage 1"
+          },
+          "why": {
+            "ar": "تفيدك إن كانت الشبكات نقطة ضعفك.",
+            "en": "Helps if networking is your weaker side."
+          }
+        },
+        {
+          "id": "ms-sc900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "قصيرة ودراستها مجانية؛ مفيدة حيث يستعمل أصحاب العمل أنظمة Microsoft.",
+            "en": "Short and free to study for; useful where employers use Microsoft systems."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-qa-tester",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "برمجة تكفي لقراءة الشيفرة وكتابة برامج صغيرة، وكيف تُبنى البرمجيات وتُطلق.",
+            "en": "Enough programming to read code and write small scripts, and how software is built and released."
+          },
+          "why": {
+            "ar": "المختبر الذي يقرأ الشيفرة يجد أخطاء أدق ويؤتمت فحوصه.",
+            "en": "Testers who can read code find better bugs and automate their checks."
+          },
+          "capabilities": [
+            "software"
+          ],
+          "resources": [
+            "cs50p",
+            "py-tutorial",
+            "hsoub-python"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "تصميم الاختبارات: فئات التكافؤ والقيم الحدية وحالات الاختبار وتقارير الأخطاء الواضحة.",
+            "en": "Test design: equivalence classes, boundary values, test cases and clear bug reports."
+          },
+          "why": {
+            "ar": "التصميم الجيد للاختبارات يكشف عيوبًا أكثر باختبارات أقل.",
+            "en": "Good test design finds more defects with fewer tests."
+          },
+          "capabilities": [
+            "testing"
+          ],
+          "resources": [
+            "istqb-syllabus",
+            "swe-book",
+            "google-testing-blog"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "اختبر تطبيق ويب حقيقيًا واحدًا: 20 حالة اختبار، و5 تقارير أخطاء، و3 فحوص مؤتمتة بأداة Playwright أو pytest.",
+            "en": "Test one real web app: 20 test cases, 5 bug reports, and 3 automated checks with Playwright or pytest."
+          },
+          "why": {
+            "ar": "يريد أصحاب العمل رؤية حالات اختبارك وأتمتتك جنبًا إلى جنب.",
+            "en": "Employers want to see your test cases and your automation side by side."
+          },
+          "capabilities": [
+            "testing",
+            "software"
+          ],
+          "resources": [
+            "playwright-docs",
+            "pytest-docs",
+            "selenium-docs",
+            "yt-playwright"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "ادرس المنهج الرسمي المجاني لشهادة الاختبار التأسيسية.",
+            "en": "Study the free official syllabus for the foundation testing certificate."
+          },
+          "why": {
+            "ar": "الشهادة التأسيسية مطلوبة كثيرًا في إعلانات وظائف الاختبار.",
+            "en": "The foundation certificate is widely asked for in testing postings."
+          },
+          "capabilities": [
+            "testing"
+          ],
+          "resources": [
+            "istqb-syllabus",
+            "roadmap-sh"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر خطة اختبارك وتقارير الأخطاء والأتمتة، واقرأ إعلانات حقيقية لوظائف ضمان الجودة.",
+            "en": "Publish your test plan, bug reports and automation, and read real QA postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat",
+            "doroob"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "istqb-ctfl",
+          "recommendation": "take",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة الاختبار الأكثر ذكرًا عند أصحاب العمل، ومنهجها مجاني.",
+            "en": "The testing certificate most named by employers; the syllabus is free."
+          }
+        },
+        {
+          "id": "github-foundations",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 3",
+            "en": "After stage 3"
+          },
+          "why": {
+            "ar": "المختبرون يعملون في المستودعات نفسها مع المطورين.",
+            "en": "Testers work in the same repositories as developers."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-database-administrator",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "النموذج العلائقي ولغة SQL: الجداول والمفاتيح والربط والاستعلامات البسيطة.",
+            "en": "The relational model and SQL: tables, keys, joins and simple queries."
+          },
+          "why": {
+            "ar": "على مسؤول قواعد البيانات أن يقرأ SQL ويكتبها بطلاقة.",
+            "en": "An administrator must read and write SQL fluently."
+          },
+          "capabilities": [
+            "database"
+          ],
+          "resources": [
+            "cs50sql",
+            "hsoub-sql",
+            "pg-tutorial",
+            "kaggle-sql"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "كيف تعمل قاعدة البيانات من الداخل: التصميم والفهارس والمعاملات والتخزين.",
+            "en": "How a database works inside: design, indexes, transactions and storage."
+          },
+          "why": {
+            "ar": "معرفة الداخل هي ما يمكّنك من إصلاح القواعد البطيئة أو المعطلة.",
+            "en": "Knowing the inside is what lets you fix slow or broken databases."
+          },
+          "capabilities": [
+            "database",
+            "db-operations"
+          ],
+          "resources": [
+            "yt-cmu-db",
+            "cmu-15445",
+            "ms-data-relational",
+            "ms-data-core-ar"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "شغّل قاعدة PostgreSQL تدريبية: مستخدمون وأدوار، ونسخة احتياطية، وتمرين استعادة، واستعلام بطيء تُصلحه بفهرس.",
+            "en": "Run a training PostgreSQL database: users and roles, a backup, a restore drill, and a slow query fixed with an index."
+          },
+          "why": {
+            "ar": "النسخ الاحتياطي والاستعادة وضبط الصلاحيات هي العمل اليومي لهذا الدور.",
+            "en": "Backup, restore and access control are the daily work of the role."
+          },
+          "capabilities": [
+            "db-operations"
+          ],
+          "resources": [
+            "pg-roles",
+            "pg-backup",
+            "pg-admin"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "اتبع مسار التعلم الرسمي المجاني لشهادة مسؤول قواعد البيانات.",
+            "en": "Follow the free official learning path for a database administrator certificate."
+          },
+          "why": {
+            "ar": "كثيرًا ما تذكر إعلانات هذا الدور شهادة من مزوّد قواعد البيانات.",
+            "en": "Administrator postings often name a vendor certificate."
+          },
+          "capabilities": [
+            "db-operations"
+          ],
+          "resources": [
+            "ms-dp300-course",
+            "ms-data-core"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب تمرين الاستعادة وعمل التحسين في دليل تشغيل قصير، واقرأ إعلانات حقيقية لوظيفة مسؤول قواعد البيانات.",
+            "en": "Write up your restore drill and tuning work as a short runbook, and read real DBA postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat",
+            "doroob"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-dp300",
+          "recommendation": "take",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة معروفة لمسؤولي قواعد البيانات بمسار تعلم رسمي مجاني.",
+            "en": "A recognised administrator certificate with a free official learning path."
+          }
+        },
+        {
+          "id": "ms-az900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "كثير من قواعد البيانات تعمل اليوم على السحابة، وهذه أول خطوة.",
+            "en": "Many databases now run in the cloud; this is the first step."
+          }
+        },
+        {
+          "id": "fcc-relational-db",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 1",
+            "en": "After stage 1"
+          },
+          "why": {
+            "ar": "تدريب عملي مجاني على SQL وسطر الأوامر.",
+            "en": "Free and hands-on practice of SQL and the command line."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-web-developer",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "كيف يعمل الويب، وHTML وCSS لبناء صفحات بسيطة.",
+            "en": "How the web works, and HTML and CSS to build simple pages."
+          },
+          "why": {
+            "ar": "كل واجهة ويب هي HTML وCSS في أساسها.",
+            "en": "Every web interface is HTML and CSS underneath."
+          },
+          "capabilities": [
+            "web-development"
+          ],
+          "resources": [
+            "mdn-learn",
+            "webdev-html",
+            "hsoub-html",
+            "yt-elzero"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "لغة JavaScript، والتخطيط المتجاوب للجوال، وإتاحة الوصول.",
+            "en": "JavaScript, responsive layouts for phones, and accessibility."
+          },
+          "why": {
+            "ar": "معظم المستخدمين على الجوال، والصفحات المتاحة تعمل للجميع.",
+            "en": "Most users are on phones, and accessible pages work for everyone."
+          },
+          "capabilities": [
+            "web-development",
+            "software"
+          ],
+          "resources": [
+            "webdev-css",
+            "hsoub-js",
+            "webdev-a11y",
+            "odin"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "موقع يناسب الجوال فيه نموذج، تختبره على جوال حقيقي وتنشره على GitHub Pages.",
+            "en": "A mobile-friendly site with a form, tested on a real phone and published on GitHub Pages."
+          },
+          "why": {
+            "ar": "الموقع المنشور أقوى دليل في هذا الدور.",
+            "en": "A live site is the strongest proof for this role."
+          },
+          "capabilities": [
+            "web-development",
+            "software"
+          ],
+          "resources": [
+            "github-pages",
+            "react-learn",
+            "cs50web",
+            "fcc-learn"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "اختياري: شهادة ويب مجانية قائمة على المشاريع.",
+            "en": "Optional: a free project-based web certificate."
+          },
+          "why": {
+            "ar": "في وظائف الويب، الموقع المنشور أهم من الشهادة.",
+            "en": "For web roles, a live site counts more than a certificate."
+          },
+          "capabilities": [
+            "web-development"
+          ],
+          "resources": [
+            "fcc-rwd",
+            "ms-github"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "ضع أفضل موقعين في ملفك مع لقطات شاشة، واقرأ إعلانات حقيقية لوظيفة مطور ويب.",
+            "en": "Put your two best sites in your profile with screenshots, and read real web developer postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "roadmap-sh",
+            "jadarat",
+            "satr"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "fcc-rwd",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "مجانية، وكل مشروع فيها صفحة تستطيع عرضها.",
+            "en": "Free, and every project in it is a page you can show."
+          }
+        },
+        {
+          "id": "github-foundations",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 3",
+            "en": "After stage 3"
+          },
+          "why": {
+            "ar": "تؤكد أساسيات Git وGitHub التي تستعملها فرق الويب.",
+            "en": "Confirms the Git and GitHub basics web teams use."
+          }
+        },
+        {
+          "id": "aws-ccp",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد وظيفتك الأولى، إن كنت تنشر على السحابة",
+            "en": "After your first job, if you deploy to the cloud"
+          },
+          "why": {
+            "ar": "مفيدة حين تبدأ تشغيل المواقع على منصة سحابية.",
+            "en": "Useful when you start running sites on a cloud platform."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "job-systems-analyst",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "كيف تدعم نظم المعلومات العمل، ومن يستعملها ومن يموّلها.",
+            "en": "How information systems support work, and who uses and pays for them."
+          },
+          "why": {
+            "ar": "محلل النظم يبدأ من العمل لا من البرنامج.",
+            "en": "A systems analyst starts from the work, not from the software."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "atlassian-requirements",
+            "edraak",
+            "ms-learn-ar"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "النمذجة: مخططات الإجراءات بترميز BPMN، وحالات الاستخدام ومخططات الأنشطة في UML، وتدفق البيانات.",
+            "en": "Modelling: process diagrams in BPMN, UML use cases and activity diagrams, and data flows."
+          },
+          "why": {
+            "ar": "المخططات هي طريقة المحلل للاتفاق مع المستخدمين والمطورين.",
+            "en": "Diagrams are how analysts agree with users and developers."
+          },
+          "capabilities": [
+            "systems-analysis",
+            "requirements"
+          ],
+          "resources": [
+            "bpmn",
+            "uml",
+            "atlassian-user-stories"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "وثّق سير عمل حقيقيًا واحدًا كما هو اليوم، واحتياجات أصحاب المصلحة، وقارن بين خيارين للحل في مذكرة قصيرة.",
+            "en": "Document one real workflow as it is today, the stakeholders’ needs, and compare two solution options in a short memo."
+          },
+          "why": {
+            "ar": "المقارنة بين الخيارات مع الأسباب هي القرار الذي يدعمه هذا الدور.",
+            "en": "Comparing options with reasons is the decision this role supports."
+          },
+          "capabilities": [
+            "systems-analysis",
+            "requirements"
+          ],
+          "resources": [
+            "nngroup",
+            "uml"
+          ],
+          "order": 3
+        },
+        {
+          "id": "certification",
+          "title": {
+            "ar": "الشهادة",
+            "en": "Certification"
+          },
+          "learn": {
+            "ar": "اختياري: دورة رسمية مجانية عن أدوات أتمتة الإجراءات، قبل شهادة تحليل تمهيدية.",
+            "en": "Optional: a free official course on process automation tools, before an entry analysis certificate."
+          },
+          "why": {
+            "ar": "أدوات البرمجة منخفضة الشيفرة كثيرًا ما تكون طريقة تنفيذ تصاميم المحللين.",
+            "en": "Low-code tools are often how analysts’ designs get built."
+          },
+          "capabilities": [
+            "systems-analysis"
+          ],
+          "resources": [
+            "ms-pl900-course",
+            "atlassian-agile"
+          ],
+          "order": 4
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اجمع مخططاتك ومذكرتك في معرض أعمال قصير، واقرأ إعلانات حقيقية لوظيفة محلل نظم.",
+            "en": "Collect your diagrams and memo in a short portfolio, and read real systems analyst postings."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "jadarat",
+            "doroob",
+            "github-profile"
+          ],
+          "order": 5
+        }
+      ],
+      "certifications": [
+        {
+          "id": "iiba-ecba",
+          "recommendation": "take",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة التحليل التمهيدية، ولا تتطلب خبرة عمل.",
+            "en": "The entry analysis certificate; it needs no work experience."
+          }
+        },
+        {
+          "id": "ms-pl900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "تُظهر قدرتك على تحويل تصميم الإجراء إلى أداة تعمل.",
+            "en": "Shows you can turn a process design into a working tool."
+          }
+        },
+        {
+          "id": "itil4",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد وظيفتك الأولى، إن عملت في خدمات تقنية المعلومات",
+            "en": "After your first job, if you work in IT services"
+          },
+          "why": {
+            "ar": "مفيدة لفرق الخدمات، ولا تلزم للبداية.",
+            "en": "Useful for service teams, not needed to start."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-ai-work",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "ما الذكاء الاصطناعي والذكاء الاصطناعي التوليدي، وفيمَ يُحسنان، وأين يخطئان.",
+            "en": "What AI and generative AI are, what they do well, and where they make mistakes."
+          },
+          "why": {
+            "ar": "الاستعمال الجيد للذكاء الاصطناعي يبدأ بمعرفة حدوده.",
+            "en": "Using AI well starts with knowing its limits."
+          },
+          "capabilities": [
+            "ai-work"
+          ],
+          "resources": [
+            "elements-ai",
+            "ms-genai",
+            "ms-genai-ar"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "الاستعمال المسؤول للذكاء الاصطناعي في العمل: تعليمات واضحة، والتحقق من كل ناتج، وإبعاد البيانات الشخصية.",
+            "en": "Using AI responsibly at work: clear instructions, checking every output, and keeping personal data out."
+          },
+          "why": {
+            "ar": "التوجيهات السعودية وأصحاب العمل يتوقعون استعمالًا متحقَّقًا منه ويحفظ الخصوصية.",
+            "en": "Saudi guidance and employers expect checked, private use."
+          },
+          "capabilities": [
+            "ai-work"
+          ],
+          "resources": [
+            "sdaia",
+            "cs50ai"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "اختر مهمة واحدة قابلة للقياس، وأنجزها بالذكاء الاصطناعي وبدونه، وسجّل الوقت والأخطاء وما تحققت منه.",
+            "en": "Pick one measurable task, do it with and without AI, and record the time, the errors and what you checked."
+          },
+          "why": {
+            "ar": "المقارنة المقيسة دليل يستطيع صاحب العمل قراءته.",
+            "en": "A measured comparison is evidence an employer can read."
+          },
+          "capabilities": [
+            "ai-work"
+          ],
+          "resources": [
+            "excel",
+            "ms-learn-ar"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب المقارنة في صفحة واحدة، تذكر فيها بدقة ما فعله الذكاء الاصطناعي وما فعلته أنت.",
+            "en": "Write the comparison up in one page, saying exactly what the AI did and what you did."
+          },
+          "why": {
+            "ar": "الوضوح في دور الذكاء الاصطناعي هو ما يجعل العمل موثوقًا.",
+            "en": "Being clear about AI’s part is what makes the work trustworthy."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "doroob"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-ai900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة أساسيات قصيرة بمسار تعلم رسمي مجاني.",
+            "en": "A short fundamentals certificate with a free official learning path."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-data-portfolio",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "لغة SQL لاستخراج البيانات التي يحتاجها سؤالك.",
+            "en": "SQL to pull the data your question needs."
+          },
+          "why": {
+            "ar": "مشروع المعرض يبدأ من بيانات اخترتها بنفسك.",
+            "en": "A portfolio project starts from data you selected yourself."
+          },
+          "capabilities": [
+            "database"
+          ],
+          "resources": [
+            "kaggle-sql",
+            "hsoub-sql"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "تنظيف البيانات وتلخيصها ورسمها بأمانة.",
+            "en": "Cleaning, summarising and charting the data honestly."
+          },
+          "why": {
+            "ar": "البيانات النظيفة والرسوم الأمينة أول ما يفحصه المراجعون.",
+            "en": "Clean data and honest charts are what reviewers check first."
+          },
+          "capabilities": [
+            "statistics",
+            "database"
+          ],
+          "resources": [
+            "kaggle-pandas",
+            "kaggle-dataviz",
+            "pandas-start"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "سؤال عمل واحد، ومجموعة بيانات واحدة، ونتيجة موثّقة واحدة تعرضها في خمس دقائق.",
+            "en": "One business question, one dataset, one documented result you can present in five minutes."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "ms-powerbi",
+            "github-pages",
+            "kaggle-learn"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر المشروع مع ملف README قصير: السؤال والبيانات والطريقة والحدود.",
+            "en": "Publish the project with a short README: the question, the data, the method and the limits."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "fcc-data-python",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "مجانية وقائمة على المشاريع.",
+            "en": "Free and project-based."
+          }
+        },
+        {
+          "id": "ms-pl300",
+          "recommendation": "later",
+          "when": {
+            "ar": "بعد المشروع، إن كنت تتجه إلى وظائف المحللين",
+            "en": "After the project, if you aim for analyst jobs"
+          },
+          "why": {
+            "ar": "شهادة المحللين الأكثر ذكرًا عند أصحاب العمل.",
+            "en": "The analyst certificate employers name most."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-sql-analytics",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "الجداول والمفاتيح والتصفية والربط والتجميع.",
+            "en": "Tables, keys, filters, joins and grouping."
+          },
+          "why": {
+            "ar": "كل استعلام تحليلي يُبنى من هذه القطع.",
+            "en": "Every analytic query is built from these pieces."
+          },
+          "capabilities": [
+            "database"
+          ],
+          "resources": [
+            "cs50sql",
+            "hsoub-sql",
+            "yt-cs50"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "دوال النوافذ والاستعلامات الفرعية والتحقق من صحة النتيجة.",
+            "en": "Window functions, subqueries and checking that a result is right."
+          },
+          "why": {
+            "ar": "التحليل يحتاج استعلامات تستطيع تكرارها والوثوق بها.",
+            "en": "Analysis needs queries you can repeat and trust."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "kaggle-sql",
+            "pg-tutorial",
+            "sqlite-lang"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "عشرة استعلامات قابلة للتكرار تجيب عن سؤال عمل واحد، محفوظة في ملف مع تعليقات.",
+            "en": "Ten repeatable queries that answer one business question, saved in a commented script."
+          },
+          "why": {
+            "ar": "الملف المعلَّق دليل تحليل يستطيع أي أحد إعادة تشغيله.",
+            "en": "A commented script is analysis evidence anyone can rerun."
+          },
+          "capabilities": [
+            "database"
+          ],
+          "resources": [
+            "fcc-relational-db",
+            "ms-github"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر الملف مع السؤال وما يُظهره كل استعلام.",
+            "en": "Publish the script with the question and what each query shows."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "fcc-relational-db",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "تدريب عملي مجاني على SQL مع شهادة.",
+            "en": "Free hands-on SQL practice with a certificate."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-python-analytics",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "أساسيات Python: القيم والقوائم والحلقات والدوال والملفات.",
+            "en": "Python basics: values, lists, loops, functions and files."
+          },
+          "why": {
+            "ar": "تحتاج اللغة قبل المكتبات.",
+            "en": "You need the language before the libraries."
+          },
+          "capabilities": [
+            "software"
+          ],
+          "resources": [
+            "cs50p",
+            "py-tutorial",
+            "hsoub-python",
+            "hsoub-academy"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "مكتبة pandas للجداول، والإحصاء الذي يقف وراء التلخيص.",
+            "en": "pandas for tables, and the statistics behind a summary."
+          },
+          "why": {
+            "ar": "معظم التحليل بلغة Python هو pandas مع إحصاء دقيق.",
+            "en": "Most analysis in Python is pandas plus careful statistics."
+          },
+          "capabilities": [
+            "statistics"
+          ],
+          "resources": [
+            "kaggle-pandas",
+            "pandas-start",
+            "yt-statquest",
+            "yt-fcc"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "تحليل واحد قابل لإعادة الإنتاج: دفتر أو ملف يستطيع أي أحد إعادة تشغيله من البيانات الخام.",
+            "en": "One reproducible analysis: a notebook or script that anyone can rerun from the raw data."
+          },
+          "why": {
+            "ar": "العمل القابل لإعادة الإنتاج هو ما يقبله المسار دليلًا.",
+            "en": "Reproducible work is what the pathway accepts as evidence."
+          },
+          "capabilities": [
+            "statistics",
+            "software"
+          ],
+          "resources": [
+            "kaggle-dataviz",
+            "fcc-data-python",
+            "ms-github"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر التحليل مع ملف README والخطوات الدقيقة لإعادة تشغيله.",
+            "en": "Publish the analysis with a README and the exact steps to rerun it."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "fcc-data-python",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة مجانية في تحليل Python قائمة على المشاريع.",
+            "en": "Free and project-based Python analysis certificate."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-bi-dashboard",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "الجداول الإلكترونية والمقاييس الأساسية التي تعرضها اللوحة.",
+            "en": "Spreadsheets and the basic measures a dashboard shows."
+          },
+          "why": {
+            "ar": "اللوحة لا تزيد جودتها على جودة مقاييسها.",
+            "en": "A dashboard is only as good as the measures in it."
+          },
+          "capabilities": [
+            "statistics"
+          ],
+          "resources": [
+            "excel",
+            "khan-stats",
+            "khan-ar"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "تحميل البيانات ونمذجتها في أداة ذكاء أعمال، واختيار الرسم المناسب.",
+            "en": "Loading and modelling data in a BI tool, and choosing the right chart."
+          },
+          "why": {
+            "ar": "النمذجة تحدد صحة الأرقام.",
+            "en": "Modelling decides whether the numbers are right."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "ms-powerbi",
+            "ms-powerbi-ar",
+            "yt-powerbi"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "لوحة واحدة تجيب عن سؤال عمل واحد، مع ملاحظة عن كل مقياس.",
+            "en": "One dashboard that answers one business question, with a note on each measure."
+          },
+          "why": {
+            "ar": "اللوحة المشروحة دليل، وغير المشروحة زينة.",
+            "en": "An explained dashboard is evidence; an unexplained one is decoration."
+          },
+          "capabilities": [
+            "database",
+            "statistics"
+          ],
+          "resources": [
+            "ms-pl300-course",
+            "kaggle-dataviz"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "شارك لقطات الشاشة وملاحظات المقاييس في معرض أعمالك.",
+            "en": "Share screenshots and the measure notes in your portfolio."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-pl300",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 3",
+            "en": "After stage 3"
+          },
+          "why": {
+            "ar": "أكثر شهادة تُذكر لعمل Power BI.",
+            "en": "The most named certificate for Power BI work."
+          }
+        },
+        {
+          "id": "ms-pl900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة أساسيات قصيرة للأدوات نفسها.",
+            "en": "A short fundamentals certificate for the same tools."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-product-discovery",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "كيف تحاور المستخدمين وتجد المشكلة الحقيقية وراء الطلب.",
+            "en": "How to talk with users and find the real problem behind a request."
+          },
+          "why": {
+            "ar": "الاكتشاف يفشل حين تُخمَّن المشكلة.",
+            "en": "Discovery fails when the problem is guessed."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "nngroup",
+            "atlassian-agile"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "الفرضيات وقصص المستخدم ومعايير القبول.",
+            "en": "Hypotheses, user stories and acceptance criteria."
+          },
+          "why": {
+            "ar": "هذه تحوّل المشكلة إلى شيء يستطيع الفريق بناءه.",
+            "en": "These turn a problem into something a team can build."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "atlassian-user-stories",
+            "atlassian-requirements",
+            "scrum-guide-ar"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "مشكلة مستخدم واحدة تتحول إلى فرضيات ومتطلبات ونموذج قرار بسيط.",
+            "en": "One user problem turned into hypotheses, requirements and a simple decision model."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "uml",
+            "bpmn"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب العمل في دراسة حالة من صفحتين.",
+            "en": "Write the work up as a two-page case study."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "doroob",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "scrum-pspo1",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "تُظهر فهمك لقائمة أعمال المنتج.",
+            "en": "Shows you understand product backlogs."
+          }
+        },
+        {
+          "id": "iiba-ecba",
+          "recommendation": "later",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة التحليل التمهيدية، إن كنت تتجه إلى وظائف المحللين.",
+            "en": "The entry analysis certificate, if you aim for analyst jobs."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-qa-tester",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "الغرض من الاختبار، وكيف تكتب حالة اختبار وتقرير خطأ.",
+            "en": "What testing is for, and how to write a test case and a bug report."
+          },
+          "why": {
+            "ar": "الحالات والتقارير الواضحة أساس كل عمل اختبار.",
+            "en": "Clear cases and reports are the base of all testing work."
+          },
+          "capabilities": [
+            "testing"
+          ],
+          "resources": [
+            "istqb-syllabus",
+            "google-testing-blog"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "أتمتة بعض الفحوص بأداة اختبار.",
+            "en": "Automating a few checks with a test tool."
+          },
+          "why": {
+            "ar": "الأتمتة مطلوبة في معظم إعلانات وظائف الاختبار.",
+            "en": "Automation is asked for in most testing postings."
+          },
+          "capabilities": [
+            "testing",
+            "software"
+          ],
+          "resources": [
+            "playwright-docs",
+            "pytest-docs"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "اختبر تطبيقًا واحدًا: حالات الاختبار، والعيوب المكتشفة، وثلاثة فحوص مؤتمتة.",
+            "en": "Test one application: test cases, defects found and three automated checks."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "testing"
+          ],
+          "resources": [
+            "yt-playwright",
+            "selenium-docs",
+            "ms-github"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر خطة الاختبار والعيوب والأتمتة.",
+            "en": "Publish the test plan, the defects and the automation."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "istqb-ctfl",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "شهادة الاختبار التأسيسية، ومنهجها مجاني.",
+            "en": "The foundation testing certificate; the syllabus is free."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-database-administrator",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "تثبيت قاعدة بيانات وكتابة SQL الأساسية.",
+            "en": "Installing a database and writing basic SQL."
+          },
+          "why": {
+            "ar": "تتدرب على الإدارة في قاعدة تشغّلها بنفسك.",
+            "en": "You practise administration on a database you run yourself."
+          },
+          "capabilities": [
+            "database"
+          ],
+          "resources": [
+            "pg-tutorial",
+            "hsoub-sql"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "المستخدمون والأدوار والنسخ الاحتياطي والاستعادة.",
+            "en": "Users, roles, backups and restores."
+          },
+          "why": {
+            "ar": "هذه هي العمليات التي يفحصها المسار.",
+            "en": "These are the operations the pathway checks."
+          },
+          "capabilities": [
+            "db-operations"
+          ],
+          "resources": [
+            "pg-roles",
+            "pg-backup",
+            "pg-admin"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "تمرين استعادة من نسخة احتياطية ومراجعة صلاحيات على قاعدة تدريبية.",
+            "en": "A restore drill from a backup and an access review on a training database."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "db-operations",
+            "database"
+          ],
+          "resources": [
+            "yt-cmu-db",
+            "ms-data-relational"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب التمرين في دليل تشغيل قصير.",
+            "en": "Write the drill up as a short runbook."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-dp300",
+          "recommendation": "later",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة معروفة لمسؤولي قواعد البيانات، إن كنت تتجه إلى هذه الوظائف.",
+            "en": "A recognised administrator certificate, if you aim for DBA jobs."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-web-developer",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "HTML وCSS لصفحات بسيطة.",
+            "en": "HTML and CSS for simple pages."
+          },
+          "why": {
+            "ar": "كل واجهة تبدأ من هنا.",
+            "en": "Every interface starts here."
+          },
+          "capabilities": [
+            "web-development"
+          ],
+          "resources": [
+            "webdev-html",
+            "webdev-css",
+            "hsoub-html"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "أساسيات JavaScript، وتخطيط الجوال، وإتاحة الوصول.",
+            "en": "JavaScript basics, phone layouts and accessibility."
+          },
+          "why": {
+            "ar": "المسار يفحص واجهة جوال قابلة للاستخدام.",
+            "en": "The pathway checks a usable mobile interface."
+          },
+          "capabilities": [
+            "web-development"
+          ],
+          "resources": [
+            "webdev-a11y",
+            "hsoub-js",
+            "hsoub-css",
+            "mdn-learn"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "واجهة جوال تختبر وظائفها الأساسية على جوال حقيقي.",
+            "en": "A mobile interface with its core functions tested on a real phone."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "web-development",
+            "software"
+          ],
+          "resources": [
+            "github-pages",
+            "yt-elzero",
+            "odin"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "انشر الموقع واذكر ما اختبرته.",
+            "en": "Publish the site and list what you tested."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "github-profile",
+            "satr"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "fcc-rwd",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "مجانية، وكل مشروع فيها صفحة تستطيع عرضها.",
+            "en": "Free, and every project in it is a page you can show."
+          }
+        }
+      ]
+    },
+    {
+      "pathwayId": "training-systems-analyst",
+      "source": "KAMIN draft from the pathway’s required capabilities (src/matching/targets.js) and the providers’ and issuers’ official pages",
+      "language": [
+        "ar",
+        "en"
+      ],
+      "status": "proposed",
+      "note": "written by Claude, approved by team and supervisor (stated by Amjd 2026-11-18)",
+      "stages": [
+        {
+          "id": "basics",
+          "title": {
+            "ar": "الأساسيات",
+            "en": "Basics"
+          },
+          "learn": {
+            "ar": "من أصحاب المصلحة وماذا يحتاجون.",
+            "en": "Who the stakeholders are and what they need."
+          },
+          "why": {
+            "ar": "التحليل يبدأ من احتياجات الناس.",
+            "en": "Analysis starts from people’s needs."
+          },
+          "capabilities": [
+            "requirements"
+          ],
+          "resources": [
+            "atlassian-requirements",
+            "edraak"
+          ],
+          "order": 1
+        },
+        {
+          "id": "core",
+          "title": {
+            "ar": "المهارات الأساسية للمسار",
+            "en": "Core skills"
+          },
+          "learn": {
+            "ar": "رسم سير العمل كما هو، وكما يمكن أن يكون.",
+            "en": "Drawing a workflow as it is, and as it could be."
+          },
+          "why": {
+            "ar": "المخططات توضح المقارنة.",
+            "en": "Diagrams make the comparison clear."
+          },
+          "capabilities": [
+            "systems-analysis"
+          ],
+          "resources": [
+            "bpmn",
+            "uml"
+          ],
+          "order": 2
+        },
+        {
+          "id": "project",
+          "title": {
+            "ar": "مشروع تطبيقي",
+            "en": "Practice project"
+          },
+          "learn": {
+            "ar": "وثّق سير عمل واحدًا واحتياجات أصحاب المصلحة فيه، ثم قارن بين خيارين للحل.",
+            "en": "Document one workflow and its stakeholders’ needs, then compare two solution options."
+          },
+          "why": {
+            "ar": "هذا هو الدليل الذي يطلبه المسار.",
+            "en": "This is the evidence the pathway asks for."
+          },
+          "capabilities": [
+            "systems-analysis",
+            "requirements"
+          ],
+          "resources": [
+            "nngroup",
+            "atlassian-user-stories"
+          ],
+          "order": 3
+        },
+        {
+          "id": "job-ready",
+          "title": {
+            "ar": "الجاهزية للعمل",
+            "en": "Job-ready"
+          },
+          "learn": {
+            "ar": "اكتب المقارنة في مذكرة قرار قصيرة.",
+            "en": "Write the comparison up as a short decision memo."
+          },
+          "why": {
+            "ar": "يبحث أصحاب العمل عن أعمال يستطيعون فتحها وقراءتها، والإعلانات الحقيقية تخبرك بالكلمات التي يستعملونها.",
+            "en": "Employers look for work they can open and read, and real postings tell you which words they use."
+          },
+          "capabilities": [],
+          "resources": [
+            "doroob",
+            "jadarat"
+          ],
+          "order": 4
+        }
+      ],
+      "certifications": [
+        {
+          "id": "ms-pl900",
+          "recommendation": "optional",
+          "when": {
+            "ar": "بعد المرحلة 2",
+            "en": "After stage 2"
+          },
+          "why": {
+            "ar": "تُظهر قدرتك على تحويل تصميم الإجراء إلى أداة تعمل.",
+            "en": "Shows you can turn a process design into a working tool."
+          }
+        },
+        {
+          "id": "iiba-ecba",
+          "recommendation": "later",
+          "when": {
+            "ar": "في السنة الأخيرة",
+            "en": "Final year"
+          },
+          "why": {
+            "ar": "شهادة التحليل التمهيدية، إن كنت تتجه إلى وظائف المحللين.",
+            "en": "The entry analysis certificate, if you aim for analyst jobs."
+          }
+        }
+      ]
+    }
+  ]
+}

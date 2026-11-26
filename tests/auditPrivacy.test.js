@@ -24,7 +24,8 @@ const SESSION_KEY = 'kamin-session-v3' // src/state/profileState.js STORAGE_KEY 
 // Task 59: the profile actions moved from src/App.jsx to src/state/useKaminProfile.js (shared by both
 // interfaces); the labels are read there, and the line guards below cover App.jsx and both state files.
 const hookSource = readFileSync(new URL('../src/state/useKaminProfile.js', import.meta.url), 'utf8')
-const appSource = ['../src/App.jsx', '../src/state/useKaminProfile.js', '../src/state/profileState.js'].map(file => readFileSync(new URL(file, import.meta.url), 'utf8')).join('\n')
+// Task 70: src/App.jsx (the old interface) is deleted; the guards cover the two state files the interface uses.
+const appSource = ['../src/state/useKaminProfile.js', '../src/state/profileState.js'].map(file => readFileSync(new URL(file, import.meta.url), 'utf8')).join('\n')
 function expressionAfter(anchor, opener) {
   const at = hookSource.indexOf(anchor)
   if (at < 0) throw new Error(`useKaminProfile.js: "${anchor}" not found`)
@@ -150,7 +151,7 @@ describe('Task 46: the usage log keeps no file name and no project title', () =>
     })
   }
 
-  it('App.jsx and the profile state files never put a file name or a title into a log line, and never print a raw error on upload or export', () => {
+  it('the profile state files never put a file name or a title into a log line, and never print a raw error on upload or export', () => {
     for (const line of appSource.split(/\r?\n/).filter(l => /\blog\(|audit:\[/.test(l))) {
       expect(line).not.toMatch(/\$\{[^}]*(file\??\.name|\.title)\b[^}]*\}/)
     }

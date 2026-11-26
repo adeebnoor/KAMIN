@@ -1,7 +1,7 @@
 // Task 56 · interests in the student's own words ("I like building apps for hospitals").
 // Pure and fully local; loaded on demand (import('./interests/freeText.js')), never in the initial
 // bundle. The text is understood with the approved improved engine and lexicon
-// (kamin-project-suggest-improved-v1), the digital-interest topic terms and the interest vocabulary
+// (kamin-project-suggest-improved-v2 since Task 77), the digital-interest topic terms and the interest vocabulary
 // (src/interests/vocabulary.js: everyday goals such as apps, websites, games, health, in English,
 // Arabic and Saudi dialect), and shown back as chips the student can remove; the original sentence is
 // always kept.
@@ -58,7 +58,7 @@ const DIGITAL_TARGETS = new Map(DIGITAL_TOPICS.map(topic => [topic.id, topic.tar
  */
 export function understandInterest(text, lang = 'en') {
   const clean = checkInterestText(text, lang)
-  const capabilities = suggestCapabilities(clean, { max: FREE_INTEREST_MAX_CHIPS }).suggestions.map(s => s.skillId)
+  const capabilities = suggestCapabilities(clean, { max: FREE_INTEREST_MAX_CHIPS, keepWishes: true }).suggestions.map(s => s.skillId)
   const bySkills = targetProfiles
     .filter(t => (t.requiredSkills || []).filter(id => capabilities.includes(id)).length >= 2)
     .map(t => t.id)
