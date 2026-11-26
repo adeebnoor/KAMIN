@@ -1,0 +1,11 @@
+{
+  "file": "testset-v2.json",
+  "sha256": "b6ea4839aeeb9f4080aa3c8b46ce108e1de56382fa4b69a0158408c74308d189",
+  "frozenAt": "2026-11-24",
+  "cases": 71,
+  "byLanguage": {
+    "ar": 44,
+    "en": 27
+  },
+  "harness": "kamin-eval-project-suggest-v1"
+}
